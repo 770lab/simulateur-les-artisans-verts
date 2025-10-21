@@ -447,20 +447,19 @@ if (elCht) elCht.textContent = euro(coutHT) + ' €';
   const rcAmount = racInitial * (pct/100);
   const racEffectif = racInitial - rcAmount;
 
-  const recettes = racEffectif + lastCEE + lastMPR;
-  const margeAidesHT = ( (racEffectif / (1 + TVA_CLIENT)) + lastCEE + lastMPR ) - coutHT;
-
-  // Top row values
-  document.getElementById('rc_amount').textContent      = euro(rcAmount) + ' €';
-  document.getElementById('resteChargeTop').textContent = euro(racEffectif) + ' €';
-  document.getElementById('margeAidesHTTop').textContent= euro(margeAidesHT) + ' €';
-  setMargeHtColorTop(margeAidesHT);
-
-  // Bottom (in résumé)
-  document.getElementById('resteCharge').textContent = euro(racEffectif) + ' €';
-  document.getElementById('recettes').textContent = 'CEE : ' + euro(lastCEE) + ' € | MPR : ' + euro(lastMPR) + ' € | RAC : ' + euro(racEffectif) + ' €';
-  document.getElementById('margeAidesHT').textContent= euro(margeAidesHT) + ' €';
-  setMargeHtColorBottom(margeAidesHT);
+  const recettes  = racEffectif + lastCEE + lastMPR;
+const margeCatalogueHT = prixHT - coutHT;
+const margeAidesHT = margeCatalogueHT - (rcAmount / (1 + TVA_CLIENT));
+// Top row values
+document.getElementById('rc_amount').textContent      = euro(rcAmount) + ' €';
+document.getElementById('resteChargeTop').textContent = euro(racEffectif) + ' €';
+document.getElementById('margeAidesHTTop').textContent= euro(margeAidesHT) + ' €';
+setMargeHtColorTop(margeAidesHT);
+// Bottom (in résumé)
+document.getElementById('resteCharge').textContent = euro(racEffectif) + ' €';
+document.getElementById('recettes').textContent = 'CEE : ' + euro(lastCEE) + ' € | MPR : ' + euro(lastMPR) + ' € | RAC : ' + euro(racEffectif) + ' €';
+document.getElementById('margeAidesHT').textContent= euro(margeAidesHT) + ' €';
+setMargeHtColorBottom(margeAidesHT);
 }
 
 function calculate(){
