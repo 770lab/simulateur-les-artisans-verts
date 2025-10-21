@@ -81,6 +81,14 @@
   .pwd-box button{padding:10px 14px; border-radius:10px; border:1px solid #0fb36b; background:#0fb36b; color:#fff; font-weight:800; cursor:pointer}
   .pwd-hint{text-align:center; color:#64748b; font-size:12px; margin-top:-6px; margin-bottom:12px}
   .pwd-error{text-align:center; color:#b91c1c; font-size:13px; display:none}
+
+/* marge progress bar */
+.mbar{height:12px; background:#e9ecef; border-radius:999px; overflow:hidden; position:relative;}
+.mbar .fill{height:100%; width:0%; transition:width .3s ease;}
+.mbar.good .fill{background:#2da44e;}
+.mbar.warn .fill{background:#f59e0b;}
+.mbar.bad  .fill{background:#dc2626;}
+.mbar .label{position:absolute; top:-22px; right:0; font-size:12px; color:#0a3d28; opacity:.9;}
 </style>
 </head>
 <body>
@@ -146,18 +154,12 @@
             <label for="ecs">Type d’ECS</label>
             <select id="ecs">
               <option value="">PAC seule</option>
-              <option>PAC + Ballon Electrique</option>
-              <option>PAC + Ballon Thermodynamique</option>
-              <option>PAC + Ballon SSC</option>
+              <option>Ballon thermodynamique</option>
+              <option>Ballon électrique</option>
+              <option>Ballon SSC</option>
             </select>
           </div>
 
-          <div class="field">
-            <label>Délégataire</label>
-            <div id="delegBadge" class="badge">—</div>
-          </div>
-        </div>
-        
           <div class="field">
             <label>Catégorie MPR</label>
             <div id="mprChips" class="mpr">
@@ -168,11 +170,17 @@
             </div>
           </div>
 
+          <div class="field">
+            <label>Délégataire</label>
+            <div id="delegBadge" class="badge">—</div>
+          </div>
+        </div>
+
         <div class="line"></div>
 
         <div class="rc-row">
           <div class="rc-tile">
-            <label for="rc_pct">Prise en charge du RAC (%)</label>
+            <label for="rc_pct">% offert</label>
             <input id="rc_pct" type="number" min="0" max="100" step="1" value="100" class="rc-input rc-bleu" />
           </div>
           <div class="rc-tile">
@@ -190,6 +198,27 @@
         </div>
 
         <div class="line"></div>
+
+        
+        <div class="line"></div>
+        <div id="scenarioPanel" class="card" style="margin-top:8px; padding:12px; background:#0a3d2810; border:1px solid #0a3d2830; border-radius:12px;">
+          <h3 style="margin:0 0 8px; font-size:16px; color:#0a3d28;">Résumé scénario (pack sélectionné)</h3>
+          <div style="display:grid; grid-template-columns: repeat(2, minmax(200px,1fr)); gap:10px;">
+            <div class="pill"><span>Pack</span><span id="sc_pack">—</span></div>
+            <div class="pill"><span>Prix TTC</span><span id="sc_prixTTC">0,00 €</span></div>
+            <div class="pill"><span>CEE</span><span id="sc_cee">0,00 €</span></div>
+            <div class="pill"><span>MPR</span><span id="sc_mpr">0,00 €</span></div>
+            <div class="pill"><span>Reste à charge (avant offre)</span><span id="sc_racAvant">0,00 €</span></div>
+          </div>
+          <div class="line" style="margin:10px 0;"></div>
+<div class="pill soft"><span>Marge HT actuelle</span><span id="sc_marge_current_val">0,00 €</span></div>
+<div class="mbar bad" id="sc_marge_current_bar"><div class="fill"></div><div class="label">seuils: 2 000 / 4 000 €</div></div>
+<div class="line" style="margin:10px 0;"></div>
+<div style="display:grid; grid-template-columns: repeat(2, minmax(240px,1fr)); gap:10px;">
+            <div class="pill soft"><span>Marge HT si RAC non offert</span><span id="sc_marge_no_offre">0,00 €</span></div>
+            <div class="pill soft"><span>Marge après geste commercial (HT)</span><span id="sc_marge_offert">0,00 €</span></div>
+          </div>
+        </div>
 
         <div class="result">
           <div class="metric">
@@ -239,7 +268,7 @@
       </div>
     </div>
 
-    <footer><div class="powered">Powered by 770 Lab</div></footer>
+    <footer><div class="powered">Powered by Gamberge</div></footer>
   </div>
 
 <script>
@@ -293,10 +322,10 @@ const mprByEcs = {
 
 // Packs (TTC)
 const packsPricing = {
-  "PAC": { prixTTC: 12500, coutTTC: 6940, coutHT: 6200 },
-  "PAC + ballon électrique": { prixTTC: 14300, coutTTC: 7180, coutHT: 6400 },
-  "PAC + ballon thermodynamique": { prixTTC: 15270, coutTTC: 8260, coutHT: 7300 },
-  "PAC + SSC": { prixTTC: 24970, coutTTC: 13080, coutHT: 11700 }
+  "PAC": { prixTTC: 10890, coutTTC: 6940, coutHT: 6200 },
+  "PAC + ballon électrique": { prixTTC: 13750, coutTTC: 7180, coutHT: 6400 },
+  "PAC + ballon thermodynamique": { prixTTC: 13750, coutTTC: 8260, coutHT: 7300 },
+  "PAC + SSC": { prixTTC: 25850, coutTTC: 13080, coutHT: 11700 }
 };
 const TVA_CLIENT = 0.055; const TVA_FOUR = 0.20;
 
@@ -413,53 +442,86 @@ function updateRcInputColor(){
 }
 function getRacPercent(){ let v=parseFloat(document.getElementById('rc_pct').value); if(isNaN(v)) v=0; return Math.min(100,Math.max(0,v)); }
 
+
+// === Robust pack detection based on ECS selection ===
+function detectEcsFlags(){
+  const ecs = (document.getElementById('ecs').value || '').toLowerCase();
+  return {
+    isThermo: ecs.includes('thermo'),
+    isElec: ecs.includes('élect') || ecs.includes('elect'),
+    isSSC: ecs.includes('ssc')
+  };
+}
+function resolvePackKey(packsPricing){
+  const f = detectEcsFlags();
+  const keys = Object.keys(packsPricing || {});
+  const findKey = (re, canonical) => {
+    const k = keys.find(k => re.test(k.toLowerCase()));
+    return k || (keys.includes(canonical) ? canonical : canonical);
+  };
+  if (f.isSSC)    return findKey(/ssc/, 'PAC + SSC');
+  if (f.isThermo) return findKey(/thermo/, 'PAC + ballon thermodynamique');
+  if (f.isElec)   return findKey(/élect|elect/, 'PAC + ballon électrique');
+  return findKey(/^pac/, 'PAC');
+}
+
+
 function updateMarge(){
-  const pack = detectPack();
-  document.getElementById('packLabel').textContent = 'Pack détecté : ' + pack;
-  const row = packsPricing[pack] || {prixTTC:0, coutTTC:0};
-  const prix = row.prixTTC, cout = row.coutTTC;
-  // Coût HT (packsPricing.coutHT prioritaire)
-  const coutHT = cout / (1 + TVA_FOUR);
-  const elCht = document.getElementById('coutHT'); if (elCht) elCht.textContent = euro(coutHT) + ' €';
+  // Detect the effective pack key based on ECS
+  const packKey = (typeof resolvePackKey === 'function') ? resolvePackKey(packsPricing) : 'PAC';
+  const labelEl = document.getElementById('packLabel');
+  if (labelEl) labelEl.textContent = 'Pack détecté : ' + packKey;
 
-  const margeTTC = prix - cout;
-  const prixHT = prix / (1 + TVA_CLIENT);
+  const row = (packsPricing && packsPricing[packKey]) ? packsPricing[packKey] : { prixTTC:0, coutTTC:0 };
+  const prixTTC = Number(row.prixTTC) || 0;
+  const coutTTC = Number(row.coutTTC) || 0;
+  const coutHT  = (row.coutHT != null) ? Number(row.coutHT) : (coutTTC / (1 + TVA_FOUR));
+
+  // Résumé commercial (bas)
+  const prixHT = prixTTC / (1 + TVA_CLIENT);
+  const margeTTC = prixTTC - coutTTC;
   const margeHT = prixHT - coutHT;
-  document.getElementById('prixTTC').textContent  = euro(prix) + ' €';
-  document.getElementById('coutTTC').textContent  = euro(cout) + ' €';
-if (elCht) elCht.textContent = euro(coutHT) + ' €';
 
-  // Remise commerciale (RAC)
-  const racPct = (typeof getRacPercent==='function') ? getRacPercent() : 0;
-  const racAmount = (prix || 0) * (racPct/100);
-  const elRac = document.getElementById('rc_amount'); if (elRac) elRac.textContent = euro(racAmount) + ' €';
+  const elPrixTTC = document.getElementById('prixTTC');
+  const elCoutTTC = document.getElementById('coutTTC');
+  const elCht     = document.getElementById('coutHT');
+  const elMargeTTC= document.getElementById('margeTTC');
+  const elMargeHT = document.getElementById('margeHT');
 
-  // Total aides & Reste à charge
-  const cee = lastCEE || 0; const mpr = lastMPR || 0; const totalAides = cee + mpr;
-  const elTotAides = document.getElementById('totalAides'); if (elTotAides) elTotAides.textContent = euro(totalAides) + ' €';
-  const reste = Math.max(0, (prix || 0) - racAmount - totalAides);
-  const elReste = document.getElementById('resteChargeTop'); if (elReste) elReste.textContent = euro(reste) + ' €';
-  var _elMTC = document.getElementById('margeTTC'); if(_elMTC){ _elMTC.textContent = euro(margeTTC) + ' €'; }
-  document.getElementById('margeHT').textContent  = euro(margeHT) + ' €';
+  if (elPrixTTC)  elPrixTTC.textContent  = euro(prixTTC) + ' €';
+  if (elCoutTTC)  elCoutTTC.textContent  = euro(coutTTC) + ' €';
+  if (elCht)      elCht.textContent      = euro(coutHT) + ' €';
+  if (elMargeTTC) elMargeTTC.textContent = euro(margeTTC) + ' €';
+  if (elMargeHT)  elMargeHT.textContent  = euro(margeHT) + ' €';
 
-  const racInitial = Math.max(prix - (lastCEE + lastMPR), 0);
-  const pct = getRacPercent();
-  const rcAmount = racInitial * (pct/100);
-  const racEffectif = racInitial - rcAmount;
+  // Haut de page
+  const cee = Number(lastCEE) || 0;
+  const mpr = Number(lastMPR) || 0;
+  const aides = cee + mpr;
 
-  const recettes  = racEffectif + lastCEE + lastMPR;
-const margeCatalogueHT = prixHT - coutHT;
-const margeAidesHT = margeCatalogueHT - (rcAmount / (1 + TVA_CLIENT));
-// Top row values
-document.getElementById('rc_amount').textContent      = euro(rcAmount) + ' €';
-document.getElementById('resteChargeTop').textContent = euro(racEffectif) + ' €';
-document.getElementById('margeAidesHTTop').textContent= euro(margeAidesHT) + ' €';
-setMargeHtColorTop(margeAidesHT);
-// Bottom (in résumé)
-document.getElementById('resteCharge').textContent = euro(racEffectif) + ' €';
-document.getElementById('recettes').textContent = 'CEE : ' + euro(lastCEE) + ' € | MPR : ' + euro(lastMPR) + ' € | RAC : ' + euro(racEffectif) + ' €';
-document.getElementById('margeAidesHT').textContent= euro(margeAidesHT) + ' €';
-setMargeHtColorBottom(margeAidesHT);
+  const racAvant = Math.max(0, prixTTC - aides);
+  const rcPct = getRacPercent();
+  const rcAmount = (rcPct/100) * racAvant;
+  const racApres = Math.max(0, racAvant - rcAmount);
+
+  const recettesTTC = aides + racApres;
+  const recettesHT = recettesTTC / (1 + TVA_CLIENT);
+  const margeAidesHT = recettesHT - coutHT;
+
+  const elRecettes = document.getElementById('recettes');
+  const elRacTop   = document.getElementById('resteChargeTop');
+  const elRcAmount = document.getElementById('rc_amount');
+  const elMargeTop = document.getElementById('margeAidesHTTop');
+
+  if (elRcAmount) elRcAmount.textContent = euro(rcAmount) + ' €';
+  if (elRacTop)   elRacTop.textContent   = euro(racApres) + ' €';
+  if (elRecettes) elRecettes.textContent = 'CEE : ' + euro(cee) + ' € | MPR : ' + euro(mpr) + ' € | RAC : ' + euro(racApres) + ' €';
+  if (elMargeTop) elMargeTop.textContent = euro(margeAidesHT) + ' €';
+
+  if (typeof setMargeHtColorBottom === 'function') setMargeHtColorBottom(margeAidesHT);
+  if (typeof setMargeHtColorTop === 'function')    setMargeHtColorTop(margeAidesHT);
+
+  if (typeof refreshScenarioPanel === 'function') refreshScenarioPanel();
 }
 
 function calculate(){
@@ -474,7 +536,7 @@ function calculate(){
   
   // If ECS device is Thermo or SSC, force usage to 'Chauffage et ECS'
   let effectiveUsage = usage;
-  if (ecsType === 'Ballon thermodynamique' || ecsType === 'Ballon SSC') effectiveUsage = 'Chauffage et ECS';
+  if (ecsType === 'Ballon SSC') effectiveUsage = 'Chauffage et ECS';
 if (!range || isNaN(mwhCumacPrice) || mwhCumacPrice < 0){
     document.getElementById('kwhCumacTotal').textContent='0';
     document.getElementById('estimatedPrimeCEE').textContent='0,00';
@@ -483,21 +545,33 @@ if (!range || isNaN(mwhCumacPrice) || mwhCumacPrice < 0){
     const elRacR = document.getElementById('rc_amount'); if (elRacR) elRacR.textContent = '0,00 €';
     const elResteR = document.getElementById('resteChargeTop'); if (elResteR) elResteR.textContent = '0,00 €';
     const elChtR = document.getElementById('coutHT'); if (elChtR) elChtR.textContent = '0,00 €';
-    lastCEE=0; lastMPR=0; updateMarge(); return;
+    lastCEE=0; lastMPR=0; updateMarge(); refreshScenarioPanel(); return;
   }
 
   const baseKwhCumac  = data[typeLogement].baseValues[etas][effectiveUsage];
 const surfaceFactor = parseFloat(document.getElementById('surfaceRange').value);
 const zoneFactor    = data.zoneFactors[zone];
 
-// Normal cumac (bonus + thermo)
+// Cumac robuste basé sur ECS
 let pacKwhc = baseKwhCumac * surfaceFactor * zoneFactor * 5;
-let ballonKwhc = (ecsType === 'Ballon thermodynamique') ? 15600 : 0;
-let totalKwhc = pacKwhc + ballonKwhc;
+const ecsRaw = (document.getElementById('ecs').value || '');
+const ecs = ecsRaw.toLowerCase();
+const isThermo = ecs.includes('thermo');
+const isElec   = ecs.includes('élect') || ecs.includes('elect');
+const isSSC    = ecs.includes('ssc');
 
-// Délégataire override (VALOREN): override ONLY for SSC
+let totalKwhc = pacKwhc;
+if (isThermo) {
+  totalKwhc = pacKwhc + 15600;
+} else if (isSSC) {
+  totalKwhc = pacKwhc;
+} else if (isElec) {
+  totalKwhc = pacKwhc;
+}
+
+// Délégataire override (VALOREN) uniquement pour SSC
 const deleg = document.getElementById('delegBadge').textContent.trim().toUpperCase();
-if (deleg === 'VALOREN' && ecsType === 'Ballon SSC'){
+if (deleg === 'VALOREN' && isSSC){
   totalKwhc = 769200; // 769.2 MWh
 }
 
@@ -516,8 +590,7 @@ const cee = (totalKwhc / 1000) * mwhCumacPrice;
   document.getElementById('mpRenovAide').textContent     = euro(mprTotal);
   document.getElementById('totalAides').textContent      = euro(totalAides);
 
-  updateMarge();
-}
+  updateMarge(); refreshScenarioPanel(); }
 
 function initMprChips(){
   const cont = document.getElementById('mprChips');
@@ -543,6 +616,61 @@ document.getElementById('zone').addEventListener('change', calculate);
 document.getElementById('mwhCumacPrice').addEventListener('input', calculate);
 document.getElementById('ecs').addEventListener('change', ()=>{ renderDelegAuto(); calculate(); });
 document.getElementById('rc_pct').addEventListener('input', updateMarge);
+
+
+function refreshScenarioPanel(){
+  // helper to colorize the bar based on thresholds
+  function setMargeBar(val){
+    const bar = document.getElementById('sc_marge_current_bar');
+    const fill = bar ? bar.querySelector('.fill') : null;
+    if(!bar || !fill) return;
+    // remove classes
+    bar.classList.remove('good','warn','bad');
+    if (val > 4000) bar.classList.add('good');
+    else if (val >= 2000) bar.classList.add('warn');
+    else bar.classList.add('bad');
+    // scale: cap at 6000€ => 100%
+    fill.style.width = '100%';
+  }
+  try{
+    const packKey = (typeof resolvePackKey === 'function' && typeof packsPricing !== 'undefined') 
+      ? resolvePackKey(packsPricing) 
+      : ((typeof detectPack === 'function') ? detectPack() : 'PAC');
+    const row = (typeof packsPricing !== 'undefined' && packsPricing[packKey]) ? packsPricing[packKey] : { prixTTC:0, coutTTC:0 };
+    const prixTTC = Number(row.prixTTC) || 0;
+    const coutHT  = (row.coutHT != null) ? Number(row.coutHT) : ((Number(row.coutTTC)||0) / (1 + TVA_FOUR));
+    const cee = Number(lastCEE) || 0;
+    const mpr = Number(lastMPR) || 0;
+    const aides = cee + mpr;
+
+    const racAvant = Math.max(0, prixTTC - aides);
+
+    const recettes_no_offre_TTC = aides + racAvant;
+    const marge_no_offre_HT = (recettes_no_offre_TTC / (1 + TVA_CLIENT)) - coutHT;
+
+    const recettes_offert_TTC = aides;
+    const marge_offert_HT = (recettes_offert_TTC / (1 + TVA_CLIENT)) - coutHT;
+
+    const setTxt = (id, v) => { const el=document.getElementById(id); if(el) el.textContent = v; };
+    // current margin with current RAC %
+    const rcPct = (typeof getRacPercent==='function') ? getRacPercent() : 0;
+    const rcAmount = (rcPct/100) * racAvant;
+    const racApres = Math.max(0, racAvant - rcAmount);
+    const recettesTTC_current = aides + racApres;
+    const marge_current_HT = (recettesTTC_current / (1 + TVA_CLIENT)) - coutHT;
+    setTxt('sc_marge_current_val', euro(marge_current_HT) + ' €');
+    setMargeBar(marge_current_HT);
+
+    setTxt('sc_pack', packKey);
+    setTxt('sc_prixTTC', euro(prixTTC) + ' €');
+    setTxt('sc_cee', euro(cee) + ' €');
+    setTxt('sc_mpr', euro(mpr) + ' €');
+    setTxt('sc_racAvant', euro(racAvant) + ' €');
+    setTxt('sc_marge_no_offre', euro(marge_no_offre_HT) + ' €');
+    setTxt('sc_marge_offert', euro(marge_offert_HT) + ' €');
+  }catch(e){}
+}
+
 
 document.addEventListener('DOMContentLoaded', ()=>{
   initMprChips();
