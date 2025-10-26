@@ -122,6 +122,101 @@
 h1{margin-top:0}
 
 #whoBadge{display:none!important}
+
+/* === PDF tweaks === */
+@media print {
+  .export-pdf-btn { display: none !important; }
+  .pdf-footer { display: flex !important; flex-direction: column; align-items: center; gap: 8px; margin-top: 16px; }
+  .pdf-footer .brand-line { font-size: 12px; color: #4b5563; }
+  /* Lighten cards borders for print */
+  .card, .box, .panel { box-shadow: none !important; }
+}
+@media screen {
+  .pdf-footer { display: none; }
+}
+
+
+/* Ensure text visible in all inputs */
+input[type="text"], input:not([type]), input[type="search"] {
+  color: #0F172A;
+}
+::placeholder { color: #9CA3AF; }
+
+
+/* === Visibility fix for supplier inputs === */
+.vue-fournisseur input,
+.vue-fournisseur select,
+.vue-fournisseur textarea {
+  color: #0F172A !important;        /* dark text */
+  background: #ffffff !important;   /* white bg */
+  caret-color: #0F172A !important;
+  border-color: #cbd5e1 !important; /* slate-300 */
+}
+.vue-fournisseur input::placeholder,
+.vue-fournisseur textarea::placeholder {
+  color: #94a3b8 !important;        /* slate-400 */
+  opacity: 1;
+}
+
+/* If container class is different, also apply generic fallback when supplier tab is active */
+[data-view="fournisseur"] input,
+[data-view="fournisseur"] select,
+[data-view="fournisseur"] textarea {
+  color: #0F172A !important;
+  background: #ffffff !important;
+  caret-color: #0F172A !important;
+}
+[data-view="fournisseur"] input::placeholder,
+[data-view="fournisseur"] textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* Autofill (Chrome) */
+.vue-fournisseur input:-webkit-autofill {
+  -webkit-text-fill-color: #0F172A !important;
+  -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
+}
+
+
+/* === Force light form fields everywhere to avoid white-on-white === */
+input, select, textarea {
+  color: #0F172A !important;
+  background-color: #FFFFFF !important;
+  caret-color: #0F172A !important;
+  -webkit-text-fill-color: #0F172A !important;
+}
+input::placeholder, textarea::placeholder {
+  color: #94A3B8 !important;
+  opacity: 1 !important;
+}
+/* remove any dark utility bg on cards that may wrap inputs */
+.form-card, .field, .tile, .badge {
+  background-color: #FFFFFF !important;
+}
+/* === Logo quality & proportions === */
+.header-brand, .brand-logo { display:flex; align-items:center; gap:.5rem; }
+.brand-logo img {
+  height: 56px;              /* fixed visual height */
+  width: auto;               /* no stretch */
+  object-fit: contain;       /* preserve aspect */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  -ms-interpolation-mode: nearest-neighbor;
+}
+/* Improve print: keep logo crisp */
+@media print {
+  .brand-logo img { height: 48px; }
+}
+
+
+/* Center the dossier status text block (OK / À AMÉLIORER / REFUSÉ) */
+.dossier-status-centered {
+  text-align: center !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
 </style>
 </head>
 <body>
@@ -221,11 +316,11 @@ h1{margin-top:0}
           <div class="row">
             <div>
               <label>Nom</label>
-              <input id="nom_c" type="text" placeholder="Dupont" />
+              <input id="nom_c" type="text" placeholder="" />
             </div>
             <div>
               <label>Prénom</label>
-              <input id="prenom_c" type="text" placeholder="Marie" />
+              <input id="prenom_c" type="text" placeholder="" />
             </div>
           </div>
         </div>
@@ -348,7 +443,7 @@ h1{margin-top:0}
       <!-- Export PDF button (client) -->
       <div class="section">
         <div style="display:flex;justify-content:center;margin-top:6px;">
-          <button id="exportBtn" class="btn" disabled>Exporter en PDF</button>
+          <button id="exportBtn" class="btn" disabled<button id="exportBtn" class="export-pdf-btn btn" disabled>Exporter en PDF</button>
         </div>
       </div>
     </div>
@@ -359,8 +454,8 @@ h1{margin-top:0}
         <strong><span aria-label="Vue fournisseur">🔒</span></strong>
         <span class="badge"><span id="roleBadge" class="pill">—</span></span>
         <div style="display:flex;gap:8px;align-items:end">
-          <div><label style="font-size:11px;color:#94a3b8">Nom</label><input id="nom_p" type="text" placeholder="Dupont" style="padding:8px 10px;border-radius:10px;border:1px solid var(--border);background:#ffffff;color:#fff;font-size:13px;width:140px" /></div>
-          <div><label style="font-size:11px;color:#94a3b8">Prénom</label><input id="prenom_p" type="text" placeholder="Marie" style="padding:8px 10px;border-radius:10px;border:1px solid var(--border);background:#ffffff;color:#fff;font-size:13px;width:140px" /></div>
+          <div><label style="font-size:11px;color:#94a3b8">Nom</label><input id="nom_p" type="text" placeholder="" style="padding:8px 10px;border-radius:10px;border:1px solid var(--border);background:#ffffff;color:#fff;font-size:13px;width:140px" /></div>
+          <div><label style="font-size:11px;color:#94a3b8">Prénom</label><input id="prenom_p" type="text" placeholder="" style="padding:8px 10px;border-radius:10px;border:1px solid var(--border);background:#ffffff;color:#fff;font-size:13px;width:140px" /></div>
         </div>
       </div>
 
@@ -516,7 +611,7 @@ h1{margin-top:0}
       <!-- Export PDF button (supplier) -->
       <div class="section">
         <div style="display:flex;justify-content:center;margin-top:6px;">
-          <button id="exportBtn_pro" class="btn" disabled>Exporter en PDF</button>
+          <button id="exportBtn_pro" class="btn" disabled<button id="exportBtn_pro" class="export-pdf-btn btn" disabled>Exporter en PDF</button>
         </div>
       </div>
 
@@ -814,8 +909,8 @@ document.getElementById('pwBtn').addEventListener('click', ()=>{
   document.getElementById('surface_c').value="90<S<110";
   document.getElementById('offerPct_c').value=0;
   document.getElementById('offerAmt_c').value=0;
-  document.getElementById('nom_c').value="";
-  document.getElementById('prenom_c').value="";
+  
+  
   // Defaults — pro mirror
   syncClientToPro();
   // First compute
@@ -833,8 +928,8 @@ function resetAll(){
   document.getElementById('surface_c').value="90<S<110";
   document.getElementById('offerPct_c').value=0;
   document.getElementById('offerAmt_c').value=0;
-  document.getElementById('nom_c').value="";
-  document.getElementById('prenom_c').value="";
+  
+  
   syncClientToPro();
   recomputeClient();
   recomputePro();
@@ -848,5 +943,112 @@ document.addEventListener('DOMContentLoaded', ()=>{
 });
 
 </script>
+
+<div class="pdf-footer">
+  <span class="brand-logo"><img src="artisans_verts_logo.png" alt="Les Artisans Verts" style="max-width:140px;height:auto;"></span>
+  <div class="brand-line">Propulsé par <strong>770 Lab</strong></div>
+</div>
+
+
+<script>
+(function(){
+  function normalize(t){ return (t||'').replace(/\s+/g,' ').trim().toLowerCase(); }
+  function findInputsByLabelText(targetText){
+    const results = [];
+    const labels = Array.from(document.querySelectorAll('label'));
+    labels.forEach(lb => {
+      const txt = normalize(lb.textContent);
+      if (txt === normalize(targetText)){
+        let el = null;
+        // 1) If label has 'for' attribute, link by id
+        const forId = lb.getAttribute('for');
+        if (forId){
+          el = document.getElementById(forId);
+        }
+        // 2) Try to find an input within same container
+        if(!el){
+          el = lb.closest('.field, .form-group, .input, div, section')?.querySelector('input[type="text"], input:not([type]), input[type="search"], input[type="tel"], input[type="email"]');
+        }
+        // 3) Try next sibling
+        if(!el){
+          let sib = lb.nextElementSibling;
+          while(sib && !(sib.tagName==='INPUT')) sib = sib.nextElementSibling;
+          if (sib && sib.tagName==='INPUT') el = sib;
+        }
+        if(el) results.push(el);
+      }
+    });
+    // Fallback: also check placeholders if no label found
+    if (results.length === 0){
+      const all = Array.from(document.querySelectorAll('input[type="text"], input:not([type])'));
+      all.forEach(i => {
+        const ph = normalize(i.getAttribute('placeholder'));
+        if (ph === normalize(targetText)) results.push(i);
+      });
+    }
+    // Deduplicate
+    return Array.from(new Set(results));
+  }
+
+  function setupSyncFor(labelText, storageKey){
+    const nodes = findInputsByLabelText(labelText);
+    if (nodes.length < 2) return; // nothing to sync
+    // Initial reconcile: if one has value, push to others
+    let seed = nodes.find(n => (n.value||'').trim().length>0);
+    if (seed){
+      nodes.forEach(n => { if(n!==seed){ n.value = seed.value; n.dispatchEvent(new Event('input', {bubbles:true})); } });
+    }
+    // Two-way sync
+    nodes.forEach(n => {
+      n.addEventListener('input', () => {
+        const val = n.value;
+        // store in session so reload keeps values across tabs
+        try { sessionStorage.setItem(storageKey, val); } catch(e){}
+        nodes.forEach(m => { if(m!==n){ m.value = val; m.dispatchEvent(new Event('input', {bubbles:true})); } });
+      }, {passive:true});
+      // Also load from sessionStorage if present
+      try {
+        const saved = sessionStorage.getItem(storageKey);
+        if (saved !== null && saved !== undefined){
+          n.value = saved;
+        }
+      } catch(e){}
+    });
+  }
+
+  // Run after DOM ready
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', () => {
+      setupSyncFor('Nom','sync_nom');
+      setupSyncFor('Prénom','sync_prenom');
+    });
+  } else {
+    setupSyncFor('Nom','sync_nom');
+    setupSyncFor('Prénom','sync_prenom');
+  }
+})();
+</script>
+
+
+<script>
+(function(){
+  const labels = ["DOSSIER OK", "DOSSIER À AMÉLIORER", "DOSSIER A AMELIORER", "DOSSIER REFUSÉ", "DOSSIER REFUSE"];
+  function centerStatus() {
+    const all = Array.from(document.querySelectorAll('div,section,article,button,span'));
+    for (const el of all) {
+      const t = (el.textContent || "").trim().toUpperCase();
+      if (labels.includes(t)) {
+        el.classList.add('dossier-status-centered');
+      }
+    }
+  }
+  if (document.readyState !== 'loading') centerStatus();
+  else document.addEventListener('DOMContentLoaded', centerStatus);
+  // Observe future changes (when status changes with thresholds)
+  const obs = new MutationObserver(centerStatus);
+  obs.observe(document.documentElement, {childList:true, subtree:true, characterData:true});
+})();
+</script>
+
 </body>
 </html>
