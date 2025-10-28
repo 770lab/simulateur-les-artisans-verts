@@ -258,21 +258,17 @@ input::placeholder, textarea::placeholder {
 
 
 /* Inline combined meta box (final alignment) */
-.inline-meta {
-  border: 1px solid #D1D5DB;       /* solid neutral border */
-  border-radius: 10px;
-  padding: 12px 16px;
-  background: #fff;
-  font-size: 15px;
-  font-weight: 400;
-  color: var(--text);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 56px;                    /* exactly same height as inputs/selects */
-  line-height: 1;
-  white-space: nowrap;
-  box-sizing: border-box;
+.inline-meta{
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:#fff;
+  padding:12px 14px;
+  min-height:56px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  box-sizing:border-box;
+  line-height:1.2;
 }
 .inline-meta strong {
   font-weight: 700;                /* bold values only */
@@ -284,13 +280,60 @@ input::placeholder, textarea::placeholder {
 
 /* Force solid border & exact height for the combined meta box (override) */
 #combo_meta_clientCard.inline-meta, 
-#combo_meta_proCard.inline-meta {
-  border: 1px solid #D1D5DB !important;
-  border-radius: 10px !important;
-  height: 56px !important;
-  padding: 12px 16px !important;
-  background: #fff !important;
-  box-sizing: border-box !important;
+#combo_meta_proCard.inline-meta{
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:#fff;
+  padding:12px 14px;
+  min-height:56px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  box-sizing:border-box;
+  line-height:1.2;
+}
+
+
+/* Hide the 'Paramètres' section title */
+.section.paramSection > h3{ display:none !important; }
+
+
+/* Label for combined meta box */
+.inline-meta-label{
+  display:block;
+  font-weight:600;
+  font-size:13px;
+  margin-bottom:6px;
+  color:var(--text);
+}
+
+
+.inline-meta-wrapper{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.inline-meta-label{
+  display:block;
+  font-weight:600;
+  font-size:13px;
+  margin-bottom:6px;
+  color:var(--text);
+}
+
+
+/* Wrapper so label + field stay in the same grid cell (harmonised like others) */
+.inline-meta-wrapper{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.inline-meta-label{
+  display:block;
+  font-weight:600;
+  font-size:13px;
+  margin-bottom:6px;
+  color:var(--text);
 }
 
 </style>
@@ -1266,7 +1309,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
     function syncText(){
       const d = delegSrc ? delegSrc.textContent.trim() : '—';
       const k = kwhSrc ? kwhSrc.textContent.trim() : '—';
-      span.innerHTML = `Délégataire : <strong>${d}</strong> — kWh cumac : <strong>${k}</strong>`;
+      span.innerHTML = `<strong>${d}</strong> | <strong>${k}</strong>`;
     }
     syncText();
     if(delegSrc) new MutationObserver(syncText).observe(delegSrc, {childList:true, characterData:true, subtree:true});
@@ -1278,6 +1321,109 @@ document.addEventListener('DOMContentLoaded', ()=>{
     buildCombinedInlineBox('proCard');
   }
   if(document.readyState!=='loading') init();
+  else document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+
+
+<script>
+(function(){
+  function addLabelAbove(id){
+    const el = document.getElementById(id);
+    if(!el) return;
+    const label = document.createElement('label');
+    label.className = 'inline-meta-label';
+    label.textContent = 'Délégataire & cumac';
+    el.parentNode.insertBefore(label, el);
+  }
+  if(document.readyState !== 'loading'){
+    addLabelAbove('combo_meta_clientCard');
+    addLabelAbove('combo_meta_proCard');
+  } else {
+    document.addEventListener('DOMContentLoaded', function(){
+      addLabelAbove('combo_meta_clientCard');
+      addLabelAbove('combo_meta_proCard');
+    });
+  }
+})();
+</script>
+
+
+<script>
+(function(){
+  function placeLabelInSameCell(comboId, labelText){
+    const el = document.getElementById(comboId);
+    if(!el) return;
+    const parent = el.parentElement; // row cell
+    if(!parent) return;
+
+    // Remove any stray inline-meta-label siblings previously inserted
+    Array.from(parent.querySelectorAll('.inline-meta-label')).forEach(n => n.remove());
+
+    // Build wrapper and insert label + move el inside
+    const wrapper = document.createElement('div');
+    wrapper.className = 'inline-meta-wrapper';
+    const label = document.createElement('label');
+    label.className = 'inline-meta-label';
+    label.textContent = labelText;
+
+    // Replace el with wrapper in the grid cell
+    parent.replaceChild(wrapper, el);
+    wrapper.appendChild(label);
+    wrapper.appendChild(el);
+  }
+
+  function init(){
+    placeLabelInSameCell('combo_meta_clientCard', 'Délégataire & cumac');
+    placeLabelInSameCell('combo_meta_proCard', 'Délégataire & cumac');
+  }
+
+  if(document.readyState !== 'loading') init();
+  else document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+
+
+<script>
+(function(){
+  function equalizeFieldHeights(cardId, leftSelectId, rightBoxId){
+    const card = document.getElementById(cardId);
+    if(!card) return;
+    const left = card.querySelector('#' + leftSelectId);
+    const box = card.querySelector('#' + rightBoxId);
+    if(!left || !box) return;
+
+    function apply(){
+      const cs = window.getComputedStyle(left);
+      // Real outer height (content + padding + border)
+      const h = left.getBoundingClientRect().height;
+      // Mirror border/padding styles
+      box.style.borderRadius = cs.borderRadius;
+      box.style.borderWidth  = cs.borderWidth;
+      box.style.borderStyle  = cs.borderStyle || 'solid';
+      box.style.borderColor  = cs.borderColor || getComputedStyle(document.body).getPropertyValue('--border') || '#d1d5db';
+      box.style.paddingTop   = cs.paddingTop;
+      box.style.paddingBottom= cs.paddingBottom;
+      box.style.paddingLeft  = cs.paddingLeft;
+      box.style.paddingRight = cs.paddingRight;
+      // Exact height match
+      box.style.height = h + 'px';
+      box.style.display = 'flex';
+      box.style.alignItems = 'center';
+    }
+
+    apply();
+    // Re-apply on resize/zoom/font changes
+    window.addEventListener('resize', apply);
+    const ro = new ResizeObserver(apply);
+    ro.observe(left);
+  }
+
+  function init(){
+    equalizeFieldHeights('clientCard', 'surface_c', 'combo_meta_clientCard');
+    equalizeFieldHeights('proCard',    'surface_p', 'combo_meta_proCard');
+  }
+  if(document.readyState !== 'loading') init();
   else document.addEventListener('DOMContentLoaded', init);
 })();
 </script>
