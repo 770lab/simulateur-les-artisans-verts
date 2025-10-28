@@ -13,19 +13,19 @@
   body{ margin:0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; color:var(--text);
     background:#f6f9f7;
     padding:24px; }
-  .wrap{max-width:1120px;margin:0 auto}
+  .wrap{max-width:1040px;margin:0 auto}
   h1{font-size:24px;margin:0 0 10px}
   .tabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
   .tab{padding:10px 14px;border:1px solid var(--border);border-radius:12px;background:#ffffff;cursor:pointer}
   .tab.active{outline:2px solid rgba(22,163,74,.55)}
   .card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;box-shadow:0 10px 24px rgba(2,8,23,.05)}
-  .row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+  .row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
   label{display:block;font-size:12px;color:#0f172a;margin-bottom:6px;font-weight:600}
   select,input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--border);background:#ffffff;color:#0f172a;font-size:15px;outline:none}
   input[disabled]{opacity:.7; cursor:not-allowed; background:#f5f7f8}
   .section{margin-top:14px}
   .section h3{margin:0 0 8px}
-  .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
   .tile{border:1px solid var(--border);border-radius:14px;padding:14px;background:#ffffff}
   .k{color:var(--muted);font-size:12px;text-transform:uppercase;margin-bottom:6px;letter-spacing:.2px;white-space:nowrap}
   .v{font-size:28px;font-weight:800;white-space:nowrap}
@@ -217,6 +217,82 @@ input::placeholder, textarea::placeholder {
   align-items: center !important;
 }
 
+
+@media print {
+  button.export-pdf-btn, .export-pdf-btn, [id*="export"], [class*="export"] {
+    display: none !important;
+    visibility: hidden !important;
+  }
+  footer { display: none !important; }
+  .pdf-footer { display: flex !important; justify-content: center; margin-top: 20px; }
+}
+
+
+/* === 2-Column Desktop Harmony === */
+@media (min-width: 981px){
+  .wrap{ padding-left: 8px; padding-right: 8px; }
+  label{ font-size: 13px; margin-bottom: 8px; }
+  select,input{ min-height: 54px; font-size: 16px; border-radius: 12px; }
+  .section{ margin-top: 18px; }
+  .section h3{ margin: 0 0 10px; }
+  .tile{ min-height: 110px; display:flex; flex-direction:column; justify-content:space-between; }
+  .k{ margin-bottom: 6px; }
+  /* Keep status tile full width */
+  .statusTile{ grid-column: 1 / -1; }
+  /* Compact meta boxes into 2 columns */
+  .meta-compact{ display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:16px; }
+  /* Head bar: make inputs align well */
+  .head .grow .row{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+
+
+/* Combined meta box sits nicely in the grid cell */
+#combo_meta_clientCard, #combo_meta_proCard{
+  border:1px dashed var(--border);
+  border-radius:14px;
+  padding:10px 12px;
+  background:#ffffff;
+}
+
+
+
+
+/* Inline combined meta box (final alignment) */
+.inline-meta {
+  border: 1px solid #D1D5DB;       /* solid neutral border */
+  border-radius: 10px;
+  padding: 12px 16px;
+  background: #fff;
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 56px;                    /* exactly same height as inputs/selects */
+  line-height: 1;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+.inline-meta strong {
+  font-weight: 700;                /* bold values only */
+}
+.inline-meta strong{
+  font-weight:800;            /* values bold */
+}
+
+
+/* Force solid border & exact height for the combined meta box (override) */
+#combo_meta_clientCard.inline-meta, 
+#combo_meta_proCard.inline-meta {
+  border: 1px solid #D1D5DB !important;
+  border-radius: 10px !important;
+  height: 56px !important;
+  padding: 12px 16px !important;
+  background: #fff !important;
+  box-sizing: border-box !important;
+}
+
 </style>
 </head>
 <body>
@@ -247,49 +323,7 @@ input::placeholder, textarea::placeholder {
       </div>
     </div>
 
-    <div class="brand-wrap">
-<svg id="logoInlineAV" viewBox="0 0 640 240" role="img" aria-label="Les Artisans Verts" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <style>
-      .av-green{ fill:#16a34a; stroke:#16a34a; }
-      .av-stroke{ fill:none; stroke:#16a34a; stroke-width:16; stroke-linejoin:round; }
-      .av-blue{ fill:#164e63; } /* teal/dark-blue */
-      .av-dark{ fill:#0f172a; }
-    
-/* Tidy, centered brand sizing */
-.brand-wrap{display:flex;justify-content:center;align-items:center;margin:18px 0 10px}
-#logoInlineAV{height:80px;width:auto;display:block}
-@media (min-width: 768px){
-  #logoInlineAV{height:96px}
-}
-@media print{
-  .brand-wrap{margin:6mm 0 4mm}
-  #logoInlineAV{height:48px}
-}
-
-
-/* ---- Refined branding layout ---- */
-.brand-wrap{display:flex;justify-content:center;align-items:center;margin:8px 0 14px}
-#logoInlineAV{height:88px;max-width:90%;width:auto;display:block}
-@media (min-width:768px){#logoInlineAV{height:96px}}
-@media print{#logoInlineAV{height:48px}}
-h1{margin-top:0}
-
-#whoBadge{display:none!important}
-</style>
-  </defs>
-  <!-- House outline -->
-  <path class="av-stroke" d="M48 204 V72 L200 24 L352 72 V204 H48 Z" />
-  <!-- Leaf -->
-  <g transform="translate(384,120)">
-    <path class="av-green" d="M0,84 C24,24 92,0 140,0 c48,0 76,28 76,64 c0,47-44,68-88,68 h-64 c28-16 40-40 0-68 z"/>
-    <path fill="#0f172a" opacity=".12" d="M110,64 c-16,14-28,26-36,42 10-2 20-8 30-18 14-14 18-24 6-24z"/>
-  </g>
-  <!-- Text -->
-  <text x="72" y="122" class="av-blue" font-family="Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial" font-size="72" font-weight="800">ARTISANS</text>
-  <text x="72" y="188" class="av-green" font-family="Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial" font-size="72" font-weight="700">VERTS</text>
-</svg>
-</div><h1>Simulateur Aides PAC</h1>
+    <h1>Simulateur Aides PAC</h1>
 
     <div class="tabs">
       <button id="tabClient" class="tab active"><span aria-label="Vue client">🏠</span></button>
@@ -945,7 +979,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 </script>
 
 <div class="pdf-footer">
-  <span class="brand-logo"><img src="artisans_verts_logo.png" alt="Les Artisans Verts" style="max-width:140px;height:auto;"></span>
+  
   <div class="brand-line">Propulsé par <strong>770 Lab</strong></div>
 </div>
 
@@ -1047,6 +1081,204 @@ document.addEventListener('DOMContentLoaded', ()=>{
   // Observe future changes (when status changes with thresholds)
   const obs = new MutationObserver(centerStatus);
   obs.observe(document.documentElement, {childList:true, subtree:true, characterData:true});
+})();
+</script>
+
+
+<script>
+(function(){
+  function moveEtasUp(sectionIdSuffix){
+    try{
+      // paramSection is the first .section inside the card
+      const card = document.getElementById(sectionIdSuffix);
+      if(!card) return;
+      const param = card.querySelector('.section.paramSection');
+      if(!param) return;
+      const rows = param.querySelectorAll('.row');
+      if(rows.length < 2) return;
+      const row1 = rows[0];
+      const row2 = rows[1];
+
+      // Find ETAS field in row2 (by label text startsWith 'Plage d\'ETAS')
+      const etasField = Array.from(row2.children).find(div => {
+        const lb = div.querySelector('label'); 
+        return lb && /Plage d'ETAS/i.test(lb.textContent || '');
+      });
+      if(etasField){
+        // Insert ETAS just after Zone (which is label 'Zone climatique') inside row1
+        const zoneField = Array.from(row1.children).find(div => {
+          const lb = div.querySelector('label');
+          return lb && /Zone climatique/i.test(lb.textContent || '');
+        });
+        if(zoneField && zoneField.nextSibling){
+          row1.insertBefore(etasField, zoneField.nextSibling);
+        }else{
+          row1.appendChild(etasField);
+        }
+      }
+      // Optional: if row2 becomes empty, keep; otherwise OK.
+    }catch(e){ /* silent */ }
+  }
+
+  // Client & Pro
+  if(document.readyState !== 'loading'){
+    moveEtasUp('clientCard');
+    moveEtasUp('proCard');
+  }else{
+    document.addEventListener('DOMContentLoaded', function(){
+      moveEtasUp('clientCard');
+      moveEtasUp('proCard');
+    });
+  }
+})();
+</script>
+
+
+<script>
+(function(){
+  function buildCombinedBox(suffix){
+    const card = document.getElementById(suffix);
+    if(!card) return;
+    const param = card.querySelector('.section.paramSection');
+    if(!param) return;
+    const rows = param.querySelectorAll('.row');
+    if(rows.length < 2) return;
+    const row2 = rows[1]; // row with Surface (we moved ETAS up earlier)
+
+    // Create combined meta box
+    const box = document.createElement('div');
+    box.className = 'meta-box';
+    box.id = 'combo_meta_' + suffix;
+    box.style.display = 'flex';
+    box.style.flexDirection = 'column';
+    box.style.gap = '6px';
+    box.style.height = '100%';
+
+    const t1 = document.createElement('div');
+    t1.className = 'meta-title';
+    t1.textContent = 'Délégataire';
+    const v1 = document.createElement('div');
+    v1.className = 'meta-value big';
+    v1.id = 'combo_deleg_' + suffix;
+    v1.textContent = '—';
+
+    const t2 = document.createElement('div');
+    t2.className = 'meta-title';
+    t2.textContent = 'kWh cumac';
+    const v2 = document.createElement('div');
+    v2.className = 'meta-value big mono';
+    v2.id = 'combo_kwh_' + suffix;
+    v2.textContent = '—';
+
+    box.appendChild(t1); box.appendChild(v1); box.appendChild(t2); box.appendChild(v2);
+
+    // Insert as second column of row2 (right of Surface)
+    // If row2 currently has only one child, append; otherwise replace second slot
+    if(row2.children.length === 1){
+      row2.appendChild(box);
+    }else{
+      // ensure it's in position 2
+      if(row2.children[1].id !== box.id){
+        if(row2.children.length >= 2) row2.replaceChild(box, row2.children[1]);
+        else row2.appendChild(box);
+      }
+    }
+
+    // Hide the old meta-compact in this card
+    const metaCompact = card.querySelector('.meta-compact');
+    if(metaCompact) metaCompact.style.display = 'none';
+
+    // Sync values from original spans (delegataire_* and kwh_*)
+    const delegSrc = card.querySelector('#delegataire_' + (suffix === 'clientCard' ? 'c' : 'p'));
+    const kwhSrc = card.querySelector('#kwh_' + (suffix === 'clientCard' ? 'c' : 'p'));
+    const v1Dest = v1;
+    const v2Dest = v2;
+
+    function syncOnce(){
+      if(delegSrc) v1Dest.textContent = delegSrc.textContent || '—';
+      if(kwhSrc) v2Dest.textContent = kwhSrc.textContent || '—';
+    }
+    syncOnce();
+
+    // Observe changes to keep in sync when parameters change
+    if(delegSrc){
+      new MutationObserver(syncOnce).observe(delegSrc, {childList:true, characterData:true, subtree:true});
+    }
+    if(kwhSrc){
+      new MutationObserver(syncOnce).observe(kwhSrc, {childList:true, characterData:true, subtree:true});
+    }
+  }
+
+  function init(){
+    buildCombinedBox('clientCard');
+    buildCombinedBox('proCard');
+  }
+
+  if(document.readyState !== 'loading') init();
+  else document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+
+
+<script>
+(function(){
+  function buildCombinedInlineBox(suffix){
+    const card = document.getElementById(suffix);
+    if(!card) return;
+    const param = card.querySelector('.section.paramSection');
+    if(!param) return;
+    const rows = param.querySelectorAll('.row');
+    if(rows.length < 2) return;
+    const row2 = rows[1];
+
+    // Create inline combined box
+    const box = document.createElement('div');
+    box.className = 'meta-box inline-meta';
+    box.id = 'combo_meta_' + suffix;
+    box.style.display = 'flex';
+    box.style.alignItems = 'center';
+    box.style.justifyContent = 'space-between';
+    box.style.gap = '10px';
+    box.style.width = '100%';
+    box.style.height = '100%';
+
+    const span = document.createElement('span');
+    span.id = 'combo_text_' + suffix;
+    span.textContent = '—';
+
+    box.appendChild(span);
+
+    // Insert as second column of row2 (right of Surface)
+    if(row2.children.length === 1){
+      row2.appendChild(box);
+    } else {
+      if(row2.children.length >= 2) row2.replaceChild(box, row2.children[1]);
+      else row2.appendChild(box);
+    }
+
+    // Hide the old meta-compact
+    const metaCompact = card.querySelector('.meta-compact');
+    if(metaCompact) metaCompact.style.display = 'none';
+
+    // Source values
+    const delegSrc = card.querySelector('#delegataire_' + (suffix === 'clientCard' ? 'c' : 'p'));
+    const kwhSrc = card.querySelector('#kwh_' + (suffix === 'clientCard' ? 'c' : 'p'));
+    function syncText(){
+      const d = delegSrc ? delegSrc.textContent.trim() : '—';
+      const k = kwhSrc ? kwhSrc.textContent.trim() : '—';
+      span.innerHTML = `Délégataire : <strong>${d}</strong> — kWh cumac : <strong>${k}</strong>`;
+    }
+    syncText();
+    if(delegSrc) new MutationObserver(syncText).observe(delegSrc, {childList:true, characterData:true, subtree:true});
+    if(kwhSrc) new MutationObserver(syncText).observe(kwhSrc, {childList:true, characterData:true, subtree:true});
+  }
+
+  function init(){
+    buildCombinedInlineBox('clientCard');
+    buildCombinedInlineBox('proCard');
+  }
+  if(document.readyState!=='loading') init();
+  else document.addEventListener('DOMContentLoaded', init);
 })();
 </script>
 
