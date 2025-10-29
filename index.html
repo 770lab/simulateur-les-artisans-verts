@@ -336,6 +336,31 @@ input::placeholder, textarea::placeholder {
   color:var(--text);
 }
 
+
+/* === Robust fixes: mini-tiles hidden + scenario label styling === */
+.meta-compact,
+#delegataire_c, #delegataire_p,
+#kwh_c, #kwh_p {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+}
+
+/* Scenario line inside TOTAL TTC tile */
+.tile .scenario-label {
+  font-size: 20px;
+  margin: 10px 0 10px;
+  font-weight: 600;
+  color: #1E293B; /* dark for scenario value */
+}
+.tile .scenario-label .prefix {
+  color: #64748B; /* lighter grey for label prefix */
+  font-weight: 500;
+}
+
 </style>
 </head>
 <body>
@@ -742,13 +767,7 @@ const fmtNum = (n) => Math.round(n).toLocaleString('fr-FR');
 
 function prixPro(deleg, cat){ const b = (cat==='BLEU'); return deleg==='ECO NEGOCE' ? (b?12.5:7.4) : (b?11.78:7.0); }
 function prixClient(deleg){ return deleg==='ECO NEGOCE' ? 6.50 : 7.00; }
-function delegataireFor(surface, scenCEE, scen){
-  // Hard rule: PAC + SSC => VALOREN (always)
-  if (scen === 'PAC + SSC') return 'VALOREN';
-  // Otherwise: >130m² goes ECO NEGOCE except SSC which stays VALOREN
-  return (surface==='S>130' && scenCEE!=='BALLON SSC') ? 'ECO NEGOCE' : 'VALOREN';
-}
-
+function delegataireFor(surface, scenCEE){ return (surface==='S>130' && scenCEE!=='BALLON SSC') ? 'ECO NEGOCE' : 'VALOREN'; }
 
 // ===== Synchronisation bidirectionnelle =====
 function syncClientToPro(){
@@ -780,7 +799,7 @@ function recomputeClient(){
   const ttc = TTC[scen] || 0;
   const aide = (MPR[scen] && MPR[scen][cat]) ? MPR[scen][cat] : 0;
 
-  const deleg = delegataireFor(surface, ceeScen, scen);
+  const deleg = delegataireFor(surface, ceeScen);
   const prixCli = prixClient(deleg);
   const prixProRef = prixPro(deleg, cat);
   const kwh = CEE_DATA[etas][zone][ceeScen][surface];
@@ -799,7 +818,7 @@ function recomputeClient(){
   const active = document.activeElement===offerAmtInput ? 'amt' : (document.activeElement===offerPctInput ? 'pct' : 'pct');
   if(active==='pct'){ amt=racBrut*(pct/100); offerAmtInput.value=Math.round(amt); }
   else{ const base=racBrut===0?1:racBrut; pct=(amt/base)*100; offerPctInput.value=Math.max(0,pct).toFixed(0); }
-  const rac = Math.max(0, racBrut - amt);
+  const rac = racBrut - amt;
 
   // UI client
   document.getElementById('mprTTC_c').textContent = fmt(ttc);
@@ -809,7 +828,7 @@ function recomputeClient(){
   document.getElementById('cee_c').textContent = fmt(cee_client);
   document.getElementById('aidesTotal_c').textContent = fmt(aidesTotal_client);
   const racTile = document.getElementById('racFinalTile_c');
-  document.getElementById('racFinal_c').textContent = fmt(Math.max(0,rac));
+  document.getElementById('racFinal_c').textContent = fmt(rac);
   racTile.classList.remove('rac-ok','rac-0','neg'); racTile.classList.add(rac===0?'rac-0':(rac<0?'neg':'rac-ok'));
 
   // Print summary
@@ -865,7 +884,7 @@ function recomputePro(){
   const ttc = TTC[scen] || 0;
   const aide = (MPR[scen] && MPR[scen][cat]) ? MPR[scen][cat] : 0;
 
-  const deleg = delegataireFor(surface, ceeScen, scen);
+  const deleg = delegataireFor(surface, ceeScen);
   const prix = lock ? ( (deleg==='ECO NEGOCE') ? (cat==='BLEU'?12.5:7.4) : (cat==='BLEU'?11.78:7.0) ) : parseFloat(document.getElementById('prixCumac_p').value || '0');
   if(lock){ document.getElementById('prixCumac_p').value = prix.toFixed(2); }
   const kwh = CEE_DATA[etas][zone][ceeScen][surface];
@@ -881,7 +900,7 @@ function recomputePro(){
   if(active==='pct'){ amt = racBrut * (pct/100); document.getElementById('offerAmt_p').value = Math.round(amt); }
   else{ const base=racBrut===0?1:racBrut; pct=(amt/base)*100; document.getElementById('offerPct_p').value = Math.max(0,pct).toFixed(0); }
 
-  const rac = Math.max(0, racBrut - amt);
+  const rac = racBrut - amt;
 
   const venteHT = Math.max(0, rac) / 1.055;
   const cout = COUT_HT[scen] || 0;
@@ -901,7 +920,7 @@ function recomputePro(){
 
   const racTile = document.getElementById('racFinalTile_p');
   const racEl = document.getElementById('racFinal_p');
-  racEl.textContent = fmt(Math.max(0,rac));
+  racEl.textContent = fmt(rac);
   // Pas d'outline couleur côté fournisseur
   racTile.className = 'tile';
 
@@ -1431,6 +1450,88 @@ document.addEventListener('DOMContentLoaded', ()=>{
   }
   if(document.readyState !== 'loading') init();
   else document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+
+
+<script>
+(function () {
+  function getScenarioText(select) {
+    if (!select) return '—';
+    const opt = select.options[select.selectedIndex];
+    return (opt && (opt.textContent || opt.innerText) || select.value || '—').trim();
+  }
+
+  function findTotalTtcTiles() {
+    const tiles = Array.from(document.querySelectorAll('.tile'));
+    return tiles.filter(t => {
+      const k = t.querySelector('.k');
+      return k && /total\s*ttc/i.test((k.textContent || '').trim());
+    });
+  }
+
+  function upsertScenarioLine(tile, scenarioText) {
+    if (!tile) return;
+    let label = tile.querySelector('.scenario-label[data-auto="1"]');
+    if (!label) {
+      label = document.createElement('div');
+      label.className = 'scenario-label';
+      label.setAttribute('data-auto', '1');
+      const k = tile.querySelector('.k');
+      if (k && k.parentNode) {
+        k.insertAdjacentElement('afterend', label);
+      } else {
+        tile.insertBefore(label, tile.firstChild);
+      }
+    }
+    label.innerHTML = '<span class="prefix">Scénario choisi :</span> ' + (scenarioText || '—');
+  }
+
+  function hideMiniTilesFallback() {
+    const rx = [/délégataire/i, /delegataire/i, /kwh\s*cumac/i];
+    document.querySelectorAll('.tile').forEach(t => {
+      const k = t.querySelector('.k');
+      if (!k) return;
+      const txt = (k.textContent || '').trim();
+      if (rx.some(r => r.test(txt))) {
+        t.style.display = 'none';
+      }
+    });
+  }
+
+  function refresh() {
+    const selC = document.getElementById('mprScenario_c');
+    const selP = document.getElementById('mprScenario_p');
+    const textC = getScenarioText(selC);
+    const textP = getScenarioText(selP) || textC;
+
+    const tiles = findTotalTtcTiles();
+    if (tiles.length >= 2) {
+      upsertScenarioLine(tiles[0], textC);
+      upsertScenarioLine(tiles[1], textP);
+    } else {
+      tiles.forEach(t => upsertScenarioLine(t, textC));
+    }
+
+    hideMiniTilesFallback();
+  }
+
+  ['mprScenario_c','mprScenario_p'].forEach(id => {
+    const sel = document.getElementById(id);
+    if (sel) sel.addEventListener('change', refresh);
+  });
+
+  const mo = new MutationObserver(() => {
+    clearTimeout(window.__ttcRefreshTick);
+    window.__ttcRefreshTick = setTimeout(refresh, 50);
+  });
+  mo.observe(document.documentElement, { childList: true, subtree: true });
+
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    refresh();
+  } else {
+    document.addEventListener('DOMContentLoaded', refresh);
+  }
 })();
 </script>
 
