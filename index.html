@@ -742,7 +742,13 @@ const fmtNum = (n) => Math.round(n).toLocaleString('fr-FR');
 
 function prixPro(deleg, cat){ const b = (cat==='BLEU'); return deleg==='ECO NEGOCE' ? (b?12.5:7.4) : (b?11.78:7.0); }
 function prixClient(deleg){ return deleg==='ECO NEGOCE' ? 6.50 : 7.00; }
-function delegataireFor(surface, scenCEE){ return (surface==='S>130' && scenCEE!=='BALLON SSC') ? 'ECO NEGOCE' : 'VALOREN'; }
+function delegataireFor(surface, scenCEE, scen){
+  // Hard rule: PAC + SSC => VALOREN (always)
+  if (scen === 'PAC + SSC') return 'VALOREN';
+  // Otherwise: >130m² goes ECO NEGOCE except SSC which stays VALOREN
+  return (surface==='S>130' && scenCEE!=='BALLON SSC') ? 'ECO NEGOCE' : 'VALOREN';
+}
+
 
 // ===== Synchronisation bidirectionnelle =====
 function syncClientToPro(){
@@ -774,7 +780,7 @@ function recomputeClient(){
   const ttc = TTC[scen] || 0;
   const aide = (MPR[scen] && MPR[scen][cat]) ? MPR[scen][cat] : 0;
 
-  const deleg = delegataireFor(surface, ceeScen);
+  const deleg = delegataireFor(surface, ceeScen, scen);
   const prixCli = prixClient(deleg);
   const prixProRef = prixPro(deleg, cat);
   const kwh = CEE_DATA[etas][zone][ceeScen][surface];
@@ -859,7 +865,7 @@ function recomputePro(){
   const ttc = TTC[scen] || 0;
   const aide = (MPR[scen] && MPR[scen][cat]) ? MPR[scen][cat] : 0;
 
-  const deleg = delegataireFor(surface, ceeScen);
+  const deleg = delegataireFor(surface, ceeScen, scen);
   const prix = lock ? ( (deleg==='ECO NEGOCE') ? (cat==='BLEU'?12.5:7.4) : (cat==='BLEU'?11.78:7.0) ) : parseFloat(document.getElementById('prixCumac_p').value || '0');
   if(lock){ document.getElementById('prixCumac_p').value = prix.toFixed(2); }
   const kwh = CEE_DATA[etas][zone][ceeScen][surface];
