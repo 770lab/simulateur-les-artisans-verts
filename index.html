@@ -799,7 +799,7 @@ function recomputeClient(){
   const active = document.activeElement===offerAmtInput ? 'amt' : (document.activeElement===offerPctInput ? 'pct' : 'pct');
   if(active==='pct'){ amt=racBrut*(pct/100); offerAmtInput.value=Math.round(amt); }
   else{ const base=racBrut===0?1:racBrut; pct=(amt/base)*100; offerPctInput.value=Math.max(0,pct).toFixed(0); }
-  const rac = racBrut - amt;
+  const rac = Math.max(0, racBrut - amt);
 
   // UI client
   document.getElementById('mprTTC_c').textContent = fmt(ttc);
@@ -809,7 +809,7 @@ function recomputeClient(){
   document.getElementById('cee_c').textContent = fmt(cee_client);
   document.getElementById('aidesTotal_c').textContent = fmt(aidesTotal_client);
   const racTile = document.getElementById('racFinalTile_c');
-  document.getElementById('racFinal_c').textContent = fmt(rac);
+  document.getElementById('racFinal_c').textContent = fmt(Math.max(0,rac));
   racTile.classList.remove('rac-ok','rac-0','neg'); racTile.classList.add(rac===0?'rac-0':(rac<0?'neg':'rac-ok'));
 
   // Print summary
@@ -881,7 +881,7 @@ function recomputePro(){
   if(active==='pct'){ amt = racBrut * (pct/100); document.getElementById('offerAmt_p').value = Math.round(amt); }
   else{ const base=racBrut===0?1:racBrut; pct=(amt/base)*100; document.getElementById('offerPct_p').value = Math.max(0,pct).toFixed(0); }
 
-  const rac = racBrut - amt;
+  const rac = Math.max(0, racBrut - amt);
 
   const venteHT = Math.max(0, rac) / 1.055;
   const cout = COUT_HT[scen] || 0;
@@ -901,7 +901,7 @@ function recomputePro(){
 
   const racTile = document.getElementById('racFinalTile_p');
   const racEl = document.getElementById('racFinal_p');
-  racEl.textContent = fmt(rac);
+  racEl.textContent = fmt(Math.max(0,rac));
   // Pas d'outline couleur côté fournisseur
   racTile.className = 'tile';
 
