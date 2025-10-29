@@ -1,1539 +1,710 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Simulateur</title>
-<style>
-  :root{
-    --bg:#f6f9f7; --card:#ffffff; --muted:#6b7280; --text:#0f172a;
-    --border: rgba(15,23,42,.12); --accent:#16a34a; --ok:#22c55e; --warn:#f59e0b; --danger:#ef4444;
-  }
-  *{box-sizing:border-box}
-  body{ margin:0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; color:var(--text);
-    background:#f6f9f7;
-    padding:24px; }
-  .wrap{max-width:1040px;margin:0 auto}
-  h1{font-size:24px;margin:0 0 10px}
-  .tabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
-  .tab{padding:10px 14px;border:1px solid var(--border);border-radius:12px;background:#ffffff;cursor:pointer}
-  .tab.active{outline:2px solid rgba(22,163,74,.55)}
-  .card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;box-shadow:0 10px 24px rgba(2,8,23,.05)}
-  .row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
-  label{display:block;font-size:12px;color:#0f172a;margin-bottom:6px;font-weight:600}
-  select,input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--border);background:#ffffff;color:#0f172a;font-size:15px;outline:none}
-  input[disabled]{opacity:.7; cursor:not-allowed; background:#f5f7f8}
-  .section{margin-top:14px}
-  .section h3{margin:0 0 8px}
-  .tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
-  .tile{border:1px solid var(--border);border-radius:14px;padding:14px;background:#ffffff}
-  .k{color:var(--muted);font-size:12px;text-transform:uppercase;margin-bottom:6px;letter-spacing:.2px;white-space:nowrap}
-  .v{font-size:28px;font-weight:800;white-space:nowrap}
-  .mono{font-variant-numeric: tabular-nums; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;white-space:nowrap}
-  .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:#ffffff;border:1px dashed var(--border);font-size:12px}
-  .meta-compact{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px}
-  .meta-box{background:#ffffff;border:1px dashed var(--border);border-radius:14px;padding:10px 12px}
-  .meta-title{font-size:12px;color:var(--muted);margin-bottom:4px;white-space:nowrap}
-  .meta-value{font-size:22px;font-weight:800;white-space:nowrap}
-  .meta-value.big{font-size:26px}
-  .rac-ok{outline:2px solid rgba(16,185,129,.35)} .rac-0{outline:2px solid rgba(124,156,255,.35)} .neg{outline:2px solid rgba(239,68,68,.45)}
-  .note{color:var(--muted);font-size:12px;margin-top:6px}
-  .hidden{display:none}
-  .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:8px}
-  .badge{display:inline-flex;align-items:center;gap:8px}
-  @media (max-width: 980px){ .row{grid-template-columns:1fr} .tiles{grid-template-columns:1fr} }
-  .pw-box{display:flex;gap:8px;align-items:center;margin:8px 0}
-  .pw-box input{max-width:220px}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulateur Aides PAC</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  .aides-block .rowline{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px dashed var(--border)}
-  .aides-block .rowline:last-child{border-bottom:none;padding-top:12px}
-  .aides-block .label{color:var(--muted);font-size:14px;white-space:nowrap}
-  .aides-block .value{font-size:22px;font-weight:800;white-space:nowrap}
-  .aides-block .total .label{font-weight:700;letter-spacing:.2px}
-  .aides-block .total .value{font-size:28px}
-  .accent{color:var(--ok)}
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.6;
+        }
 
-  .offer-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px}
-  .offer-field{display:flex;flex-direction:column;gap:6px}
-  .offer-field input{font-variant-numeric:tabular-nums;font-size:24px;text-align:center}
+        .header {
+            background: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
 
-  .head{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}
-  .head .grow{flex:1}
-  .head .actions{display:flex;gap:8px;align-items:end}
-  .btn{padding:10px 14px;border-radius:10px;border:1px solid rgba(22,163,74,.25);background:#16a34a;color:#fff;cursor:pointer;box-shadow:0 4px 12px rgba(22,163,74,.25)}
-  .btn[disabled]{opacity:.5;cursor:not-allowed}
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-  /* Status tile */
-  .statusTile{grid-column:1 / -1; display:flex; align-items:center; justify-content:center; gap:12px; text-align:center}
-  .statusTitle{font-size:26px; font-weight:900; letter-spacing:.4px}
-  .statusOK{background:linear-gradient(180deg, rgba(34,197,94,.30), rgba(34,197,94,.10)); border-color: rgba(34,197,94,.9); box-shadow:0 0 0 1px rgba(34,197,94,.45) inset, 0 8px 30px rgba(34,197,94,.25);}
-  .statusWARN{background:linear-gradient(180deg, rgba(245,158,11,.30), rgba(245,158,11,.10)); border-color: rgba(245,158,11,.8); box-shadow:0 0 0 1px rgba(245,158,11,.45) inset, 0 8px 30px rgba(245,158,11,.25);}
-  .statusBAD{background:linear-gradient(180deg, rgba(239,68,68,.35), rgba(239,68,68,.12)); border-color: rgba(239,68,68,1); box-shadow:0 0 0 1px rgba(239,68,68,.55) inset, 0 8px 30px rgba(239,68,68,.3);}
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
 
-  /* PRINT */
-  .printOnly{display:none}
-  @media print{
-    @page{ size:A4; margin:12mm }
-    body{background:#fff;color:#000;padding:0}
-    .tabs, .pw-box, #gate, .head, .note, h1{display:none!important}
-    .paramSection{display:none!important}
-    .card{border:none;box-shadow:none;padding:0}
-    .tile{border:1px solid #ddd;background:#fff;padding:8px;page-break-inside:avoid}
-    .wrap{max-width:1000px}
-    .meta-box{border:1px solid #ddd}
-    .k{font-size:10pt}
-    .v{font-size:18pt}
-    .aides-block .value{font-size:16pt}
-    .aides-block .total .value{font-size:20pt}
-    .offer-field input{font-size:14pt}
-    .row{grid-template-columns:repeat(3,1fr);gap:8px}
-    .tiles{grid-template-columns:repeat(3,1fr);gap:8px}
-    .printOnly{display:block}
-  }
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
 
-/* ===== Branding - Artisans Verts ===== */
-.brand-wrap{display:flex;justify-content:center;align-items:center;margin:12px 0 4px}
-#brandLogo{height:44px;width:auto;display:block;filter:none}
-@media (min-width: 768px){ #brandLogo{height:54px} }
-@media print{ #brandLogo{height:38px} h1{margin-top:4px} }
+        .lock-btn {
+            background: #f5f5f7;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
+        .lock-btn:hover {
+            background: #e8e8ed;
+        }
 
-/* Fallback logo visibility in print too */
-@media print { #logoFallback[style*="display:none"]{display:none!important} }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
 
+        .modal.active {
+            display: flex;
+        }
 
-/* Tidy, centered brand sizing */
-.brand-wrap{display:flex;justify-content:center;align-items:center;margin:18px 0 10px}
-#logoInlineAV{height:80px;width:auto;display:block}
-@media (min-width: 768px){
-  #logoInlineAV{height:96px}
-}
-@media print{
-  .brand-wrap{margin:6mm 0 4mm}
-  #logoInlineAV{height:48px}
-}
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            max-width: 400px;
+            width: 90%;
+        }
 
+        .modal-content h2 {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
 
-/* ---- Refined branding layout ---- */
-.brand-wrap{display:flex;justify-content:center;align-items:center;margin:8px 0 14px}
-#logoInlineAV{height:88px;max-width:90%;width:auto;display:block}
-@media (min-width:768px){#logoInlineAV{height:96px}}
-@media print{#logoInlineAV{height:48px}}
-h1{margin-top:0}
+        .modal-content input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #d2d2d7;
+            border-radius: 8px;
+            font-size: 15px;
+            margin-bottom: 16px;
+        }
 
-#whoBadge{display:none!important}
+        .modal-content button {
+            width: 100%;
+            padding: 12px;
+            background: #0071e3;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+        }
 
-/* === PDF tweaks === */
-@media print {
-  .export-pdf-btn { display: none !important; }
-  .pdf-footer { display: flex !important; flex-direction: column; align-items: center; gap: 8px; margin-top: 16px; }
-  .pdf-footer .brand-line { font-size: 12px; color: #4b5563; }
-  /* Lighten cards borders for print */
-  .card, .box, .panel { box-shadow: none !important; }
-}
-@media screen {
-  .pdf-footer { display: none; }
-}
+        .modal-content button:hover {
+            background: #0077ed;
+        }
 
+        .main-content {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 28px;
+            padding: 30px 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
 
-/* Ensure text visible in all inputs */
-input[type="text"], input:not([type]), input[type="search"] {
-  color: #0F172A;
-}
-::placeholder { color: #9CA3AF; }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+        }
 
+        .card-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #86868b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
 
-/* === Visibility fix for supplier inputs === */
-.vue-fournisseur input,
-.vue-fournisseur select,
-.vue-fournisseur textarea {
-  color: #0F172A !important;        /* dark text */
-  background: #ffffff !important;   /* white bg */
-  caret-color: #0F172A !important;
-  border-color: #cbd5e1 !important; /* slate-300 */
-}
-.vue-fournisseur input::placeholder,
-.vue-fournisseur textarea::placeholder {
-  color: #94a3b8 !important;        /* slate-400 */
-  opacity: 1;
-}
+        .form-group {
+            margin-bottom: 14px;
+        }
 
-/* If container class is different, also apply generic fallback when supplier tab is active */
-[data-view="fournisseur"] input,
-[data-view="fournisseur"] select,
-[data-view="fournisseur"] textarea {
-  color: #0F172A !important;
-  background: #ffffff !important;
-  caret-color: #0F172A !important;
-}
-[data-view="fournisseur"] input::placeholder,
-[data-view="fournisseur"] textarea::placeholder {
-  color: #94a3b8 !important;
-}
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: #1d1d1f;
+        }
 
-/* Autofill (Chrome) */
-.vue-fournisseur input:-webkit-autofill {
-  -webkit-text-fill-color: #0F172A !important;
-  -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
-}
+        .form-group small {
+            display: block;
+            font-size: 12px;
+            color: #86868b;
+            margin-top: 4px;
+        }
 
+        select, input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #d2d2d7;
+            border-radius: 8px;
+            font-size: 15px;
+            background: white;
+            transition: all 0.2s;
+        }
 
-/* === Force light form fields everywhere to avoid white-on-white === */
-input, select, textarea {
-  color: #0F172A !important;
-  background-color: #FFFFFF !important;
-  caret-color: #0F172A !important;
-  -webkit-text-fill-color: #0F172A !important;
-}
-input::placeholder, textarea::placeholder {
-  color: #94A3B8 !important;
-  opacity: 1 !important;
-}
-/* remove any dark utility bg on cards that may wrap inputs */
-.form-card, .field, .tile, .badge {
-  background-color: #FFFFFF !important;
-}
-/* === Logo quality & proportions === */
-.header-brand, .brand-logo { display:flex; align-items:center; gap:.5rem; }
-.brand-logo img {
-  height: 56px;              /* fixed visual height */
-  width: auto;               /* no stretch */
-  object-fit: contain;       /* preserve aspect */
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
-  -ms-interpolation-mode: nearest-neighbor;
-}
-/* Improve print: keep logo crisp */
-@media print {
-  .brand-logo img { height: 48px; }
-}
+        select:focus, input:focus {
+            outline: none;
+            border-color: #0071e3;
+            box-shadow: 0 0 0 4px rgba(0,113,227,0.1);
+        }
 
+        .fournisseur-only {
+            display: none;
+        }
 
-/* Center the dossier status text block (OK / À AMÉLIORER / REFUSÉ) */
-.dossier-status-centered {
-  text-align: center !important;
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-}
+        .fournisseur-mode .fournisseur-only {
+            display: block;
+        }
 
+        .results-sidebar {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
 
-@media print {
-  button.export-pdf-btn, .export-pdf-btn, [id*="export"], [class*="export"] {
-    display: none !important;
-    visibility: hidden !important;
-  }
-  footer { display: none !important; }
-  .pdf-footer { display: flex !important; justify-content: center; margin-top: 20px; }
-}
+        .summary-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+            margin-bottom: 16px;
+        }
 
+        .summary-header {
+            font-size: 12px;
+            font-weight: 600;
+            color: #86868b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
 
-/* === 2-Column Desktop Harmony === */
-@media (min-width: 981px){
-  .wrap{ padding-left: 8px; padding-right: 8px; }
-  label{ font-size: 13px; margin-bottom: 8px; }
-  select,input{ min-height: 54px; font-size: 16px; border-radius: 12px; }
-  .section{ margin-top: 18px; }
-  .section h3{ margin: 0 0 10px; }
-  .tile{ min-height: 110px; display:flex; flex-direction:column; justify-content:space-between; }
-  .k{ margin-bottom: 6px; }
-  /* Keep status tile full width */
-  .statusTile{ grid-column: 1 / -1; }
-  /* Compact meta boxes into 2 columns */
-  .meta-compact{ display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:16px; }
-  /* Head bar: make inputs align well */
-  .head .grow .row{ grid-template-columns: repeat(2, minmax(0,1fr)); }
-}
+        .scenario-label {
+            font-size: 13px;
+            color: #1d1d1f;
+            margin-bottom: 20px;
+            padding: 14px;
+            background: #f5f5f7;
+            border-radius: 8px;
+            border-left: 4px solid #0071e3;
+            line-height: 1.5;
+        }
+        
+        .scenario-label strong {
+            font-weight: 600;
+        }
+        
+        .scenario-label .separator {
+            color: #86868b;
+            margin: 0 8px;
+        }
+        
+        .color-bleu { color: #0071e3; }
+        .color-jaune { color: #fbbf24; }
+        .color-violet { color: #8b5cf6; }
+        .color-rose { color: #ec4899; }
 
+        .amount-row {
+            margin-bottom: 12px;
+        }
 
-/* Combined meta box sits nicely in the grid cell */
-#combo_meta_clientCard, #combo_meta_proCard{
-  border:1px dashed var(--border);
-  border-radius:14px;
-  padding:10px 12px;
-  background:#ffffff;
-}
+        .amount-label {
+            font-size: 12px;
+            color: #86868b;
+            margin-bottom: 4px;
+        }
 
+        .amount-value {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1d1d1f;
+        }
 
+        .amount-value.highlight {
+            color: #34c759;
+        }
 
+        .rac-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+        }
 
-/* Inline combined meta box (final alignment) */
-.inline-meta{
-  border:1px solid var(--border);
-  border-radius:10px;
-  background:#fff;
-  padding:12px 14px;
-  min-height:56px;
-  display:flex;
-  align-items:center;
-  justify-content:flex-start;
-  box-sizing:border-box;
-  line-height:1.2;
-}
-.inline-meta strong {
-  font-weight: 700;                /* bold values only */
-}
-.inline-meta strong{
-  font-weight:800;            /* values bold */
-}
+        .rac-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
 
+        .rac-item input {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1d1d1f;
+            text-align: center;
+            padding: 8px 10px;
+        }
 
-/* Force solid border & exact height for the combined meta box (override) */
-#combo_meta_clientCard.inline-meta, 
-#combo_meta_proCard.inline-meta{
-  border:1px solid var(--border);
-  border-radius:10px;
-  background:#fff;
-  padding:12px 14px;
-  min-height:56px;
-  display:flex;
-  align-items:center;
-  justify-content:flex-start;
-  box-sizing:border-box;
-  line-height:1.2;
-}
+        .final-amount {
+            text-align: right;
+            padding-top: 20px;
+            border-top: 2px solid #f5f5f7;
+        }
 
+        .final-amount .amount-label {
+            font-size: 13px;
+            color: #86868b;
+            margin-bottom: 6px;
+        }
 
-/* Hide the 'Paramètres' section title */
-.section.paramSection > h3{ display:none !important; }
+        .final-amount .amount-value {
+            font-size: 34px;
+            font-weight: 700;
+            color: #1d1d1f;
+        }
 
+        .status-badge {
+            display: inline-block;
+            padding: 14px 32px;
+            font-weight: 700;
+            font-size: 18px;
+            border-radius: 12px;
+            text-align: center;
+            width: 100%;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+        }
 
-/* Label for combined meta box */
-.inline-meta-label{
-  display:block;
-  font-weight:600;
-  font-size:13px;
-  margin-bottom:6px;
-  color:var(--text);
-}
+        .status-badge.ok {
+            background: #d1f4e0;
+            color: #0d7f3f;
+        }
 
+        .status-badge.warning {
+            background: #fff3cd;
+            color: #856404;
+        }
 
-.inline-meta-wrapper{
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-}
-.inline-meta-label{
-  display:block;
-  font-weight:600;
-  font-size:13px;
-  margin-bottom:6px;
-  color:var(--text);
-}
+        .status-badge.danger {
+            background: #f8d7da;
+            color: #721c24;
+        }
 
+        .btn-reset {
+            background: #f5f5f7;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 10px;
+        }
 
-/* Wrapper so label + field stay in the same grid cell (harmonised like others) */
-.inline-meta-wrapper{
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-}
-.inline-meta-label{
-  display:block;
-  font-weight:600;
-  font-size:13px;
-  margin-bottom:6px;
-  color:var(--text);
-}
+        .btn-reset:hover {
+            background: #e8e8ed;
+        }
 
+        .footer {
+            text-align: center;
+            padding: 8px 20px 8px;
+            color: #86868b;
+            font-size: 13px;
+        }
 
-/* === Robust fixes: mini-tiles hidden + scenario label styling === */
-.meta-compact,
-#delegataire_c, #delegataire_p,
-#kwh_c, #kwh_p {
-  display: none !important;
-  visibility: hidden !important;
-  height: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border: 0 !important;
-}
+        @media print {
+            .header, .lock-btn, .btn-reset, .footer, .parameters-section, .main-content {
+                display: none !important;
+            }
+            
+            #printArea {
+                display: block !important;
+            }
 
-/* Scenario line inside TOTAL TTC tile */
-.tile .scenario-label {
-  font-size: 20px;
-  margin: 10px 0 10px;
-  font-weight: 600;
-  color: #1E293B; /* dark for scenario value */
-}
-.tile .scenario-label .prefix {
-  color: #64748B; /* lighter grey for label prefix */
-  font-weight: 500;
-}
+            body {
+                background: white;
+            }
 
-</style>
+            @page {
+                margin: 15mm;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .results-sidebar {
+                position: static;
+            }
+        }
+
+        .note-small {
+            font-size: 11px;
+            color: #86868b;
+            text-align: center;
+            margin-top: 8px;
+        }
+    </style>
 </head>
 <body>
-  <div class="wrap">
-    <!-- PRINT HEADER SUMMARY ONLY -->
-    <div id="printBlock" class="printOnly">
-      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:8px">
-        <div id="docTitle" style="font-size:28pt;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Dossier — —</div>
-        <div style="font-size:11pt;color:#6b7280;white-space:nowrap"><span id="docDate"></span></div>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
-        <div class="tile"><div class="k">Scénario</div><div class="v mono" id="p_scen">—</div></div>
-        <div class="tile"><div class="k">Catégorie MPR</div><div class="v mono" id="p_cat">—</div></div>
-        <div class="tile"><div class="k">Zone</div><div class="v mono" id="p_zone">—</div></div>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px">
-        <div class="tile"><div class="k">ETAS</div><div class="v mono" id="p_etas">—</div></div>
-        <div class="tile"><div class="k">Surface</div><div class="v mono" id="p_surface">—</div></div>
-        <div class="tile"><div class="k">Délégataire</div><div class="v mono" id="p_deleg">—</div></div>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px">
-        <div class="tile"><div class="k">kWh cumac</div><div class="v mono" id="p_kwh">—</div></div>
-        <div class="tile"><div class="k">Aides totales</div><div class="v mono" id="p_aides">—</div></div>
-        <div class="tile"><div class="k">Reste à charge</div><div class="v mono" id="p_rac">—</div></div>
-      </div>
-      <div style="margin-top:8mm;text-align:center;color:#777;font-size:10pt">
-        Propulsé par 770 Lab
-      </div>
+    <div class="header">
+        <div class="container">
+            <div class="header-content">
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <div style="background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); color: white; padding: 12px 20px; border-radius: 10px; font-weight: 700; font-size: 15px; letter-spacing: 0.5px; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);">
+                        🏠 LES ARTISANS VERTS
+                    </div>
+                    <h1 style="margin: 0; font-size: 22px;">Simulateur Aides PAC</h1>
+                </div>
+                <button class="lock-btn" id="lockBtn">
+                    <span id="lockIcon">🔒</span>
+                </button>
+            </div>
+        </div>
     </div>
 
-    <h1>Simulateur Aides PAC</h1>
-
-    <div class="tabs">
-      <button id="tabClient" class="tab active"><span aria-label="Vue client">🏠</span></button>
-      <button id="tabPro" class="tab"><span aria-label="Vue fournisseur">🔒</span></button>
-      <span class="pill hidden" id="whoBadge">—</span>
+    <div class="modal" id="passwordModal">
+        <div class="modal-content">
+            <h2>Accès Vue fournisseur</h2>
+            <input type="password" id="passwordInput" placeholder="Mot de passe">
+            <button id="unlockBtn">Déverrouiller</button>
+        </div>
     </div>
 
-    <!-- Password gate for Pro (no hint text) -->
-    <div id="gate" class="card hidden">
-      <div class="topbar">
-        <strong>Accès Vue fournisseur</strong>
-      </div>
-      <div class="pw-box">
-        <input id="pwInput" type="password" placeholder="Mot de passe" />
-        <button id="pwBtn" class="tab">Déverrouiller</button>
-        <span id="pwMsg" class="note"></span>
-      </div>
+    <div class="main-content" id="mainContent">
+        <div class="parameters-section">
+            <div class="card">
+                <h2 class="card-title">Informations Client</h2>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+                    <div>
+                        <label>Nom</label>
+                        <input type="text" id="nom" placeholder="Nom du client" oninput="checkExport()">
+                    </div>
+                    <div>
+                        <label>Prénom</label>
+                        <input type="text" id="prenom" placeholder="Prénom du client" oninput="checkExport()">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">Paramètres</h2>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="scenario">Scénario</label>
+                        <select id="scenario" onchange="calc()">
+                            <option value="PAC">PAC</option>
+                            <option value="PAC + BALLON ÉLECTRIQUE">PAC + BALLON ÉLECTRIQUE</option>
+                            <option value="PAC + BALLON THERMO">PAC + BALLON THERMO</option>
+                            <option value="PAC + SSC">PAC + SSC</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="categorie">Catégorie MPR</label>
+                        <select id="categorie" onchange="calc()">
+                            <option value="BLEU">MPR Bleu</option>
+                            <option value="JAUNE">MPR Jaune</option>
+                            <option value="VIOLET">MPR Violet</option>
+                            <option value="ROSE">MPR Rose</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="zone">Zone climatique</label>
+                        <select id="zone" onchange="calc()">
+                            <option value="H1">H1</option>
+                            <option value="H2">H2</option>
+                            <option value="H3">H3</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="etas">Plage d'ETAS</label>
+                        <select id="etas" onchange="calc()">
+                            <option value="111-140">111 < ETAS < 140</option>
+                            <option value="140-170" selected>140 < ETAS < 170</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0; grid-column: 1 / -1;">
+                        <label for="surface">Surface S (m²)</label>
+                        <select id="surface" onchange="calc()">
+                            <option value="S<70">S < 70 m²</option>
+                            <option value="70<S<90">70–90 m²</option>
+                            <option value="90<S<110" selected>90–110 m²</option>
+                            <option value="110<S<130">110–130 m²</option>
+                            <option value="S>130">> 130 m²</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="btn-reset" onclick="reset()" style="margin-top: 12px;">Réinitialiser</button>
+            </div>
+
+            <div class="card fournisseur-only">
+                <h2 class="card-title">Coûts (Vue Fournisseur)</h2>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="prixCumac">Prix cumac (€/MWhcumac)</label>
+                        <input type="number" id="prixCumac" value="11.78" step="0.01" oninput="calc()">
+                        <small>
+                            <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
+                                <input type="checkbox" id="lockPrice" checked onchange="calc()"> Verrouiller (auto selon délégataire)
+                            </label>
+                        </small>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label>Délégataire</label>
+                        <input type="text" id="delegataire" value="" readonly style="background: #f5f5f7; color: #1d1d1f;">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0; grid-column: 1 / -1;">
+                        <label>kWh cumac</label>
+                        <input type="text" id="kwhCumac" value="" readonly style="background: #f5f5f7; color: #1d1d1f; font-weight: 600;">
+                    </div>
+                </div>
+            </div>
+
+            <div style="padding-bottom: 40px;"></div>
+        </div>
+
+        <div class="results-sidebar">
+            <div class="summary-card" style="margin-bottom: 0;">
+                <h2 class="summary-header">Résumé</h2>
+                <div class="scenario-label" id="scenarioSummary">—</div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <!-- Colonne gauche : résumé des montants -->
+                    <div>
+                        <div class="amount-row">
+                            <div class="amount-label">TOTAL TTC</div>
+                            <div class="amount-value" id="totalTTC">—</div>
+                        </div>
+
+                        <div class="amount-row fournisseur-only">
+                            <div class="amount-label">COÛT HT</div>
+                            <div class="amount-value" id="displayCoutHT">—</div>
+                            <small style="font-size: 11px; color: #86868b;">Coût matériel + pose + admin</small>
+                        </div>
+
+                        <div class="amount-row">
+                            <div class="amount-label">AIDES MPR</div>
+                            <div class="amount-value" id="aidesMPR">—</div>
+                        </div>
+
+                        <div class="amount-row">
+                            <div class="amount-label">AIDES CEE</div>
+                            <div class="amount-value" id="aidesCEE">—</div>
+                        </div>
+
+                        <div class="amount-row">
+                            <div class="amount-label">TOTAL DES AIDES</div>
+                            <div class="amount-value highlight" id="totalAides">—</div>
+                        </div>
+
+                        <div class="amount-row">
+                            <div class="amount-label">RESTE À CHARGE</div>
+                            <div class="amount-value" id="resteCharge">—</div>
+                        </div>
+
+                        <div class="amount-row fournisseur-only">
+                            <div class="amount-label">MARGE FINALE (HT)</div>
+                            <div class="amount-value" id="margeFinal">—</div>
+                        </div>
+                    </div>
+
+                    <!-- Colonne droite : prise en charge du RAC -->
+                    <div>
+                        <h2 class="summary-header" style="margin-bottom: 8px;">Prise en charge du RAC</h2>
+                        
+                        <div style="margin-bottom: 10px;">
+                            <div class="amount-label">Pourcentage (%)</div>
+                            <input type="number" id="racPourcent" value="0" min="0" max="100" step="1" oninput="updatePct()" style="font-size: 24px; font-weight: 700; text-align: center; padding: 10px;">
+                        </div>
+                        
+                        <div style="margin-bottom: 10px;">
+                            <div class="amount-label">RAC offert (€)</div>
+                            <input type="number" id="racOffert" value="0" min="0" step="1" oninput="updateAmt()" style="font-size: 24px; font-weight: 700; text-align: center; padding: 10px;">
+                        </div>
+                        
+                        <div class="note-small fournisseur-only" style="margin-bottom: 10px;">Appliqué sur le RAC brut. N'affecte pas le prix cumac.</div>
+
+                        <div class="status-badge ok" id="statusBadge" style="margin-bottom: 16px; margin-top: 4px;">DOSSIER OK</div>
+                        
+                        <button id="exportBtn" disabled style="width: 100%; background: #0071e3; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: not-allowed; opacity: 0.5; transition: all 0.2s; margin-bottom: 12px;">
+                            📄 Exporter en PDF
+                        </button>
+                        
+                        <button id="whatsappBtn" disabled style="width: 100%; background: #25D366; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: not-allowed; opacity: 0.5; transition: all 0.2s;">
+                            💬 Demander un devis
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- CLIENT CARD -->
-    <div id="clientCard" class="card">
-      <div class="head">
-        <div class="grow">
-          <div class="row">
-            <div>
-              <label>Nom</label>
-              <input id="nom_c" type="text" placeholder="" />
-            </div>
-            <div>
-              <label>Prénom</label>
-              <input id="prenom_c" type="text" placeholder="" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="section paramSection">
-        <h3>Paramètres</h3>
-        <div class="row">
-          <div>
-            <label>Scénario</label>
-            <select class="sync" id="mprScenario_c">
-              <option value="PAC">PAC</option>
-              <option value="PAC + BALLON ÉLECTRIQUE">PAC + BALLON ÉLECTRIQUE</option>
-              <option value="PAC + BALLON THERMO">PAC + BALLON THERMO</option>
-              <option value="PAC + SSC">PAC + SSC</option>
-            </select>
-          </div>
-          <div>
-            <label>Catégorie MPR</label>
-            <select class="sync" id="mprCat_c">
-              <option value="BLEU">MPR Bleu</option>
-              <option value="JAUNE">MPR Jaune</option>
-              <option value="VIOLET">MPR Violet</option>
-              <option value="ROSE">MPR Rose</option>
-            </select>
-          </div>
-          <div>
-            <label>Zone climatique</label>
-            <select class="sync" id="zone_c">
-              <option value="H1">H1</option>
-              <option value="H2">H2</option>
-              <option value="H3">H3</option>
-            </select>
-          </div>
-        </div>
-        <div class="row" style="margin-top:12px">
-          <div>
-            <label>Plage d'ETAS</label>
-            <select class="sync" id="etas_c">
-              <option value="111-140">111 &lt; ETAS &lt; 140</option>
-              <option value="140-170" selected>140 &lt; ETAS &lt; 170</option>
-            </select>
-          </div>
-          <div>
-            <label>Surface S (m²)</label>
-            <select class="sync" id="surface_c">
-              <option value="S<70">S &lt; 70 m²</option>
-              <option value="70<S<90">70–90 m²</option>
-              <option value="90<S<110" selected>90–110 m²</option>
-              <option value="110<S<130">110–130 m²</option>
-              <option value="S>130">&gt; 130 m²</option>
-            </select>
-          </div>
-        </div>
-
-        
-        <div style="display:flex;justify-content:flex-start;margin:10px 0 6px;">
-          <button id="resetBtn_c" class="btn" style="background:#16a34a;border-color:rgba(22,163,74,.35)">Réinitialiser scénario</button>
-        </div>
-<div class="meta-compact">
-          <div class="meta-box">
-            <div class="meta-title">Délégataire</div>
-            <div id="delegataire_c" class="meta-value big">—</div>
-          </div>
-          <div class="meta-box">
-            <div class="meta-title">kWh cumac</div>
-            <div id="kwh_c" class="meta-value big mono">—</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="section">
-        <h3>Montants</h3>
-        <div class="tiles">
-          <div class="tile">
-            <div class="k">TOTAL TTC</div>
-            <div id="mprTTC_c" class="v mono">—</div>
-          </div>
-          <div class="tile">
-            <div class="k">AIDES</div>
-            <div class="aides-block">
-              <div class="rowline">
-                <div class="label">MPR</div>
-                <div id="mprAide_c" class="value mono">—</div>
-              </div>
-              <div class="rowline">
-                <div class="label">CEE</div>
-                <div id="cee_c" class="value mono">—</div>
-              </div>
-              <div class="rowline total">
-                <div class="label">TOTAL AIDES</div>
-                <div id="aidesTotal_c" class="value mono accent">—</div>
-              </div>
-            </div>
-          </div>
-          <div class="tile" id="offerTile_c">
-            <div class="k">PRISE EN CHARGE</div>
-            <div class="offer-grid">
-              <div class="offer-field">
-                <label for="offerPct_c">Pourcentage (%)</label>
-                <input id="offerPct_c" type="number" min="0" max="100" step="1" value="0" />
-              </div>
-              <div class="offer-field">
-                <label for="offerAmt_c">RAC offert (€)</label>
-                <input id="offerAmt_c" type="number" step="1" value="0" />
-              </div>
-            </div>
-          </div>
-          <div class="tile" id="racFinalTile_c">
-            <div class="k">RESTE À CHARGE</div>
-            <div id="racFinal_c" class="v mono">—</div>
-          </div>
-          <!-- STATUS TILE -->
-          <div class="tile statusTile" id="statusTile_c">
-            <div id="statusText_c" class="statusTitle">—</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Export PDF button (client) -->
-      <div class="section">
-        <div style="display:flex;justify-content:center;margin-top:6px;">
-          <button id="exportBtn" class="btn" disabled<button id="exportBtn" class="export-pdf-btn btn" disabled>Exporter en PDF</button>
-        </div>
-      </div>
+    <div class="footer">
+        <p style="margin: 0;">Propulsé par 770 Lab</p>
     </div>
 
-    <!-- PRO CARD -->
-    <div id="proCard" class="card hidden">
-      <div class="topbar">
-        <strong><span aria-label="Vue fournisseur">🔒</span></strong>
-        <span class="badge"><span id="roleBadge" class="pill">—</span></span>
-        <div style="display:flex;gap:8px;align-items:end">
-          <div><label style="font-size:11px;color:#94a3b8">Nom</label><input id="nom_p" type="text" placeholder="" style="padding:8px 10px;border-radius:10px;border:1px solid var(--border);background:#ffffff;color:#fff;font-size:13px;width:140px" /></div>
-          <div><label style="font-size:11px;color:#94a3b8">Prénom</label><input id="prenom_p" type="text" placeholder="" style="padding:8px 10px;border-radius:10px;border:1px solid var(--border);background:#ffffff;color:#fff;font-size:13px;width:140px" /></div>
-        </div>
-      </div>
-
-      <!-- PARAMS SECTION -->
-      <div class="section paramSection">
-        <h3>Paramètres</h3>
-        <div class="row">
-          <div>
-            <label>Scénario</label>
-            <select class="sync" id="mprScenario_p">
-              <option value="PAC">PAC</option>
-              <option value="PAC + BALLON ÉLECTRIQUE">PAC + BALLON ÉLECTRIQUE</option>
-              <option value="PAC + BALLON THERMO">PAC + BALLON THERMO</option>
-              <option value="PAC + SSC">PAC + SSC</option>
-            </select>
-          </div>
-          <div>
-            <label>Catégorie MPR</label>
-            <select class="sync" id="mprCat_p">
-              <option value="BLEU">MPR Bleu</option>
-              <option value="JAUNE">MPR Jaune</option>
-              <option value="VIOLET">MPR Violet</option>
-              <option value="ROSE">MPR Rose</option>
-            </select>
-          </div>
-          <div>
-            <label>Zone climatique</label>
-            <select class="sync" id="zone_p">
-              <option value="H1">H1</option>
-              <option value="H2">H2</option>
-              <option value="H3">H3</option>
-            </select>
-          </div>
-        </div>
-        <div class="row" style="margin-top:12px">
-          <div>
-            <label>Plage d'ETAS</label>
-            <select class="sync" id="etas_p">
-              <option value="111-140">111 &lt; ETAS &lt; 140</option>
-              <option value="140-170" selected>140 &lt; ETAS &lt; 170</option>
-            </select>
-          </div>
-          <div>
-            <label>Surface S (m²)</label>
-            <select class="sync" id="surface_p">
-              <option value="S<70">S &lt; 70 m²</option>
-              <option value="70<S<90">70–90 m²</option>
-              <option value="90<S<110" selected>90–110 m²</option>
-              <option value="110<S<130">110–130 m²</option>
-              <option value="S>130">&gt; 130 m²</option>
-            </select>
-          </div>
-        </div>
-
-        
-        <div style="display:flex;justify-content:flex-start;margin:10px 0 6px;">
-          <button id="resetBtn_p" class="btn" style="background:#16a34a;border-color:rgba(22,163,74,.35)">Réinitialiser</button>
-        </div>
-<div class="meta-compact">
-          <div class="meta-box">
-            <div class="meta-title">Délégataire</div>
-            <div id="delegataire_p" class="meta-value big">—</div>
-          </div>
-          <div class="meta-box">
-            <div class="meta-title">kWh cumac</div>
-            <div id="kwh_p" class="meta-value big mono">—</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- MONTANTS — supplier order -->
-      <div class="section">
-        <h3>Montants</h3>
-        <div class="tiles">
-          <div class="tile">
-            <div class="k">TOTAL TTC</div>
-            <div id="mprTTC_p" class="v mono">—</div>
-          </div>
-          <div class="tile">
-            <div class="k">Coût HT</div>
-            <div id="coutHT_p" class="v mono">—</div>
-            <div class="note">Coût matériel + pose + admin</div>
-          </div>
-          <div class="tile">
-            <div class="k">AIDES</div>
-            <div class="aides-block">
-              <div class="rowline">
-                <div class="label">MPR</div>
-                <div id="mprAide_p" class="value mono">—</div>
-              </div>
-              <div class="rowline">
-                <div class="label">CEE</div>
-                <div id="cee_p" class="value mono">—</div>
-              </div>
-              <div class="rowline total">
-                <div class="label">TOTAL AIDES</div>
-                <div id="aidesTotal_p" class="value mono accent">—</div>
-              </div>
-            </div>
-          </div>
-          <div class="tile" id="offerTile_p">
-            <div class="k">PRISE EN CHARGE</div>
-            <div class="offer-grid">
-              <div class="offer-field">
-                <label for="offerPct_p">Pourcentage (%)</label>
-                <input id="offerPct_p" type="number" min="0" max="100" step="1" value="0" />
-              </div>
-              <div class="offer-field">
-                <label for="offerAmt_p">RAC offert (€)</label>
-                <input id="offerAmt_p" type="number" step="1" value="0" />
-              </div>
-            </div>
-            <div class="note">Appliqué sur le RAC brut. N’affecte pas le prix cumac.</div>
-          </div>
-          <div class="tile" id="racFinalTile_p">
-            <div class="k">RESTE À CHARGE</div>
-            <div id="racFinal_p" class="v mono">—</div>
-          </div>
-          <div class="tile" id="margeTile_p">
-            <div class="k">Marge Finale (HT)</div>
-            <div id="margeHT_p" class="v mono">—</div>
+    <!-- Zone d'impression cachée -->
+    <div id="printArea" style="display: none;">
+        <div style="padding: 40px; font-family: -apple-system, sans-serif;">
+            <h1 style="font-size: 28px; margin-bottom: 10px;" id="printTitle">Dossier —</h1>
+            <p style="color: #6b7280; margin-bottom: 30px;" id="printDate"></p>
             
-          </div>
-          <!-- STATUS TILE (supplier) -->
-          <div class="tile statusTile" id="statusTile_p" class="tile">
-            <div id="statusText_p" class="statusTitle">—</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Secondary info tiles -->
-      <div class="section">
-        <div class="tiles">
-          <div class="tile">
-            <div class="k">Prix cumac</div>
-            <div style="display:flex;gap:8px;align-items:center">
-              <input id="prixCumac_p" type="number" step="0.01" class="mono" style="flex:1" />
-              <label class="pill" style="gap:6px"><input id="lockPrice_p" type="checkbox" checked /> Verrouiller</label>
+            <div style="background: #f9fafb; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                <h2 style="font-size: 14px; color: #6b7280; text-transform: uppercase; margin-bottom: 15px;">Résumé</h2>
+                <p style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #e5e7eb;" id="printScenario"></p>
+                
+                <div style="margin-bottom: 15px;">
+                    <div style="font-size: 12px; color: #6b7280;">TOTAL TTC</div>
+                    <div style="font-size: 28px; font-weight: 700;" id="printTTC"></div>
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <div style="font-size: 12px; color: #6b7280;">AIDES MPR</div>
+                    <div style="font-size: 28px; font-weight: 700;" id="printMPR"></div>
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <div style="font-size: 12px; color: #6b7280;">AIDES CEE</div>
+                    <div style="font-size: 28px; font-weight: 700;" id="printCEE"></div>
+                </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <div style="font-size: 12px; color: #6b7280;">TOTAL DES AIDES</div>
+                    <div style="font-size: 28px; font-weight: 700; color: #34c759;" id="printTotalAides"></div>
+                </div>
             </div>
-            <div id="unit_p" class="note">— €/MWhcumac</div>
-          </div>
-          <div class="tile">
-            <div class="k">kWh cumac</div>
-            <div id="kwh_p_dup" class="v mono">—</div>
-          </div>
-          <div class="tile">
-            <div class="k">Délégataire</div>
-            <div id="delegataire_p_dup" class="v">—</div>
-          </div>
+            
+            <div style="background: #f9fafb; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                <h2 style="font-size: 14px; color: #6b7280; text-transform: uppercase; margin-bottom: 15px;">Prise en charge du RAC</h2>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                    <div>
+                        <div style="font-size: 12px; color: #6b7280;">Pourcentage (%)</div>
+                        <div style="font-size: 24px; font-weight: 700;" id="printPct"></div>
+                    </div>
+                    <div>
+                        <div style="font-size: 12px; color: #6b7280;">RAC offert (€)</div>
+                        <div style="font-size: 24px; font-weight: 700;" id="printOffert"></div>
+                    </div>
+                </div>
+                
+                <div style="padding-top: 20px; border-top: 2px solid #e5e7eb; text-align: right;">
+                    <div style="font-size: 12px; color: #6b7280; margin-bottom: 8px;">RESTE À CHARGE</div>
+                    <div style="font-size: 36px; font-weight: 700;" id="printRAC"></div>
+                </div>
+                
+                <div style="margin-top: 20px; padding: 16px; border-radius: 12px; text-align: center; font-weight: 700; font-size: 18px;" id="printStatus"></div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 40px; color: #6b7280; font-size: 12px;">
+                Propulsé par 770 Lab
+            </div>
         </div>
-      </div>
-
-      <!-- Export PDF button (supplier) -->
-      <div class="section">
-        <div style="display:flex;justify-content:center;margin-top:6px;">
-          <button id="exportBtn_pro" class="btn" disabled<button id="exportBtn_pro" class="export-pdf-btn btn" disabled>Exporter en PDF</button>
-        </div>
-      </div>
-
-      <!-- END PRO CARD -->
     </div>
 
-    <footer style="width:100%;text-align:center;margin:30px 0 10px;opacity:0.75;font-size:12px;">
-      Propulsé par <strong>770 Lab</strong>
-    </footer>
-  </div>
-
 <script>
-// ===== Données =====
-const TTC = { "PAC":10890, "PAC + BALLON ÉLECTRIQUE":13750, "PAC + BALLON THERMO":13750, "PAC + SSC":25850 };
-const MPR = {
-  "PAC":{BLEU:5000,JAUNE:4000,VIOLET:3000,ROSE:0},
-  "PAC + BALLON ÉLECTRIQUE":{BLEU:5000,JAUNE:4000,VIOLET:3000,ROSE:0},
-  "PAC + BALLON THERMO":{BLEU:6200,JAUNE:4800,VIOLET:3400,ROSE:0},
-  "PAC + SSC":{BLEU:15000,JAUNE:12000,VIOLET:7000,ROSE:0}
-};
-const COUT_HT = { "PAC":6200, "PAC + BALLON ÉLECTRIQUE":6400, "PAC + BALLON THERMO":7300, "PAC + SSC":11700 };
-const CEE_DATA = {
-  "140-170":{ "H1":{"PAC":{"S<70":274800,"70<S<90":384720,"90<S<110":549600,"110<S<130":604560,"S>130":879360},
-                    "BALLON ELECTRIQUE":{"S<70":274800,"70<S<90":384720,"90<S<110":549600,"110<S<130":604560,"S>130":879360},
-                    "BALLON THERMO":{"S<70":290400,"70<S<90":400320,"90<S<110":565200,"110<S<130":620160,"S>130":894960},
-                    "BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},
-             "H2":{"PAC":{"S<70":229000,"70<S<90":320600,"90<S<110":458000,"110<S<130":503800,"S>130":732800},
-                    "BALLON ELECTRIQUE":{"S<70":229000,"70<S<90":320600,"90<S<110":458000,"110<S<130":503800,"S>130":732800},
-                    "BALLON THERMO":{"S<70":244600,"70<S<90":336200,"90<S<110":473600,"110<S<130":519400,"S>130":748400},
-                    "BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},
-             "H3":{"PAC":{"S<70":160300,"70<S<90":224420,"90<S<110":320600,"110<S<130":352660,"S>130":512960},
-                    "BALLON ELECTRIQUE":{"S<70":160300,"70<S<90":224420,"90<S<110":320600,"110<S<130":352660,"S>130":512960},
-                    "BALLON THERMO":{"S<70":175900,"70<S<90":240020,"90<S<110":336200,"110<S<130":368260,"S>130":528560},
-                    "BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}}},
-  "111-140":{ "H1":{"PAC":{"S<70":238500,"70<S<90":333900,"90<S<110":477000,"110<S<130":524700,"S>130":763200},
-                    "BALLON ELECTRIQUE":{"S<70":238500,"70<S<90":333900,"90<S<110":477000,"110<S<130":524700,"S>130":763200},
-                    "BALLON THERMO":{"S<70":254100,"70<S<90":349500,"90<S<110":492600,"110<S<130":540300,"S>130":778800},
-                    "BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},
-             "H2":{"PAC":{"S<70":198750,"70<S<90":278250,"90<S<110":397500,"110<S<130":437250,"S>130":636000},
-                    "BALLON ELECTRIQUE":{"S<70":198750,"70<S<90":278250,"90<S<110":397500,"110<S<130":437250,"S>130":636000},
-                    "BALLON THERMO":{"S<70":214350,"70<S<90":293850,"90<S<110":413100,"110<S<130":452850,"S>130":651600},
-                    "BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},
-             "H3":{"PAC":{"S<70":139125,"70<S<90":194775,"90<S<110":278250,"110<S<130":306075,"S>130":445200},
-                    "BALLON ELECTRIQUE":{"S<70":139125,"70<S<90":194775,"90<S<110":278250,"110<S<130":306075,"S>130":445200},
-                    "BALLON THERMO":{"S<70":154725,"70<S<90":210375,"90<S<110":293850,"110<S<130":321675,"S>130":460800}}}
-};
-
-const MAP_TO_CEE = { "PAC":"PAC","PAC + BALLON ÉLECTRIQUE":"BALLON ELECTRIQUE","PAC + BALLON THERMO":"BALLON THERMO","PAC + SSC":"BALLON SSC" };
-const fmt = (n) => Math.round(n).toLocaleString('fr-FR') + ' €';
-const fmtNum = (n) => Math.round(n).toLocaleString('fr-FR');
-
-function prixPro(deleg, cat){ const b = (cat==='BLEU'); return deleg==='ECO NEGOCE' ? (b?12.5:7.4) : (b?11.78:7.0); }
-function prixClient(deleg){ return deleg==='ECO NEGOCE' ? 6.50 : 7.00; }
-function delegataireFor(surface, scenCEE){ return (surface==='S>130' && scenCEE!=='BALLON SSC') ? 'ECO NEGOCE' : 'VALOREN'; }
-
-// ===== Synchronisation bidirectionnelle =====
-function syncClientToPro(){
-  [['mprScenario_c','mprScenario_p'],['mprCat_c','mprCat_p'],['zone_c','zone_p'],['etas_c','etas_p'],['surface_c','surface_p'],['offerPct_c','offerPct_p'],['offerAmt_c','offerAmt_p'],['nom_c','nom_p'],['prenom_c','prenom_p']].forEach(([c,p])=>{
-    const s=document.getElementById(c), d=document.getElementById(p); if(s&&d && d.value!==s.value){ d.value=s.value; }
-  });
-}
-function syncProToClient(){
-  [['mprScenario_p','mprScenario_c'],['mprCat_p','mprCat_c'],['zone_p','zone_c'],['etas_p','etas_c'],['surface_p','surface_c'],['offerPct_p','offerPct_c'],['offerAmt_p','offerAmt_c'],['nom_p','nom_c'],['prenom_p','prenom_c']].forEach(([p,c])=>{
-    const s=document.getElementById(p), d=document.getElementById(c); if(s&&d && d.value!==s.value){ d.value=s.value; }
-  });
-}
-
-// ===== CLIENT =====
-function recomputeClient(){
-  // Keep supplier in sync
-  syncClientToPro();
-
-  const scen = document.getElementById('mprScenario_c').value;
-  const cat = document.getElementById('mprCat_c').value;
-  const zone = document.getElementById('zone_c').value;
-  const etas = document.getElementById('etas_c').value;
-  const surface = document.getElementById('surface_c').value;
-  const offerPctInput = document.getElementById('offerPct_c');
-  const offerAmtInput = document.getElementById('offerAmt_c');
-
-  const ceeScen = MAP_TO_CEE[scen];
-
-  const ttc = TTC[scen] || 0;
-  const aide = (MPR[scen] && MPR[scen][cat]) ? MPR[scen][cat] : 0;
-
-  const deleg = delegataireFor(surface, ceeScen);
-  const prixCli = prixClient(deleg);
-  const prixProRef = prixPro(deleg, cat);
-  const kwh = CEE_DATA[etas][zone][ceeScen][surface];
-
-  const cee_client = kwh * prixCli / 1000;
-  const cee_pro = kwh * prixProRef / 1000;
-
-  const aidesTotal_client = aide + cee_client;
-  const aidesTotal_pro = aide + cee_pro;
-
-  const racBrut = ttc - aidesTotal_client;
-
-  // Prise en charge (client)
-  let pct = parseFloat(offerPctInput.value || '0'); if(isNaN(pct)) pct=0; pct=Math.max(0,Math.min(pct,100)); offerPctInput.value=pct.toFixed(0);
-  let amt = parseFloat(offerAmtInput.value || '0'); if(isNaN(amt)) amt=0;
-  const active = document.activeElement===offerAmtInput ? 'amt' : (document.activeElement===offerPctInput ? 'pct' : 'pct');
-  if(active==='pct'){ amt=racBrut*(pct/100); offerAmtInput.value=Math.round(amt); }
-  else{ const base=racBrut===0?1:racBrut; pct=(amt/base)*100; offerPctInput.value=Math.max(0,pct).toFixed(0); }
-  const rac = racBrut - amt;
-
-  // UI client
-  document.getElementById('mprTTC_c').textContent = fmt(ttc);
-  document.getElementById('mprAide_c').textContent = fmt(aide);
-  document.getElementById('delegataire_c').textContent = deleg;
-  document.getElementById('kwh_c').textContent = fmtNum(kwh);
-  document.getElementById('cee_c').textContent = fmt(cee_client);
-  document.getElementById('aidesTotal_c').textContent = fmt(aidesTotal_client);
-  const racTile = document.getElementById('racFinalTile_c');
-  document.getElementById('racFinal_c').textContent = fmt(rac);
-  racTile.classList.remove('rac-ok','rac-0','neg'); racTile.classList.add(rac===0?'rac-0':(rac<0?'neg':'rac-ok'));
-
-  // Print summary
-  const fullName = `${(document.getElementById('prenom_c').value||'').trim()} ${(document.getElementById('nom_c').value||'').trim()}`.trim();
-  document.getElementById('docTitle').textContent = fullName ? ('Dossier — ' + fullName) : 'Dossier — —';
-  document.getElementById('docDate').textContent = new Date().toLocaleDateString('fr-FR');
-  document.getElementById('p_scen').textContent = scen;
-  document.getElementById('p_cat').textContent = 'MPR ' + cat[0] + cat.slice(1).toLowerCase();
-  document.getElementById('p_zone').textContent = zone;
-  document.getElementById('p_etas').textContent = etas.replace('-', '–');
-  document.getElementById('p_surface').textContent = surface.replace('S<','S < ').replace('<S<',' – ').replace('S>','S > ');
-  document.getElementById('p_deleg').textContent = deleg;
-  document.getElementById('p_kwh').textContent = (Math.round(kwh)).toLocaleString('fr-FR');
-  document.getElementById('p_aides').textContent = Math.round(aidesTotal_client).toLocaleString('fr-FR') + ' €';
-  document.getElementById('p_rac').textContent = Math.round(rac).toLocaleString('fr-FR') + ' €';
-
-  // ===== Dossier status (based on PRO margin) =====
-  const cout = COUT_HT[scen] || 0;
-  const venteHT_pro = Math.max(0, rac) / 1.055; // client payment HT only when RAC>0
-  const marge_pro = venteHT_pro - cout + aidesTotal_pro;
-
-  const tile = document.getElementById('statusTile_c');
-  const label = document.getElementById('statusText_c');
-
-  tile.classList.remove('statusOK','statusWARN','statusBAD');
-  if(marge_pro > 4000){
-    tile.classList.add('statusOK');
-    label.textContent = 'DOSSIER OK';
-  }else if(marge_pro >= 2000){
-    tile.classList.add('statusWARN');
-    label.textContent = 'DOSSIER À AMÉLIORER';
-  }else{
-    tile.classList.add('statusBAD');
-    label.textContent = 'DOSSIER REFUSÉ';
-  }
-
-  validateExport();
-}
-
-// ===== PRO =====
-function recomputePro(){
-  // Keep client in sync
-  syncProToClient();
-
-  const scen = document.getElementById('mprScenario_p').value;
-  const cat = document.getElementById('mprCat_p').value;
-  const zone = document.getElementById('zone_p').value;
-  const etas = document.getElementById('etas_p').value;
-  const surface = document.getElementById('surface_p').value;
-  const lock = document.getElementById('lockPrice_p').checked;
-
-  const ceeScen = MAP_TO_CEE[scen];
-  const ttc = TTC[scen] || 0;
-  const aide = (MPR[scen] && MPR[scen][cat]) ? MPR[scen][cat] : 0;
-
-  const deleg = delegataireFor(surface, ceeScen);
-  const prix = lock ? ( (deleg==='ECO NEGOCE') ? (cat==='BLEU'?12.5:7.4) : (cat==='BLEU'?11.78:7.0) ) : parseFloat(document.getElementById('prixCumac_p').value || '0');
-  if(lock){ document.getElementById('prixCumac_p').value = prix.toFixed(2); }
-  const kwh = CEE_DATA[etas][zone][ceeScen][surface];
-  const cee = kwh * prix / 1000;
-
-  const aidesTotal = aide + cee;
-  const racBrut = ttc - aidesTotal;
-
-  // Prise en charge (pro)
-  let pct = parseFloat(document.getElementById('offerPct_p').value || '0'); if(isNaN(pct)) pct=0; pct=Math.max(0,Math.min(pct,100));
-  let amt = parseFloat(document.getElementById('offerAmt_p').value || '0'); if(isNaN(amt)) amt=0;
-  const active = document.activeElement===document.getElementById('offerAmt_p') ? 'amt' : (document.activeElement===document.getElementById('offerPct_p') ? 'pct' : 'pct');
-  if(active==='pct'){ amt = racBrut * (pct/100); document.getElementById('offerAmt_p').value = Math.round(amt); }
-  else{ const base=racBrut===0?1:racBrut; pct=(amt/base)*100; document.getElementById('offerPct_p').value = Math.max(0,pct).toFixed(0); }
-
-  const rac = racBrut - amt;
-
-  const venteHT = Math.max(0, rac) / 1.055;
-  const cout = COUT_HT[scen] || 0;
-  const marge = venteHT - cout + aidesTotal;
-  const pctMarge = venteHT>0 ? (marge/venteHT)*100 : 0;
-
-  document.getElementById('mprTTC_p').textContent = fmt(ttc);
-  document.getElementById('mprAide_p').textContent = fmt(aide);
-  document.getElementById('delegataire_p').textContent = deleg;
-  document.getElementById('delegataire_p_dup').textContent = deleg;
-  document.getElementById('kwh_p').textContent = fmtNum(kwh);
-  document.getElementById('kwh_p_dup').textContent = (Math.round(kwh)).toLocaleString('fr-FR');
-  document.getElementById('unit_p').textContent = prix.toFixed(2).replace('.', ',') + ' €/MWhcumac';
-  document.getElementById('cee_p').textContent = fmt(cee);
-  document.getElementById('aidesTotal_p').textContent = fmt(aidesTotal);
-  document.getElementById('prixCumac_p').disabled = lock;
-
-  const racTile = document.getElementById('racFinalTile_p');
-  const racEl = document.getElementById('racFinal_p');
-  racEl.textContent = fmt(rac);
-  // Pas d'outline couleur côté fournisseur
-  racTile.className = 'tile';
-
-  document.getElementById('coutHT_p').textContent = fmt(cout);
-  document.getElementById('margeHT_p').textContent = fmt(marge);
-
-  // Supplier status tile
-  const st = document.getElementById('statusTile_p');
-  const stx = document.getElementById('statusText_p');
-  st.className='tile';
-  if(marge > 4000){ st.classList.add('statusOK'); stx.textContent='DOSSIER OK'; }
-  else if(marge >= 2000){ st.classList.add('statusWARN'); stx.textContent='DOSSIER À AMÉLIORER'; }
-  else { st.classList.add('statusBAD'); stx.textContent='DOSSIER REFUSÉ'; }
-}
-
-// ===== Events / Tabs / Init =====
-function validateExport(){
-  const nom=(document.getElementById('nom_c').value||'').trim();
-  const prenom=(document.getElementById('prenom_c').value||'').trim();
-  const b1=document.getElementById('exportBtn'), b2=document.getElementById('exportBtn_pro');
-  if(b1) b1.disabled = !(nom && prenom);
-  if(b2) b2.disabled = !(nom && prenom);
-}
-function exportPDF(){ window.print(); }
-
-['mprScenario_c','mprCat_c','zone_c','etas_c','surface_c','nom_c','prenom_c','offerPct_c','offerAmt_c'].forEach(id=>{
-  const el = document.getElementById(id);
-  el.addEventListener('input', ()=>{ recomputeClient(); validateExport(); });
-  el.addEventListener('change', ()=>{ recomputeClient(); validateExport(); });
-});
-
-['mprScenario_p','mprCat_p','zone_p','etas_p','surface_p','offerPct_p','offerAmt_p','nom_p','prenom_p'].forEach(id=>{
-  const el = document.getElementById(id);
-  el.addEventListener('input', ()=>{ recomputePro(); validateExport(); });
-  el.addEventListener('change', ()=>{ recomputePro(); validateExport(); });
-});
-
-document.getElementById('lockPrice_p').addEventListener('change', recomputePro);
-document.getElementById('prixCumac_p').addEventListener('input', recomputePro);
-
-const exportBtn = document.getElementById('exportBtn');
-if(exportBtn){ exportBtn.addEventListener('click', exportPDF); }
-const exportBtnPro = document.getElementById('exportBtn_pro');
-if(exportBtnPro){ exportBtnPro.addEventListener('click', exportPDF); }
-
-const tabClient = document.getElementById('tabClient');
-const tabPro = document.getElementById('tabPro');
-const clientCard = document.getElementById('clientCard');
-const proCard = document.getElementById('proCard');
-const gate = document.getElementById('gate');
-const whoBadge = document.getElementById('whoBadge');
-const roleBadge = document.getElementById('roleBadge');
-let proUnlocked = false;
-
-tabClient.addEventListener('click', ()=>{
-  tabClient.classList.add('active'); tabPro.classList.remove('active');
-  clientCard.classList.remove('hidden'); proCard.classList.add('hidden'); gate.classList.add('hidden');
-});
-tabPro.addEventListener('click', ()=>{
-  tabPro.classList.add('active'); tabClient.classList.remove('active');
-  if(!proUnlocked){ gate.classList.remove('hidden'); clientCard.classList.add('hidden'); proCard.classList.add('hidden'); }
-  else { gate.classList.add('hidden'); clientCard.classList.add('hidden'); proCard.classList.remove('hidden'); }
-});
-document.getElementById('pwBtn').addEventListener('click', ()=>{
-  const val = (document.getElementById('pwInput').value || '').trim();
-  const msg = document.getElementById('pwMsg');
-  if(val === 'gamberge' || val === 'lav'){
-    proUnlocked = true;
-    gate.classList.add('hidden');
-    clientCard.classList.add('hidden');
-    proCard.classList.remove('hidden');
-    const who = (val === 'gamberge') ? 'Ouvert par : Toi (gamberge)' : 'Ouvert par : Commerciaux (lav)';
-    whoBadge.textContent = who; whoBadge.classList.remove('hidden'); roleBadge.textContent = who;
-    msg.textContent = '';
-    // ensure both sides are freshly computed and in sync
-    recomputeClient(); recomputePro(); validateExport();
-  }else{
-    msg.innerHTML = '<span style=\"color:#fca5a5\">Mot de passe incorrect.</span>';
-  }
-});
-
-(function init(){
-  // Defaults — client
-  document.getElementById('mprScenario_c').value="PAC";
-  document.getElementById('mprCat_c').value="BLEU";
-  document.getElementById('zone_c').value="H1";
-  document.getElementById('etas_c').value="140-170";
-  document.getElementById('surface_c').value="90<S<110";
-  document.getElementById('offerPct_c').value=0;
-  document.getElementById('offerAmt_c').value=0;
-  
-  
-  // Defaults — pro mirror
-  syncClientToPro();
-  // First compute
-  recomputeClient();
-  recomputePro();
-  validateExport();
-})();
-
-// ===== Réinitialisation =====
-function resetAll(){
-  document.getElementById('mprScenario_c').value="PAC";
-  document.getElementById('mprCat_c').value="BLEU";
-  document.getElementById('zone_c').value="H1";
-  document.getElementById('etas_c').value="140-170";
-  document.getElementById('surface_c').value="90<S<110";
-  document.getElementById('offerPct_c').value=0;
-  document.getElementById('offerAmt_c').value=0;
-  
-  
-  syncClientToPro();
-  recomputeClient();
-  recomputePro();
-  validateExport();
-}
-document.addEventListener('DOMContentLoaded', ()=>{
-  const rc = document.getElementById('resetBtn_c');
-  if(rc) rc.addEventListener('click', resetAll);
-  const rp = document.getElementById('resetBtn_p');
-  if(rp) rp.addEventListener('click', resetAll);
-});
-
-</script>
-
-<div class="pdf-footer">
-  
-  <div class="brand-line">Propulsé par <strong>770 Lab</strong></div>
-</div>
-
-
-<script>
-(function(){
-  function normalize(t){ return (t||'').replace(/\s+/g,' ').trim().toLowerCase(); }
-  function findInputsByLabelText(targetText){
-    const results = [];
-    const labels = Array.from(document.querySelectorAll('label'));
-    labels.forEach(lb => {
-      const txt = normalize(lb.textContent);
-      if (txt === normalize(targetText)){
-        let el = null;
-        // 1) If label has 'for' attribute, link by id
-        const forId = lb.getAttribute('for');
-        if (forId){
-          el = document.getElementById(forId);
-        }
-        // 2) Try to find an input within same container
-        if(!el){
-          el = lb.closest('.field, .form-group, .input, div, section')?.querySelector('input[type="text"], input:not([type]), input[type="search"], input[type="tel"], input[type="email"]');
-        }
-        // 3) Try next sibling
-        if(!el){
-          let sib = lb.nextElementSibling;
-          while(sib && !(sib.tagName==='INPUT')) sib = sib.nextElementSibling;
-          if (sib && sib.tagName==='INPUT') el = sib;
-        }
-        if(el) results.push(el);
-      }
-    });
-    // Fallback: also check placeholders if no label found
-    if (results.length === 0){
-      const all = Array.from(document.querySelectorAll('input[type="text"], input:not([type])'));
-      all.forEach(i => {
-        const ph = normalize(i.getAttribute('placeholder'));
-        if (ph === normalize(targetText)) results.push(i);
-      });
+const D={TTC:{"PAC":10890,"PAC + BALLON ÉLECTRIQUE":13750,"PAC + BALLON THERMO":13750,"PAC + SSC":25850},MPR:{"PAC":{BLEU:5000,JAUNE:4000,VIOLET:3000,ROSE:0},"PAC + BALLON ÉLECTRIQUE":{BLEU:5000,JAUNE:4000,VIOLET:3000,ROSE:0},"PAC + BALLON THERMO":{BLEU:6200,JAUNE:4800,VIOLET:3400,ROSE:0},"PAC + SSC":{BLEU:15000,JAUNE:12000,VIOLET:7000,ROSE:0}},COUT:{"PAC":6200,"PAC + BALLON ÉLECTRIQUE":6400,"PAC + BALLON THERMO":7300,"PAC + SSC":11700},CEE:{"140-170":{H1:{PAC:{"S<70":274800,"70<S<90":384720,"90<S<110":549600,"110<S<130":604560,"S>130":879360},"BALLON ELECTRIQUE":{"S<70":274800,"70<S<90":384720,"90<S<110":549600,"110<S<130":604560,"S>130":879360},"BALLON THERMO":{"S<70":290400,"70<S<90":400320,"90<S<110":565200,"110<S<130":620160,"S>130":894960},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H2:{PAC:{"S<70":229000,"70<S<90":320600,"90<S<110":458000,"110<S<130":503800,"S>130":732800},"BALLON ELECTRIQUE":{"S<70":229000,"70<S<90":320600,"90<S<110":458000,"110<S<130":503800,"S>130":732800},"BALLON THERMO":{"S<70":244600,"70<S<90":336200,"90<S<110":473600,"110<S<130":519400,"S>130":748400},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H3:{PAC:{"S<70":160300,"70<S<90":224420,"90<S<110":320600,"110<S<130":352660,"S>130":512960},"BALLON ELECTRIQUE":{"S<70":160300,"70<S<90":224420,"90<S<110":320600,"110<S<130":352660,"S>130":512960},"BALLON THERMO":{"S<70":175900,"70<S<90":240020,"90<S<110":336200,"110<S<130":368260,"S>130":528560},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}}},"111-140":{H1:{PAC:{"S<70":238500,"70<S<90":333900,"90<S<110":477000,"110<S<130":524700,"S>130":763200},"BALLON ELECTRIQUE":{"S<70":238500,"70<S<90":333900,"90<S<110":477000,"110<S<130":524700,"S>130":763200},"BALLON THERMO":{"S<70":254100,"70<S<90":349500,"90<S<110":492600,"110<S<130":540300,"S>130":778800},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H2:{PAC:{"S<70":198750,"70<S<90":278250,"90<S<110":397500,"110<S<130":437250,"S>130":636000},"BALLON ELECTRIQUE":{"S<70":198750,"70<S<90":278250,"90<S<110":397500,"110<S<130":437250,"S>130":636000},"BALLON THERMO":{"S<70":214350,"70<S<90":293850,"90<S<110":413100,"110<S<130":452850,"S>130":651600},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H3:{PAC:{"S<70":139125,"70<S<90":194775,"90<S<110":278250,"110<S<130":306075,"S>130":445200},"BALLON ELECTRIQUE":{"S<70":139125,"70<S<90":194775,"90<S<110":278250,"110<S<130":306075,"S>130":445200},"BALLON THERMO":{"S<70":154725,"70<S<90":210375,"90<S<110":293850,"110<S<130":321675,"S>130":460800}}}}};
+const M={"PAC":"PAC","PAC + BALLON ÉLECTRIQUE":"BALLON ELECTRIQUE","PAC + BALLON THERMO":"BALLON THERMO","PAC + SSC":"BALLON SSC"};
+let mode=0;
+function deleg(s,c){return(s==='S>130'&&c!=='BALLON SSC')?'ECO NEGOCE':'VALOREN'}
+function prix(d,c){const b=c==='BLEU';return d==='ECO NEGOCE'?(b?12.5:7.4):(b?11.78:7.0)}
+function prixC(d){return d==='ECO NEGOCE'?6.5:7.0}
+function fmt(n){return Math.round(n).toLocaleString('fr-FR')+' €'}
+function calc(){const sc=document.getElementById('scenario').value;const ct=document.getElementById('categorie').value;const zn=document.getElementById('zone').value;const et=document.getElementById('etas').value;const sf=document.getElementById('surface').value;const cs=M[sc];const tt=D.TTC[sc]||0;const ad=(D.MPR[sc]&&D.MPR[sc][ct])?D.MPR[sc][ct]:0;const ch=D.COUT[sc]||0;const dg=deleg(sf,cs);const kw=D.CEE[et][zn][cs][sf];console.log('Mode:',mode,'kWh:',kw,'Delegataire:',dg);let px,ce;if(mode){const lk=document.getElementById('lockPrice').checked;if(lk){px=prix(dg,ct);document.getElementById('prixCumac').value=px.toFixed(2)}else{px=parseFloat(document.getElementById('prixCumac').value)||0}ce=kw*px/1000;console.log('Setting kwhCumac to:',Math.round(kw).toLocaleString('fr-FR'));document.getElementById('delegataire').value=dg;document.getElementById('kwhCumac').value=Math.round(kw).toLocaleString('fr-FR')}else{px=prixC(dg);ce=kw*px/1000}const ta=ad+ce;const rb=tt-ta;document.getElementById('totalTTC').textContent=fmt(tt);document.getElementById('aidesMPR').textContent=fmt(ad);document.getElementById('aidesCEE').textContent=fmt(ce);document.getElementById('totalAides').textContent=fmt(ta);if(mode)document.getElementById('displayCoutHT').textContent=fmt(ch);const st=document.getElementById('scenario').options[document.getElementById('scenario').selectedIndex].text;const ct2=document.getElementById('categorie').options[document.getElementById('categorie').selectedIndex].text;const zn2=document.getElementById('zone').options[document.getElementById('zone').selectedIndex].text;const et2=document.getElementById('etas').options[document.getElementById('etas').selectedIndex].text;const sf2=document.getElementById('surface').options[document.getElementById('surface').selectedIndex].text;const colorClass=ct==='BLEU'?'color-bleu':(ct==='JAUNE'?'color-jaune':(ct==='VIOLET'?'color-violet':'color-rose'));const borderColor=ct==='BLEU'?'#0071e3':(ct==='JAUNE'?'#fbbf24':(ct==='VIOLET'?'#8b5cf6':'#ec4899'));document.getElementById('scenarioSummary').innerHTML=`<strong class="${colorClass}">${st}</strong><span class="separator">•</span>${ct2}<span class="separator">•</span>Zone ${zn2}<span class="separator">•</span>${sf2}<span class="separator">•</span>${et2}`;document.getElementById('scenarioSummary').style.borderLeftColor=borderColor;calcRAC(rb,ch,ta)}
+function calcRAC(rb,ch,ta){const po=parseFloat(document.getElementById('racPourcent').value)||0;const mo=parseFloat(document.getElementById('racOffert').value)||0;const rc=rb-mo;document.getElementById('resteCharge').textContent=fmt(rc);const vh=Math.max(0,rc)/1.055;const mg=vh-ch+ta;if(mode)document.getElementById('margeFinal').textContent=fmt(mg);const bd=document.getElementById('statusBadge');if(mg>=4000){bd.className='status-badge ok';bd.textContent='DOSSIER OK'}else if(mg>=2000){bd.className='status-badge warning';bd.textContent='DOSSIER À AMÉLIORER'}else{bd.className='status-badge danger';bd.textContent='DOSSIER KO'}}
+function updatePct(){const sc=document.getElementById('scenario').value;const ct=document.getElementById('categorie').value;const zn=document.getElementById('zone').value;const et=document.getElementById('etas').value;const sf=document.getElementById('surface').value;const cs=M[sc];const tt=D.TTC[sc]||0;const ad=(D.MPR[sc]&&D.MPR[sc][ct])?D.MPR[sc][ct]:0;const ch=D.COUT[sc]||0;const dg=deleg(sf,cs);const kw=D.CEE[et][zn][cs][sf];let px,ce;if(mode){const lk=document.getElementById('lockPrice').checked;px=lk?prix(dg,ct):parseFloat(document.getElementById('prixCumac').value)||0;ce=kw*px/1000}else{px=prixC(dg);ce=kw*px/1000}const ta=ad+ce;const rb=tt-ta;let po=parseFloat(document.getElementById('racPourcent').value)||0;if(po>100)po=100;if(po<0)po=0;document.getElementById('racPourcent').value=Math.round(po);const mo=Math.round(rb*(po/100));document.getElementById('racOffert').value=mo;calcRAC(rb,ch,ta)}
+function updateAmt(){const sc=document.getElementById('scenario').value;const ct=document.getElementById('categorie').value;const zn=document.getElementById('zone').value;const et=document.getElementById('etas').value;const sf=document.getElementById('surface').value;const cs=M[sc];const tt=D.TTC[sc]||0;const ad=(D.MPR[sc]&&D.MPR[sc][ct])?D.MPR[sc][ct]:0;const ch=D.COUT[sc]||0;const dg=deleg(sf,cs);const kw=D.CEE[et][zn][cs][sf];let px,ce;if(mode){const lk=document.getElementById('lockPrice').checked;px=lk?prix(dg,ct):parseFloat(document.getElementById('prixCumac').value)||0;ce=kw*px/1000}else{px=prixC(dg);ce=kw*px/1000}const ta=ad+ce;const rb=tt-ta;let mo=parseFloat(document.getElementById('racOffert').value)||0;if(mo>rb)mo=rb;if(mo<0)mo=0;document.getElementById('racOffert').value=Math.round(mo);let po=rb>0?Math.round((mo/rb)*100):0;if(po>100)po=100;if(po<0)po=0;document.getElementById('racPourcent').value=po;calcRAC(rb,ch,ta)}
+function reset(){document.getElementById('scenario').value='PAC';document.getElementById('categorie').value='BLEU';document.getElementById('zone').value='H1';document.getElementById('etas').value='140-170';document.getElementById('surface').value='90<S<110';document.getElementById('racPourcent').value=0;document.getElementById('racOffert').value=0;if(mode){document.getElementById('prixCumac').value=11.78;document.getElementById('lockPrice').checked=true}calc()}
+function checkExport(){const nom=document.getElementById('nom').value.trim();const prenom=document.getElementById('prenom').value.trim();const btn=document.getElementById('exportBtn');const wBtn=document.getElementById('whatsappBtn');if(nom&&prenom){btn.disabled=false;btn.style.cursor='pointer';btn.style.opacity='1';wBtn.disabled=false;wBtn.style.cursor='pointer';wBtn.style.opacity='1'}else{btn.disabled=true;btn.style.cursor='not-allowed';btn.style.opacity='0.5';wBtn.disabled=true;wBtn.style.cursor='not-allowed';wBtn.style.opacity='0.5'}}
+function sendWhatsApp(){const nom=document.getElementById('nom').value.trim();const prenom=document.getElementById('prenom').value.trim();if(!nom||!prenom){alert('Veuillez renseigner le nom et le prénom du client');return}const scenario=document.getElementById('scenario').options[document.getElementById('scenario').selectedIndex].text;const categorie=document.getElementById('categorie').options[document.getElementById('categorie').selectedIndex].text;const zone=document.getElementById('zone').options[document.getElementById('zone').selectedIndex].text;const etas=document.getElementById('etas').options[document.getElementById('etas').selectedIndex].text;const surface=document.getElementById('surface').options[document.getElementById('surface').selectedIndex].text;const ttc=document.getElementById('totalTTC').textContent;const aidesMPR=document.getElementById('aidesMPR').textContent;const aidesCEE=document.getElementById('aidesCEE').textContent;const totalAides=document.getElementById('totalAides').textContent;const rac=document.getElementById('resteCharge').textContent;const message=`🏠 *Demande de devis - Les Artisans Verts*%0A%0A👤 *Client :* ${prenom} ${nom}%0A%0A📋 *Configuration :*%0A• Scénario : ${scenario}%0A• ${categorie}%0A• ${zone}%0A• ${surface}%0A• ${etas}%0A%0A💰 *Montants :*%0A• Total TTC : ${ttc}%0A• Aides MPR : ${aidesMPR}%0A• Aides CEE : ${aidesCEE}%0A• Total aides : ${totalAides}%0A• Reste à charge : ${rac}%0A%0AJe souhaite obtenir un devis détaillé.`;window.open(`https://wa.me/?text=${message}`, '_blank')}
+function exportPDF(){
+    const nom=document.getElementById('nom').value.trim();
+    const prenom=document.getElementById('prenom').value.trim();
+    console.log('Export PDF clicked!',nom,prenom);
+    
+    if(!nom||!prenom){
+        alert('Veuillez renseigner le nom et le prénom du client');
+        return;
     }
-    // Deduplicate
-    return Array.from(new Set(results));
-  }
-
-  function setupSyncFor(labelText, storageKey){
-    const nodes = findInputsByLabelText(labelText);
-    if (nodes.length < 2) return; // nothing to sync
-    // Initial reconcile: if one has value, push to others
-    let seed = nodes.find(n => (n.value||'').trim().length>0);
-    if (seed){
-      nodes.forEach(n => { if(n!==seed){ n.value = seed.value; n.dispatchEvent(new Event('input', {bubbles:true})); } });
-    }
-    // Two-way sync
-    nodes.forEach(n => {
-      n.addEventListener('input', () => {
-        const val = n.value;
-        // store in session so reload keeps values across tabs
-        try { sessionStorage.setItem(storageKey, val); } catch(e){}
-        nodes.forEach(m => { if(m!==n){ m.value = val; m.dispatchEvent(new Event('input', {bubbles:true})); } });
-      }, {passive:true});
-      // Also load from sessionStorage if present
-      try {
-        const saved = sessionStorage.getItem(storageKey);
-        if (saved !== null && saved !== undefined){
-          n.value = saved;
-        }
-      } catch(e){}
-    });
-  }
-
-  // Run after DOM ready
-  if (document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', () => {
-      setupSyncFor('Nom','sync_nom');
-      setupSyncFor('Prénom','sync_prenom');
-    });
-  } else {
-    setupSyncFor('Nom','sync_nom');
-    setupSyncFor('Prénom','sync_prenom');
-  }
-})();
-</script>
-
-
-<script>
-(function(){
-  const labels = ["DOSSIER OK", "DOSSIER À AMÉLIORER", "DOSSIER A AMELIORER", "DOSSIER REFUSÉ", "DOSSIER REFUSE"];
-  function centerStatus() {
-    const all = Array.from(document.querySelectorAll('div,section,article,button,span'));
-    for (const el of all) {
-      const t = (el.textContent || "").trim().toUpperCase();
-      if (labels.includes(t)) {
-        el.classList.add('dossier-status-centered');
-      }
-    }
-  }
-  if (document.readyState !== 'loading') centerStatus();
-  else document.addEventListener('DOMContentLoaded', centerStatus);
-  // Observe future changes (when status changes with thresholds)
-  const obs = new MutationObserver(centerStatus);
-  obs.observe(document.documentElement, {childList:true, subtree:true, characterData:true});
-})();
-</script>
-
-
-<script>
-(function(){
-  function moveEtasUp(sectionIdSuffix){
-    try{
-      // paramSection is the first .section inside the card
-      const card = document.getElementById(sectionIdSuffix);
-      if(!card) return;
-      const param = card.querySelector('.section.paramSection');
-      if(!param) return;
-      const rows = param.querySelectorAll('.row');
-      if(rows.length < 2) return;
-      const row1 = rows[0];
-      const row2 = rows[1];
-
-      // Find ETAS field in row2 (by label text startsWith 'Plage d\'ETAS')
-      const etasField = Array.from(row2.children).find(div => {
-        const lb = div.querySelector('label'); 
-        return lb && /Plage d'ETAS/i.test(lb.textContent || '');
-      });
-      if(etasField){
-        // Insert ETAS just after Zone (which is label 'Zone climatique') inside row1
-        const zoneField = Array.from(row1.children).find(div => {
-          const lb = div.querySelector('label');
-          return lb && /Zone climatique/i.test(lb.textContent || '');
-        });
-        if(zoneField && zoneField.nextSibling){
-          row1.insertBefore(etasField, zoneField.nextSibling);
-        }else{
-          row1.appendChild(etasField);
-        }
-      }
-      // Optional: if row2 becomes empty, keep; otherwise OK.
-    }catch(e){ /* silent */ }
-  }
-
-  // Client & Pro
-  if(document.readyState !== 'loading'){
-    moveEtasUp('clientCard');
-    moveEtasUp('proCard');
-  }else{
-    document.addEventListener('DOMContentLoaded', function(){
-      moveEtasUp('clientCard');
-      moveEtasUp('proCard');
-    });
-  }
-})();
-</script>
-
-
-<script>
-(function(){
-  function buildCombinedBox(suffix){
-    const card = document.getElementById(suffix);
-    if(!card) return;
-    const param = card.querySelector('.section.paramSection');
-    if(!param) return;
-    const rows = param.querySelectorAll('.row');
-    if(rows.length < 2) return;
-    const row2 = rows[1]; // row with Surface (we moved ETAS up earlier)
-
-    // Create combined meta box
-    const box = document.createElement('div');
-    box.className = 'meta-box';
-    box.id = 'combo_meta_' + suffix;
-    box.style.display = 'flex';
-    box.style.flexDirection = 'column';
-    box.style.gap = '6px';
-    box.style.height = '100%';
-
-    const t1 = document.createElement('div');
-    t1.className = 'meta-title';
-    t1.textContent = 'Délégataire';
-    const v1 = document.createElement('div');
-    v1.className = 'meta-value big';
-    v1.id = 'combo_deleg_' + suffix;
-    v1.textContent = '—';
-
-    const t2 = document.createElement('div');
-    t2.className = 'meta-title';
-    t2.textContent = 'kWh cumac';
-    const v2 = document.createElement('div');
-    v2.className = 'meta-value big mono';
-    v2.id = 'combo_kwh_' + suffix;
-    v2.textContent = '—';
-
-    box.appendChild(t1); box.appendChild(v1); box.appendChild(t2); box.appendChild(v2);
-
-    // Insert as second column of row2 (right of Surface)
-    // If row2 currently has only one child, append; otherwise replace second slot
-    if(row2.children.length === 1){
-      row2.appendChild(box);
+    
+    // Remplir la zone d'impression
+    document.getElementById('printTitle').textContent=`Dossier — ${prenom} ${nom}`;
+    document.getElementById('printDate').textContent=`Date: ${new Date().toLocaleDateString('fr-FR')}`;
+    document.getElementById('printScenario').textContent=document.getElementById('scenarioSummary').textContent;
+    document.getElementById('printTTC').textContent=document.getElementById('totalTTC').textContent;
+    document.getElementById('printMPR').textContent=document.getElementById('aidesMPR').textContent;
+    document.getElementById('printCEE').textContent=document.getElementById('aidesCEE').textContent;
+    document.getElementById('printTotalAides').textContent=document.getElementById('totalAides').textContent;
+    document.getElementById('printPct').textContent=document.getElementById('racPourcent').value;
+    document.getElementById('printOffert').textContent=document.getElementById('racOffert').value+' €';
+    document.getElementById('printRAC').textContent=document.getElementById('resteCharge').textContent;
+    
+    const badge=document.getElementById('statusBadge');
+    const printStatus=document.getElementById('printStatus');
+    printStatus.textContent=badge.textContent;
+    if(badge.classList.contains('ok')){
+        printStatus.style.background='#d1f4e0';
+        printStatus.style.color='#0d7f3f';
+    }else if(badge.classList.contains('warning')){
+        printStatus.style.background='#fff3cd';
+        printStatus.style.color='#856404';
     }else{
-      // ensure it's in position 2
-      if(row2.children[1].id !== box.id){
-        if(row2.children.length >= 2) row2.replaceChild(box, row2.children[1]);
-        else row2.appendChild(box);
-      }
+        printStatus.style.background='#f8d7da';
+        printStatus.style.color='#721c24';
     }
-
-    // Hide the old meta-compact in this card
-    const metaCompact = card.querySelector('.meta-compact');
-    if(metaCompact) metaCompact.style.display = 'none';
-
-    // Sync values from original spans (delegataire_* and kwh_*)
-    const delegSrc = card.querySelector('#delegataire_' + (suffix === 'clientCard' ? 'c' : 'p'));
-    const kwhSrc = card.querySelector('#kwh_' + (suffix === 'clientCard' ? 'c' : 'p'));
-    const v1Dest = v1;
-    const v2Dest = v2;
-
-    function syncOnce(){
-      if(delegSrc) v1Dest.textContent = delegSrc.textContent || '—';
-      if(kwhSrc) v2Dest.textContent = kwhSrc.textContent || '—';
-    }
-    syncOnce();
-
-    // Observe changes to keep in sync when parameters change
-    if(delegSrc){
-      new MutationObserver(syncOnce).observe(delegSrc, {childList:true, characterData:true, subtree:true});
-    }
-    if(kwhSrc){
-      new MutationObserver(syncOnce).observe(kwhSrc, {childList:true, characterData:true, subtree:true});
-    }
-  }
-
-  function init(){
-    buildCombinedBox('clientCard');
-    buildCombinedBox('proCard');
-  }
-
-  if(document.readyState !== 'loading') init();
-  else document.addEventListener('DOMContentLoaded', init);
-})();
+    
+    console.log('Opening print dialog...');
+    window.print();
+}
+document.getElementById('lockBtn').onclick=function(){if(!mode){document.getElementById('passwordModal').classList.add('active')}else{mode=0;document.getElementById('mainContent').classList.remove('fournisseur-mode');document.getElementById('lockIcon').textContent='🔒';calc()}};
+document.getElementById('exportBtn').onclick=exportPDF;
+document.getElementById('whatsappBtn').onclick=sendWhatsApp;
+document.getElementById('unlockBtn').onclick=function(){const pw=document.getElementById('passwordInput').value;if(pw==='gamberge'||pw==='lav'){mode=1;document.getElementById('mainContent').classList.add('fournisseur-mode');document.getElementById('passwordModal').classList.remove('active');document.getElementById('passwordInput').value='';document.getElementById('lockIcon').textContent='🔓';calc()}else{alert('Mot de passe incorrect')}};
+document.getElementById('passwordModal').onclick=function(e){if(e.target.id==='passwordModal'){document.getElementById('passwordModal').classList.remove('active')}};
+calc();
 </script>
-
-
-<script>
-(function(){
-  function buildCombinedInlineBox(suffix){
-    const card = document.getElementById(suffix);
-    if(!card) return;
-    const param = card.querySelector('.section.paramSection');
-    if(!param) return;
-    const rows = param.querySelectorAll('.row');
-    if(rows.length < 2) return;
-    const row2 = rows[1];
-
-    // Create inline combined box
-    const box = document.createElement('div');
-    box.className = 'meta-box inline-meta';
-    box.id = 'combo_meta_' + suffix;
-    box.style.display = 'flex';
-    box.style.alignItems = 'center';
-    box.style.justifyContent = 'space-between';
-    box.style.gap = '10px';
-    box.style.width = '100%';
-    box.style.height = '100%';
-
-    const span = document.createElement('span');
-    span.id = 'combo_text_' + suffix;
-    span.textContent = '—';
-
-    box.appendChild(span);
-
-    // Insert as second column of row2 (right of Surface)
-    if(row2.children.length === 1){
-      row2.appendChild(box);
-    } else {
-      if(row2.children.length >= 2) row2.replaceChild(box, row2.children[1]);
-      else row2.appendChild(box);
-    }
-
-    // Hide the old meta-compact
-    const metaCompact = card.querySelector('.meta-compact');
-    if(metaCompact) metaCompact.style.display = 'none';
-
-    // Source values
-    const delegSrc = card.querySelector('#delegataire_' + (suffix === 'clientCard' ? 'c' : 'p'));
-    const kwhSrc = card.querySelector('#kwh_' + (suffix === 'clientCard' ? 'c' : 'p'));
-    function syncText(){
-      const d = delegSrc ? delegSrc.textContent.trim() : '—';
-      const k = kwhSrc ? kwhSrc.textContent.trim() : '—';
-      span.innerHTML = `<strong>${d}</strong> | <strong>${k}</strong>`;
-    }
-    syncText();
-    if(delegSrc) new MutationObserver(syncText).observe(delegSrc, {childList:true, characterData:true, subtree:true});
-    if(kwhSrc) new MutationObserver(syncText).observe(kwhSrc, {childList:true, characterData:true, subtree:true});
-  }
-
-  function init(){
-    buildCombinedInlineBox('clientCard');
-    buildCombinedInlineBox('proCard');
-  }
-  if(document.readyState!=='loading') init();
-  else document.addEventListener('DOMContentLoaded', init);
-})();
-</script>
-
-
-<script>
-(function(){
-  function addLabelAbove(id){
-    const el = document.getElementById(id);
-    if(!el) return;
-    const label = document.createElement('label');
-    label.className = 'inline-meta-label';
-    label.textContent = 'Délégataire & cumac';
-    el.parentNode.insertBefore(label, el);
-  }
-  if(document.readyState !== 'loading'){
-    addLabelAbove('combo_meta_clientCard');
-    addLabelAbove('combo_meta_proCard');
-  } else {
-    document.addEventListener('DOMContentLoaded', function(){
-      addLabelAbove('combo_meta_clientCard');
-      addLabelAbove('combo_meta_proCard');
-    });
-  }
-})();
-</script>
-
-
-<script>
-(function(){
-  function placeLabelInSameCell(comboId, labelText){
-    const el = document.getElementById(comboId);
-    if(!el) return;
-    const parent = el.parentElement; // row cell
-    if(!parent) return;
-
-    // Remove any stray inline-meta-label siblings previously inserted
-    Array.from(parent.querySelectorAll('.inline-meta-label')).forEach(n => n.remove());
-
-    // Build wrapper and insert label + move el inside
-    const wrapper = document.createElement('div');
-    wrapper.className = 'inline-meta-wrapper';
-    const label = document.createElement('label');
-    label.className = 'inline-meta-label';
-    label.textContent = labelText;
-
-    // Replace el with wrapper in the grid cell
-    parent.replaceChild(wrapper, el);
-    wrapper.appendChild(label);
-    wrapper.appendChild(el);
-  }
-
-  function init(){
-    placeLabelInSameCell('combo_meta_clientCard', 'Délégataire & cumac');
-    placeLabelInSameCell('combo_meta_proCard', 'Délégataire & cumac');
-  }
-
-  if(document.readyState !== 'loading') init();
-  else document.addEventListener('DOMContentLoaded', init);
-})();
-</script>
-
-
-<script>
-(function(){
-  function equalizeFieldHeights(cardId, leftSelectId, rightBoxId){
-    const card = document.getElementById(cardId);
-    if(!card) return;
-    const left = card.querySelector('#' + leftSelectId);
-    const box = card.querySelector('#' + rightBoxId);
-    if(!left || !box) return;
-
-    function apply(){
-      const cs = window.getComputedStyle(left);
-      // Real outer height (content + padding + border)
-      const h = left.getBoundingClientRect().height;
-      // Mirror border/padding styles
-      box.style.borderRadius = cs.borderRadius;
-      box.style.borderWidth  = cs.borderWidth;
-      box.style.borderStyle  = cs.borderStyle || 'solid';
-      box.style.borderColor  = cs.borderColor || getComputedStyle(document.body).getPropertyValue('--border') || '#d1d5db';
-      box.style.paddingTop   = cs.paddingTop;
-      box.style.paddingBottom= cs.paddingBottom;
-      box.style.paddingLeft  = cs.paddingLeft;
-      box.style.paddingRight = cs.paddingRight;
-      // Exact height match
-      box.style.height = h + 'px';
-      box.style.display = 'flex';
-      box.style.alignItems = 'center';
-    }
-
-    apply();
-    // Re-apply on resize/zoom/font changes
-    window.addEventListener('resize', apply);
-    const ro = new ResizeObserver(apply);
-    ro.observe(left);
-  }
-
-  function init(){
-    equalizeFieldHeights('clientCard', 'surface_c', 'combo_meta_clientCard');
-    equalizeFieldHeights('proCard',    'surface_p', 'combo_meta_proCard');
-  }
-  if(document.readyState !== 'loading') init();
-  else document.addEventListener('DOMContentLoaded', init);
-})();
-</script>
-
-
-<script>
-(function () {
-  function getScenarioText(select) {
-    if (!select) return '—';
-    const opt = select.options[select.selectedIndex];
-    return (opt && (opt.textContent || opt.innerText) || select.value || '—').trim();
-  }
-
-  function findTotalTtcTiles() {
-    const tiles = Array.from(document.querySelectorAll('.tile'));
-    return tiles.filter(t => {
-      const k = t.querySelector('.k');
-      return k && /total\s*ttc/i.test((k.textContent || '').trim());
-    });
-  }
-
-  function upsertScenarioLine(tile, scenarioText) {
-    if (!tile) return;
-    let label = tile.querySelector('.scenario-label[data-auto="1"]');
-    if (!label) {
-      label = document.createElement('div');
-      label.className = 'scenario-label';
-      label.setAttribute('data-auto', '1');
-      const k = tile.querySelector('.k');
-      if (k && k.parentNode) {
-        k.insertAdjacentElement('afterend', label);
-      } else {
-        tile.insertBefore(label, tile.firstChild);
-      }
-    }
-    label.innerHTML = '<span class="prefix">Scénario choisi :</span> ' + (scenarioText || '—');
-  }
-
-  function hideMiniTilesFallback() {
-    const rx = [/délégataire/i, /delegataire/i, /kwh\s*cumac/i];
-    document.querySelectorAll('.tile').forEach(t => {
-      const k = t.querySelector('.k');
-      if (!k) return;
-      const txt = (k.textContent || '').trim();
-      if (rx.some(r => r.test(txt))) {
-        t.style.display = 'none';
-      }
-    });
-  }
-
-  function refresh() {
-    const selC = document.getElementById('mprScenario_c');
-    const selP = document.getElementById('mprScenario_p');
-    const textC = getScenarioText(selC);
-    const textP = getScenarioText(selP) || textC;
-
-    const tiles = findTotalTtcTiles();
-    if (tiles.length >= 2) {
-      upsertScenarioLine(tiles[0], textC);
-      upsertScenarioLine(tiles[1], textP);
-    } else {
-      tiles.forEach(t => upsertScenarioLine(t, textC));
-    }
-
-    hideMiniTilesFallback();
-  }
-
-  ['mprScenario_c','mprScenario_p'].forEach(id => {
-    const sel = document.getElementById(id);
-    if (sel) sel.addEventListener('change', refresh);
-  });
-
-  const mo = new MutationObserver(() => {
-    clearTimeout(window.__ttcRefreshTick);
-    window.__ttcRefreshTick = setTimeout(refresh, 50);
-  });
-  mo.observe(document.documentElement, { childList: true, subtree: true });
-
-  if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    refresh();
-  } else {
-    document.addEventListener('DOMContentLoaded', refresh);
-  }
-})();
-</script>
-
 </body>
 </html>
