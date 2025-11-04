@@ -501,9 +501,18 @@
                                 <span style="color: #86868b;">Coût admin (HT)</span>
                                 <span style="font-weight: 600;" id="coutAdmin">—</span>
                             </div>
-                            <div style="border-top: 2px solid #d2d2d7; margin-top: 8px; padding-top: 8px; display: flex; justify-content: space-between; font-size: 14px;">
-                                <span style="font-weight: 600;">TOTAL COÛT HT</span>
-                                <span style="font-weight: 700; font-size: 16px;" id="coutTotalHT">—</span>
+                            <div style="border-top: 2px solid #d2d2d7; margin-top: 8px; padding-top: 8px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 14px; margin-bottom: 8px;">
+                                    <span style="font-weight: 600;">TOTAL COÛT HT</span>
+                                </div>
+                                <div>
+                                    <input type="number" id="coutTotalHTInput" value="6200" step="1" oninput="updateFromCoutHT()" style="font-size: 18px; font-weight: 700; text-align: right; padding: 10px 14px; width: 100%; border: 2px solid #0071e3; border-radius: 8px; background: white;">
+                                    <small style="font-size: 11px; color: #86868b; margin-top: 6px; display: block;">
+                                        <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
+                                            <input type="checkbox" id="lockCoutHT" checked onchange="calc()"> Verrouiller (auto selon détail × quantité)
+                                        </label>
+                                    </small>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -546,6 +555,16 @@
                         <div class="amount-row">
                             <div class="amount-label">TOTAL TTC</div>
                             <div class="amount-value" id="totalTTC">—</div>
+                        </div>
+
+                        <div class="amount-row fournisseur-only">
+                            <div class="amount-label">TOTAL TTC</div>
+                            <input type="number" id="totalTTCInput" value="10890" step="1" oninput="updateFromTTC()" style="font-size: 24px; font-weight: 700; text-align: right; padding: 10px 14px; width: 100%; border: 2px solid #0071e3; border-radius: 8px; background: white; margin-bottom: 6px;">
+                            <small style="font-size: 11px; color: #86868b; margin-top: 4px;">
+                                <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
+                                    <input type="checkbox" id="lockTTC" checked onchange="calc()"> Verrouiller (auto selon scénario × quantité)
+                                </label>
+                            </small>
                         </div>
 
                         <div class="amount-row fournisseur-only">
@@ -718,6 +737,30 @@ function fmt(n){return Math.round(n).toLocaleString('fr-FR')+' €'}
 
 // Fonction pour mettre à jour les coûts détaillés
 function updateCosts(){
+    // Sauvegarder le pourcentage actuel
+    const savedPct = parseFloat(document.getElementById('racPourcent').value) || 0;
+    
+    // Recalculer tout
+    calc();
+    
+    // Réappliquer le pourcentage sur le nouveau RAC si nécessaire
+    if(savedPct > 0){
+        document.getElementById('racPourcent').value = savedPct;
+        updatePct();
+    }
+}
+
+// Fonction appelée quand on modifie manuellement le Total TTC
+function updateFromTTC(){
+    // Décocher le verrou automatiquement
+    document.getElementById('lockTTC').checked=false;
+    calc();
+}
+
+// Fonction appelée quand on modifie manuellement le Coût HT
+function updateFromCoutHT(){
+    // Décocher le verrou automatiquement
+    document.getElementById('lockCoutHT').checked=false;
     calc();
 }
 function calc(){
@@ -731,23 +774,52 @@ function calc(){
     // Calculer la quantité (1 par défaut en mode client)
     const qty=mode ? (parseInt(document.getElementById('quantite').value)||1) : 1;
     
-    const tt=(D.TTC[sc]||0)*qty;
+    // Gestion du Total TTC
+    let tt;
+    if(mode){
+        const lockTTC=document.getElementById('lockTTC').checked;
+        if(lockTTC){
+            tt=(D.TTC[sc]||0)*qty;
+            document.getElementById('totalTTCInput').value=tt;
+        }else{
+            tt=parseFloat(document.getElementById('totalTTCInput').value)||0;
+        }
+    }else{
+        tt=(D.TTC[sc]||0)*qty;
+    }
+    
     const ad=(D.MPR[sc]&&D.MPR[sc][ct])?D.MPR[sc][ct]:0;
     
-    // Calculer le coût HT selon la quantité en mode fournisseur
+    // Gestion du Coût HT
     let ch;
     if(mode){
-        if(D.COUT_DETAIL[sc]){
-            const detail=D.COUT_DETAIL[sc];
-            ch=(detail.materiel+detail.pose+detail.admin)*qty;
-            
-            // Mettre à jour l'affichage du détail des coûts
-            document.getElementById('coutMateriel').textContent=fmt(detail.materiel*qty);
-            document.getElementById('coutPose').textContent=fmt(detail.pose*qty);
-            document.getElementById('coutAdmin').textContent=fmt(detail.admin*qty);
-            document.getElementById('coutTotalHT').textContent=fmt(ch);
+        const lockCoutHT=document.getElementById('lockCoutHT').checked;
+        
+        if(lockCoutHT){
+            // Mode auto : calculer selon la quantité
+            if(D.COUT_DETAIL[sc]){
+                const detail=D.COUT_DETAIL[sc];
+                ch=(detail.materiel+detail.pose+detail.admin)*qty;
+                
+                // Mettre à jour l'affichage du détail des coûts
+                document.getElementById('coutMateriel').textContent=fmt(detail.materiel*qty);
+                document.getElementById('coutPose').textContent=fmt(detail.pose*qty);
+                document.getElementById('coutAdmin').textContent=fmt(detail.admin*qty);
+                document.getElementById('coutTotalHTInput').value=ch;
+            }else{
+                ch=(D.COUT[sc]||0)*qty;
+                document.getElementById('coutTotalHTInput').value=ch;
+            }
         }else{
-            ch=(D.COUT[sc]||0)*qty;
+            // Mode manuel : utiliser la valeur saisie
+            ch=parseFloat(document.getElementById('coutTotalHTInput').value)||0;
+            
+            // Afficher "Manuel" pour le détail
+            if(D.COUT_DETAIL[sc]){
+                document.getElementById('coutMateriel').textContent='—';
+                document.getElementById('coutPose').textContent='—';
+                document.getElementById('coutAdmin').textContent='—';
+            }
         }
     }else{
         ch=D.COUT[sc]||0;
@@ -812,18 +884,18 @@ function calc(){
     document.getElementById('scenarioSummary').innerHTML=`<strong class="${colorClass}">${st}</strong><span class="separator">•</span>${ct2}<span class="separator">•</span>Zone ${zn2}<span class="separator">•</span>${sf2}<span class="separator">•</span>${et2}`;
     document.getElementById('scenarioSummary').style.borderLeftColor=borderColor;
     
-    calcRAC(rb,ch,ta,taForMarge);
+    calcRAC(rb,ch,ta,taForMarge,tt);
 }
 
 // CORRECTION: Le statut est TOUJOURS calculé selon la marge finale réelle (vue fournisseur)
-function calcRAC(rb,ch,ta,taForMarge){
+function calcRAC(rb,ch,ta,taForMarge,tt){
     const po=parseFloat(document.getElementById('racPourcent').value)||0;
     const mo=parseFloat(document.getElementById('racOffert').value)||0;
     const rc=rb-mo;
     document.getElementById('resteCharge').textContent=fmt(rc);
     
-    // Calcul de la marge finale POUR LE STATUT (avec les vraies aides fournisseur)
-    const rbForMarge = D.TTC[document.getElementById('scenario').value] - taForMarge;
+    // Calcul de la marge finale POUR LE STATUT (avec les vraies aides fournisseur et le vrai TTC)
+    const rbForMarge = tt - taForMarge;
     const rcForMarge = rbForMarge - mo;
     const vhForMarge = Math.max(0,rcForMarge)/1.055;
     const mgForMarge = vhForMarge - ch + taForMarge;
@@ -854,9 +926,42 @@ function updatePct(){
     const et=document.getElementById('etas').value;
     const sf=document.getElementById('surface').value;
     const cs=M[sc];
-    const tt=D.TTC[sc]||0;
+    
+    // Récupérer le TTC (manuel ou auto)
+    let tt;
+    if(mode){
+        const lockTTC=document.getElementById('lockTTC').checked;
+        if(lockTTC){
+            const qty=parseInt(document.getElementById('quantite').value)||1;
+            tt=(D.TTC[sc]||0)*qty;
+        }else{
+            tt=parseFloat(document.getElementById('totalTTCInput').value)||0;
+        }
+    }else{
+        tt=D.TTC[sc]||0;
+    }
+    
     const ad=(D.MPR[sc]&&D.MPR[sc][ct])?D.MPR[sc][ct]:0;
-    const ch=D.COUT[sc]||0;
+    
+    // Récupérer le coût HT (manuel ou auto)
+    let ch;
+    if(mode){
+        const lockCoutHT=document.getElementById('lockCoutHT').checked;
+        if(lockCoutHT){
+            const qty=parseInt(document.getElementById('quantite').value)||1;
+            if(D.COUT_DETAIL[sc]){
+                const detail=D.COUT_DETAIL[sc];
+                ch=(detail.materiel+detail.pose+detail.admin)*qty;
+            }else{
+                ch=(D.COUT[sc]||0)*qty;
+            }
+        }else{
+            ch=parseFloat(document.getElementById('coutTotalHTInput').value)||0;
+        }
+    }else{
+        ch=D.COUT[sc]||0;
+    }
+    
     const kw=D.CEE[et][zn][cs][sf];
     
     let px,ce,dg;
@@ -897,7 +1002,7 @@ function updatePct(){
     const mo=Math.round(rb*(po/100));
     document.getElementById('racOffert').value=mo;
     
-    calcRAC(rb,ch,ta,taForMarge);
+    calcRAC(rb,ch,ta,taForMarge,tt);
 }
 function updateAmt(){
     const sc=document.getElementById('scenario').value;
@@ -906,9 +1011,42 @@ function updateAmt(){
     const et=document.getElementById('etas').value;
     const sf=document.getElementById('surface').value;
     const cs=M[sc];
-    const tt=D.TTC[sc]||0;
+    
+    // Récupérer le TTC (manuel ou auto)
+    let tt;
+    if(mode){
+        const lockTTC=document.getElementById('lockTTC').checked;
+        if(lockTTC){
+            const qty=parseInt(document.getElementById('quantite').value)||1;
+            tt=(D.TTC[sc]||0)*qty;
+        }else{
+            tt=parseFloat(document.getElementById('totalTTCInput').value)||0;
+        }
+    }else{
+        tt=D.TTC[sc]||0;
+    }
+    
     const ad=(D.MPR[sc]&&D.MPR[sc][ct])?D.MPR[sc][ct]:0;
-    const ch=D.COUT[sc]||0;
+    
+    // Récupérer le coût HT (manuel ou auto)
+    let ch;
+    if(mode){
+        const lockCoutHT=document.getElementById('lockCoutHT').checked;
+        if(lockCoutHT){
+            const qty=parseInt(document.getElementById('quantite').value)||1;
+            if(D.COUT_DETAIL[sc]){
+                const detail=D.COUT_DETAIL[sc];
+                ch=(detail.materiel+detail.pose+detail.admin)*qty;
+            }else{
+                ch=(D.COUT[sc]||0)*qty;
+            }
+        }else{
+            ch=parseFloat(document.getElementById('coutTotalHTInput').value)||0;
+        }
+    }else{
+        ch=D.COUT[sc]||0;
+    }
+    
     const kw=D.CEE[et][zn][cs][sf];
     
     let px,ce,dg;
@@ -952,7 +1090,7 @@ function updateAmt(){
     if(po<0)po=0;
     document.getElementById('racPourcent').value=po;
     
-    calcRAC(rb,ch,ta,taForMarge);
+    calcRAC(rb,ch,ta,taForMarge,tt);
 }
 function reset(){document.getElementById('scenario').value='PAC';document.getElementById('categorie').value='BLEU';document.getElementById('zone').value='H1';document.getElementById('etas').value='140-170';document.getElementById('surface').value='90<S<110';document.getElementById('racPourcent').value=0;document.getElementById('racOffert').value=0;if(mode){document.getElementById('prixCumac').value=11.78;document.getElementById('lockPrice').checked=true}calc()}
 function checkExport(){const nom=document.getElementById('nom').value.trim();const prenom=document.getElementById('prenom').value.trim();const btn=document.getElementById('exportBtn');const wBtn=document.getElementById('whatsappBtn');if(nom&&prenom){btn.disabled=false;btn.style.cursor='pointer';btn.style.opacity='1';wBtn.disabled=false;wBtn.style.cursor='pointer';wBtn.style.opacity='1'}else{btn.disabled=true;btn.style.cursor='not-allowed';btn.style.opacity='0.5';wBtn.disabled=true;wBtn.style.cursor='not-allowed';wBtn.style.opacity='0.5'}}
