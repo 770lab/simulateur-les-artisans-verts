@@ -377,6 +377,11 @@
             text-align: center;
             margin-top: 8px;
         }
+
+        .editable-value {
+            background: #fff9e6;
+            border: 2px dashed #fbbf24;
+        }
     </style>
 </head>
 <body>
@@ -478,7 +483,33 @@
             </div>
 
             <div class="card fournisseur-only">
-                <h2 class="card-title">Coûts (Vue Fournisseur)</h2>
+                <h2 class="card-title">Montants (Vue Fournisseur)</h2>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="totalTTCInput">Total TTC (€)</label>
+                        <input type="number" id="totalTTCInput" value="10890" step="1" oninput="calc()">
+                        <small>
+                            <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
+                                <input type="checkbox" id="lockTTC" checked onchange="calc()"> Verrouiller (valeur auto)
+                            </label>
+                        </small>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="coutHTInput">Coût HT (€)</label>
+                        <input type="number" id="coutHTInput" value="6200" step="1" oninput="calc()">
+                        <small>
+                            <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
+                                <input type="checkbox" id="lockCoutHT" checked onchange="calc()"> Verrouiller (valeur auto)
+                            </label>
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card fournisseur-only">
+                <h2 class="card-title">CEE (Vue Fournisseur)</h2>
                 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                     <div class="form-group" style="margin-bottom: 0;">
@@ -653,24 +684,95 @@ function deleg(s,c,cee,ch){if(c==='BALLON SSC')return 'VALOREN';return cee>(ch*1
 function prix(d,c){const b=c==='BLEU';return d==='ECO NEGOCE'?(b?12.5:7.4):(b?11.78:7.0)}
 function prixC(d){return d==='ECO NEGOCE'?6.5:7.0}
 function fmt(n){return Math.round(n).toLocaleString('fr-FR')+' €'}
-function calc(){const sc=document.getElementById('scenario').value;const ct=document.getElementById('categorie').value;const zn=document.getElementById('zone').value;const et=document.getElementById('etas').value;const sf=document.getElementById('surface').value;const cs=M[sc];const tt=D.TTC[sc]||0;const ad=(D.MPR[sc]&&D.MPR[sc][ct])?D.MPR[sc][ct]:0;const ch=D.COUT[sc]||0;const kw=D.CEE[et][zn][cs][sf];let px,ce,dg;if(mode){const lk=document.getElementById('lockPrice').checked;if(lk){dg=deleg(sf,cs,kw*11.78/1000,ch);px=prix(dg,ct);document.getElementById('prixCumac').value=px.toFixed(2)}else{px=parseFloat(document.getElementById('prixCumac').value)||0;ce=kw*px/1000;dg=deleg(sf,cs,ce,ch)}ce=kw*px/1000;console.log('Mode:',mode,'kWh:',kw,'Delegataire:',dg);console.log('Setting kwhCumac to:',Math.round(kw).toLocaleString('fr-FR'));document.getElementById('delegataire').value=dg;document.getElementById('kwhCumac').value=Math.round(kw).toLocaleString('fr-FR')}else{ce=kw*7.0/1000;dg=deleg(sf,cs,ce,ch);px=prixC(dg);ce=kw*px/1000}const ta=ad+ce;const rb=tt-ta;document.getElementById('totalTTC').textContent=fmt(tt);document.getElementById('aidesMPR').textContent=fmt(ad);document.getElementById('aidesCEE').textContent=fmt(ce);document.getElementById('totalAides').textContent=fmt(ta);if(mode)document.getElementById('displayCoutHT').textContent=fmt(ch);const st=document.getElementById('scenario').options[document.getElementById('scenario').selectedIndex].text;const ct2=document.getElementById('categorie').options[document.getElementById('categorie').selectedIndex].text;const zn2=document.getElementById('zone').options[document.getElementById('zone').selectedIndex].text;const et2=document.getElementById('etas').options[document.getElementById('etas').selectedIndex].text;const sf2=document.getElementById('surface').options[document.getElementById('surface').selectedIndex].text;const colorClass=ct==='BLEU'?'color-bleu':(ct==='JAUNE'?'color-jaune':(ct==='VIOLET'?'color-violet':'color-rose'));const borderColor=ct==='BLEU'?'#0071e3':(ct==='JAUNE'?'#fbbf24':(ct==='VIOLET'?'#8b5cf6':'#ec4899'));document.getElementById('scenarioSummary').innerHTML=`<strong class="${colorClass}">${st}</strong><span class="separator">•</span>${ct2}<span class="separator">•</span>Zone ${zn2}<span class="separator">•</span>${sf2}<span class="separator">•</span>${et2}`;document.getElementById('scenarioSummary').style.borderLeftColor=borderColor;calcRAC(rb,ch,ta)}
+function calc(){
+    const sc=document.getElementById('scenario').value;
+    const ct=document.getElementById('categorie').value;
+    const zn=document.getElementById('zone').value;
+    const et=document.getElementById('etas').value;
+    const sf=document.getElementById('surface').value;
+    const cs=M[sc];
+    
+    // Gestion du Total TTC
+    let tt;
+    if(mode && !document.getElementById('lockTTC').checked) {
+        tt = parseFloat(document.getElementById('totalTTCInput').value) || 0;
+    } else {
+        tt = D.TTC[sc] || 0;
+        if(mode) {
+            document.getElementById('totalTTCInput').value = tt;
+        }
+    }
+    
+    // Gestion du Coût HT
+    let ch;
+    if(mode && !document.getElementById('lockCoutHT').checked) {
+        ch = parseFloat(document.getElementById('coutHTInput').value) || 0;
+    } else {
+        ch = D.COUT[sc] || 0;
+        if(mode) {
+            document.getElementById('coutHTInput').value = ch;
+        }
+    }
+    
+    const ad=(D.MPR[sc]&&D.MPR[sc][ct])?D.MPR[sc][ct]:0;
+    const kw=D.CEE[et][zn][cs][sf];
+    let px,ce,dg;
+    
+    if(mode){
+        const lk=document.getElementById('lockPrice').checked;
+        if(lk){
+            dg=deleg(sf,cs,kw*11.78/1000,ch);
+            px=prix(dg,ct);
+            document.getElementById('prixCumac').value=px.toFixed(2);
+        }else{
+            px=parseFloat(document.getElementById('prixCumac').value)||0;
+            ce=kw*px/1000;
+            dg=deleg(sf,cs,ce,ch);
+        }
+        ce=kw*px/1000;
+        document.getElementById('delegataire').value=dg;
+        document.getElementById('kwhCumac').value=Math.round(kw).toLocaleString('fr-FR');
+    }else{
+        ce=kw*7.0/1000;
+        dg=deleg(sf,cs,ce,ch);
+        px=prixC(dg);
+        ce=kw*px/1000;
+    }
+    
+    const ta=ad+ce;
+    const rb=tt-ta;
+    document.getElementById('totalTTC').textContent=fmt(tt);
+    document.getElementById('aidesMPR').textContent=fmt(ad);
+    document.getElementById('aidesCEE').textContent=fmt(ce);
+    document.getElementById('totalAides').textContent=fmt(ta);
+    if(mode)document.getElementById('displayCoutHT').textContent=fmt(ch);
+    
+    const st=document.getElementById('scenario').options[document.getElementById('scenario').selectedIndex].text;
+    const ct2=document.getElementById('categorie').options[document.getElementById('categorie').selectedIndex].text;
+    const zn2=document.getElementById('zone').options[document.getElementById('zone').selectedIndex].text;
+    const et2=document.getElementById('etas').options[document.getElementById('etas').selectedIndex].text;
+    const sf2=document.getElementById('surface').options[document.getElementById('surface').selectedIndex].text;
+    const colorClass=ct==='BLEU'?'color-bleu':(ct==='JAUNE'?'color-jaune':(ct==='VIOLET'?'color-violet':'color-rose'));
+    const borderColor=ct==='BLEU'?'#0071e3':(ct==='JAUNE'?'#fbbf24':(ct==='VIOLET'?'#8b5cf6':'#ec4899'));
+    document.getElementById('scenarioSummary').innerHTML=`<strong class="${colorClass}">${st}</strong><span class="separator">•</span>${ct2}<span class="separator">•</span>Zone ${zn2}<span class="separator">•</span>${sf2}<span class="separator">•</span>${et2}`;
+    document.getElementById('scenarioSummary').style.borderLeftColor=borderColor;
+    calcRAC(rb,ch,ta);
+}
 function calcRAC(rb,ch,ta){const po=parseFloat(document.getElementById('racPourcent').value)||0;const mo=parseFloat(document.getElementById('racOffert').value)||0;const rc=rb-mo;document.getElementById('resteCharge').textContent=fmt(rc);const vh=Math.max(0,rc)/1.055;const mg=vh-ch+ta;if(mode)document.getElementById('margeFinal').textContent=fmt(mg);const bd=document.getElementById('statusBadge');if(mg>=4000){bd.className='status-badge ok';bd.textContent='DOSSIER OK'}else if(mg>=2000){bd.className='status-badge warning';bd.textContent='DOSSIER À AMÉLIORER'}else{bd.className='status-badge danger';bd.textContent='DOSSIER KO'}}
-function updatePct(){const sc=document.getElementById('scenario').value;const ct=document.getElementById('categorie').value;const zn=document.getElementById('zone').value;const et=document.getElementById('etas').value;const sf=document.getElementById('surface').value;const cs=M[sc];const tt=D.TTC[sc]||0;const ad=(D.MPR[sc]&&D.MPR[sc][ct])?D.MPR[sc][ct]:0;const ch=D.COUT[sc]||0;const kw=D.CEE[et][zn][cs][sf];let px,ce,dg;if(mode){const lk=document.getElementById('lockPrice').checked;if(lk){ce=kw*11.78/1000;dg=deleg(sf,cs,ce,ch);px=prix(dg,ct)}else{px=parseFloat(document.getElementById('prixCumac').value)||0}ce=kw*px/1000}else{ce=kw*7.0/1000;dg=deleg(sf,cs,ce,ch);px=prixC(dg);ce=kw*px/1000}const ta=ad+ce;const rb=tt-ta;let po=parseFloat(document.getElementById('racPourcent').value)||0;if(po>100)po=100;if(po<0)po=0;document.getElementById('racPourcent').value=Math.round(po);const mo=Math.round(rb*(po/100));document.getElementById('racOffert').value=mo;calcRAC(rb,ch,ta)}
-function updateAmt(){const sc=document.getElementById('scenario').value;const ct=document.getElementById('categorie').value;const zn=document.getElementById('zone').value;const et=document.getElementById('etas').value;const sf=document.getElementById('surface').value;const cs=M[sc];const tt=D.TTC[sc]||0;const ad=(D.MPR[sc]&&D.MPR[sc][ct])?D.MPR[sc][ct]:0;const ch=D.COUT[sc]||0;const kw=D.CEE[et][zn][cs][sf];let px,ce,dg;if(mode){const lk=document.getElementById('lockPrice').checked;if(lk){ce=kw*11.78/1000;dg=deleg(sf,cs,ce,ch);px=prix(dg,ct)}else{px=parseFloat(document.getElementById('prixCumac').value)||0}ce=kw*px/1000}else{ce=kw*7.0/1000;dg=deleg(sf,cs,ce,ch);px=prixC(dg);ce=kw*px/1000}const ta=ad+ce;const rb=tt-ta;let mo=parseFloat(document.getElementById('racOffert').value)||0;if(mo>rb)mo=rb;if(mo<0)mo=0;document.getElementById('racOffert').value=Math.round(mo);let po=rb>0?Math.round((mo/rb)*100):0;if(po>100)po=100;if(po<0)po=0;document.getElementById('racPourcent').value=po;calcRAC(rb,ch,ta)}
-function reset(){document.getElementById('scenario').value='PAC';document.getElementById('categorie').value='BLEU';document.getElementById('zone').value='H1';document.getElementById('etas').value='140-170';document.getElementById('surface').value='90<S<110';document.getElementById('racPourcent').value=0;document.getElementById('racOffert').value=0;if(mode){document.getElementById('prixCumac').value=11.78;document.getElementById('lockPrice').checked=true}calc()}
+function updatePct(){const sc=document.getElementById('scenario').value;const ct=document.getElementById('categorie').value;const zn=document.getElementById('zone').value;const et=document.getElementById('etas').value;const sf=document.getElementById('surface').value;const cs=M[sc];let tt;if(mode&&!document.getElementById('lockTTC').checked){tt=parseFloat(document.getElementById('totalTTCInput').value)||0}else{tt=D.TTC[sc]||0}let ch;if(mode&&!document.getElementById('lockCoutHT').checked){ch=parseFloat(document.getElementById('coutHTInput').value)||0}else{ch=D.COUT[sc]||0}const ad=(D.MPR[sc]&&D.MPR[sc][ct])?D.MPR[sc][ct]:0;const kw=D.CEE[et][zn][cs][sf];let px,ce,dg;if(mode){const lk=document.getElementById('lockPrice').checked;if(lk){ce=kw*11.78/1000;dg=deleg(sf,cs,ce,ch);px=prix(dg,ct)}else{px=parseFloat(document.getElementById('prixCumac').value)||0}ce=kw*px/1000}else{ce=kw*7.0/1000;dg=deleg(sf,cs,ce,ch);px=prixC(dg);ce=kw*px/1000}const ta=ad+ce;const rb=tt-ta;let po=parseFloat(document.getElementById('racPourcent').value)||0;if(po>100)po=100;if(po<0)po=0;document.getElementById('racPourcent').value=Math.round(po);const mo=Math.round(rb*(po/100));document.getElementById('racOffert').value=mo;calcRAC(rb,ch,ta)}
+function updateAmt(){const sc=document.getElementById('scenario').value;const ct=document.getElementById('categorie').value;const zn=document.getElementById('zone').value;const et=document.getElementById('etas').value;const sf=document.getElementById('surface').value;const cs=M[sc];let tt;if(mode&&!document.getElementById('lockTTC').checked){tt=parseFloat(document.getElementById('totalTTCInput').value)||0}else{tt=D.TTC[sc]||0}let ch;if(mode&&!document.getElementById('lockCoutHT').checked){ch=parseFloat(document.getElementById('coutHTInput').value)||0}else{ch=D.COUT[sc]||0}const ad=(D.MPR[sc]&&D.MPR[sc][ct])?D.MPR[sc][ct]:0;const kw=D.CEE[et][zn][cs][sf];let px,ce,dg;if(mode){const lk=document.getElementById('lockPrice').checked;if(lk){ce=kw*11.78/1000;dg=deleg(sf,cs,ce,ch);px=prix(dg,ct)}else{px=parseFloat(document.getElementById('prixCumac').value)||0}ce=kw*px/1000}else{ce=kw*7.0/1000;dg=deleg(sf,cs,ce,ch);px=prixC(dg);ce=kw*px/1000}const ta=ad+ce;const rb=tt-ta;let mo=parseFloat(document.getElementById('racOffert').value)||0;if(mo>rb)mo=rb;if(mo<0)mo=0;document.getElementById('racOffert').value=Math.round(mo);let po=rb>0?Math.round((mo/rb)*100):0;if(po>100)po=100;if(po<0)po=0;document.getElementById('racPourcent').value=po;calcRAC(rb,ch,ta)}
+function reset(){document.getElementById('scenario').value='PAC';document.getElementById('categorie').value='BLEU';document.getElementById('zone').value='H1';document.getElementById('etas').value='140-170';document.getElementById('surface').value='90<S<110';document.getElementById('racPourcent').value=0;document.getElementById('racOffert').value=0;if(mode){document.getElementById('prixCumac').value=11.78;document.getElementById('lockPrice').checked=true;document.getElementById('lockTTC').checked=true;document.getElementById('lockCoutHT').checked=true}calc()}
 function checkExport(){const nom=document.getElementById('nom').value.trim();const prenom=document.getElementById('prenom').value.trim();const btn=document.getElementById('exportBtn');const wBtn=document.getElementById('whatsappBtn');if(nom&&prenom){btn.disabled=false;btn.style.cursor='pointer';btn.style.opacity='1';wBtn.disabled=false;wBtn.style.cursor='pointer';wBtn.style.opacity='1'}else{btn.disabled=true;btn.style.cursor='not-allowed';btn.style.opacity='0.5';wBtn.disabled=true;wBtn.style.cursor='not-allowed';wBtn.style.opacity='0.5'}}
 function sendWhatsApp(){const nom=document.getElementById('nom').value.trim();const prenom=document.getElementById('prenom').value.trim();if(!nom||!prenom){alert('Veuillez renseigner le nom et le prénom du client');return}const scenario=document.getElementById('scenario').options[document.getElementById('scenario').selectedIndex].text;const categorie=document.getElementById('categorie').options[document.getElementById('categorie').selectedIndex].text;const zone=document.getElementById('zone').options[document.getElementById('zone').selectedIndex].text;const etas=document.getElementById('etas').options[document.getElementById('etas').selectedIndex].text;const surface=document.getElementById('surface').options[document.getElementById('surface').selectedIndex].text;const ttc=document.getElementById('totalTTC').textContent;const aidesMPR=document.getElementById('aidesMPR').textContent;const aidesCEE=document.getElementById('aidesCEE').textContent;const totalAides=document.getElementById('totalAides').textContent;const rac=document.getElementById('resteCharge').textContent;const message=`🏠 *Demande de devis - Les Artisans Verts*%0A%0A👤 *Client :* ${prenom} ${nom}%0A%0A📋 *Configuration :*%0A• Scénario : ${scenario}%0A• ${categorie}%0A• ${zone}%0A• ${surface}%0A• ${etas}%0A%0A💰 *Montants :*%0A• Total TTC : ${ttc}%0A• Aides MPR : ${aidesMPR}%0A• Aides CEE : ${aidesCEE}%0A• Total aides : ${totalAides}%0A• Reste à charge : ${rac}%0A%0AJe souhaite obtenir un devis détaillé.`;window.open(`https://api.whatsapp.com/send?text=${message}`, '_blank')}
 function exportPDF(){
     const nom=document.getElementById('nom').value.trim();
     const prenom=document.getElementById('prenom').value.trim();
-    console.log('Export PDF clicked!',nom,prenom);
     
     if(!nom||!prenom){
         alert('Veuillez renseigner le nom et le prénom du client');
         return;
     }
     
-    // Remplir la zone d'impression
     document.getElementById('printTitle').textContent=`Dossier — ${prenom} ${nom}`;
     document.getElementById('printDate').textContent=`Date: ${new Date().toLocaleDateString('fr-FR')}`;
     document.getElementById('printScenario').textContent=document.getElementById('scenarioSummary').textContent;
@@ -696,7 +798,6 @@ function exportPDF(){
         printStatus.style.color='#721c24';
     }
     
-    console.log('Opening print dialog...');
     window.print();
 }
 document.getElementById('lockBtn').onclick=function(){if(!mode){document.getElementById('passwordModal').classList.add('active')}else{mode=0;document.getElementById('mainContent').classList.remove('fournisseur-mode');document.getElementById('lockIcon').textContent='🔒';calc()}};
