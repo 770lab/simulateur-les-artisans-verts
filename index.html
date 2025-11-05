@@ -726,35 +726,36 @@ let mode=0;
 
 // Vérifier si le mode fournisseur est encore valide au chargement
 function checkStoredMode(){
-    const stored = localStorage.getItem('fournisseurMode');
+    const stored = localStorage.getItem('fournisseurAuth');
     if(stored){
         const data = JSON.parse(stored);
         const now = new Date().getTime();
-        // Vérifier si moins de 24h se sont écoulées
+        // Vérifier si moins de 24h se sont écoulées depuis l'authentification
         if(now - data.timestamp < 24 * 60 * 60 * 1000){
+            // L'utilisateur est authentifié - démarrer en mode fournisseur
             mode = 1;
             document.getElementById('mainContent').classList.add('fournisseur-mode');
             document.getElementById('lockIcon').textContent='🔓';
             return true;
         } else {
             // Session expirée, nettoyer
-            localStorage.removeItem('fournisseurMode');
+            localStorage.removeItem('fournisseurAuth');
         }
     }
     return false;
 }
 
-// Sauvegarder le mode fournisseur avec timestamp
+// Sauvegarder l'authentification (valide 24h)
 function saveMode(){
     const data = {
         timestamp: new Date().getTime()
     };
-    localStorage.setItem('fournisseurMode', JSON.stringify(data));
+    localStorage.setItem('fournisseurAuth', JSON.stringify(data));
 }
 
-// Supprimer le mode fournisseur
+// Supprimer l'authentification fournisseur
 function clearMode(){
-    localStorage.removeItem('fournisseurMode');
+    localStorage.removeItem('fournisseurAuth');
 }
 function deleg(s,c,cee,ch){if(c==='BALLON SSC')return 'VALOREN';return cee>(ch*1.25)?'ECO NEGOCE':'VALOREN'}
 function prix(d,c){const b=c==='BLEU';return d==='ECO NEGOCE'?(b?12.5:7.4):(b?11.78:7.0)}
@@ -1162,13 +1163,28 @@ function exportPDF(){
 }
 document.getElementById('lockBtn').onclick=function(){
     if(!mode){
-        document.getElementById('passwordModal').classList.add('active')
+        // Mode client -> vérifier si déjà authentifié
+        const stored = localStorage.getItem('fournisseurAuth');
+        if(stored){
+            const data = JSON.parse(stored);
+            const now = new Date().getTime();
+            // Si authentifié depuis moins de 24h, passer direct en mode fournisseur
+            if(now - data.timestamp < 24 * 60 * 60 * 1000){
+                mode=1;
+                document.getElementById('mainContent').classList.add('fournisseur-mode');
+                document.getElementById('lockIcon').textContent='🔓';
+                calc();
+                return;
+            }
+        }
+        // Sinon demander le mot de passe
+        document.getElementById('passwordModal').classList.add('active');
     }else{
+        // Mode fournisseur -> passer en mode client (sans supprimer l'auth)
         mode=0;
-        clearMode(); // Supprimer la session sauvegardée
         document.getElementById('mainContent').classList.remove('fournisseur-mode');
         document.getElementById('lockIcon').textContent='🔒';
-        calc()
+        calc();
     }
 };
 document.getElementById('exportBtn').onclick=exportPDF;
