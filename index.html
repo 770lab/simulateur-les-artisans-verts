@@ -493,42 +493,45 @@
             <div class="card fournisseur-only">
                 <h2 class="card-title">Coûts (Vue Fournisseur)</h2>
                 
-                <div style="margin-bottom: 16px;">
-                    <div style="display: grid; grid-template-columns: auto 1fr auto; gap: 8px; align-items: center; margin-bottom: 8px;">
-                        <label style="font-size: 12px; font-weight: 500;">Quantité</label>
-                        <input type="number" id="quantite" value="1" min="1" step="1" oninput="updateCosts()" style="padding: 8px 12px;">
-                        <button onclick="document.getElementById('quantite').value=1; updateCosts()" style="padding: 8px 16px; background: #f5f5f7; border: none; border-radius: 6px; cursor: pointer; font-size: 13px;">Reset</button>
-                    </div>
-                    
-                    <div style="background: #f5f5f7; padding: 14px; border-radius: 8px; margin-bottom: 12px;">
-                        <div style="display: grid; gap: 8px;">
-                            <div style="display: flex; justify-content: space-between; font-size: 13px;">
-                                <span style="color: #86868b;">Coût matériel (HT)</span>
-                                <span style="font-weight: 600;" id="coutMateriel">—</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; font-size: 13px;">
-                                <span style="color: #86868b;">Coût pose (HT)</span>
-                                <span style="font-weight: 600;" id="coutPose">—</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; font-size: 13px;">
-                                <span style="color: #86868b;">Coût admin (HT)</span>
-                                <span style="font-weight: 600;" id="coutAdmin">—</span>
-                            </div>
-                            <div style="border-top: 2px solid #d2d2d7; margin-top: 8px; padding-top: 8px;">
-                                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 14px; margin-bottom: 8px;">
-                                    <span style="font-weight: 600;">TOTAL COÛT HT</span>
-                                </div>
-                                <div>
-                                    <input type="number" id="coutTotalHTInput" value="6200" step="1" oninput="updateFromCoutHT()" style="font-size: 18px; font-weight: 700; text-align: right; padding: 10px 14px; width: 100%; border: 2px solid #0071e3; border-radius: 8px; background: white;">
-                                    <small style="font-size: 11px; color: #86868b; margin-top: 6px; display: block;">
-                                        <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
-                                            <input type="checkbox" id="lockCoutHT" checked onchange="calc()"> Verrouiller (auto selon détail × quantité)
-                                        </label>
-                                    </small>
-                                </div>
-                            </div>
+                <!-- Quantité -->
+                <div style="display: grid; grid-template-columns: auto 1fr auto; gap: 8px; align-items: center; margin-bottom: 12px;">
+                    <label style="font-size: 12px; font-weight: 500;">Quantité</label>
+                    <input type="number" id="quantite" value="1" min="1" step="1" oninput="calc()" style="padding: 8px 12px; font-weight: 600; border: 2px solid #0071e3; border-radius: 6px;">
+                    <button onclick="document.getElementById('quantite').value=1; calc()" style="padding: 8px 16px; background: #f5f5f7; border: none; border-radius: 6px; cursor: pointer; font-size: 13px;">Reset</button>
+                </div>
+                
+                <div style="background: #f5f5f7; padding: 16px; border-radius: 8px; margin-bottom: 12px;">
+                    <div style="display: grid; gap: 10px; font-size: 13px;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: #86868b;">Matériel</span>
+                            <span style="font-weight: 600;" id="detailMateriel">—</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: #86868b;">Pose</span>
+                            <span style="font-weight: 600;" id="detailPose">—</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: #86868b;">Accessoires</span>
+                            <span style="font-weight: 600;" id="detailAccessoires">—</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: #86868b;">Admin</span>
+                            <span style="font-weight: 600;" id="detailAdmin">—</span>
                         </div>
                     </div>
+                </div>
+                
+                <!-- Total Coût HT global -->
+                <div style="background: #0071e3; color: white; padding: 14px; border-radius: 8px; margin-bottom: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <span style="font-weight: 600; font-size: 14px;">TOTAL COÛT HT</span>
+                    </div>
+                    <input type="number" id="coutTotalHTInput" value="6200" step="1" oninput="updateFromCoutHT()" style="font-size: 20px; font-weight: 700; text-align: right; padding: 10px 14px; width: 100%; border: 2px solid white; border-radius: 8px; background: white; color: #1d1d1f;">
+                    <small style="font-size: 11px; color: rgba(255,255,255,0.9); margin-top: 6px; display: block;">
+                        <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
+                            <input type="checkbox" id="lockCoutHT" checked onchange="calc()"> Verrouiller (auto selon scénario × quantité)
+                        </label>
+                    </small>
                 </div>
                 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
@@ -559,8 +562,8 @@
 
         <div class="results-sidebar">
             <div class="summary-card" style="margin-bottom: 0;">
-                <h2 class="summary-header">Résumé</h2>
-                <div class="scenario-label" id="scenarioSummary">—</div>
+                <!-- Résumé du scénario EN HAUT -->
+                <div class="scenario-label" id="scenarioSummary" style="font-size: 14px; margin-bottom: 20px; padding: 12px; background: #f5f5f7; border-radius: 8px;">—</div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                     <!-- Colonne gauche : résumé des montants -->
@@ -720,8 +723,27 @@
     </div>
 
 <script>
-const D={TTC:{"PAC":10890,"PAC + BALLON ÉLECTRIQUE":13750,"PAC + BALLON THERMO":13750,"PAC + SSC":25850},MPR:{"PAC":{BLEU:5000,JAUNE:4000,VIOLET:3000,ROSE:0},"PAC + BALLON ÉLECTRIQUE":{BLEU:5000,JAUNE:4000,VIOLET:3000,ROSE:0},"PAC + BALLON THERMO":{BLEU:6200,JAUNE:4800,VIOLET:3400,ROSE:0},"PAC + SSC":{BLEU:15000,JAUNE:12000,VIOLET:7000,ROSE:0}},COUT:{"PAC":6200,"PAC + BALLON ÉLECTRIQUE":6400,"PAC + BALLON THERMO":7300,"PAC + SSC":11700},COUT_DETAIL:{"PAC":{materiel:4500,pose:1500,admin:200},"PAC + BALLON ÉLECTRIQUE":{materiel:4700,pose:1500,admin:200},"PAC + BALLON THERMO":{materiel:5600,pose:1500,admin:200},"PAC + SSC":{materiel:9500,pose:2000,admin:200}},CEE:{"140-170":{H1:{PAC:{"S<70":274800,"70<S<90":384720,"90<S<110":549600,"110<S<130":604560,"S>130":879360},"BALLON ELECTRIQUE":{"S<70":274800,"70<S<90":384720,"90<S<110":549600,"110<S<130":604560,"S>130":879360},"BALLON THERMO":{"S<70":290400,"70<S<90":400320,"90<S<110":565200,"110<S<130":620160,"S>130":894960},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H2:{PAC:{"S<70":229000,"70<S<90":320600,"90<S<110":458000,"110<S<130":503800,"S>130":732800},"BALLON ELECTRIQUE":{"S<70":229000,"70<S<90":320600,"90<S<110":458000,"110<S<130":503800,"S>130":732800},"BALLON THERMO":{"S<70":244600,"70<S<90":336200,"90<S<110":473600,"110<S<130":519400,"S>130":748400},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H3:{PAC:{"S<70":160300,"70<S<90":224420,"90<S<110":320600,"110<S<130":352660,"S>130":512960},"BALLON ELECTRIQUE":{"S<70":160300,"70<S<90":224420,"90<S<110":320600,"110<S<130":352660,"S>130":512960},"BALLON THERMO":{"S<70":175900,"70<S<90":240020,"90<S<110":336200,"110<S<130":368260,"S>130":528560},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}}},"111-140":{H1:{PAC:{"S<70":238500,"70<S<90":333900,"90<S<110":477000,"110<S<130":524700,"S>130":763200},"BALLON ELECTRIQUE":{"S<70":238500,"70<S<90":333900,"90<S<110":477000,"110<S<130":524700,"S>130":763200},"BALLON THERMO":{"S<70":254100,"70<S<90":349500,"90<S<110":492600,"110<S<130":540300,"S>130":778800},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H2:{PAC:{"S<70":198750,"70<S<90":278250,"90<S<110":397500,"110<S<130":437250,"S>130":636000},"BALLON ELECTRIQUE":{"S<70":198750,"70<S<90":278250,"90<S<110":397500,"110<S<130":437250,"S>130":636000},"BALLON THERMO":{"S<70":214350,"70<S<90":293850,"90<S<110":413100,"110<S<130":452850,"S>130":651600},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H3:{PAC:{"S<70":139125,"70<S<90":194775,"90<S<110":278250,"110<S<130":306075,"S>130":445200},"BALLON ELECTRIQUE":{"S<70":139125,"70<S<90":194775,"90<S<110":278250,"110<S<130":306075,"S>130":445200},"BALLON THERMO":{"S<70":154725,"70<S<90":210375,"90<S<110":293850,"110<S<130":321675,"S>130":460800}}}}};
+const D={TTC:{"PAC":10890,"PAC + BALLON ÉLECTRIQUE":13750,"PAC + BALLON THERMO":13750,"PAC + SSC":25850},MPR:{"PAC":{BLEU:5000,JAUNE:4000,VIOLET:3000,ROSE:0},"PAC + BALLON ÉLECTRIQUE":{BLEU:5000,JAUNE:4000,VIOLET:3000,ROSE:0},"PAC + BALLON THERMO":{BLEU:6200,JAUNE:4800,VIOLET:3400,ROSE:0},"PAC + SSC":{BLEU:15000,JAUNE:12000,VIOLET:7000,ROSE:0}},COUT:{"PAC":6200,"PAC + BALLON ÉLECTRIQUE":6400,"PAC + BALLON THERMO":7300,"PAC + SSC":11700},COUT_DETAIL:{"PAC":{materiel:2900,pose:2500,accessoires:500,admin:300},"PAC + BALLON ÉLECTRIQUE":{materiel:3100,pose:2500,accessoires:500,admin:300},"PAC + BALLON THERMO":{materiel:4000,pose:2500,accessoires:500,admin:300},"PAC + SSC":{materiel:6100,pose:4800,accessoires:500,admin:300}},CEE:{"140-170":{H1:{PAC:{"S<70":274800,"70<S<90":384720,"90<S<110":549600,"110<S<130":604560,"S>130":879360},"BALLON ELECTRIQUE":{"S<70":274800,"70<S<90":384720,"90<S<110":549600,"110<S<130":604560,"S>130":879360},"BALLON THERMO":{"S<70":290400,"70<S<90":400320,"90<S<110":565200,"110<S<130":620160,"S>130":894960},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H2:{PAC:{"S<70":229000,"70<S<90":320600,"90<S<110":458000,"110<S<130":503800,"S>130":732800},"BALLON ELECTRIQUE":{"S<70":229000,"70<S<90":320600,"90<S<110":458000,"110<S<130":503800,"S>130":732800},"BALLON THERMO":{"S<70":244600,"70<S<90":336200,"90<S<110":473600,"110<S<130":519400,"S>130":748400},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H3:{PAC:{"S<70":160300,"70<S<90":224420,"90<S<110":320600,"110<S<130":352660,"S>130":512960},"BALLON ELECTRIQUE":{"S<70":160300,"70<S<90":224420,"90<S<110":320600,"110<S<130":352660,"S>130":512960},"BALLON THERMO":{"S<70":175900,"70<S<90":240020,"90<S<110":336200,"110<S<130":368260,"S>130":528560},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}}},"111-140":{H1:{PAC:{"S<70":238500,"70<S<90":333900,"90<S<110":477000,"110<S<130":524700,"S>130":763200},"BALLON ELECTRIQUE":{"S<70":238500,"70<S<90":333900,"90<S<110":477000,"110<S<130":524700,"S>130":763200},"BALLON THERMO":{"S<70":254100,"70<S<90":349500,"90<S<110":492600,"110<S<130":540300,"S>130":778800},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H2:{PAC:{"S<70":198750,"70<S<90":278250,"90<S<110":397500,"110<S<130":437250,"S>130":636000},"BALLON ELECTRIQUE":{"S<70":198750,"70<S<90":278250,"90<S<110":397500,"110<S<130":437250,"S>130":636000},"BALLON THERMO":{"S<70":214350,"70<S<90":293850,"90<S<110":413100,"110<S<130":452850,"S>130":651600},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H3:{PAC:{"S<70":139125,"70<S<90":194775,"90<S<110":278250,"110<S<130":306075,"S>130":445200},"BALLON ELECTRIQUE":{"S<70":139125,"70<S<90":194775,"90<S<110":278250,"110<S<130":306075,"S>130":445200},"BALLON THERMO":{"S<70":154725,"70<S<90":210375,"90<S<110":293850,"110<S<130":321675,"S>130":460800},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}}}}};
 const M={"PAC":"PAC","PAC + BALLON ÉLECTRIQUE":"BALLON ELECTRIQUE","PAC + BALLON THERMO":"BALLON THERMO","PAC + SSC":"BALLON SSC"};
+
+// Fonction pour déterminer le type de ballon selon le scénario
+function getBallonType(scenario){
+    if(scenario === "PAC") return null;
+    if(scenario === "PAC + BALLON ÉLECTRIQUE") return "BALLON_ELECTRIQUE";
+    if(scenario === "PAC + BALLON THERMO") return "BALLON_THERMO";
+    if(scenario === "PAC + SSC") return "SSC";
+    return null;
+}
+
+// Fonction helper pour accéder aux données CEE en toute sécurité
+function getCEE(et, zn, cs, sf){
+    if(!D.CEE[et]) return 0;
+    if(!D.CEE[et][zn]) return 0;
+    if(!D.CEE[et][zn][cs]) return 0;
+    if(!D.CEE[et][zn][cs][sf]) return 0;
+    return D.CEE[et][zn][cs][sf];
+}
+
 let mode=0;
 
 // Vérifier si le mode fournisseur est encore valide au chargement
@@ -798,7 +820,7 @@ function calc(){
     const sf=document.getElementById('surface').value;
     const cs=M[sc];
     
-    // Calculer la quantité (1 par défaut en mode client)
+    // Récupérer la quantité (1 par défaut en mode client)
     const qty=mode ? (parseInt(document.getElementById('quantite').value)||1) : 1;
     
     // Gestion du Total TTC
@@ -812,7 +834,7 @@ function calc(){
             tt=parseFloat(document.getElementById('totalTTCInput').value)||0;
         }
     }else{
-        tt=(D.TTC[sc]||0)*qty;
+        tt=D.TTC[sc]||0;
     }
     
     const ad=(D.MPR[sc]&&D.MPR[sc][ct])?D.MPR[sc][ct]:0;
@@ -823,15 +845,16 @@ function calc(){
         const lockCoutHT=document.getElementById('lockCoutHT').checked;
         
         if(lockCoutHT){
-            // Mode auto : calculer selon la quantité
+            // Mode auto : utiliser les coûts du scénario × quantité
             if(D.COUT_DETAIL[sc]){
                 const detail=D.COUT_DETAIL[sc];
-                ch=(detail.materiel+detail.pose+detail.admin)*qty;
+                ch=(detail.materiel+detail.pose+detail.accessoires+detail.admin)*qty;
                 
-                // Mettre à jour l'affichage du détail des coûts
-                document.getElementById('coutMateriel').textContent=fmt(detail.materiel*qty);
-                document.getElementById('coutPose').textContent=fmt(detail.pose*qty);
-                document.getElementById('coutAdmin').textContent=fmt(detail.admin*qty);
+                // Afficher le détail (multiplié par la quantité)
+                document.getElementById('detailMateriel').textContent=fmt(detail.materiel*qty);
+                document.getElementById('detailPose').textContent=fmt(detail.pose*qty);
+                document.getElementById('detailAccessoires').textContent=fmt(detail.accessoires*qty);
+                document.getElementById('detailAdmin').textContent=fmt(detail.admin*qty);
                 document.getElementById('coutTotalHTInput').value=ch;
             }else{
                 ch=(D.COUT[sc]||0)*qty;
@@ -841,21 +864,20 @@ function calc(){
             // Mode manuel : utiliser la valeur saisie
             ch=parseFloat(document.getElementById('coutTotalHTInput').value)||0;
             
-            // Afficher "Manuel" pour le détail
-            if(D.COUT_DETAIL[sc]){
-                document.getElementById('coutMateriel').textContent='—';
-                document.getElementById('coutPose').textContent='—';
-                document.getElementById('coutAdmin').textContent='—';
-            }
+            // Masquer le détail
+            document.getElementById('detailMateriel').textContent='—';
+            document.getElementById('detailPose').textContent='—';
+            document.getElementById('detailAccessoires').textContent='—';
+            document.getElementById('detailAdmin').textContent='—';
         }
     }else{
         ch=D.COUT[sc]||0;
     }
     
-    const kw=D.CEE[et][zn][cs][sf];
+    const kw=getCEE(et,zn,cs,sf);
     
     let px,ce,dg;
-    let ceForMarge, taForMarge; // Pour calculer la vraie marge même en mode client
+    let ceForMarge, taForMarge;
     
     if(mode){
         const lk=document.getElementById('lockPrice').checked;
@@ -877,13 +899,11 @@ function calc(){
         document.getElementById('delegataire').value=dg;
         document.getElementById('kwhCumac').value=Math.round(kw).toLocaleString('fr-FR');
     }else{
-        // Mode client : afficher les aides avec prix fixe 7.0
         ce=kw*7.0/1000;
         dg=deleg(sf,cs,ce,ch);
         px=prixC(dg);
         ce=kw*px/1000;
         
-        // MAIS calculer la vraie marge avec le prix fournisseur pour le statut
         const dgForMarge=deleg(sf,cs,kw*11.78/1000,ch);
         const pxForMarge=prix(dgForMarge,ct);
         ceForMarge=kw*pxForMarge/1000;
@@ -978,7 +998,7 @@ function updatePct(){
             const qty=parseInt(document.getElementById('quantite').value)||1;
             if(D.COUT_DETAIL[sc]){
                 const detail=D.COUT_DETAIL[sc];
-                ch=(detail.materiel+detail.pose+detail.admin)*qty;
+                ch=(detail.materiel+detail.pose+detail.accessoires+detail.admin)*qty;
             }else{
                 ch=(D.COUT[sc]||0)*qty;
             }
@@ -989,7 +1009,7 @@ function updatePct(){
         ch=D.COUT[sc]||0;
     }
     
-    const kw=D.CEE[et][zn][cs][sf];
+    const kw=getCEE(et,zn,cs,sf);
     
     let px,ce,dg;
     let ceForMarge, taForMarge;
@@ -1063,7 +1083,7 @@ function updateAmt(){
             const qty=parseInt(document.getElementById('quantite').value)||1;
             if(D.COUT_DETAIL[sc]){
                 const detail=D.COUT_DETAIL[sc];
-                ch=(detail.materiel+detail.pose+detail.admin)*qty;
+                ch=(detail.materiel+detail.pose+detail.accessoires+detail.admin)*qty;
             }else{
                 ch=(D.COUT[sc]||0)*qty;
             }
@@ -1074,7 +1094,7 @@ function updateAmt(){
         ch=D.COUT[sc]||0;
     }
     
-    const kw=D.CEE[et][zn][cs][sf];
+    const kw=getCEE(et,zn,cs,sf);
     
     let px,ce,dg;
     let ceForMarge, taForMarge;
