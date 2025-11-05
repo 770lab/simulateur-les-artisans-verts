@@ -184,6 +184,19 @@
         .fournisseur-mode .fournisseur-only {
             display: block;
         }
+        
+        /* En mode fournisseur, masquer la version lecture seule du Total TTC */
+        .fournisseur-mode .ttc-readonly {
+            display: none !important;
+        }
+
+        .client-only {
+            display: block;
+        }
+
+        .fournisseur-mode .client-only {
+            display: none;
+        }
 
         .results-sidebar {
             position: sticky;
@@ -552,12 +565,13 @@
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                     <!-- Colonne gauche : résumé des montants -->
                     <div>
-                        <div class="amount-row">
+                        <!-- Total TTC : affichage lecture seule en mode client, éditable en mode fournisseur -->
+                        <div class="ttc-readonly" style="margin-bottom: 12px;">
                             <div class="amount-label">TOTAL TTC</div>
-                            <div class="amount-value" id="totalTTC">—</div>
+                            <div class="amount-value" id="totalTTC" style="text-align: right;">—</div>
                         </div>
-
-                        <div class="amount-row fournisseur-only">
+                        
+                        <div class="fournisseur-only" style="margin-bottom: 12px;">
                             <div class="amount-label">TOTAL TTC</div>
                             <input type="number" id="totalTTCInput" value="10890" step="1" oninput="updateFromTTC()" style="font-size: 24px; font-weight: 700; text-align: right; padding: 10px 14px; width: 100%; border: 2px solid #0071e3; border-radius: 8px; background: white; margin-bottom: 6px;">
                             <small style="font-size: 11px; color: #86868b; margin-top: 4px;">
@@ -567,35 +581,47 @@
                             </small>
                         </div>
 
-                        <div class="amount-row fournisseur-only">
+                        <div class="fournisseur-only" style="margin-bottom: 12px;">
                             <div class="amount-label">COÛT HT</div>
-                            <div class="amount-value" id="displayCoutHT">—</div>
-                            <small style="font-size: 11px; color: #86868b;">Coût matériel + pose + admin</small>
+                            <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                                <small style="font-size: 11px; color: #86868b;">Coût matériel + pose + admin</small>
+                                <div class="amount-value" id="displayCoutHT" style="text-align: right;">—</div>
+                            </div>
                         </div>
 
-                        <div class="amount-row">
-                            <div class="amount-label">AIDES MPR</div>
-                            <div class="amount-value" id="aidesMPR">—</div>
+                        <div style="margin-bottom: 12px;">
+                            <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                                <div class="amount-label">AIDES MPR</div>
+                                <div class="amount-value" id="aidesMPR" style="text-align: right;">—</div>
+                            </div>
                         </div>
 
-                        <div class="amount-row">
-                            <div class="amount-label">AIDES CEE</div>
-                            <div class="amount-value" id="aidesCEE">—</div>
+                        <div style="margin-bottom: 12px;">
+                            <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                                <div class="amount-label">AIDES CEE</div>
+                                <div class="amount-value" id="aidesCEE" style="text-align: right;">—</div>
+                            </div>
                         </div>
 
-                        <div class="amount-row">
-                            <div class="amount-label">TOTAL DES AIDES</div>
-                            <div class="amount-value highlight" id="totalAides">—</div>
+                        <div style="margin-bottom: 12px;">
+                            <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                                <div class="amount-label">TOTAL DES AIDES</div>
+                                <div class="amount-value highlight" id="totalAides" style="text-align: right;">—</div>
+                            </div>
                         </div>
 
-                        <div class="amount-row">
-                            <div class="amount-label">RESTE À CHARGE</div>
-                            <div class="amount-value" id="resteCharge">—</div>
+                        <div style="margin-bottom: 12px;">
+                            <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                                <div class="amount-label">RESTE À CHARGE</div>
+                                <div class="amount-value" id="resteCharge" style="text-align: right;">—</div>
+                            </div>
                         </div>
 
-                        <div class="amount-row fournisseur-only">
-                            <div class="amount-label">MARGE FINALE (HT)</div>
-                            <div class="amount-value" id="margeFinal">—</div>
+                        <div class="fournisseur-only" style="margin-bottom: 12px;">
+                            <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                                <div class="amount-label">MARGE FINALE (HT)</div>
+                                <div class="amount-value" id="margeFinal" style="text-align: right;">—</div>
+                            </div>
                         </div>
                     </div>
 
