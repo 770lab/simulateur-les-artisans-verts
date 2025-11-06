@@ -493,43 +493,63 @@
             <div class="card fournisseur-only">
                 <h2 class="card-title">Coûts (Vue Fournisseur)</h2>
                 
-                <!-- Quantité -->
-                <div style="display: grid; grid-template-columns: auto 1fr auto; gap: 8px; align-items: center; margin-bottom: 12px;">
-                    <label style="font-size: 12px; font-weight: 500;">Quantité</label>
-                    <input type="number" id="quantite" value="1" min="1" step="1" oninput="calc()" style="padding: 8px 12px; font-weight: 600; border: 2px solid #0071e3; border-radius: 6px;">
-                    <button onclick="document.getElementById('quantite').value=1; calc()" style="padding: 8px 16px; background: #f5f5f7; border: none; border-radius: 6px; cursor: pointer; font-size: 13px;">Reset</button>
-                </div>
-                
                 <div style="background: #f5f5f7; padding: 16px; border-radius: 8px; margin-bottom: 12px;">
-                    <div style="display: grid; gap: 10px; font-size: 13px;">
-                        <div style="display: flex; justify-content: space-between;">
-                            <span style="color: #86868b;">Matériel</span>
-                            <span style="font-weight: 600;" id="detailMateriel">—</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between;">
-                            <span style="color: #86868b;">Pose</span>
-                            <span style="font-weight: 600;" id="detailPose">—</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between;">
-                            <span style="color: #86868b;">Accessoires</span>
-                            <span style="font-weight: 600;" id="detailAccessoires">—</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between;">
-                            <span style="color: #86868b;">Admin</span>
-                            <span style="font-weight: 600;" id="detailAdmin">—</span>
-                        </div>
+                    <!-- En-têtes -->
+                    <div style="display: grid; grid-template-columns: 1fr 100px 80px 100px; gap: 8px; margin-bottom: 12px; font-size: 11px; font-weight: 600; color: #86868b; text-transform: uppercase;">
+                        <div>Poste</div>
+                        <div style="text-align: right;">Prix unit. (€)</div>
+                        <div style="text-align: center;">Qté</div>
+                        <div style="text-align: right;">Total (€)</div>
+                    </div>
+                    
+                    <!-- Matériel -->
+                    <div style="display: grid; grid-template-columns: 1fr 100px 80px 100px; gap: 8px; align-items: center; margin-bottom: 8px;">
+                        <div style="font-weight: 500;">Matériel</div>
+                        <input type="number" id="prixMateriel" value="2900" step="1" oninput="updateCoutsDetails()" style="padding: 6px 8px; text-align: right; border: 1px solid #d2d2d7; border-radius: 4px;">
+                        <input type="number" id="qtyMateriel" value="1" min="0" step="1" oninput="updateCoutsDetails()" style="padding: 6px 8px; text-align: center; border: 1px solid #0071e3; border-radius: 4px; font-weight: 600;">
+                        <div style="text-align: right; font-weight: 600;" id="totalMateriel">2 900 €</div>
+                    </div>
+                    
+                    <!-- Pose -->
+                    <div style="display: grid; grid-template-columns: 1fr 100px 80px 100px; gap: 8px; align-items: center; margin-bottom: 8px;">
+                        <div style="font-weight: 500;">Pose</div>
+                        <input type="number" id="prixPose" value="2500" step="1" oninput="updateCoutsDetails()" style="padding: 6px 8px; text-align: right; border: 1px solid #d2d2d7; border-radius: 4px;">
+                        <input type="number" id="qtyPose" value="1" min="0" step="1" oninput="updateCoutsDetails()" style="padding: 6px 8px; text-align: center; border: 1px solid #0071e3; border-radius: 4px; font-weight: 600;">
+                        <div style="text-align: right; font-weight: 600;" id="totalPose">2 500 €</div>
+                    </div>
+                    
+                    <!-- Accessoires -->
+                    <div style="display: grid; grid-template-columns: 1fr 100px 80px 100px; gap: 8px; align-items: center; margin-bottom: 8px;">
+                        <div style="font-weight: 500;">Accessoires</div>
+                        <input type="number" id="prixAccessoires" value="500" step="1" oninput="updateCoutsDetails()" style="padding: 6px 8px; text-align: right; border: 1px solid #d2d2d7; border-radius: 4px;">
+                        <input type="number" id="qtyAccessoires" value="1" min="0" step="1" oninput="updateCoutsDetails()" style="padding: 6px 8px; text-align: center; border: 1px solid #0071e3; border-radius: 4px; font-weight: 600;">
+                        <div style="text-align: right; font-weight: 600;" id="totalAccessoires">500 €</div>
+                    </div>
+                    
+                    <!-- Admin -->
+                    <div style="display: grid; grid-template-columns: 1fr 100px 80px 100px; gap: 8px; align-items: center; margin-bottom: 8px;">
+                        <div style="font-weight: 500;">Admin</div>
+                        <input type="number" id="prixAdmin" value="300" step="1" oninput="updateCoutsDetails()" style="padding: 6px 8px; text-align: right; border: 1px solid #d2d2d7; border-radius: 4px;">
+                        <input type="number" id="qtyAdmin" value="1" min="0" step="1" oninput="updateCoutsDetails()" style="padding: 6px 8px; text-align: center; border: 1px solid #0071e3; border-radius: 4px; font-weight: 600;">
+                        <div style="text-align: right; font-weight: 600;" id="totalAdmin">300 €</div>
+                    </div>
+                    
+                    <div style="margin-top: 12px; padding-top: 12px; border-top: 2px solid #d2d2d7;">
+                        <button onclick="resetCoutsToScenario()" style="padding: 6px 12px; background: white; border: 1px solid #0071e3; color: #0071e3; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 500;">
+                            ↻ Réinitialiser selon scénario
+                        </button>
                     </div>
                 </div>
                 
                 <!-- Total Coût HT global -->
-                <div style="background: #0071e3; color: white; padding: 14px; border-radius: 8px; margin-bottom: 12px;">
+                <div style="background: white; border: 2px solid #d2d2d7; padding: 14px; border-radius: 8px; margin-bottom: 12px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                        <span style="font-weight: 600; font-size: 14px;">TOTAL COÛT HT</span>
+                        <span style="font-weight: 600; font-size: 14px; color: #1d1d1f;">TOTAL COÛT HT</span>
                     </div>
-                    <input type="number" id="coutTotalHTInput" value="6200" step="1" oninput="updateFromCoutHT()" style="font-size: 20px; font-weight: 700; text-align: right; padding: 10px 14px; width: 100%; border: 2px solid white; border-radius: 8px; background: white; color: #1d1d1f;">
-                    <small style="font-size: 11px; color: rgba(255,255,255,0.9); margin-top: 6px; display: block;">
+                    <input type="number" id="coutTotalHTInput" value="6200" step="1" oninput="updateFromCoutHT()" style="font-size: 20px; font-weight: 700; text-align: right; padding: 10px 14px; width: 100%; border: 2px solid #0071e3; border-radius: 8px; background: #f5f5f7; color: #1d1d1f;">
+                    <small style="font-size: 11px; color: #86868b; margin-top: 6px; display: block;">
                         <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
-                            <input type="checkbox" id="lockCoutHT" checked onchange="calc()"> Verrouiller (auto selon scénario × quantité)
+                            <input type="checkbox" id="lockCoutHT" checked onchange="calc()"> Verrouiller (auto selon détail)
                         </label>
                     </small>
                 </div>
@@ -585,11 +605,11 @@
                         </div>
 
                         <div class="fournisseur-only" style="margin-bottom: 12px;">
-                            <div class="amount-label">COÛT HT</div>
                             <div style="display: flex; justify-content: space-between; align-items: baseline;">
-                                <small style="font-size: 11px; color: #86868b;">Coût matériel + pose + admin</small>
+                                <div class="amount-label">COÛT HT</div>
                                 <div class="amount-value" id="displayCoutHT" style="text-align: right;">—</div>
                             </div>
+                            <small style="font-size: 11px; color: #86868b; display: block; margin-top: 4px;">Coût matériel + pose + admin</small>
                         </div>
 
                         <div style="margin-bottom: 12px;">
@@ -744,6 +764,58 @@ function getCEE(et, zn, cs, sf){
     return D.CEE[et][zn][cs][sf];
 }
 
+// Fonction pour mettre à jour les totaux quand on modifie les quantités/prix
+function updateCoutsDetails(){
+    const prixMat = parseFloat(document.getElementById('prixMateriel').value)||0;
+    const qtyMat = parseInt(document.getElementById('qtyMateriel').value)||0;
+    const totalMat = prixMat * qtyMat;
+    document.getElementById('totalMateriel').textContent = fmt(totalMat);
+    
+    const prixPose = parseFloat(document.getElementById('prixPose').value)||0;
+    const qtyPose = parseInt(document.getElementById('qtyPose').value)||0;
+    const totalPose = prixPose * qtyPose;
+    document.getElementById('totalPose').textContent = fmt(totalPose);
+    
+    const prixAcc = parseFloat(document.getElementById('prixAccessoires').value)||0;
+    const qtyAcc = parseInt(document.getElementById('qtyAccessoires').value)||0;
+    const totalAcc = prixAcc * qtyAcc;
+    document.getElementById('totalAccessoires').textContent = fmt(totalAcc);
+    
+    const prixAdm = parseFloat(document.getElementById('prixAdmin').value)||0;
+    const qtyAdm = parseInt(document.getElementById('qtyAdmin').value)||0;
+    const totalAdm = prixAdm * qtyAdm;
+    document.getElementById('totalAdmin').textContent = fmt(totalAdm);
+    
+    // Mettre à jour le total si verrouillé
+    if(document.getElementById('lockCoutHT').checked){
+        const total = totalMat + totalPose + totalAcc + totalAdm;
+        document.getElementById('coutTotalHTInput').value = total;
+    }
+    
+    // Recalculer tout
+    calc();
+}
+
+// Fonction pour réinitialiser les coûts selon le scénario
+function resetCoutsToScenario(){
+    const sc = document.getElementById('scenario').value;
+    if(D.COUT_DETAIL[sc]){
+        const detail = D.COUT_DETAIL[sc];
+        document.getElementById('prixMateriel').value = detail.materiel;
+        document.getElementById('prixPose').value = detail.pose;
+        document.getElementById('prixAccessoires').value = detail.accessoires;
+        document.getElementById('prixAdmin').value = detail.admin;
+        
+        // Réinitialiser les quantités à 1
+        document.getElementById('qtyMateriel').value = 1;
+        document.getElementById('qtyPose').value = 1;
+        document.getElementById('qtyAccessoires').value = 1;
+        document.getElementById('qtyAdmin').value = 1;
+        
+        updateCoutsDetails();
+    }
+}
+
 let mode=0;
 
 // Vérifier si le mode fournisseur est encore valide au chargement
@@ -820,21 +892,40 @@ function calc(){
     const sf=document.getElementById('surface').value;
     const cs=M[sc];
     
-    // Récupérer la quantité (1 par défaut en mode client)
-    const qty=mode ? (parseInt(document.getElementById('quantite').value)||1) : 1;
+    // En mode fournisseur, initialiser les champs de détail si le scénario a changé
+    if(mode && D.COUT_DETAIL[sc]){
+        const currentPrixMat = parseFloat(document.getElementById('prixMateriel').value);
+        // Vérifier si les prix correspondent à un autre scénario (= scénario vient de changer)
+        let needUpdate = false;
+        for(let scenario in D.COUT_DETAIL){
+            if(scenario !== sc && D.COUT_DETAIL[scenario].materiel === currentPrixMat){
+                needUpdate = true;
+                break;
+            }
+        }
+        if(needUpdate || !currentPrixMat){
+            resetCoutsToScenario();
+        }
+    }
     
     // Gestion du Total TTC
     let tt;
     if(mode){
         const lockTTC=document.getElementById('lockTTC').checked;
         if(lockTTC){
-            tt=(D.TTC[sc]||0)*qty;
-            document.getElementById('totalTTCInput').value=tt;
+            // Multiplier le TTC de base par la quantité de matériel
+            const ttcBase = D.TTC[sc]||0;
+            const qtyMat = parseInt(document.getElementById('qtyMateriel').value)||1;
+            
+            tt = ttcBase * qtyMat;
+            document.getElementById('totalTTCInput').value=Math.round(tt);
         }else{
             tt=parseFloat(document.getElementById('totalTTCInput').value)||0;
         }
     }else{
-        tt=D.TTC[sc]||0;
+        // En mode client, utiliser la valeur du champ (qui peut avoir été modifiée en mode fournisseur)
+        const ttcInput = parseFloat(document.getElementById('totalTTCInput').value);
+        tt = ttcInput || D.TTC[sc]||0;
     }
     
     const ad=(D.MPR[sc]&&D.MPR[sc][ct])?D.MPR[sc][ct]:0;
@@ -845,30 +936,21 @@ function calc(){
         const lockCoutHT=document.getElementById('lockCoutHT').checked;
         
         if(lockCoutHT){
-            // Mode auto : utiliser les coûts du scénario × quantité
-            if(D.COUT_DETAIL[sc]){
-                const detail=D.COUT_DETAIL[sc];
-                ch=(detail.materiel+detail.pose+detail.accessoires+detail.admin)*qty;
-                
-                // Afficher le détail (multiplié par la quantité)
-                document.getElementById('detailMateriel').textContent=fmt(detail.materiel*qty);
-                document.getElementById('detailPose').textContent=fmt(detail.pose*qty);
-                document.getElementById('detailAccessoires').textContent=fmt(detail.accessoires*qty);
-                document.getElementById('detailAdmin').textContent=fmt(detail.admin*qty);
-                document.getElementById('coutTotalHTInput').value=ch;
-            }else{
-                ch=(D.COUT[sc]||0)*qty;
-                document.getElementById('coutTotalHTInput').value=ch;
-            }
+            // Mode auto : calculer depuis les champs de détail
+            const prixMat = parseFloat(document.getElementById('prixMateriel').value)||0;
+            const qtyMat = parseInt(document.getElementById('qtyMateriel').value)||0;
+            const prixPose = parseFloat(document.getElementById('prixPose').value)||0;
+            const qtyPose = parseInt(document.getElementById('qtyPose').value)||0;
+            const prixAcc = parseFloat(document.getElementById('prixAccessoires').value)||0;
+            const qtyAcc = parseInt(document.getElementById('qtyAccessoires').value)||0;
+            const prixAdm = parseFloat(document.getElementById('prixAdmin').value)||0;
+            const qtyAdm = parseInt(document.getElementById('qtyAdmin').value)||0;
+            
+            ch = (prixMat * qtyMat) + (prixPose * qtyPose) + (prixAcc * qtyAcc) + (prixAdm * qtyAdm);
+            document.getElementById('coutTotalHTInput').value=ch;
         }else{
             // Mode manuel : utiliser la valeur saisie
             ch=parseFloat(document.getElementById('coutTotalHTInput').value)||0;
-            
-            // Masquer le détail
-            document.getElementById('detailMateriel').textContent='—';
-            document.getElementById('detailPose').textContent='—';
-            document.getElementById('detailAccessoires').textContent='—';
-            document.getElementById('detailAdmin').textContent='—';
         }
     }else{
         ch=D.COUT[sc]||0;
@@ -979,8 +1061,8 @@ function updatePct(){
     if(mode){
         const lockTTC=document.getElementById('lockTTC').checked;
         if(lockTTC){
-            const qty=parseInt(document.getElementById('quantite').value)||1;
-            tt=(D.TTC[sc]||0)*qty;
+            const qtyMat = parseInt(document.getElementById('qtyMateriel').value)||1;
+            tt=(D.TTC[sc]||0)*qtyMat;
         }else{
             tt=parseFloat(document.getElementById('totalTTCInput').value)||0;
         }
@@ -995,13 +1077,16 @@ function updatePct(){
     if(mode){
         const lockCoutHT=document.getElementById('lockCoutHT').checked;
         if(lockCoutHT){
-            const qty=parseInt(document.getElementById('quantite').value)||1;
-            if(D.COUT_DETAIL[sc]){
-                const detail=D.COUT_DETAIL[sc];
-                ch=(detail.materiel+detail.pose+detail.accessoires+detail.admin)*qty;
-            }else{
-                ch=(D.COUT[sc]||0)*qty;
-            }
+            const prixMat = parseFloat(document.getElementById('prixMateriel').value)||0;
+            const qtyMat = parseInt(document.getElementById('qtyMateriel').value)||0;
+            const prixPose = parseFloat(document.getElementById('prixPose').value)||0;
+            const qtyPose = parseInt(document.getElementById('qtyPose').value)||0;
+            const prixAcc = parseFloat(document.getElementById('prixAccessoires').value)||0;
+            const qtyAcc = parseInt(document.getElementById('qtyAccessoires').value)||0;
+            const prixAdm = parseFloat(document.getElementById('prixAdmin').value)||0;
+            const qtyAdm = parseInt(document.getElementById('qtyAdmin').value)||0;
+            
+            ch = (prixMat * qtyMat) + (prixPose * qtyPose) + (prixAcc * qtyAcc) + (prixAdm * qtyAdm);
         }else{
             ch=parseFloat(document.getElementById('coutTotalHTInput').value)||0;
         }
@@ -1064,8 +1149,8 @@ function updateAmt(){
     if(mode){
         const lockTTC=document.getElementById('lockTTC').checked;
         if(lockTTC){
-            const qty=parseInt(document.getElementById('quantite').value)||1;
-            tt=(D.TTC[sc]||0)*qty;
+            const qtyMat = parseInt(document.getElementById('qtyMateriel').value)||1;
+            tt=(D.TTC[sc]||0)*qtyMat;
         }else{
             tt=parseFloat(document.getElementById('totalTTCInput').value)||0;
         }
@@ -1080,13 +1165,16 @@ function updateAmt(){
     if(mode){
         const lockCoutHT=document.getElementById('lockCoutHT').checked;
         if(lockCoutHT){
-            const qty=parseInt(document.getElementById('quantite').value)||1;
-            if(D.COUT_DETAIL[sc]){
-                const detail=D.COUT_DETAIL[sc];
-                ch=(detail.materiel+detail.pose+detail.accessoires+detail.admin)*qty;
-            }else{
-                ch=(D.COUT[sc]||0)*qty;
-            }
+            const prixMat = parseFloat(document.getElementById('prixMateriel').value)||0;
+            const qtyMat = parseInt(document.getElementById('qtyMateriel').value)||0;
+            const prixPose = parseFloat(document.getElementById('prixPose').value)||0;
+            const qtyPose = parseInt(document.getElementById('qtyPose').value)||0;
+            const prixAcc = parseFloat(document.getElementById('prixAccessoires').value)||0;
+            const qtyAcc = parseInt(document.getElementById('qtyAccessoires').value)||0;
+            const prixAdm = parseFloat(document.getElementById('prixAdmin').value)||0;
+            const qtyAdm = parseInt(document.getElementById('qtyAdmin').value)||0;
+            
+            ch = (prixMat * qtyMat) + (prixPose * qtyPose) + (prixAcc * qtyAcc) + (prixAdm * qtyAdm);
         }else{
             ch=parseFloat(document.getElementById('coutTotalHTInput').value)||0;
         }
