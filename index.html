@@ -572,7 +572,12 @@
 
                     <div class="form-group" style="margin-bottom: 0; grid-column: 1 / -1;">
                         <label>kWh cumac</label>
-                        <input type="text" id="kwhCumac" value="" readonly style="background: #f5f5f7; color: #1d1d1f; font-weight: 600;">
+                        <input type="number" id="kwhCumac" value="" step="0.1" oninput="calc()" style="font-weight: 600;">
+                        <small>
+                            <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
+                                <input type="checkbox" id="lockKwh" checked onchange="calc()"> Verrouiller (auto selon scenario)
+                            </label>
+                        </small>
                     </div>
                 </div>
             </div>
@@ -956,7 +961,20 @@ function calc(){
         ch=D.COUT[sc]||0;
     }
     
-    const kw=getCEE(et,zn,cs,sf);
+    let kw=getCEE(et,zn,cs,sf);
+    
+    // Gestion du verrouillage des kWh cumac (mode fournisseur seulement)
+    if(mode){
+        const lockKwh=document.getElementById('lockKwh').checked;
+        if(!lockKwh){
+            // Mode manuel : utiliser la valeur saisie
+            const kwhManuel=parseFloat(document.getElementById('kwhCumac').value.replace(/\s/g,''))||0;
+            if(kwhManuel>0) kw=kwhManuel;
+        }else{
+            // Mode verrouillé : afficher la valeur calculée
+            document.getElementById('kwhCumac').value=Math.round(kw).toLocaleString('fr-FR');
+        }
+    }
     
     let px,ce,dg;
     let ceForMarge, taForMarge;
@@ -979,7 +997,12 @@ function calc(){
         console.log('Mode:',mode,'kWh:',kw,'Delegataire:',dg);
         console.log('Setting kwhCumac to:',Math.round(kw).toLocaleString('fr-FR'));
         document.getElementById('delegataire').value=dg;
-        document.getElementById('kwhCumac').value=Math.round(kw).toLocaleString('fr-FR');
+        
+        // Mettre à jour le champ kwhCumac si verrouillé
+        const lockKwh=document.getElementById('lockKwh').checked;
+        if(lockKwh){
+            document.getElementById('kwhCumac').value=Math.round(kw).toLocaleString('fr-FR');
+        }
     }else{
         ce=kw*7.0/1000;
         dg=deleg(sf,cs,ce,ch);
@@ -1094,7 +1117,17 @@ function updatePct(){
         ch=D.COUT[sc]||0;
     }
     
-    const kw=getCEE(et,zn,cs,sf);
+    let kw=getCEE(et,zn,cs,sf);
+    
+    // Gestion du verrouillage des kWh cumac (mode fournisseur seulement)
+    if(mode){
+        const lockKwh=document.getElementById('lockKwh').checked;
+        if(!lockKwh){
+            // Mode manuel : utiliser la valeur saisie
+            const kwhManuel=parseFloat(document.getElementById('kwhCumac').value.replace(/\s/g,''))||0;
+            if(kwhManuel>0) kw=kwhManuel;
+        }
+    }
     
     let px,ce,dg;
     let ceForMarge, taForMarge;
@@ -1182,7 +1215,17 @@ function updateAmt(){
         ch=D.COUT[sc]||0;
     }
     
-    const kw=getCEE(et,zn,cs,sf);
+    let kw=getCEE(et,zn,cs,sf);
+    
+    // Gestion du verrouillage des kWh cumac (mode fournisseur seulement)
+    if(mode){
+        const lockKwh=document.getElementById('lockKwh').checked;
+        if(!lockKwh){
+            // Mode manuel : utiliser la valeur saisie
+            const kwhManuel=parseFloat(document.getElementById('kwhCumac').value.replace(/\s/g,''))||0;
+            if(kwhManuel>0) kw=kwhManuel;
+        }
+    }
     
     let px,ce,dg;
     let ceForMarge, taForMarge;
