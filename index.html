@@ -73,6 +73,8 @@
             z-index: 1000;
             align-items: center;
             justify-content: center;
+            overflow-y: auto;
+            padding: 20px;
         }
 
         .modal.active {
@@ -115,6 +117,260 @@
 
         .modal-content button:hover {
             background: #0077ed;
+        }
+
+        /* Modal Recommandations */
+        .reco-modal-content {
+            background: white;
+            border-radius: 16px;
+            max-width: 1200px;
+            width: 95%;
+            max-height: 90vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .reco-header {
+            padding: 30px 40px 20px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .reco-header h2 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .reco-header p {
+            color: #86868b;
+            font-size: 14px;
+        }
+
+        .reco-filters {
+            padding: 20px 40px;
+            background: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .reco-filters h3 {
+            font-size: 14px;
+            color: #86868b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .filter-item label {
+            display: block;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .filter-item select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #d2d2d7;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .reco-tabs {
+            display: flex;
+            padding: 0 40px;
+            background: white;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .reco-tab {
+            padding: 16px 24px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #86868b;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .reco-tab:hover {
+            color: #1d1d1f;
+        }
+
+        .reco-tab.active {
+            color: #0071e3;
+            border-bottom-color: #0071e3;
+        }
+
+        .reco-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px 40px;
+        }
+
+        .reco-content {
+            display: none;
+        }
+
+        .reco-content.active {
+            display: block;
+        }
+
+        .reco-grid {
+            display: grid;
+            gap: 16px;
+        }
+
+        .reco-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .reco-card:hover {
+            border-color: #0071e3;
+            box-shadow: 0 4px 20px rgba(0,113,227,0.1);
+        }
+
+        .reco-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .reco-rank {
+            background: linear-gradient(135deg, #0071e3 0%, #0077ed 100%);
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .reco-scenario {
+            flex: 1;
+            margin-left: 16px;
+        }
+
+        .reco-scenario h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .reco-scenario p {
+            font-size: 13px;
+            color: #86868b;
+        }
+
+        .reco-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .reco-metric {
+            background: #f9fafb;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .reco-metric-label {
+            font-size: 11px;
+            color: #86868b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .reco-metric-value {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .reco-metric-value.positive {
+            color: #34c759;
+        }
+
+        .reco-metric-value.negative {
+            color: #ff3b30;
+        }
+
+        .reco-score {
+            text-align: center;
+            padding: 12px;
+            background: linear-gradient(135deg, #34c759 0%, #30d158 100%);
+            color: white;
+            border-radius: 8px;
+            font-weight: 700;
+        }
+
+        .reco-score.good {
+            background: linear-gradient(135deg, #34c759 0%, #30d158 100%);
+        }
+
+        .reco-score.medium {
+            background: linear-gradient(135deg, #ff9500 0%, #ffb340 100%);
+        }
+
+        .reco-score.low {
+            background: linear-gradient(135deg, #ff3b30 0%, #ff6961 100%);
+        }
+
+        .reco-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .btn-apply {
+            flex: 1;
+            background: #0071e3;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-apply:hover {
+            background: #0077ed;
+        }
+
+        .btn-close-modal {
+            background: #f5f5f7;
+            color: #1d1d1f;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-close-modal:hover {
+            background: #e8e8ed;
         }
 
         .main-content {
@@ -185,7 +441,6 @@
             display: block;
         }
         
-        /* En mode fournisseur, masquer la version lecture seule du Total TTC */
         .fournisseur-mode .ttc-readonly {
             display: none !important;
         }
@@ -349,6 +604,26 @@
             background: #e8e8ed;
         }
 
+        .btn-reco {
+            background: linear-gradient(135deg, #ff9500 0%, #ffb340 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 10px;
+            box-shadow: 0 4px 12px rgba(255, 149, 0, 0.3);
+        }
+
+        .btn-reco:hover {
+            background: linear-gradient(135deg, #ffb340 0%, #ff9500 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 149, 0, 0.4);
+        }
+
         .footer {
             text-align: center;
             padding: 8px 20px 8px;
@@ -382,6 +657,16 @@
             .results-sidebar {
                 position: static;
             }
+
+            .reco-modal-content {
+                width: 100%;
+                max-height: 100vh;
+                border-radius: 0;
+            }
+
+            .reco-tabs {
+                overflow-x: auto;
+            }
         }
 
         .note-small {
@@ -389,6 +674,23 @@
             color: #86868b;
             text-align: center;
             margin-top: 8px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #86868b;
+        }
+
+        .loading::after {
+            content: '...';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
         }
     </style>
 </head>
@@ -414,6 +716,78 @@
             <h2>Accès Vue fournisseur</h2>
             <input type="password" id="passwordInput" placeholder="Mot de passe">
             <button id="unlockBtn">Déverrouiller</button>
+        </div>
+    </div>
+
+    <!-- Modal Recommandations -->
+    <div class="modal" id="recoModal">
+        <div class="reco-modal-content">
+            <div class="reco-header">
+                <h2>🎯 Recommandations Automatiques</h2>
+                <p>Analyse intelligente de 320 scénarios possibles</p>
+            </div>
+
+            <div class="reco-filters">
+                <h3>Filtres (optionnels)</h3>
+                <div class="filter-grid">
+                    <div class="filter-item">
+                        <label>Zone climatique</label>
+                        <select id="filterZone">
+                            <option value="">Toutes</option>
+                            <option value="H1">H1</option>
+                            <option value="H2">H2</option>
+                            <option value="H3">H3</option>
+                        </select>
+                    </div>
+                    <div class="filter-item">
+                        <label>Surface</label>
+                        <select id="filterSurface">
+                            <option value="">Toutes</option>
+                            <option value="S<70">S < 70 m²</option>
+                            <option value="70<S<90">70–90 m²</option>
+                            <option value="90<S<110">90–110 m²</option>
+                            <option value="110<S<130">110–130 m²</option>
+                            <option value="S>130">> 130 m²</option>
+                        </select>
+                    </div>
+                    <div class="filter-item">
+                        <label>Catégorie MPR</label>
+                        <select id="filterCategorie">
+                            <option value="">Toutes</option>
+                            <option value="BLEU">MPR Bleu</option>
+                            <option value="JAUNE">MPR Jaune</option>
+                            <option value="VIOLET">MPR Violet</option>
+                            <option value="ROSE">MPR Rose</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="reco-tabs">
+                <button class="reco-tab active" data-tab="marge">💰 Top Marge</button>
+                <button class="reco-tab" data-tab="rac">💳 RAC Minimal</button>
+                <button class="reco-tab" data-tab="equilibre">⚖️ Équilibre</button>
+                <button class="reco-tab" data-tab="vendable">🎯 Plus Vendable</button>
+            </div>
+
+            <div class="reco-body">
+                <div class="reco-content active" id="recoMarge">
+                    <div class="loading">Calcul en cours</div>
+                </div>
+                <div class="reco-content" id="recoRAC">
+                    <div class="loading">Calcul en cours</div>
+                </div>
+                <div class="reco-content" id="recoEquilibre">
+                    <div class="loading">Calcul en cours</div>
+                </div>
+                <div class="reco-content" id="recoVendable">
+                    <div class="loading">Calcul en cours</div>
+                </div>
+            </div>
+
+            <div style="padding: 20px 40px; border-top: 1px solid #e5e7eb; background: #f9fafb;">
+                <button class="btn-close-modal" onclick="closeRecoModal()">Fermer</button>
+            </div>
         </div>
     </div>
 
@@ -487,69 +861,50 @@
                     </div>
                 </div>
 
-                <button class="btn-reset" onclick="reset()" style="margin-top: 12px;">Réinitialiser</button>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <button class="btn-reset" onclick="reset()">Réinitialiser</button>
+                    <button class="btn-reco fournisseur-only" onclick="openRecoModal()">🎯 Recommandations</button>
+                </div>
             </div>
 
             <div class="card fournisseur-only">
                 <h2 class="card-title">Coûts (Vue Fournisseur)</h2>
                 
+                <div style="display: grid; grid-template-columns: auto 1fr auto; gap: 8px; align-items: center; margin-bottom: 12px;">
+                    <label style="font-size: 12px; font-weight: 500;">Quantité</label>
+                    <input type="number" id="quantite" value="1" min="1" step="1" oninput="calc()" style="padding: 8px 12px; font-weight: 600; border: 2px solid #0071e3; border-radius: 6px;">
+                    <button onclick="document.getElementById('quantite').value=1; calc()" style="padding: 8px 16px; background: #f5f5f7; border: none; border-radius: 6px; cursor: pointer; font-size: 13px;">Reset</button>
+                </div>
+                
                 <div style="background: #f5f5f7; padding: 16px; border-radius: 8px; margin-bottom: 12px;">
-                    <!-- En-têtes -->
-                    <div style="display: grid; grid-template-columns: 1fr 100px 80px 100px; gap: 8px; margin-bottom: 12px; font-size: 11px; font-weight: 600; color: #86868b; text-transform: uppercase;">
-                        <div>Poste</div>
-                        <div style="text-align: right;">Prix unit. (€)</div>
-                        <div style="text-align: center;">Qté</div>
-                        <div style="text-align: right;">Total (€)</div>
-                    </div>
-                    
-                    <!-- Matériel -->
-                    <div style="display: grid; grid-template-columns: 1fr 100px 80px 100px; gap: 8px; align-items: center; margin-bottom: 8px;">
-                        <div style="font-weight: 500;">Matériel</div>
-                        <input type="number" id="prixMateriel" value="2900" step="1" oninput="updateCoutsDetails()" style="padding: 6px 8px; text-align: right; border: 1px solid #d2d2d7; border-radius: 4px;">
-                        <input type="number" id="qtyMateriel" value="1" min="0" step="1" oninput="updateCoutsDetails()" style="padding: 6px 8px; text-align: center; border: 1px solid #0071e3; border-radius: 4px; font-weight: 600;">
-                        <div style="text-align: right; font-weight: 600;" id="totalMateriel">2 900 €</div>
-                    </div>
-                    
-                    <!-- Pose -->
-                    <div style="display: grid; grid-template-columns: 1fr 100px 80px 100px; gap: 8px; align-items: center; margin-bottom: 8px;">
-                        <div style="font-weight: 500;">Pose</div>
-                        <input type="number" id="prixPose" value="2500" step="1" oninput="updateCoutsDetails()" style="padding: 6px 8px; text-align: right; border: 1px solid #d2d2d7; border-radius: 4px;">
-                        <input type="number" id="qtyPose" value="1" min="0" step="1" oninput="updateCoutsDetails()" style="padding: 6px 8px; text-align: center; border: 1px solid #0071e3; border-radius: 4px; font-weight: 600;">
-                        <div style="text-align: right; font-weight: 600;" id="totalPose">2 500 €</div>
-                    </div>
-                    
-                    <!-- Accessoires -->
-                    <div style="display: grid; grid-template-columns: 1fr 100px 80px 100px; gap: 8px; align-items: center; margin-bottom: 8px;">
-                        <div style="font-weight: 500;">Accessoires</div>
-                        <input type="number" id="prixAccessoires" value="500" step="1" oninput="updateCoutsDetails()" style="padding: 6px 8px; text-align: right; border: 1px solid #d2d2d7; border-radius: 4px;">
-                        <input type="number" id="qtyAccessoires" value="1" min="0" step="1" oninput="updateCoutsDetails()" style="padding: 6px 8px; text-align: center; border: 1px solid #0071e3; border-radius: 4px; font-weight: 600;">
-                        <div style="text-align: right; font-weight: 600;" id="totalAccessoires">500 €</div>
-                    </div>
-                    
-                    <!-- Admin -->
-                    <div style="display: grid; grid-template-columns: 1fr 100px 80px 100px; gap: 8px; align-items: center; margin-bottom: 8px;">
-                        <div style="font-weight: 500;">Admin</div>
-                        <input type="number" id="prixAdmin" value="300" step="1" oninput="updateCoutsDetails()" style="padding: 6px 8px; text-align: right; border: 1px solid #d2d2d7; border-radius: 4px;">
-                        <input type="number" id="qtyAdmin" value="1" min="0" step="1" oninput="updateCoutsDetails()" style="padding: 6px 8px; text-align: center; border: 1px solid #0071e3; border-radius: 4px; font-weight: 600;">
-                        <div style="text-align: right; font-weight: 600;" id="totalAdmin">300 €</div>
-                    </div>
-                    
-                    <div style="margin-top: 12px; padding-top: 12px; border-top: 2px solid #d2d2d7;">
-                        <button onclick="resetCoutsToScenario()" style="padding: 6px 12px; background: white; border: 1px solid #0071e3; color: #0071e3; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 500;">
-                            ↻ Réinitialiser selon scénario
-                        </button>
+                    <div style="display: grid; gap: 10px; font-size: 13px;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: #86868b;">Matériel</span>
+                            <span style="font-weight: 600;" id="detailMateriel">—</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: #86868b;">Pose</span>
+                            <span style="font-weight: 600;" id="detailPose">—</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: #86868b;">Accessoires</span>
+                            <span style="font-weight: 600;" id="detailAccessoires">—</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: #86868b;">Admin</span>
+                            <span style="font-weight: 600;" id="detailAdmin">—</span>
+                        </div>
                     </div>
                 </div>
                 
-                <!-- Total Coût HT global -->
-                <div style="background: white; border: 2px solid #d2d2d7; padding: 14px; border-radius: 8px; margin-bottom: 12px;">
+                <div style="background: #0071e3; color: white; padding: 14px; border-radius: 8px; margin-bottom: 12px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                        <span style="font-weight: 600; font-size: 14px; color: #1d1d1f;">TOTAL COÛT HT</span>
+                        <span style="font-weight: 600; font-size: 14px;">TOTAL COÛT HT</span>
                     </div>
-                    <input type="number" id="coutTotalHTInput" value="6200" step="1" oninput="updateFromCoutHT()" style="font-size: 20px; font-weight: 700; text-align: right; padding: 10px 14px; width: 100%; border: 2px solid #0071e3; border-radius: 8px; background: #f5f5f7; color: #1d1d1f;">
-                    <small style="font-size: 11px; color: #86868b; margin-top: 6px; display: block;">
+                    <input type="number" id="coutTotalHTInput" value="6200" step="1" oninput="updateFromCoutHT()" style="font-size: 20px; font-weight: 700; text-align: right; padding: 10px 14px; width: 100%; border: 2px solid white; border-radius: 8px; background: white; color: #1d1d1f;">
+                    <small style="font-size: 11px; color: rgba(255,255,255,0.9); margin-top: 6px; display: block;">
                         <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
-                            <input type="checkbox" id="lockCoutHT" checked onchange="calc()"> Verrouiller (auto selon détail)
+                            <input type="checkbox" id="lockCoutHT" checked onchange="calc()"> Verrouiller (auto selon scénario × quantité)
                         </label>
                     </small>
                 </div>
@@ -572,12 +927,7 @@
 
                     <div class="form-group" style="margin-bottom: 0; grid-column: 1 / -1;">
                         <label>kWh cumac</label>
-                        <input type="number" id="kwhCumac" value="" step="0.1" oninput="calc()" style="font-weight: 600;">
-                        <small>
-                            <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
-                                <input type="checkbox" id="lockKwh" checked onchange="calc()"> Verrouiller (auto selon scenario)
-                            </label>
-                        </small>
+                        <input type="text" id="kwhCumac" value="" readonly style="background: #f5f5f7; color: #1d1d1f; font-weight: 600;">
                     </div>
                 </div>
             </div>
@@ -587,13 +937,10 @@
 
         <div class="results-sidebar">
             <div class="summary-card" style="margin-bottom: 0;">
-                <!-- Résumé du scénario EN HAUT -->
                 <div class="scenario-label" id="scenarioSummary" style="font-size: 14px; margin-bottom: 20px; padding: 12px; background: #f5f5f7; border-radius: 8px;">—</div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                    <!-- Colonne gauche : résumé des montants -->
                     <div>
-                        <!-- Total TTC : affichage lecture seule en mode client, éditable en mode fournisseur -->
                         <div class="ttc-readonly" style="margin-bottom: 12px;">
                             <div class="amount-label">TOTAL TTC</div>
                             <div class="amount-value" id="totalTTC" style="text-align: right;">—</div>
@@ -610,11 +957,11 @@
                         </div>
 
                         <div class="fournisseur-only" style="margin-bottom: 12px;">
+                            <div class="amount-label">COÛT HT</div>
                             <div style="display: flex; justify-content: space-between; align-items: baseline;">
-                                <div class="amount-label">COÛT HT</div>
+                                <small style="font-size: 11px; color: #86868b;">Coût matériel + pose + admin</small>
                                 <div class="amount-value" id="displayCoutHT" style="text-align: right;">—</div>
                             </div>
-                            <small style="font-size: 11px; color: #86868b; display: block; margin-top: 4px;">Coût matériel + pose + admin</small>
                         </div>
 
                         <div style="margin-bottom: 12px;">
@@ -653,7 +1000,6 @@
                         </div>
                     </div>
 
-                    <!-- Colonne droite : prise en charge du RAC -->
                     <div>
                         <h2 class="summary-header" style="margin-bottom: 8px;">Prise en charge du RAC</h2>
                         
@@ -688,7 +1034,6 @@
         <p style="margin: 0;">Propulsé par 770 Lab</p>
     </div>
 
-    <!-- Zone d'impression cachée -->
     <div id="printArea" style="display: none;">
         <div style="padding: 40px; font-family: -apple-system, sans-serif;">
             <h1 style="font-size: 28px; margin-bottom: 10px;" id="printTitle">Dossier —</h1>
@@ -751,16 +1096,28 @@
 const D={TTC:{"PAC":10890,"PAC + BALLON ÉLECTRIQUE":13750,"PAC + BALLON THERMO":13750,"PAC + SSC":25850},MPR:{"PAC":{BLEU:5000,JAUNE:4000,VIOLET:3000,ROSE:0},"PAC + BALLON ÉLECTRIQUE":{BLEU:5000,JAUNE:4000,VIOLET:3000,ROSE:0},"PAC + BALLON THERMO":{BLEU:6200,JAUNE:4800,VIOLET:3400,ROSE:0},"PAC + SSC":{BLEU:15000,JAUNE:12000,VIOLET:7000,ROSE:0}},COUT:{"PAC":6200,"PAC + BALLON ÉLECTRIQUE":6400,"PAC + BALLON THERMO":7300,"PAC + SSC":11700},COUT_DETAIL:{"PAC":{materiel:2900,pose:2500,accessoires:500,admin:300},"PAC + BALLON ÉLECTRIQUE":{materiel:3100,pose:2500,accessoires:500,admin:300},"PAC + BALLON THERMO":{materiel:4000,pose:2500,accessoires:500,admin:300},"PAC + SSC":{materiel:6100,pose:4800,accessoires:500,admin:300}},CEE:{"140-170":{H1:{PAC:{"S<70":274800,"70<S<90":384720,"90<S<110":549600,"110<S<130":604560,"S>130":879360},"BALLON ELECTRIQUE":{"S<70":274800,"70<S<90":384720,"90<S<110":549600,"110<S<130":604560,"S>130":879360},"BALLON THERMO":{"S<70":290400,"70<S<90":400320,"90<S<110":565200,"110<S<130":620160,"S>130":894960},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H2:{PAC:{"S<70":229000,"70<S<90":320600,"90<S<110":458000,"110<S<130":503800,"S>130":732800},"BALLON ELECTRIQUE":{"S<70":229000,"70<S<90":320600,"90<S<110":458000,"110<S<130":503800,"S>130":732800},"BALLON THERMO":{"S<70":244600,"70<S<90":336200,"90<S<110":473600,"110<S<130":519400,"S>130":748400},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H3:{PAC:{"S<70":160300,"70<S<90":224420,"90<S<110":320600,"110<S<130":352660,"S>130":512960},"BALLON ELECTRIQUE":{"S<70":160300,"70<S<90":224420,"90<S<110":320600,"110<S<130":352660,"S>130":512960},"BALLON THERMO":{"S<70":175900,"70<S<90":240020,"90<S<110":336200,"110<S<130":368260,"S>130":528560},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}}},"111-140":{H1:{PAC:{"S<70":238500,"70<S<90":333900,"90<S<110":477000,"110<S<130":524700,"S>130":763200},"BALLON ELECTRIQUE":{"S<70":238500,"70<S<90":333900,"90<S<110":477000,"110<S<130":524700,"S>130":763200},"BALLON THERMO":{"S<70":254100,"70<S<90":349500,"90<S<110":492600,"110<S<130":540300,"S>130":778800},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H2:{PAC:{"S<70":198750,"70<S<90":278250,"90<S<110":397500,"110<S<130":437250,"S>130":636000},"BALLON ELECTRIQUE":{"S<70":198750,"70<S<90":278250,"90<S<110":397500,"110<S<130":437250,"S>130":636000},"BALLON THERMO":{"S<70":214350,"70<S<90":293850,"90<S<110":413100,"110<S<130":452850,"S>130":651600},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H3:{PAC:{"S<70":139125,"70<S<90":194775,"90<S<110":278250,"110<S<130":306075,"S>130":445200},"BALLON ELECTRIQUE":{"S<70":139125,"70<S<90":194775,"90<S<110":278250,"110<S<130":306075,"S>130":445200},"BALLON THERMO":{"S<70":154725,"70<S<90":210375,"90<S<110":293850,"110<S<130":321675,"S>130":460800},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}}}}};
 const M={"PAC":"PAC","PAC + BALLON ÉLECTRIQUE":"BALLON ELECTRIQUE","PAC + BALLON THERMO":"BALLON THERMO","PAC + SSC":"BALLON SSC"};
 
-// Fonction pour déterminer le type de ballon selon le scénario
-function getBallonType(scenario){
-    if(scenario === "PAC") return null;
-    if(scenario === "PAC + BALLON ÉLECTRIQUE") return "BALLON_ELECTRIQUE";
-    if(scenario === "PAC + BALLON THERMO") return "BALLON_THERMO";
-    if(scenario === "PAC + SSC") return "SSC";
-    return null;
-}
+const SCENARIO_NAMES = {
+    "PAC": "PAC",
+    "PAC + BALLON ÉLECTRIQUE": "PAC + Ballon Électrique",
+    "PAC + BALLON THERMO": "PAC + Ballon Thermo",
+    "PAC + SSC": "PAC + SSC"
+};
 
-// Fonction helper pour accéder aux données CEE en toute sécurité
+const CATEGORIE_NAMES = {
+    "BLEU": "MPR Bleu",
+    "JAUNE": "MPR Jaune",
+    "VIOLET": "MPR Violet",
+    "ROSE": "MPR Rose"
+};
+
+const SURFACE_NAMES = {
+    "S<70": "< 70 m²",
+    "70<S<90": "70-90 m²",
+    "90<S<110": "90-110 m²",
+    "110<S<130": "110-130 m²",
+    "S>130": "> 130 m²"
+};
+
 function getCEE(et, zn, cs, sf){
     if(!D.CEE[et]) return 0;
     if(!D.CEE[et][zn]) return 0;
@@ -769,82 +1126,25 @@ function getCEE(et, zn, cs, sf){
     return D.CEE[et][zn][cs][sf];
 }
 
-// Fonction pour mettre à jour les totaux quand on modifie les quantités/prix
-function updateCoutsDetails(){
-    const prixMat = parseFloat(document.getElementById('prixMateriel').value)||0;
-    const qtyMat = parseInt(document.getElementById('qtyMateriel').value)||0;
-    const totalMat = prixMat * qtyMat;
-    document.getElementById('totalMateriel').textContent = fmt(totalMat);
-    
-    const prixPose = parseFloat(document.getElementById('prixPose').value)||0;
-    const qtyPose = parseInt(document.getElementById('qtyPose').value)||0;
-    const totalPose = prixPose * qtyPose;
-    document.getElementById('totalPose').textContent = fmt(totalPose);
-    
-    const prixAcc = parseFloat(document.getElementById('prixAccessoires').value)||0;
-    const qtyAcc = parseInt(document.getElementById('qtyAccessoires').value)||0;
-    const totalAcc = prixAcc * qtyAcc;
-    document.getElementById('totalAccessoires').textContent = fmt(totalAcc);
-    
-    const prixAdm = parseFloat(document.getElementById('prixAdmin').value)||0;
-    const qtyAdm = parseInt(document.getElementById('qtyAdmin').value)||0;
-    const totalAdm = prixAdm * qtyAdm;
-    document.getElementById('totalAdmin').textContent = fmt(totalAdm);
-    
-    // Mettre à jour le total si verrouillé
-    if(document.getElementById('lockCoutHT').checked){
-        const total = totalMat + totalPose + totalAcc + totalAdm;
-        document.getElementById('coutTotalHTInput').value = total;
-    }
-    
-    // Recalculer tout
-    calc();
-}
-
-// Fonction pour réinitialiser les coûts selon le scénario
-function resetCoutsToScenario(){
-    const sc = document.getElementById('scenario').value;
-    if(D.COUT_DETAIL[sc]){
-        const detail = D.COUT_DETAIL[sc];
-        document.getElementById('prixMateriel').value = detail.materiel;
-        document.getElementById('prixPose').value = detail.pose;
-        document.getElementById('prixAccessoires').value = detail.accessoires;
-        document.getElementById('prixAdmin').value = detail.admin;
-        
-        // Réinitialiser les quantités à 1
-        document.getElementById('qtyMateriel').value = 1;
-        document.getElementById('qtyPose').value = 1;
-        document.getElementById('qtyAccessoires').value = 1;
-        document.getElementById('qtyAdmin').value = 1;
-        
-        updateCoutsDetails();
-    }
-}
-
 let mode=0;
 
-// Vérifier si le mode fournisseur est encore valide au chargement
 function checkStoredMode(){
     const stored = localStorage.getItem('fournisseurAuth');
     if(stored){
         const data = JSON.parse(stored);
         const now = new Date().getTime();
-        // Vérifier si moins de 24h se sont écoulées depuis l'authentification
         if(now - data.timestamp < 24 * 60 * 60 * 1000){
-            // L'utilisateur est authentifié - démarrer en mode fournisseur
             mode = 1;
             document.getElementById('mainContent').classList.add('fournisseur-mode');
             document.getElementById('lockIcon').textContent='🔓';
             return true;
         } else {
-            // Session expirée, nettoyer
             localStorage.removeItem('fournisseurAuth');
         }
     }
     return false;
 }
 
-// Sauvegarder l'authentification (valide 24h)
 function saveMode(){
     const data = {
         timestamp: new Date().getTime()
@@ -852,43 +1152,38 @@ function saveMode(){
     localStorage.setItem('fournisseurAuth', JSON.stringify(data));
 }
 
-// Supprimer l'authentification fournisseur
 function clearMode(){
     localStorage.removeItem('fournisseurAuth');
 }
-function deleg(s,c,cee,ch){if(c==='BALLON SSC')return 'VALOREN';return cee>(ch*1.25)?'ECO NEGOCE':'VALOREN'}
-function prix(d,c){const b=c==='BLEU';return d==='ECO NEGOCE'?(b?12.5:7.4):(b?11.78:7.0)}
-function prixC(d){return d==='ECO NEGOCE'?6.5:7.0}
-function fmt(n){return Math.round(n).toLocaleString('fr-FR')+' €'}
 
-// Fonction pour mettre à jour les coûts détaillés
-function updateCosts(){
-    // Sauvegarder le pourcentage actuel
-    const savedPct = parseFloat(document.getElementById('racPourcent').value) || 0;
-    
-    // Recalculer tout
-    calc();
-    
-    // Réappliquer le pourcentage sur le nouveau RAC si nécessaire
-    if(savedPct > 0){
-        document.getElementById('racPourcent').value = savedPct;
-        updatePct();
-    }
+function deleg(s,c,cee,ch){
+    if(c==='BALLON SSC') return 'VALOREN';
+    return cee>(ch*1.25)?'ECO NEGOCE':'VALOREN';
 }
 
-// Fonction appelée quand on modifie manuellement le Total TTC
+function prix(d,c){
+    const b=c==='BLEU';
+    return d==='ECO NEGOCE'?(b?12.5:7.4):(b?11.78:7.0);
+}
+
+function prixC(d){
+    return d==='ECO NEGOCE'?6.5:7.0;
+}
+
+function fmt(n){
+    return Math.round(n).toLocaleString('fr-FR')+' €';
+}
+
 function updateFromTTC(){
-    // Décocher le verrou automatiquement
     document.getElementById('lockTTC').checked=false;
     calc();
 }
 
-// Fonction appelée quand on modifie manuellement le Coût HT
 function updateFromCoutHT(){
-    // Décocher le verrou automatiquement
     document.getElementById('lockCoutHT').checked=false;
     calc();
 }
+
 function calc(){
     const sc=document.getElementById('scenario').value;
     const ct=document.getElementById('categorie').value;
@@ -897,84 +1192,54 @@ function calc(){
     const sf=document.getElementById('surface').value;
     const cs=M[sc];
     
-    // En mode fournisseur, initialiser les champs de détail si le scénario a changé
-    if(mode && D.COUT_DETAIL[sc]){
-        const currentPrixMat = parseFloat(document.getElementById('prixMateriel').value);
-        // Vérifier si les prix correspondent à un autre scénario (= scénario vient de changer)
-        let needUpdate = false;
-        for(let scenario in D.COUT_DETAIL){
-            if(scenario !== sc && D.COUT_DETAIL[scenario].materiel === currentPrixMat){
-                needUpdate = true;
-                break;
-            }
-        }
-        if(needUpdate || !currentPrixMat){
-            resetCoutsToScenario();
-        }
-    }
+    const qty=mode ? (parseInt(document.getElementById('quantite').value)||1) : 1;
     
-    // Gestion du Total TTC
     let tt;
     if(mode){
         const lockTTC=document.getElementById('lockTTC').checked;
         if(lockTTC){
-            // Multiplier le TTC de base par la quantité de matériel
-            const ttcBase = D.TTC[sc]||0;
-            const qtyMat = parseInt(document.getElementById('qtyMateriel').value)||1;
-            
-            tt = ttcBase * qtyMat;
-            document.getElementById('totalTTCInput').value=Math.round(tt);
+            tt=(D.TTC[sc]||0)*qty;
+            document.getElementById('totalTTCInput').value=tt;
         }else{
             tt=parseFloat(document.getElementById('totalTTCInput').value)||0;
         }
     }else{
-        // En mode client, utiliser la valeur du champ (qui peut avoir été modifiée en mode fournisseur)
-        const ttcInput = parseFloat(document.getElementById('totalTTCInput').value);
-        tt = ttcInput || D.TTC[sc]||0;
+        tt=D.TTC[sc]||0;
     }
     
     const ad=(D.MPR[sc]&&D.MPR[sc][ct])?D.MPR[sc][ct]:0;
     
-    // Gestion du Coût HT
     let ch;
     if(mode){
         const lockCoutHT=document.getElementById('lockCoutHT').checked;
         
         if(lockCoutHT){
-            // Mode auto : calculer depuis les champs de détail
-            const prixMat = parseFloat(document.getElementById('prixMateriel').value)||0;
-            const qtyMat = parseInt(document.getElementById('qtyMateriel').value)||0;
-            const prixPose = parseFloat(document.getElementById('prixPose').value)||0;
-            const qtyPose = parseInt(document.getElementById('qtyPose').value)||0;
-            const prixAcc = parseFloat(document.getElementById('prixAccessoires').value)||0;
-            const qtyAcc = parseInt(document.getElementById('qtyAccessoires').value)||0;
-            const prixAdm = parseFloat(document.getElementById('prixAdmin').value)||0;
-            const qtyAdm = parseInt(document.getElementById('qtyAdmin').value)||0;
-            
-            ch = (prixMat * qtyMat) + (prixPose * qtyPose) + (prixAcc * qtyAcc) + (prixAdm * qtyAdm);
-            document.getElementById('coutTotalHTInput').value=ch;
+            if(D.COUT_DETAIL[sc]){
+                const detail=D.COUT_DETAIL[sc];
+                ch=(detail.materiel+detail.pose+detail.accessoires+detail.admin)*qty;
+                
+                document.getElementById('detailMateriel').textContent=fmt(detail.materiel*qty);
+                document.getElementById('detailPose').textContent=fmt(detail.pose*qty);
+                document.getElementById('detailAccessoires').textContent=fmt(detail.accessoires*qty);
+                document.getElementById('detailAdmin').textContent=fmt(detail.admin*qty);
+                document.getElementById('coutTotalHTInput').value=ch;
+            }else{
+                ch=(D.COUT[sc]||0)*qty;
+                document.getElementById('coutTotalHTInput').value=ch;
+            }
         }else{
-            // Mode manuel : utiliser la valeur saisie
             ch=parseFloat(document.getElementById('coutTotalHTInput').value)||0;
+            
+            document.getElementById('detailMateriel').textContent='—';
+            document.getElementById('detailPose').textContent='—';
+            document.getElementById('detailAccessoires').textContent='—';
+            document.getElementById('detailAdmin').textContent='—';
         }
     }else{
         ch=D.COUT[sc]||0;
     }
     
-    let kw=getCEE(et,zn,cs,sf);
-    
-    // Gestion du verrouillage des kWh cumac (mode fournisseur seulement)
-    if(mode){
-        const lockKwh=document.getElementById('lockKwh').checked;
-        if(!lockKwh){
-            // Mode manuel : utiliser la valeur saisie
-            const kwhManuel=parseFloat(document.getElementById('kwhCumac').value.replace(/\s/g,''))||0;
-            if(kwhManuel>0) kw=kwhManuel;
-        }else{
-            // Mode verrouillé : afficher la valeur calculée
-            document.getElementById('kwhCumac').value=Math.round(kw).toLocaleString('fr-FR');
-        }
-    }
+    const kw=getCEE(et,zn,cs,sf);
     
     let px,ce,dg;
     let ceForMarge, taForMarge;
@@ -994,15 +1259,8 @@ function calc(){
         ceForMarge=ce;
         taForMarge=ad+ceForMarge;
         
-        console.log('Mode:',mode,'kWh:',kw,'Delegataire:',dg);
-        console.log('Setting kwhCumac to:',Math.round(kw).toLocaleString('fr-FR'));
         document.getElementById('delegataire').value=dg;
-        
-        // Mettre à jour le champ kwhCumac si verrouillé
-        const lockKwh=document.getElementById('lockKwh').checked;
-        if(lockKwh){
-            document.getElementById('kwhCumac').value=Math.round(kw).toLocaleString('fr-FR');
-        }
+        document.getElementById('kwhCumac').value=Math.round(kw).toLocaleString('fr-FR');
     }else{
         ce=kw*7.0/1000;
         dg=deleg(sf,cs,ce,ch);
@@ -1023,7 +1281,7 @@ function calc(){
     document.getElementById('aidesCEE').textContent=fmt(ce);
     document.getElementById('totalAides').textContent=fmt(ta);
     
-    if(mode)document.getElementById('displayCoutHT').textContent=fmt(ch);
+    if(mode) document.getElementById('displayCoutHT').textContent=fmt(ch);
     
     const st=document.getElementById('scenario').options[document.getElementById('scenario').selectedIndex].text;
     const ct2=document.getElementById('categorie').options[document.getElementById('categorie').selectedIndex].text;
@@ -1039,30 +1297,33 @@ function calc(){
     calcRAC(rb,ch,ta,taForMarge,tt);
 }
 
-// CORRECTION: Le statut est TOUJOURS calculé selon la marge finale réelle (vue fournisseur)
 function calcRAC(rb,ch,ta,taForMarge,tt){
     const po=parseFloat(document.getElementById('racPourcent').value)||0;
     const mo=parseFloat(document.getElementById('racOffert').value)||0;
     const rc=rb-mo;
     document.getElementById('resteCharge').textContent=fmt(rc);
     
-    // Calcul de la marge finale POUR LE STATUT (avec les vraies aides fournisseur et le vrai TTC)
     const rbForMarge = tt - taForMarge;
     const rcForMarge = rbForMarge - mo;
     const vhForMarge = Math.max(0,rcForMarge)/1.055;
     const mgForMarge = vhForMarge - ch + taForMarge;
     
-    // En mode fournisseur : afficher la marge réelle
     if(mode){
         document.getElementById('margeFinal').textContent=fmt(mgForMarge);
     }
     
-    // Le statut est TOUJOURS basé sur la marge finale réelle, dans les deux modes
+    // Récupérer le scénario actuel pour adapter les seuils
+    const currentScenario = document.getElementById('scenario').value;
+    
+    // Seuils différents pour PAC + SSC
+    const seuilOK = (currentScenario === 'PAC + SSC') ? 6000 : 4000;
+    const seuilWarning = (currentScenario === 'PAC + SSC') ? 3000 : 2000;
+    
     const bd=document.getElementById('statusBadge');
-    if(mgForMarge>=4000){
+    if(mgForMarge>=seuilOK){
         bd.className='status-badge ok';
         bd.textContent='DOSSIER OK'
-    }else if(mgForMarge>=2000){
+    }else if(mgForMarge>=seuilWarning){
         bd.className='status-badge warning';
         bd.textContent='DOSSIER À AMÉLIORER'
     }else{
@@ -1079,13 +1340,12 @@ function updatePct(){
     const sf=document.getElementById('surface').value;
     const cs=M[sc];
     
-    // Récupérer le TTC (manuel ou auto)
     let tt;
     if(mode){
         const lockTTC=document.getElementById('lockTTC').checked;
         if(lockTTC){
-            const qtyMat = parseInt(document.getElementById('qtyMateriel').value)||1;
-            tt=(D.TTC[sc]||0)*qtyMat;
+            const qty=parseInt(document.getElementById('quantite').value)||1;
+            tt=(D.TTC[sc]||0)*qty;
         }else{
             tt=parseFloat(document.getElementById('totalTTCInput').value)||0;
         }
@@ -1095,21 +1355,17 @@ function updatePct(){
     
     const ad=(D.MPR[sc]&&D.MPR[sc][ct])?D.MPR[sc][ct]:0;
     
-    // Récupérer le coût HT (manuel ou auto)
     let ch;
     if(mode){
         const lockCoutHT=document.getElementById('lockCoutHT').checked;
         if(lockCoutHT){
-            const prixMat = parseFloat(document.getElementById('prixMateriel').value)||0;
-            const qtyMat = parseInt(document.getElementById('qtyMateriel').value)||0;
-            const prixPose = parseFloat(document.getElementById('prixPose').value)||0;
-            const qtyPose = parseInt(document.getElementById('qtyPose').value)||0;
-            const prixAcc = parseFloat(document.getElementById('prixAccessoires').value)||0;
-            const qtyAcc = parseInt(document.getElementById('qtyAccessoires').value)||0;
-            const prixAdm = parseFloat(document.getElementById('prixAdmin').value)||0;
-            const qtyAdm = parseInt(document.getElementById('qtyAdmin').value)||0;
-            
-            ch = (prixMat * qtyMat) + (prixPose * qtyPose) + (prixAcc * qtyAcc) + (prixAdm * qtyAdm);
+            const qty=parseInt(document.getElementById('quantite').value)||1;
+            if(D.COUT_DETAIL[sc]){
+                const detail=D.COUT_DETAIL[sc];
+                ch=(detail.materiel+detail.pose+detail.accessoires+detail.admin)*qty;
+            }else{
+                ch=(D.COUT[sc]||0)*qty;
+            }
         }else{
             ch=parseFloat(document.getElementById('coutTotalHTInput').value)||0;
         }
@@ -1117,17 +1373,7 @@ function updatePct(){
         ch=D.COUT[sc]||0;
     }
     
-    let kw=getCEE(et,zn,cs,sf);
-    
-    // Gestion du verrouillage des kWh cumac (mode fournisseur seulement)
-    if(mode){
-        const lockKwh=document.getElementById('lockKwh').checked;
-        if(!lockKwh){
-            // Mode manuel : utiliser la valeur saisie
-            const kwhManuel=parseFloat(document.getElementById('kwhCumac').value.replace(/\s/g,''))||0;
-            if(kwhManuel>0) kw=kwhManuel;
-        }
-    }
+    const kw=getCEE(et,zn,cs,sf);
     
     let px,ce,dg;
     let ceForMarge, taForMarge;
@@ -1150,7 +1396,6 @@ function updatePct(){
         px=prixC(dg);
         ce=kw*px/1000;
         
-        // Calculer la vraie marge pour le statut
         const dgForMarge=deleg(sf,cs,kw*11.78/1000,ch);
         const pxForMarge=prix(dgForMarge,ct);
         ceForMarge=kw*pxForMarge/1000;
@@ -1169,6 +1414,7 @@ function updatePct(){
     
     calcRAC(rb,ch,ta,taForMarge,tt);
 }
+
 function updateAmt(){
     const sc=document.getElementById('scenario').value;
     const ct=document.getElementById('categorie').value;
@@ -1177,13 +1423,12 @@ function updateAmt(){
     const sf=document.getElementById('surface').value;
     const cs=M[sc];
     
-    // Récupérer le TTC (manuel ou auto)
     let tt;
     if(mode){
         const lockTTC=document.getElementById('lockTTC').checked;
         if(lockTTC){
-            const qtyMat = parseInt(document.getElementById('qtyMateriel').value)||1;
-            tt=(D.TTC[sc]||0)*qtyMat;
+            const qty=parseInt(document.getElementById('quantite').value)||1;
+            tt=(D.TTC[sc]||0)*qty;
         }else{
             tt=parseFloat(document.getElementById('totalTTCInput').value)||0;
         }
@@ -1193,21 +1438,17 @@ function updateAmt(){
     
     const ad=(D.MPR[sc]&&D.MPR[sc][ct])?D.MPR[sc][ct]:0;
     
-    // Récupérer le coût HT (manuel ou auto)
     let ch;
     if(mode){
         const lockCoutHT=document.getElementById('lockCoutHT').checked;
         if(lockCoutHT){
-            const prixMat = parseFloat(document.getElementById('prixMateriel').value)||0;
-            const qtyMat = parseInt(document.getElementById('qtyMateriel').value)||0;
-            const prixPose = parseFloat(document.getElementById('prixPose').value)||0;
-            const qtyPose = parseInt(document.getElementById('qtyPose').value)||0;
-            const prixAcc = parseFloat(document.getElementById('prixAccessoires').value)||0;
-            const qtyAcc = parseInt(document.getElementById('qtyAccessoires').value)||0;
-            const prixAdm = parseFloat(document.getElementById('prixAdmin').value)||0;
-            const qtyAdm = parseInt(document.getElementById('qtyAdmin').value)||0;
-            
-            ch = (prixMat * qtyMat) + (prixPose * qtyPose) + (prixAcc * qtyAcc) + (prixAdm * qtyAdm);
+            const qty=parseInt(document.getElementById('quantite').value)||1;
+            if(D.COUT_DETAIL[sc]){
+                const detail=D.COUT_DETAIL[sc];
+                ch=(detail.materiel+detail.pose+detail.accessoires+detail.admin)*qty;
+            }else{
+                ch=(D.COUT[sc]||0)*qty;
+            }
         }else{
             ch=parseFloat(document.getElementById('coutTotalHTInput').value)||0;
         }
@@ -1215,17 +1456,7 @@ function updateAmt(){
         ch=D.COUT[sc]||0;
     }
     
-    let kw=getCEE(et,zn,cs,sf);
-    
-    // Gestion du verrouillage des kWh cumac (mode fournisseur seulement)
-    if(mode){
-        const lockKwh=document.getElementById('lockKwh').checked;
-        if(!lockKwh){
-            // Mode manuel : utiliser la valeur saisie
-            const kwhManuel=parseFloat(document.getElementById('kwhCumac').value.replace(/\s/g,''))||0;
-            if(kwhManuel>0) kw=kwhManuel;
-        }
-    }
+    const kw=getCEE(et,zn,cs,sf);
     
     let px,ce,dg;
     let ceForMarge, taForMarge;
@@ -1248,7 +1479,6 @@ function updateAmt(){
         px=prixC(dg);
         ce=kw*px/1000;
         
-        // Calculer la vraie marge pour le statut
         const dgForMarge=deleg(sf,cs,kw*11.78/1000,ch);
         const pxForMarge=prix(dgForMarge,ct);
         ceForMarge=kw*pxForMarge/1000;
@@ -1270,20 +1500,74 @@ function updateAmt(){
     
     calcRAC(rb,ch,ta,taForMarge,tt);
 }
-function reset(){document.getElementById('scenario').value='PAC';document.getElementById('categorie').value='BLEU';document.getElementById('zone').value='H1';document.getElementById('etas').value='140-170';document.getElementById('surface').value='90<S<110';document.getElementById('racPourcent').value=0;document.getElementById('racOffert').value=0;if(mode){document.getElementById('prixCumac').value=11.78;document.getElementById('lockPrice').checked=true}calc()}
-function checkExport(){const nom=document.getElementById('nom').value.trim();const prenom=document.getElementById('prenom').value.trim();const btn=document.getElementById('exportBtn');const wBtn=document.getElementById('whatsappBtn');if(nom&&prenom){btn.disabled=false;btn.style.cursor='pointer';btn.style.opacity='1';wBtn.disabled=false;wBtn.style.cursor='pointer';wBtn.style.opacity='1'}else{btn.disabled=true;btn.style.cursor='not-allowed';btn.style.opacity='0.5';wBtn.disabled=true;wBtn.style.cursor='not-allowed';wBtn.style.opacity='0.5'}}
-function sendWhatsApp(){const nom=document.getElementById('nom').value.trim();const prenom=document.getElementById('prenom').value.trim();if(!nom||!prenom){alert('Veuillez renseigner le nom et le prénom du client');return}const scenario=document.getElementById('scenario').options[document.getElementById('scenario').selectedIndex].text;const categorie=document.getElementById('categorie').options[document.getElementById('categorie').selectedIndex].text;const zone=document.getElementById('zone').options[document.getElementById('zone').selectedIndex].text;const etas=document.getElementById('etas').options[document.getElementById('etas').selectedIndex].text;const surface=document.getElementById('surface').options[document.getElementById('surface').selectedIndex].text;const ttc=document.getElementById('totalTTC').textContent;const aidesMPR=document.getElementById('aidesMPR').textContent;const aidesCEE=document.getElementById('aidesCEE').textContent;const totalAides=document.getElementById('totalAides').textContent;const rac=document.getElementById('resteCharge').textContent;const message=`🏠 *Demande de devis - Les Artisans Verts*%0A%0A👤 *Client :* ${prenom} ${nom}%0A%0A📋 *Configuration :*%0A• Scénario : ${scenario}%0A• ${categorie}%0A• ${zone}%0A• ${surface}%0A• ${etas}%0A%0A💰 *Montants :*%0A• Total TTC : ${ttc}%0A• Aides MPR : ${aidesMPR}%0A• Aides CEE : ${aidesCEE}%0A• Total aides : ${totalAides}%0A• Reste à charge : ${rac}%0A%0AJe souhaite obtenir un devis détaillé.`;window.open(`https://api.whatsapp.com/send?text=${message}`, '_blank')}
+
+function reset(){
+    document.getElementById('scenario').value='PAC';
+    document.getElementById('categorie').value='BLEU';
+    document.getElementById('zone').value='H1';
+    document.getElementById('etas').value='140-170';
+    document.getElementById('surface').value='90<S<110';
+    document.getElementById('racPourcent').value=0;
+    document.getElementById('racOffert').value=0;
+    if(mode){
+        document.getElementById('prixCumac').value=11.78;
+        document.getElementById('lockPrice').checked=true;
+    }
+    calc();
+}
+
+function checkExport(){
+    const nom=document.getElementById('nom').value.trim();
+    const prenom=document.getElementById('prenom').value.trim();
+    const btn=document.getElementById('exportBtn');
+    const wBtn=document.getElementById('whatsappBtn');
+    if(nom&&prenom){
+        btn.disabled=false;
+        btn.style.cursor='pointer';
+        btn.style.opacity='1';
+        wBtn.disabled=false;
+        wBtn.style.cursor='pointer';
+        wBtn.style.opacity='1';
+    }else{
+        btn.disabled=true;
+        btn.style.cursor='not-allowed';
+        btn.style.opacity='0.5';
+        wBtn.disabled=true;
+        wBtn.style.cursor='not-allowed';
+        wBtn.style.opacity='0.5';
+    }
+}
+
+function sendWhatsApp(){
+    const nom=document.getElementById('nom').value.trim();
+    const prenom=document.getElementById('prenom').value.trim();
+    if(!nom||!prenom){
+        alert('Veuillez renseigner le nom et le prénom du client');
+        return;
+    }
+    const scenario=document.getElementById('scenario').options[document.getElementById('scenario').selectedIndex].text;
+    const categorie=document.getElementById('categorie').options[document.getElementById('categorie').selectedIndex].text;
+    const zone=document.getElementById('zone').options[document.getElementById('zone').selectedIndex].text;
+    const etas=document.getElementById('etas').options[document.getElementById('etas').selectedIndex].text;
+    const surface=document.getElementById('surface').options[document.getElementById('surface').selectedIndex].text;
+    const ttc=document.getElementById('totalTTC').textContent;
+    const aidesMPR=document.getElementById('aidesMPR').textContent;
+    const aidesCEE=document.getElementById('aidesCEE').textContent;
+    const totalAides=document.getElementById('totalAides').textContent;
+    const rac=document.getElementById('resteCharge').textContent;
+    const message=`🏠 *Demande de devis - Les Artisans Verts*%0A%0A👤 *Client :* ${prenom} ${nom}%0A%0A📋 *Configuration :*%0A• Scénario : ${scenario}%0A• ${categorie}%0A• ${zone}%0A• ${surface}%0A• ${etas}%0A%0A💰 *Montants :*%0A• Total TTC : ${ttc}%0A• Aides MPR : ${aidesMPR}%0A• Aides CEE : ${aidesCEE}%0A• Total aides : ${totalAides}%0A• Reste à charge : ${rac}%0A%0AJe souhaite obtenir un devis détaillé.`;
+    window.open(`https://api.whatsapp.com/send?text=${message}`, '_blank');
+}
+
 function exportPDF(){
     const nom=document.getElementById('nom').value.trim();
     const prenom=document.getElementById('prenom').value.trim();
-    console.log('Export PDF clicked!',nom,prenom);
     
     if(!nom||!prenom){
         alert('Veuillez renseigner le nom et le prénom du client');
         return;
     }
     
-    // Remplir la zone d'impression
     document.getElementById('printTitle').textContent=`Dossier — ${prenom} ${nom}`;
     document.getElementById('printDate').textContent=`Date: ${new Date().toLocaleDateString('fr-FR')}`;
     document.getElementById('printScenario').textContent=document.getElementById('scenarioSummary').textContent;
@@ -1309,17 +1593,276 @@ function exportPDF(){
         printStatus.style.color='#721c24';
     }
     
-    console.log('Opening print dialog...');
     window.print();
 }
+
+// ============================================
+// SYSTÈME DE RECOMMANDATIONS AUTOMATIQUES
+// ============================================
+
+function calculateScenario(scenario, categorie, zone, etas, surface){
+    const cs = M[scenario];
+    const tt = D.TTC[scenario] || 0;
+    const ad = (D.MPR[scenario] && D.MPR[scenario][categorie]) ? D.MPR[scenario][categorie] : 0;
+    const ch = D.COUT[scenario] || 0;
+    const kw = getCEE(etas, zone, cs, surface);
+    
+    const dg = deleg(surface, cs, kw * 11.78 / 1000, ch);
+    const px = prix(dg, categorie);
+    const ce = kw * px / 1000;
+    const ta = ad + ce;
+    const rb = tt - ta;
+    
+    const vh = Math.max(0, rb) / 1.055;
+    const marge = vh - ch + ta;
+    
+    // Score de vendabilité (0-100)
+    // Seuils adaptés selon le scénario
+    const seuilOK = (scenario === 'PAC + SSC') ? 6000 : 4000;
+    const seuilWarning = (scenario === 'PAC + SSC') ? 3000 : 2000;
+    
+    let scoreVendabilite = 0;
+    if(marge >= seuilOK) scoreVendabilite += 50;
+    else if(marge >= seuilWarning) scoreVendabilite += 25;
+    
+    if(rb <= 3000) scoreVendabilite += 50;
+    else if(rb <= 5000) scoreVendabilite += 35;
+    else if(rb <= 7000) scoreVendabilite += 20;
+    
+    // Score équilibre (balance entre marge et RAC)
+    // Adapter la cible de marge selon le scénario
+    const margeCible = (scenario === 'PAC + SSC') ? 8000 : 6000;
+    const ratioMarge = Math.min(100, (marge / margeCible) * 100);
+    const ratioRAC = Math.max(0, 100 - ((rb / 10000) * 100));
+    const scoreEquilibre = (ratioMarge * 0.6) + (ratioRAC * 0.4);
+    
+    return {
+        scenario,
+        categorie,
+        zone,
+        etas,
+        surface,
+        tt,
+        ad,
+        ce,
+        ta,
+        rb,
+        ch,
+        marge,
+        scoreVendabilite,
+        scoreEquilibre,
+        delegataire: dg,
+        kwhCumac: kw
+    };
+}
+
+function analyzeAllScenarios(filters = {}){
+    const scenarios = ["PAC", "PAC + BALLON ÉLECTRIQUE", "PAC + BALLON THERMO", "PAC + SSC"];
+    const categories = ["BLEU", "JAUNE", "VIOLET", "ROSE"];
+    const zones = ["H1", "H2", "H3"];
+    const etasOptions = ["140-170", "111-140"];
+    const surfaces = ["S<70", "70<S<90", "90<S<110", "110<S<130", "S>130"];
+    
+    const results = [];
+    
+    for(let sc of scenarios){
+        for(let cat of categories){
+            for(let zn of zones){
+                for(let et of etasOptions){
+                    for(let sf of surfaces){
+                        // Appliquer les filtres
+                        if(filters.zone && zn !== filters.zone) continue;
+                        if(filters.surface && sf !== filters.surface) continue;
+                        if(filters.categorie && cat !== filters.categorie) continue;
+                        
+                        const result = calculateScenario(sc, cat, zn, et, sf);
+                        
+                        // Filtrer les marges négatives
+                        if(result.marge >= 0){
+                            results.push(result);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    return results;
+}
+
+function openRecoModal(){
+    document.getElementById('recoModal').classList.add('active');
+    
+    // Lancer l'analyse après un court délai pour que la modal s'affiche
+    setTimeout(() => {
+        runRecommendations();
+    }, 100);
+}
+
+function closeRecoModal(){
+    document.getElementById('recoModal').classList.remove('active');
+}
+
+function runRecommendations(){
+    const filters = {
+        zone: document.getElementById('filterZone').value,
+        surface: document.getElementById('filterSurface').value,
+        categorie: document.getElementById('filterCategorie').value
+    };
+    
+    const results = analyzeAllScenarios(filters);
+    
+    // Trier par marge décroissante
+    const topMarge = [...results].sort((a, b) => b.marge - a.marge).slice(0, 10);
+    
+    // Trier par RAC croissant
+    const topRAC = [...results].sort((a, b) => a.rb - b.rb).slice(0, 10);
+    
+    // Trier par score équilibre
+    const topEquilibre = [...results].sort((a, b) => b.scoreEquilibre - a.scoreEquilibre).slice(0, 10);
+    
+    // Trier par score vendabilité
+    const topVendable = [...results].sort((a, b) => b.scoreVendabilite - a.scoreVendabilite).slice(0, 10);
+    
+    // Afficher les résultats
+    displayRecommendations('recoMarge', topMarge, 'marge');
+    displayRecommendations('recoRAC', topRAC, 'rac');
+    displayRecommendations('recoEquilibre', topEquilibre, 'equilibre');
+    displayRecommendations('recoVendable', topVendable, 'vendable');
+}
+
+function displayRecommendations(containerId, results, type){
+    const container = document.getElementById(containerId);
+    
+    if(results.length === 0){
+        container.innerHTML = '<div class="loading">Aucun résultat trouvé avec ces filtres</div>';
+        return;
+    }
+    
+    let html = '<div class="reco-grid">';
+    
+    results.forEach((result, index) => {
+        const rank = index + 1;
+        
+        let scoreClass = 'good';
+        let scoreValue = 0;
+        let scoreLabel = '';
+        
+        if(type === 'marge'){
+            scoreValue = Math.round(result.marge);
+            scoreLabel = `Marge: ${fmt(result.marge)}`;
+            // Seuils adaptés selon le scénario
+            const seuilOK = (result.scenario === 'PAC + SSC') ? 6000 : 4000;
+            const seuilWarning = (result.scenario === 'PAC + SSC') ? 3000 : 2000;
+            if(result.marge < seuilWarning) scoreClass = 'low';
+            else if(result.marge < seuilOK) scoreClass = 'medium';
+        } else if(type === 'rac'){
+            scoreValue = Math.round(result.rb);
+            scoreLabel = `RAC: ${fmt(result.rb)}`;
+            if(result.rb > 7000) scoreClass = 'low';
+            else if(result.rb > 5000) scoreClass = 'medium';
+        } else if(type === 'equilibre'){
+            scoreValue = Math.round(result.scoreEquilibre);
+            scoreLabel = `Score: ${scoreValue}/100`;
+            if(scoreValue < 50) scoreClass = 'low';
+            else if(scoreValue < 70) scoreClass = 'medium';
+        } else if(type === 'vendable'){
+            scoreValue = Math.round(result.scoreVendabilite);
+            scoreLabel = `Vendabilité: ${scoreValue}/100`;
+            if(scoreValue < 50) scoreClass = 'low';
+            else if(scoreValue < 70) scoreClass = 'medium';
+        }
+        
+        html += `
+            <div class="reco-card" onclick="applyRecommendation('${result.scenario}', '${result.categorie}', '${result.zone}', '${result.etas}', '${result.surface}')">
+                <div class="reco-card-header">
+                    <div class="reco-rank">${rank}</div>
+                    <div class="reco-scenario">
+                        <h4>${SCENARIO_NAMES[result.scenario]}</h4>
+                        <p>${CATEGORIE_NAMES[result.categorie]} • Zone ${result.zone} • ${SURFACE_NAMES[result.surface]}</p>
+                    </div>
+                </div>
+                
+                <div class="reco-metrics">
+                    <div class="reco-metric">
+                        <div class="reco-metric-label">Total TTC</div>
+                        <div class="reco-metric-value">${fmt(result.tt)}</div>
+                    </div>
+                    <div class="reco-metric">
+                        <div class="reco-metric-label">Total Aides</div>
+                        <div class="reco-metric-value positive">${fmt(result.ta)}</div>
+                    </div>
+                    <div class="reco-metric">
+                        <div class="reco-metric-label">RAC</div>
+                        <div class="reco-metric-value">${fmt(result.rb)}</div>
+                    </div>
+                    <div class="reco-metric">
+                        <div class="reco-metric-label">Marge HT</div>
+                        <div class="reco-metric-value ${
+                            result.scenario === 'PAC + SSC' 
+                                ? (result.marge >= 6000 ? 'positive' : (result.marge >= 3000 ? '' : 'negative'))
+                                : (result.marge >= 4000 ? 'positive' : (result.marge >= 2000 ? '' : 'negative'))
+                        }">${fmt(result.marge)}</div>
+                    </div>
+                </div>
+                
+                <div class="reco-score ${scoreClass}">
+                    ${scoreLabel}
+                </div>
+            </div>
+        `;
+    });
+    
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+function applyRecommendation(scenario, categorie, zone, etas, surface){
+    document.getElementById('scenario').value = scenario;
+    document.getElementById('categorie').value = categorie;
+    document.getElementById('zone').value = zone;
+    document.getElementById('etas').value = etas;
+    document.getElementById('surface').value = surface;
+    
+    calc();
+    
+    closeRecoModal();
+    
+    // Scroll vers le haut
+    window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// Event listeners pour les onglets
+document.querySelectorAll('.reco-tab').forEach(tab => {
+    tab.addEventListener('click', function(){
+        document.querySelectorAll('.reco-tab').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+        
+        document.querySelectorAll('.reco-content').forEach(c => c.classList.remove('active'));
+        const targetId = this.getAttribute('data-tab');
+        
+        if(targetId === 'marge') document.getElementById('recoMarge').classList.add('active');
+        else if(targetId === 'rac') document.getElementById('recoRAC').classList.add('active');
+        else if(targetId === 'equilibre') document.getElementById('recoEquilibre').classList.add('active');
+        else if(targetId === 'vendable') document.getElementById('recoVendable').classList.add('active');
+    });
+});
+
+// Event listeners pour les filtres
+document.getElementById('filterZone').addEventListener('change', runRecommendations);
+document.getElementById('filterSurface').addEventListener('change', runRecommendations);
+document.getElementById('filterCategorie').addEventListener('change', runRecommendations);
+
+// ============================================
+// GESTION DE L'AUTHENTIFICATION
+// ============================================
+
 document.getElementById('lockBtn').onclick=function(){
     if(!mode){
-        // Mode client -> vérifier si déjà authentifié
         const stored = localStorage.getItem('fournisseurAuth');
         if(stored){
             const data = JSON.parse(stored);
             const now = new Date().getTime();
-            // Si authentifié depuis moins de 24h, passer direct en mode fournisseur
             if(now - data.timestamp < 24 * 60 * 60 * 1000){
                 mode=1;
                 document.getElementById('mainContent').classList.add('fournisseur-mode');
@@ -1328,34 +1871,50 @@ document.getElementById('lockBtn').onclick=function(){
                 return;
             }
         }
-        // Sinon demander le mot de passe
         document.getElementById('passwordModal').classList.add('active');
     }else{
-        // Mode fournisseur -> passer en mode client (sans supprimer l'auth)
         mode=0;
         document.getElementById('mainContent').classList.remove('fournisseur-mode');
         document.getElementById('lockIcon').textContent='🔒';
         calc();
     }
 };
+
 document.getElementById('exportBtn').onclick=exportPDF;
 document.getElementById('whatsappBtn').onclick=sendWhatsApp;
+
 document.getElementById('unlockBtn').onclick=function(){
     const pw=document.getElementById('passwordInput').value;
     if(pw==='gamberge'||pw==='lav'){
         mode=1;
-        saveMode(); // Sauvegarder la session pour 24h
+        saveMode();
         document.getElementById('mainContent').classList.add('fournisseur-mode');
         document.getElementById('passwordModal').classList.remove('active');
         document.getElementById('passwordInput').value='';
         document.getElementById('lockIcon').textContent='🔓';
-        calc()
+        calc();
     }else{
-        alert('Mot de passe incorrect')
+        alert('Mot de passe incorrect');
     }
 };
-document.getElementById('passwordModal').onclick=function(e){if(e.target.id==='passwordModal'){document.getElementById('passwordModal').classList.remove('active')}};
-checkStoredMode(); // Vérifier si une session existe au chargement
+
+document.getElementById('passwordModal').onclick=function(e){
+    if(e.target.id==='passwordModal'){
+        document.getElementById('passwordModal').classList.remove('active');
+    }
+};
+
+document.getElementById('recoModal').onclick=function(e){
+    if(e.target.id==='recoModal'){
+        closeRecoModal();
+    }
+};
+
+// ============================================
+// INITIALISATION
+// ============================================
+
+checkStoredMode();
 calc();
 </script>
 </body>
