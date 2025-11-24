@@ -871,24 +871,40 @@
                 <h2 class="card-title">Coûts (Vue Fournisseur)</h2>
                 
                 <div style="background: #f5f5f7; padding: 16px; border-radius: 8px; margin-bottom: 8px;">
-                    <!-- PAC -->
-                    <div style="display: grid; grid-template-columns: 80px 1fr 80px 100px; gap: 8px; align-items: center; margin-bottom: 10px;">
-                        <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">PAC</label>
-                        <input type="number" id="coutPAC" value="2900" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
-                        <input type="number" id="qtePAC" value="1" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
-                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalPAC">2 900 €</div>
+                    <!-- PAC Matériel -->
+                    <div style="display: grid; grid-template-columns: 120px 1fr 80px 100px; gap: 8px; align-items: center; margin-bottom: 10px;">
+                        <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">PAC Matériel</label>
+                        <input type="number" id="coutPACMateriel" value="2900" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
+                        <input type="number" id="qtePACMateriel" value="1" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
+                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalPACMateriel">2 900 €</div>
                     </div>
                     
-                    <!-- Ballon -->
-                    <div style="display: grid; grid-template-columns: 80px 1fr 80px 100px; gap: 8px; align-items: center; margin-bottom: 10px;">
-                        <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">Ballon</label>
-                        <input type="number" id="coutBallon" value="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
-                        <input type="number" id="qteBallon" value="0" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
-                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalBallon">0 €</div>
+                    <!-- PAC Pose -->
+                    <div style="display: grid; grid-template-columns: 120px 1fr 80px 100px; gap: 8px; align-items: center; margin-bottom: 10px;">
+                        <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">PAC Pose</label>
+                        <input type="number" id="coutPACPose" value="2500" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
+                        <input type="number" id="qtePACPose" value="1" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
+                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalPACPose">2 500 €</div>
+                    </div>
+                    
+                    <!-- Ballon Matériel -->
+                    <div style="display: grid; grid-template-columns: 120px 1fr 80px 100px; gap: 8px; align-items: center; margin-bottom: 10px;">
+                        <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">Ballon Matériel</label>
+                        <input type="number" id="coutBallonMateriel" value="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
+                        <input type="number" id="qteBallonMateriel" value="0" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
+                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalBallonMateriel">0 €</div>
+                    </div>
+                    
+                    <!-- Ballon Pose -->
+                    <div style="display: grid; grid-template-columns: 120px 1fr 80px 100px; gap: 8px; align-items: center; margin-bottom: 10px;">
+                        <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">Ballon Pose</label>
+                        <input type="number" id="coutBallonPose" value="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
+                        <input type="number" id="qteBallonPose" value="0" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
+                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalBallonPose">0 €</div>
                     </div>
                     
                     <!-- Accessoires -->
-                    <div style="display: grid; grid-template-columns: 80px 1fr 80px 100px; gap: 8px; align-items: center; margin-bottom: 10px;">
+                    <div style="display: grid; grid-template-columns: 120px 1fr 80px 100px; gap: 8px; align-items: center; margin-bottom: 10px;">
                         <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">Access.</label>
                         <input type="number" id="coutAccessoires" value="500" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
                         <input type="number" id="qteAccessoires" value="1" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
@@ -896,7 +912,7 @@
                     </div>
                     
                     <!-- Admin -->
-                    <div style="display: grid; grid-template-columns: 80px 1fr 80px 100px; gap: 8px; align-items: center;">
+                    <div style="display: grid; grid-template-columns: 120px 1fr 80px 100px; gap: 8px; align-items: center;">
                         <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">Admin</label>
                         <input type="number" id="coutAdmin" value="300" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
                         <input type="number" id="qteAdmin" value="1" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
@@ -1101,7 +1117,7 @@
     </div>
 
 <script>
-const D={TTC:{"PAC":10890,"PAC + BALLON ÉLECTRIQUE":13750,"PAC + BALLON THERMO":13750,"PAC + SSC":25850},MPR:{"PAC":{BLEU:5000,JAUNE:4000,VIOLET:3000,ROSE:0},"PAC + BALLON ÉLECTRIQUE":{BLEU:5000,JAUNE:4000,VIOLET:3000,ROSE:0},"PAC + BALLON THERMO":{BLEU:6200,JAUNE:4800,VIOLET:3400,ROSE:0},"PAC + SSC":{BLEU:15000,JAUNE:12000,VIOLET:7000,ROSE:0}},COUT:{"PAC":6200,"PAC + BALLON ÉLECTRIQUE":6400,"PAC + BALLON THERMO":7300,"PAC + SSC":11700},COUT_DETAIL:{"PAC":{pac:5400,ballon:0,accessoires:500,admin:300},"PAC + BALLON ÉLECTRIQUE":{pac:5400,ballon:200,accessoires:500,admin:300},"PAC + BALLON THERMO":{pac:5400,ballon:1100,accessoires:500,admin:300},"PAC + SSC":{pac:5400,ballon:5500,accessoires:500,admin:300}},CEE:{"140-170":{H1:{PAC:{"S<70":274800,"70<S<90":384720,"90<S<110":549600,"110<S<130":604560,"S>130":879360},"BALLON ELECTRIQUE":{"S<70":274800,"70<S<90":384720,"90<S<110":549600,"110<S<130":604560,"S>130":879360},"BALLON THERMO":{"S<70":289500,"70<S<90":399420,"90<S<110":564300,"110<S<130":619260,"S>130":894060},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H2:{PAC:{"S<70":229000,"70<S<90":320600,"90<S<110":458000,"110<S<130":503800,"S>130":732800},"BALLON ELECTRIQUE":{"S<70":229000,"70<S<90":320600,"90<S<110":458000,"110<S<130":503800,"S>130":732800},"BALLON THERMO":{"S<70":243700,"70<S<90":335300,"90<S<110":472700,"110<S<130":518500,"S>130":747500},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H3:{PAC:{"S<70":160300,"70<S<90":224420,"90<S<110":320600,"110<S<130":352660,"S>130":512960},"BALLON ELECTRIQUE":{"S<70":160300,"70<S<90":224420,"90<S<110":320600,"110<S<130":352660,"S>130":512960},"BALLON THERMO":{"S<70":175000,"70<S<90":239120,"90<S<110":335300,"110<S<130":367360,"S>130":527660},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}}},"111-140":{H1:{PAC:{"S<70":238500,"70<S<90":333900,"90<S<110":477000,"110<S<130":524700,"S>130":763200},"BALLON ELECTRIQUE":{"S<70":238500,"70<S<90":333900,"90<S<110":477000,"110<S<130":524700,"S>130":763200},"BALLON THERMO":{"S<70":253200,"70<S<90":348600,"90<S<110":491700,"110<S<130":539400,"S>130":777900},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H2:{PAC:{"S<70":198750,"70<S<90":278250,"90<S<110":397500,"110<S<130":437250,"S>130":636000},"BALLON ELECTRIQUE":{"S<70":198750,"70<S<90":278250,"90<S<110":397500,"110<S<130":437250,"S>130":636000},"BALLON THERMO":{"S<70":213450,"70<S<90":292950,"90<S<110":412200,"110<S<130":451950,"S>130":650700},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H3:{PAC:{"S<70":139125,"70<S<90":194775,"90<S<110":278250,"110<S<130":306075,"S>130":445200},"BALLON ELECTRIQUE":{"S<70":139125,"70<S<90":194775,"90<S<110":278250,"110<S<130":306075,"S>130":445200},"BALLON THERMO":{"S<70":153825,"70<S<90":209475,"90<S<110":292950,"110<S<130":320775,"S>130":459900},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}}}}};
+const D={TTC:{"PAC":10890,"PAC + BALLON ÉLECTRIQUE":13750,"PAC + BALLON THERMO":13750,"PAC + SSC":25850},MPR:{"PAC":{BLEU:5000,JAUNE:4000,VIOLET:3000,ROSE:0},"PAC + BALLON ÉLECTRIQUE":{BLEU:5000,JAUNE:4000,VIOLET:3000,ROSE:0},"PAC + BALLON THERMO":{BLEU:6200,JAUNE:4800,VIOLET:3400,ROSE:0},"PAC + SSC":{BLEU:15000,JAUNE:12000,VIOLET:7000,ROSE:0}},COUT:{"PAC":6200,"PAC + BALLON ÉLECTRIQUE":6400,"PAC + BALLON THERMO":7300,"PAC + SSC":11700},COUT_DETAIL:{"PAC":{pac_materiel:2900,pac_pose:2500,ballon_materiel:0,ballon_pose:0,accessoires:500,admin:300},"PAC + BALLON ÉLECTRIQUE":{pac_materiel:2900,pac_pose:2500,ballon_materiel:200,ballon_pose:0,accessoires:500,admin:300},"PAC + BALLON THERMO":{pac_materiel:2900,pac_pose:3000,ballon_materiel:1100,ballon_pose:500,accessoires:500,admin:300},"PAC + SSC":{pac_materiel:2900,pac_pose:4800,ballon_materiel:3200,ballon_pose:2300,accessoires:500,admin:300}},CEE:{"140-170":{H1:{PAC:{"S<70":274800,"70<S<90":384720,"90<S<110":549600,"110<S<130":604560,"S>130":879360},"BALLON ELECTRIQUE":{"S<70":274800,"70<S<90":384720,"90<S<110":549600,"110<S<130":604560,"S>130":879360},"BALLON THERMO":{"S<70":289500,"70<S<90":399420,"90<S<110":564300,"110<S<130":619260,"S>130":894060},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H2:{PAC:{"S<70":229000,"70<S<90":320600,"90<S<110":458000,"110<S<130":503800,"S>130":732800},"BALLON ELECTRIQUE":{"S<70":229000,"70<S<90":320600,"90<S<110":458000,"110<S<130":503800,"S>130":732800},"BALLON THERMO":{"S<70":243700,"70<S<90":335300,"90<S<110":472700,"110<S<130":518500,"S>130":747500},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H3:{PAC:{"S<70":160300,"70<S<90":224420,"90<S<110":320600,"110<S<130":352660,"S>130":512960},"BALLON ELECTRIQUE":{"S<70":160300,"70<S<90":224420,"90<S<110":320600,"110<S<130":352660,"S>130":512960},"BALLON THERMO":{"S<70":175000,"70<S<90":239120,"90<S<110":335300,"110<S<130":367360,"S>130":527660},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}}},"111-140":{H1:{PAC:{"S<70":238500,"70<S<90":333900,"90<S<110":477000,"110<S<130":524700,"S>130":763200},"BALLON ELECTRIQUE":{"S<70":238500,"70<S<90":333900,"90<S<110":477000,"110<S<130":524700,"S>130":763200},"BALLON THERMO":{"S<70":253200,"70<S<90":348600,"90<S<110":491700,"110<S<130":539400,"S>130":777900},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H2:{PAC:{"S<70":198750,"70<S<90":278250,"90<S<110":397500,"110<S<130":437250,"S>130":636000},"BALLON ELECTRIQUE":{"S<70":198750,"70<S<90":278250,"90<S<110":397500,"110<S<130":437250,"S>130":636000},"BALLON THERMO":{"S<70":213450,"70<S<90":292950,"90<S<110":412200,"110<S<130":451950,"S>130":650700},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H3:{PAC:{"S<70":139125,"70<S<90":194775,"90<S<110":278250,"110<S<130":306075,"S>130":445200},"BALLON ELECTRIQUE":{"S<70":139125,"70<S<90":194775,"90<S<110":278250,"110<S<130":306075,"S>130":445200},"BALLON THERMO":{"S<70":153825,"70<S<90":209475,"90<S<110":292950,"110<S<130":320775,"S>130":459900},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}}}}};
 const M={"PAC":"PAC","PAC + BALLON ÉLECTRIQUE":"BALLON ELECTRIQUE","PAC + BALLON THERMO":"BALLON THERMO","PAC + SSC":"BALLON SSC"};
 
 const SCENARIO_NAMES = {
@@ -1192,15 +1208,25 @@ function updateFromDetail(){
     document.getElementById('lockCoutHT').checked=false;
     
     // Calculer les totaux de chaque ligne
-    const coutPAC = parseFloat(document.getElementById('coutPAC').value) || 0;
-    const qtePAC = parseFloat(document.getElementById('qtePAC').value) || 0;
-    const totalPAC = coutPAC * qtePAC;
-    document.getElementById('totalPAC').textContent = fmt(totalPAC);
+    const coutPACMateriel = parseFloat(document.getElementById('coutPACMateriel').value) || 0;
+    const qtePACMateriel = parseFloat(document.getElementById('qtePACMateriel').value) || 0;
+    const totalPACMateriel = coutPACMateriel * qtePACMateriel;
+    document.getElementById('totalPACMateriel').textContent = fmt(totalPACMateriel);
     
-    const coutBallon = parseFloat(document.getElementById('coutBallon').value) || 0;
-    const qteBallon = parseFloat(document.getElementById('qteBallon').value) || 0;
-    const totalBallon = coutBallon * qteBallon;
-    document.getElementById('totalBallon').textContent = fmt(totalBallon);
+    const coutPACPose = parseFloat(document.getElementById('coutPACPose').value) || 0;
+    const qtePACPose = parseFloat(document.getElementById('qtePACPose').value) || 0;
+    const totalPACPose = coutPACPose * qtePACPose;
+    document.getElementById('totalPACPose').textContent = fmt(totalPACPose);
+    
+    const coutBallonMateriel = parseFloat(document.getElementById('coutBallonMateriel').value) || 0;
+    const qteBallonMateriel = parseFloat(document.getElementById('qteBallonMateriel').value) || 0;
+    const totalBallonMateriel = coutBallonMateriel * qteBallonMateriel;
+    document.getElementById('totalBallonMateriel').textContent = fmt(totalBallonMateriel);
+    
+    const coutBallonPose = parseFloat(document.getElementById('coutBallonPose').value) || 0;
+    const qteBallonPose = parseFloat(document.getElementById('qteBallonPose').value) || 0;
+    const totalBallonPose = coutBallonPose * qteBallonPose;
+    document.getElementById('totalBallonPose').textContent = fmt(totalBallonPose);
     
     const coutAccessoires = parseFloat(document.getElementById('coutAccessoires').value) || 0;
     const qteAccessoires = parseFloat(document.getElementById('qteAccessoires').value) || 0;
@@ -1213,7 +1239,7 @@ function updateFromDetail(){
     document.getElementById('totalAdmin').textContent = fmt(totalAdmin);
     
     // Calculer et afficher le total global
-    const totalGlobal = totalPAC + totalBallon + totalAccessoires + totalAdmin;
+    const totalGlobal = totalPACMateriel + totalPACPose + totalBallonMateriel + totalBallonPose + totalAccessoires + totalAdmin;
     document.getElementById('coutTotalHTDisplay').textContent = fmt(totalGlobal);
     
     calc();
@@ -1252,13 +1278,21 @@ function calc(){
                 const detail=D.COUT_DETAIL[sc];
                 
                 // Mettre à jour les champs individuels
-                document.getElementById('coutPAC').value = detail.pac;
-                document.getElementById('qtePAC').value = 1;
-                document.getElementById('totalPAC').textContent = fmt(detail.pac);
+                document.getElementById('coutPACMateriel').value = detail.pac_materiel;
+                document.getElementById('qtePACMateriel').value = 1;
+                document.getElementById('totalPACMateriel').textContent = fmt(detail.pac_materiel);
                 
-                document.getElementById('coutBallon').value = detail.ballon;
-                document.getElementById('qteBallon').value = detail.ballon > 0 ? 1 : 0;
-                document.getElementById('totalBallon').textContent = fmt(detail.ballon);
+                document.getElementById('coutPACPose').value = detail.pac_pose;
+                document.getElementById('qtePACPose').value = 1;
+                document.getElementById('totalPACPose').textContent = fmt(detail.pac_pose);
+                
+                document.getElementById('coutBallonMateriel').value = detail.ballon_materiel;
+                document.getElementById('qteBallonMateriel').value = detail.ballon_materiel > 0 ? 1 : 0;
+                document.getElementById('totalBallonMateriel').textContent = fmt(detail.ballon_materiel);
+                
+                document.getElementById('coutBallonPose').value = detail.ballon_pose;
+                document.getElementById('qteBallonPose').value = detail.ballon_pose > 0 ? 1 : 0;
+                document.getElementById('totalBallonPose').textContent = fmt(detail.ballon_pose);
                 
                 document.getElementById('coutAccessoires').value = detail.accessoires;
                 document.getElementById('qteAccessoires').value = 1;
@@ -1268,18 +1302,20 @@ function calc(){
                 document.getElementById('qteAdmin').value = 1;
                 document.getElementById('totalAdmin').textContent = fmt(detail.admin);
                 
-                ch = detail.pac + detail.ballon + detail.accessoires + detail.admin;
+                ch = detail.pac_materiel + detail.pac_pose + detail.ballon_materiel + detail.ballon_pose + detail.accessoires + detail.admin;
             }else{
                 ch = D.COUT[sc] || 0;
             }
         }else{
             // Mode manuel : additionner les totaux calculés
-            const totalPAC = (parseFloat(document.getElementById('coutPAC').value) || 0) * (parseFloat(document.getElementById('qtePAC').value) || 0);
-            const totalBallon = (parseFloat(document.getElementById('coutBallon').value) || 0) * (parseFloat(document.getElementById('qteBallon').value) || 0);
+            const totalPACMateriel = (parseFloat(document.getElementById('coutPACMateriel').value) || 0) * (parseFloat(document.getElementById('qtePACMateriel').value) || 0);
+            const totalPACPose = (parseFloat(document.getElementById('coutPACPose').value) || 0) * (parseFloat(document.getElementById('qtePACPose').value) || 0);
+            const totalBallonMateriel = (parseFloat(document.getElementById('coutBallonMateriel').value) || 0) * (parseFloat(document.getElementById('qteBallonMateriel').value) || 0);
+            const totalBallonPose = (parseFloat(document.getElementById('coutBallonPose').value) || 0) * (parseFloat(document.getElementById('qteBallonPose').value) || 0);
             const totalAccessoires = (parseFloat(document.getElementById('coutAccessoires').value) || 0) * (parseFloat(document.getElementById('qteAccessoires').value) || 0);
             const totalAdmin = (parseFloat(document.getElementById('coutAdmin').value) || 0) * (parseFloat(document.getElementById('qteAdmin').value) || 0);
             
-            ch = totalPAC + totalBallon + totalAccessoires + totalAdmin;
+            ch = totalPACMateriel + totalPACPose + totalBallonMateriel + totalBallonPose + totalAccessoires + totalAdmin;
         }
         
         // Afficher le total
@@ -1409,7 +1445,7 @@ function updatePct(){
         if(lockCoutHT){
             if(D.COUT_DETAIL[sc]){
                 const detail=D.COUT_DETAIL[sc];
-                ch = detail.pac + detail.ballon + detail.accessoires + detail.admin;
+                const coutPACTotal = detail.pac_materiel + detail.pac_pose; const coutBallonTotal = detail.ballon_materiel + detail.ballon_pose; ch = coutPACTotal + coutBallonTotal + detail.accessoires + detail.admin;
             }else{
                 ch = D.COUT[sc] || 0;
             }
@@ -1496,7 +1532,7 @@ function updateAmt(){
         if(lockCoutHT){
             if(D.COUT_DETAIL[sc]){
                 const detail=D.COUT_DETAIL[sc];
-                ch = detail.pac + detail.ballon + detail.accessoires + detail.admin;
+                const coutPACTotal = detail.pac_materiel + detail.pac_pose; const coutBallonTotal = detail.ballon_materiel + detail.ballon_pose; ch = coutPACTotal + coutBallonTotal + detail.accessoires + detail.admin;
             }else{
                 ch = D.COUT[sc] || 0;
             }
