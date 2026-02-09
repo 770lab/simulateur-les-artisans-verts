@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulateur Aides PAC</title>
+    <title>Simulateur Aides PAC 2026</title>
     <style>
         * {
             margin: 0;
@@ -16,6 +16,128 @@
             background: #f5f5f7;
             color: #1d1d1f;
             line-height: 1.6;
+        }
+
+        /* === BANDEAU INFO 2026 === */
+        .info-banner-2026 {
+            background: linear-gradient(135deg, #14532d 0%, #166534 50%, #15803d 100%);
+            color: white;
+            padding: 10px 20px;
+            font-size: 13px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .info-banner-2026 strong { color: #86efac; }
+        .info-banner-2026 .separator-dot { opacity: 0.4; margin: 0 4px; }
+
+        /* === AUTO-DETECTION REVENUS === */
+        .revenus-section {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 1px solid #bbf7d0;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+        }
+        .revenus-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+        }
+        .revenus-toggle h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #16a34a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0;
+        }
+        .revenus-toggle .toggle-arrow {
+            transition: transform 0.3s ease;
+            font-size: 12px;
+            color: #16a34a;
+        }
+        .revenus-toggle .toggle-arrow.open { transform: rotate(180deg); }
+        .revenus-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.3s ease;
+            padding-top: 0;
+        }
+        .revenus-body.open {
+            max-height: 500px;
+            padding-top: 14px;
+        }
+        .revenus-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+        @media (max-width: 600px) {
+            .revenus-grid { grid-template-columns: 1fr; }
+        }
+        .revenus-grid label {
+            font-size: 12px;
+            font-weight: 500;
+            color: #475569;
+            margin-bottom: 4px;
+            display: block;
+        }
+        .revenus-grid select, .revenus-grid input {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 13px;
+            background: white;
+            transition: border-color 0.2s;
+        }
+        .revenus-grid select:focus, .revenus-grid input:focus {
+            border-color: #16a34a;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+        }
+        .profil-result {
+            margin-top: 12px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+            display: none;
+            animation: fadeSlide 0.3s ease;
+        }
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .profil-result.show { display: block; }
+        .profil-result.profil-bleu {
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            color: #1e40af;
+            border: 1px solid #93c5fd;
+        }
+        .profil-result.profil-jaune {
+            background: linear-gradient(135deg, #fef9c3, #fef08a);
+            color: #92400e;
+            border: 1px solid #fcd34d;
+        }
+        .profil-result.profil-violet {
+            background: linear-gradient(135deg, #ede9fe, #ddd6fe);
+            color: #5b21b6;
+            border: 1px solid #c4b5fd;
+        }
+        .profil-result.profil-rose {
+            background: linear-gradient(135deg, #fce7f3, #fbcfe8);
+            color: #9d174d;
+            border: 1px solid #f9a8d4;
         }
 
         .header {
@@ -460,11 +582,197 @@
         }
 
         .summary-card {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+            background: linear-gradient(165deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.25), 0 0 0 1px rgba(255,255,255,0.05);
             margin-bottom: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .summary-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: var(--scroll-gradient, linear-gradient(90deg, #34d399, #22d3ee, #818cf8));
+            transition: background 0.4s ease;
+        }
+
+        /* --- Dark result row cards --- */
+        .result-row-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            padding: 14px 18px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .result-row-card:hover {
+            background: rgba(255,255,255,0.07);
+            border-color: rgba(255,255,255,0.12);
+            transform: translateY(-1px);
+        }
+        .result-row-card .rrc-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(255,255,255,0.55);
+            letter-spacing: 0.3px;
+        }
+        .result-row-card .rrc-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: #f1f5f9;
+            font-variant-numeric: tabular-nums;
+        }
+        .result-row-card .rrc-value.green { color: #34d399; }
+        .result-row-card .rrc-value.yellow { color: #fbbf24; }
+        .result-row-card .rrc-value.red { color: #f87171; }
+        .result-row-card .rrc-value.cyan { color: #22d3ee; }
+        .result-row-card .rrc-value.blue { color: #60a5fa; }
+
+        /* --- Highlight card (big number) --- */
+        .result-highlight-card {
+            background: linear-gradient(135deg, rgba(52,211,153,0.12) 0%, rgba(34,211,238,0.08) 100%);
+            border: 1px solid rgba(52,211,153,0.2);
+            border-radius: 14px;
+            padding: 18px 22px;
+            margin-bottom: 12px;
+            text-align: center;
+            position: relative;
+        }
+        .result-highlight-card .rhc-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.5);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+        .result-highlight-card .rhc-value {
+            font-size: 34px;
+            font-weight: 800;
+            color: #34d399;
+            text-shadow: 0 0 30px rgba(52,211,153,0.3);
+        }
+
+        /* --- Separator glow line --- */
+        .glow-separator {
+            height: 2px;
+            margin: 16px 0;
+            border-radius: 2px;
+            background: var(--scroll-gradient, linear-gradient(90deg, #34d399, #22d3ee, #818cf8));
+            opacity: 0.4;
+            transition: opacity 0.3s, background 0.6s;
+        }
+        .glow-separator:hover { opacity: 0.7; }
+
+        /* --- Section title dark --- */
+        .dark-section-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: rgba(255,255,255,0.35);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 12px;
+            padding-left: 2px;
+        }
+
+        /* --- Scenario label dark --- */
+        .scenario-label-dark {
+            font-size: 13px;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 18px;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            border-left: 3px solid #34d399;
+            line-height: 1.5;
+            transition: border-color 0.4s;
+        }
+        .scenario-label-dark strong { font-weight: 600; color: #f1f5f9; }
+        .scenario-label-dark .separator { color: rgba(255,255,255,0.3); margin: 0 8px; }
+
+        /* --- RAC section dark --- */
+        .rac-dark-section {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            padding: 16px;
+        }
+        .rac-dark-section .amount-label {
+            color: rgba(255,255,255,0.45);
+        }
+        .rac-dark-section input[type="number"] {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            color: #f1f5f9;
+            font-size: 22px;
+            font-weight: 700;
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            transition: border-color 0.2s;
+        }
+        .rac-dark-section input[type="number"]:focus {
+            border-color: #34d399;
+            box-shadow: 0 0 0 3px rgba(52,211,153,0.15);
+            outline: none;
+        }
+        .rac-dark-section .note-small { color: rgba(255,255,255,0.35); }
+
+        /* --- TTC Input dark mode --- */
+        .ttc-input-dark {
+            font-size: 24px;
+            font-weight: 700;
+            text-align: right;
+            padding: 10px 14px;
+            width: 100%;
+            border: 2px solid rgba(96,165,250,0.4);
+            border-radius: 10px;
+            background: rgba(255,255,255,0.05);
+            color: #f1f5f9;
+            margin-bottom: 6px;
+            transition: border-color 0.2s;
+        }
+        .ttc-input-dark:focus {
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 3px rgba(96,165,250,0.15);
+            outline: none;
+        }
+
+        /* --- Buttons dark --- */
+        .btn-dark-export {
+            width: 100%;
+            border: none;
+            padding: 13px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s;
+            margin-bottom: 10px;
+        }
+        .btn-dark-export.pdf {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+        }
+        .btn-dark-export.pdf:hover { background: linear-gradient(135deg, #60a5fa, #3b82f6); }
+        .btn-dark-export.whatsapp {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+        }
+        .btn-dark-export.whatsapp:hover { background: linear-gradient(135deg, #34d399, #22c55e); }
+        .btn-dark-export:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            filter: grayscale(0.3);
         }
 
         .summary-header {
@@ -702,13 +1010,25 @@
                     <div style="background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); color: white; padding: 12px 20px; border-radius: 10px; font-weight: 700; font-size: 15px; letter-spacing: 0.5px; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);">
                         🏠 LES ARTISANS VERTS
                     </div>
-                    <h1 style="margin: 0; font-size: 22px;">Simulateur Aides PAC</h1>
+                    <h1 style="margin: 0; font-size: 22px;">Simulateur Aides PAC <span style="font-size: 14px; background: #16a34a; color: white; padding: 2px 8px; border-radius: 6px; vertical-align: middle; margin-left: 6px;">2026</span></h1>
                 </div>
                 <button class="lock-btn" id="lockBtn">
                     <span id="lockIcon">🔒</span>
                 </button>
             </div>
         </div>
+    </div>
+
+    <!-- Bandeau Info 2026 -->
+    <div class="info-banner-2026">
+        <span>📋</span>
+        <span><strong>MPR 2026</strong> — Barèmes à jour</span>
+        <span class="separator-dot">•</span>
+        <span>Logement <strong>+15 ans</strong> requis</span>
+        <span class="separator-dot">•</span>
+        <span>Isolation murs & biomasse <strong>retirés du monogeste</strong></span>
+        <span class="separator-dot">•</span>
+        <span>Guichet réouverture <strong>≈ 12 fév. 2026</strong></span>
     </div>
 
     <div class="modal" id="passwordModal">
@@ -810,6 +1130,43 @@
 
             <div class="card">
                 <h2 class="card-title">Paramètres</h2>
+
+                <!-- Auto-détection revenus -->
+                <div class="revenus-section">
+                    <div class="revenus-toggle" onclick="toggleRevenus()">
+                        <h3>🎯 Détection automatique du profil MPR 2026</h3>
+                        <span class="toggle-arrow" id="toggleArrow">▼</span>
+                    </div>
+                    <div class="revenus-body" id="revenusBody">
+                        <div class="revenus-grid">
+                            <div>
+                                <label>Région</label>
+                                <select id="region" onchange="detectProfil()">
+                                    <option value="PROVINCE">Hors Île-de-France</option>
+                                    <option value="IDF">Île-de-France</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>Personnes dans le foyer</label>
+                                <select id="nbPersonnes" onchange="detectProfil()">
+                                    <option value="1">1 personne</option>
+                                    <option value="2">2 personnes</option>
+                                    <option value="3">3 personnes</option>
+                                    <option value="4" selected>4 personnes</option>
+                                    <option value="5">5 personnes</option>
+                                    <option value="6">6 personnes</option>
+                                    <option value="7">7 personnes</option>
+                                    <option value="8">8 personnes</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>Revenu fiscal de réf. (€)</label>
+                                <input type="number" id="rfr" placeholder="Ex: 35 000" oninput="detectProfil()">
+                            </div>
+                        </div>
+                        <div class="profil-result" id="profilResult"></div>
+                    </div>
+                </div>
                 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                     <div class="form-group" style="margin-bottom: 0;">
@@ -959,97 +1316,104 @@
             <div style="padding-bottom: 40px;"></div>
         </div>
 
-        <div class="results-sidebar">
+        <div class="results-sidebar" id="resultsSidebar">
             <div class="summary-card" style="margin-bottom: 0;">
-                <div class="scenario-label" id="scenarioSummary" style="font-size: 14px; margin-bottom: 20px; padding: 12px; background: #f5f5f7; border-radius: 8px;">—</div>
+                <div class="scenario-label-dark" id="scenarioSummary">—</div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                    <div>
-                        <div class="ttc-readonly" style="margin-bottom: 12px;">
-                            <div class="amount-label">TOTAL TTC</div>
-                            <div class="amount-value" id="totalTTC" style="text-align: right;">—</div>
-                        </div>
-                        
-                        <div class="fournisseur-only" style="margin-bottom: 12px;">
-                            <div class="amount-label">TOTAL TTC</div>
-                            <input type="number" id="totalTTCInput" value="10890" step="1" oninput="updateFromTTC()" style="font-size: 24px; font-weight: 700; text-align: right; padding: 10px 14px; width: 100%; border: 2px solid #0071e3; border-radius: 8px; background: white; margin-bottom: 6px;">
-                            <small style="font-size: 11px; color: #86868b; margin-top: 4px;">
-                                <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
-                                    <input type="checkbox" id="lockTTC" checked onchange="calc()"> Verrouiller (auto selon scénario)
-                                </label>
-                            </small>
-                        </div>
-
-                        <div class="fournisseur-only" style="margin-bottom: 12px;">
-                            <div class="amount-label">COÛT HT</div>
-                            <div style="display: flex; justify-content: space-between; align-items: baseline;">
-                                <small style="font-size: 11px; color: #86868b;">Coût matériel + pose + admin</small>
-                                <div class="amount-value" id="displayCoutHT" style="text-align: right;">—</div>
-                            </div>
-                        </div>
-
-                        <div style="margin-bottom: 12px;">
-                            <div style="display: flex; justify-content: space-between; align-items: baseline;">
-                                <div class="amount-label">AIDES MPR</div>
-                                <div class="amount-value" id="aidesMPR" style="text-align: right;">—</div>
-                            </div>
-                        </div>
-
-                        <div style="margin-bottom: 12px;">
-                            <div style="display: flex; justify-content: space-between; align-items: baseline;">
-                                <div class="amount-label">AIDES CEE</div>
-                                <div class="amount-value" id="aidesCEE" style="text-align: right;">—</div>
-                            </div>
-                        </div>
-
-                        <div style="margin-bottom: 12px;">
-                            <div style="display: flex; justify-content: space-between; align-items: baseline;">
-                                <div class="amount-label">TOTAL DES AIDES</div>
-                                <div class="amount-value highlight" id="totalAides" style="text-align: right;">—</div>
-                            </div>
-                        </div>
-
-                        <div style="margin-bottom: 12px;">
-                            <div style="display: flex; justify-content: space-between; align-items: baseline;">
-                                <div class="amount-label">RESTE À CHARGE</div>
-                                <div class="amount-value" id="resteCharge" style="text-align: right;">—</div>
-                            </div>
-                        </div>
-
-                        <div class="fournisseur-only" style="margin-bottom: 12px;">
-                            <div style="display: flex; justify-content: space-between; align-items: baseline;">
-                                <div class="amount-label">MARGE FINALE (HT)</div>
-                                <div class="amount-value" id="margeFinal" style="text-align: right;">—</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <h2 class="summary-header" style="margin-bottom: 8px;">Prise en charge du RAC</h2>
-                        
-                        <div style="margin-bottom: 10px;">
-                            <div class="amount-label">Pourcentage (%)</div>
-                            <input type="number" id="racPourcent" value="0" min="0" max="100" step="1" oninput="updatePct()" style="font-size: 24px; font-weight: 700; text-align: center; padding: 10px;">
-                        </div>
-                        
-                        <div style="margin-bottom: 10px;">
-                            <div class="amount-label">RAC offert (€)</div>
-                            <input type="number" id="racOffert" value="0" min="0" step="1" oninput="updateAmt()" style="font-size: 24px; font-weight: 700; text-align: center; padding: 10px;">
-                        </div>
-                        
-                        <div class="note-small fournisseur-only" style="margin-bottom: 10px;">Appliqué sur le RAC brut. N'affecte pas le prix cumac.</div>
-
-                        <div class="status-badge ok" id="statusBadge" style="margin-bottom: 16px; margin-top: 4px;">DOSSIER OK</div>
-                        
-                        <button id="exportBtn" disabled style="width: 100%; background: #0071e3; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: not-allowed; opacity: 0.5; transition: all 0.2s; margin-bottom: 12px;">
-                            📄 Exporter en PDF
-                        </button>
-                        
-                        <button id="whatsappBtn" disabled style="width: 100%; background: #25D366; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: not-allowed; opacity: 0.5; transition: all 0.2s;">
-                            💬 Demander un devis
-                        </button>
+                <!-- TOTAL TTC (readonly client) -->
+                <div class="ttc-readonly">
+                    <div class="result-row-card" style="background: rgba(96,165,250,0.08); border-color: rgba(96,165,250,0.15);">
+                        <div class="rrc-label">💰 Coût installation TTC</div>
+                        <div class="rrc-value blue" id="totalTTC">—</div>
                     </div>
                 </div>
+
+                <!-- TOTAL TTC (editable fournisseur) -->
+                <div class="fournisseur-only" style="margin-bottom: 12px;">
+                    <div class="dark-section-title">Coût installation</div>
+                    <input type="number" class="ttc-input-dark" id="totalTTCInput" value="10890" step="1" oninput="updateFromTTC()">
+                    <small style="font-size: 11px; color: rgba(255,255,255,0.35); margin-top: 4px; display: block;">
+                        <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
+                            <input type="checkbox" id="lockTTC" checked onchange="calc()"> Verrouiller (auto selon scénario)
+                        </label>
+                    </small>
+                </div>
+
+                <!-- COÛT HT fournisseur -->
+                <div class="fournisseur-only" style="margin-bottom: 4px;">
+                    <div class="result-row-card">
+                        <div>
+                            <div class="rrc-label">Coût HT</div>
+                            <div style="font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 2px;">Matériel + pose + admin</div>
+                        </div>
+                        <div class="rrc-value" id="displayCoutHT" style="font-size: 18px;">—</div>
+                    </div>
+                </div>
+
+                <div class="glow-separator"></div>
+
+                <!-- ESTIMATION FINANCIÈRE -->
+                <div class="dark-section-title">Estimation financière</div>
+
+                <div class="result-row-card">
+                    <div class="rrc-label">MaPrimeRénov'</div>
+                    <div class="rrc-value green" id="aidesMPR" style="font-size: 18px;">—</div>
+                </div>
+
+                <div class="result-row-card">
+                    <div class="rrc-label">Certificats CEE</div>
+                    <div class="rrc-value green" id="aidesCEE" style="font-size: 18px;">—</div>
+                </div>
+
+                <div class="glow-separator"></div>
+
+                <!-- TOTAL AIDES -->
+                <div class="result-highlight-card">
+                    <div class="rhc-label">Total des aides</div>
+                    <div class="rhc-value" id="totalAides">—</div>
+                </div>
+
+                <!-- RESTE À CHARGE -->
+                <div class="result-row-card" style="background: rgba(251,191,36,0.08); border-color: rgba(251,191,36,0.15);">
+                    <div class="rrc-label">🏠 Reste à charge estimé</div>
+                    <div class="rrc-value yellow" id="resteCharge">—</div>
+                </div>
+
+                <!-- MARGE fournisseur -->
+                <div class="fournisseur-only" style="margin-top: 4px;">
+                    <div class="result-row-card" style="background: rgba(248,113,113,0.06); border-color: rgba(248,113,113,0.12);">
+                        <div class="rrc-label">📊 Marge finale (HT)</div>
+                        <div class="rrc-value" id="margeFinal" style="font-size: 18px;">—</div>
+                    </div>
+                </div>
+
+                <div class="glow-separator"></div>
+
+                <!-- RAC Section -->
+                <div class="rac-dark-section" style="margin-bottom: 14px;">
+                    <div class="dark-section-title" style="margin-bottom: 10px;">Prise en charge du RAC</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                        <div>
+                            <div class="amount-label" style="color: rgba(255,255,255,0.45); margin-bottom: 4px;">Pourcentage (%)</div>
+                            <input type="number" id="racPourcent" value="0" min="0" max="100" step="1" oninput="updatePct()">
+                        </div>
+                        <div>
+                            <div class="amount-label" style="color: rgba(255,255,255,0.45); margin-bottom: 4px;">RAC offert (€)</div>
+                            <input type="number" id="racOffert" value="0" min="0" step="1" oninput="updateAmt()">
+                        </div>
+                    </div>
+                    <div class="note-small fournisseur-only" style="font-size: 11px; margin-bottom: 8px;">Appliqué sur le RAC brut. N'affecte pas le prix cumac.</div>
+                </div>
+
+                <div class="status-badge ok" id="statusBadge" style="margin-bottom: 14px; margin-top: 4px;">DOSSIER OK</div>
+
+                <button id="exportBtn" class="btn-dark-export pdf" disabled>
+                    📄 Exporter en PDF
+                </button>
+                
+                <button id="whatsappBtn" class="btn-dark-export whatsapp" disabled>
+                    💬 Demander un devis
+                </button>
             </div>
         </div>
     </div>
@@ -1117,6 +1481,92 @@
     </div>
 
 <script>
+// ============================================
+// BARÈMES DE REVENUS MPR 2026 (Source: france-renov.gouv.fr)
+// ============================================
+const REVENUS_2026 = {
+    PROVINCE: {
+        // [BLEU_max, JAUNE_max, VIOLET_max] — au-delà = ROSE
+        1: [17363, 22259, 31185],
+        2: [25393, 32553, 45842],
+        3: [30540, 39148, 55196],
+        4: [35676, 45735, 64550],
+        5: [40835, 52348, 73907],
+        supplement: [5151, 6598, 9357] // par personne supplémentaire
+    },
+    IDF: {
+        1: [24031, 29253, 40851],
+        2: [35270, 42933, 60051],
+        3: [42357, 51564, 71846],
+        4: [49455, 60208, 84562],
+        5: [56580, 68877, 96817],
+        supplement: [7116, 8663, 12257]
+    }
+};
+
+function getSeuilsForPersonnes(region, nb) {
+    const data = REVENUS_2026[region];
+    if (nb <= 5) return data[nb];
+    // Au-delà de 5 personnes, ajouter le supplément
+    const base = data[5];
+    const sup = data.supplement;
+    const extra = nb - 5;
+    return [
+        base[0] + sup[0] * extra,
+        base[1] + sup[1] * extra,
+        base[2] + sup[2] * extra
+    ];
+}
+
+function detectProfil() {
+    const region = document.getElementById('region').value;
+    const nb = parseInt(document.getElementById('nbPersonnes').value);
+    const rfr = parseFloat(document.getElementById('rfr').value);
+    const resultEl = document.getElementById('profilResult');
+
+    if (!rfr || rfr <= 0) {
+        resultEl.className = 'profil-result';
+        resultEl.textContent = '';
+        return;
+    }
+
+    const seuils = getSeuilsForPersonnes(region, nb);
+    let profil, label, className;
+
+    if (rfr <= seuils[0]) {
+        profil = 'BLEU'; label = '🔵 Profil Bleu — Revenus très modestes'; className = 'profil-bleu';
+    } else if (rfr <= seuils[1]) {
+        profil = 'JAUNE'; label = '🟡 Profil Jaune — Revenus modestes'; className = 'profil-jaune';
+    } else if (rfr <= seuils[2]) {
+        profil = 'VIOLET'; label = '🟣 Profil Violet — Revenus intermédiaires'; className = 'profil-violet';
+    } else {
+        profil = 'ROSE'; label = '🩷 Profil Rose — Revenus supérieurs'; className = 'profil-rose';
+    }
+
+    // Afficher le résultat
+    const regionLabel = region === 'IDF' ? 'Île-de-France' : 'Province';
+    const seuilInfo = profil === 'ROSE' 
+        ? `RFR ${rfr.toLocaleString('fr-FR')} € > ${seuils[2].toLocaleString('fr-FR')} €`
+        : `RFR ${rfr.toLocaleString('fr-FR')} € ≤ ${seuils[profil === 'BLEU' ? 0 : (profil === 'JAUNE' ? 1 : 2)].toLocaleString('fr-FR')} €`;
+
+    resultEl.className = `profil-result show ${className}`;
+    resultEl.innerHTML = `${label}<br><span style="font-weight:400;font-size:12px;">${regionLabel} • ${nb} pers. • ${seuilInfo}</span>`;
+
+    // Auto-set le select catégorie
+    document.getElementById('categorie').value = profil;
+    calc();
+}
+
+function toggleRevenus() {
+    const body = document.getElementById('revenusBody');
+    const arrow = document.getElementById('toggleArrow');
+    body.classList.toggle('open');
+    arrow.classList.toggle('open');
+}
+
+// ============================================
+// DONNÉES PRINCIPALES
+// ============================================
 const D={TTC:{"PAC":10890,"PAC + BALLON ÉLECTRIQUE":13750,"PAC + BALLON THERMO":13750,"PAC + SSC":25850},MPR:{"PAC":{BLEU:5000,JAUNE:4000,VIOLET:3000,ROSE:0},"PAC + BALLON ÉLECTRIQUE":{BLEU:5000,JAUNE:4000,VIOLET:3000,ROSE:0},"PAC + BALLON THERMO":{BLEU:6200,JAUNE:4800,VIOLET:3400,ROSE:0},"PAC + SSC":{BLEU:15000,JAUNE:12000,VIOLET:7000,ROSE:0}},COUT:{"PAC":6200,"PAC + BALLON ÉLECTRIQUE":6400,"PAC + BALLON THERMO":7300,"PAC + SSC":11700},COUT_DETAIL:{"PAC":{pac_materiel:2900,pac_pose:2500,ballon_materiel:0,ballon_pose:0,accessoires:500,admin:300},"PAC + BALLON ÉLECTRIQUE":{pac_materiel:2900,pac_pose:2500,ballon_materiel:200,ballon_pose:0,accessoires:500,admin:300},"PAC + BALLON THERMO":{pac_materiel:2900,pac_pose:2500,ballon_materiel:1100,ballon_pose:500,accessoires:500,admin:300},"PAC + SSC":{pac_materiel:2900,pac_pose:2500,ballon_materiel:3200,ballon_pose:2300,accessoires:500,admin:300}},CEE:{"140-170":{H1:{PAC:{"S<70":274800,"70<S<90":384720,"90<S<110":549600,"110<S<130":604560,"S>130":879360},"BALLON ELECTRIQUE":{"S<70":274800,"70<S<90":384720,"90<S<110":549600,"110<S<130":604560,"S>130":879360},"BALLON THERMO":{"S<70":289500,"70<S<90":399420,"90<S<110":564300,"110<S<130":619260,"S>130":894060},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H2:{PAC:{"S<70":229000,"70<S<90":320600,"90<S<110":458000,"110<S<130":503800,"S>130":732800},"BALLON ELECTRIQUE":{"S<70":229000,"70<S<90":320600,"90<S<110":458000,"110<S<130":503800,"S>130":732800},"BALLON THERMO":{"S<70":243700,"70<S<90":335300,"90<S<110":472700,"110<S<130":518500,"S>130":747500},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H3:{PAC:{"S<70":160300,"70<S<90":224420,"90<S<110":320600,"110<S<130":352660,"S>130":512960},"BALLON ELECTRIQUE":{"S<70":160300,"70<S<90":224420,"90<S<110":320600,"110<S<130":352660,"S>130":512960},"BALLON THERMO":{"S<70":175000,"70<S<90":239120,"90<S<110":335300,"110<S<130":367360,"S>130":527660},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}}},"111-140":{H1:{PAC:{"S<70":238500,"70<S<90":333900,"90<S<110":477000,"110<S<130":524700,"S>130":763200},"BALLON ELECTRIQUE":{"S<70":238500,"70<S<90":333900,"90<S<110":477000,"110<S<130":524700,"S>130":763200},"BALLON THERMO":{"S<70":253200,"70<S<90":348600,"90<S<110":491700,"110<S<130":539400,"S>130":777900},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H2:{PAC:{"S<70":198750,"70<S<90":278250,"90<S<110":397500,"110<S<130":437250,"S>130":636000},"BALLON ELECTRIQUE":{"S<70":198750,"70<S<90":278250,"90<S<110":397500,"110<S<130":437250,"S>130":636000},"BALLON THERMO":{"S<70":213450,"70<S<90":292950,"90<S<110":412200,"110<S<130":451950,"S>130":650700},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H3:{PAC:{"S<70":139125,"70<S<90":194775,"90<S<110":278250,"110<S<130":306075,"S>130":445200},"BALLON ELECTRIQUE":{"S<70":139125,"70<S<90":194775,"90<S<110":278250,"110<S<130":306075,"S>130":445200},"BALLON THERMO":{"S<70":153825,"70<S<90":209475,"90<S<110":292950,"110<S<130":320775,"S>130":459900},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}}}}};
 const M={"PAC":"PAC","PAC + BALLON ÉLECTRIQUE":"BALLON ELECTRIQUE","PAC + BALLON THERMO":"BALLON THERMO","PAC + SSC":"BALLON SSC"};
 
@@ -2002,6 +2452,43 @@ document.getElementById('recoModal').onclick=function(e){
         closeRecoModal();
     }
 };
+
+// ============================================
+// SCROLL-BASED GRADIENT ANIMATION
+// ============================================
+
+(function() {
+    const gradients = [
+        'linear-gradient(90deg, #34d399, #22d3ee, #818cf8)',   // green → cyan → indigo
+        'linear-gradient(90deg, #22d3ee, #818cf8, #c084fc)',   // cyan → indigo → purple
+        'linear-gradient(90deg, #818cf8, #c084fc, #f472b6)',   // indigo → purple → pink
+        'linear-gradient(90deg, #c084fc, #f472b6, #fb923c)',   // purple → pink → orange
+        'linear-gradient(90deg, #f472b6, #fb923c, #fbbf24)',   // pink → orange → yellow
+        'linear-gradient(90deg, #fb923c, #fbbf24, #34d399)',   // orange → yellow → green
+    ];
+
+    let ticking = false;
+
+    function updateScrollGradient() {
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const scrollPercent = docHeight > 0 ? scrollTop / docHeight : 0;
+        const idx = Math.min(Math.floor(scrollPercent * gradients.length), gradients.length - 1);
+        const gradient = gradients[idx];
+
+        document.documentElement.style.setProperty('--scroll-gradient', gradient);
+        ticking = false;
+    }
+
+    window.addEventListener('scroll', function() {
+        if (!ticking) {
+            requestAnimationFrame(updateScrollGradient);
+            ticking = true;
+        }
+    }, { passive: true });
+
+    updateScrollGradient();
+})();
 
 // ============================================
 // INITIALISATION
