@@ -140,6 +140,131 @@
             border: 1px solid #f9a8d4;
         }
 
+        /* === CEE DETAIL SECTION === */
+        .cee-section {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border: 1px solid #93c5fd;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+        }
+        .cee-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+        }
+        .cee-toggle h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0;
+        }
+        .cee-toggle .toggle-arrow {
+            transition: transform 0.3s ease;
+            font-size: 12px;
+            color: #2563eb;
+        }
+        .cee-toggle .toggle-arrow.open { transform: rotate(180deg); }
+        .cee-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, padding 0.3s ease;
+            padding-top: 0;
+        }
+        .cee-body.open {
+            max-height: 800px;
+            padding-top: 14px;
+        }
+        .cee-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        @media (max-width: 600px) {
+            .cee-grid { grid-template-columns: 1fr; }
+        }
+        .cee-grid label {
+            font-size: 12px;
+            font-weight: 500;
+            color: #475569;
+            margin-bottom: 4px;
+            display: block;
+        }
+        .cee-grid select, .cee-grid input {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 13px;
+            background: white;
+            transition: border-color 0.2s;
+        }
+        .cee-grid select:focus, .cee-grid input:focus {
+            border-color: #2563eb;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        .cee-result {
+            margin-top: 12px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            text-align: center;
+            display: none;
+            animation: fadeSlide 0.3s ease;
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            color: #1e40af;
+            border: 1px solid #93c5fd;
+        }
+        .cee-result.show { display: block; }
+        .cee-hint {
+            font-size: 11px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+        .cee-bloc-171, .cee-bloc-148 {
+            transition: all 0.3s ease;
+        }
+        .cee-hidden { display: none !important; }
+        .cee-kpi-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .cee-kpi {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 10px 12px;
+            text-align: center;
+        }
+        .cee-kpi .kpi-label {
+            font-size: 11px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        .cee-kpi .kpi-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1e40af;
+        }
+        .cee-kpi .kpi-value.green { color: #16a34a; }
+        .cee-kpi .kpi-detail {
+            font-size: 10px;
+            color: #94a3b8;
+            margin-top: 2px;
+            font-family: ui-monospace, monospace;
+        }
+
         .header {
             background: white;
             padding: 20px 0;
@@ -600,7 +725,6 @@
             transition: background 0.4s ease;
         }
 
-        /* --- Dark result row cards --- */
         .result-row-card {
             background: rgba(255,255,255,0.04);
             border: 1px solid rgba(255,255,255,0.06);
@@ -637,7 +761,6 @@
         .result-row-card .rrc-value.cyan { color: #22d3ee; }
         .result-row-card .rrc-value.blue { color: #60a5fa; }
 
-        /* --- Highlight card (big number) --- */
         .result-highlight-card {
             background: linear-gradient(135deg, rgba(52,211,153,0.12) 0%, rgba(34,211,238,0.08) 100%);
             border: 1px solid rgba(52,211,153,0.2);
@@ -662,7 +785,6 @@
             text-shadow: 0 0 30px rgba(52,211,153,0.3);
         }
 
-        /* --- Separator glow line --- */
         .glow-separator {
             height: 2px;
             margin: 16px 0;
@@ -673,7 +795,6 @@
         }
         .glow-separator:hover { opacity: 0.7; }
 
-        /* --- Section title dark --- */
         .dark-section-title {
             font-size: 11px;
             font-weight: 700;
@@ -684,7 +805,6 @@
             padding-left: 2px;
         }
 
-        /* --- Scenario label dark --- */
         .scenario-label-dark {
             font-size: 13px;
             color: rgba(255,255,255,0.8);
@@ -699,7 +819,6 @@
         .scenario-label-dark strong { font-weight: 600; color: #f1f5f9; }
         .scenario-label-dark .separator { color: rgba(255,255,255,0.3); margin: 0 8px; }
 
-        /* --- RAC section dark --- */
         .rac-dark-section {
             background: rgba(255,255,255,0.03);
             border: 1px solid rgba(255,255,255,0.06);
@@ -727,7 +846,6 @@
         }
         .rac-dark-section .note-small { color: rgba(255,255,255,0.35); }
 
-        /* --- TTC Input dark mode --- */
         .ttc-input-dark {
             font-size: 24px;
             font-weight: 700;
@@ -747,7 +865,6 @@
             outline: none;
         }
 
-        /* --- Buttons dark --- */
         .btn-dark-export {
             width: 100%;
             border: none;
@@ -1029,6 +1146,10 @@
         <span>Isolation murs & biomasse <strong>retirés du monogeste</strong></span>
         <span class="separator-dot">•</span>
         <span>Guichet réouverture <strong>≈ 12 fév. 2026</strong></span>
+        <span class="separator-dot">•</span>
+        <span>CEE : <strong>BAR-TH-171 / 143 / 148</strong> intégrés</span>
+        <span class="separator-dot">•</span>
+        <span>Zone auto par <strong>n° département</strong></span>
     </div>
 
     <div class="modal" id="passwordModal">
@@ -1131,13 +1252,75 @@
             <div class="card">
                 <h2 class="card-title">Paramètres</h2>
 
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="scenario">Scénario</label>
+                        <select id="scenario" onchange="onScenarioChange()">
+                            <option value="PAC">PAC</option>
+                            <option value="PAC + BALLON ÉLECTRIQUE">PAC + BALLON ÉLECTRIQUE</option>
+                            <option value="PAC + BALLON THERMO">PAC + BALLON THERMO</option>
+                            <option value="PAC + SSC">PAC + SSC</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="categorie">Catégorie MPR</label>
+                        <select id="categorie" onchange="calc()">
+                            <option value="BLEU">MPR Bleu</option>
+                            <option value="JAUNE">MPR Jaune</option>
+                            <option value="VIOLET">MPR Violet</option>
+                            <option value="ROSE">MPR Rose</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="zone">Zone climatique</label>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <select id="zone" onchange="calc()" style="flex: 1;">
+                                <option value="H1">H1</option>
+                                <option value="H2">H2</option>
+                                <option value="H3">H3</option>
+                            </select>
+                            <input type="text" id="departement" placeholder="N° dept" maxlength="3" oninput="detectZoneFromDept()" style="width: 70px; text-align: center; font-weight: 600;">
+                            <span id="deptZoneResult" style="display:none; font-size: 12px; font-weight: 600; color: #16a34a; white-space: nowrap;"></span>
+                        </div>
+                        <small style="color: #86868b; font-size: 11px;">Saisir un n° de département pour auto-détecter</small>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="etas">Plage d'ETAS</label>
+                        <select id="etas" onchange="calc()">
+                            <option value="111-140">111% ≤ ETAS &lt; 140%</option>
+                            <option value="140-170" selected>ETAS ≥ 140%</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="typeLogement">Type de logement</label>
+                        <select id="typeLogement" onchange="onTypeLogementChange()">
+                            <option value="maison" selected>Maison individuelle</option>
+                            <option value="appartement">Appartement</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="surface">Surface chauffée par la PAC</label>
+                        <select id="surface" onchange="calc()">
+                            <option value="S<70">S &lt; 70 m²</option>
+                            <option value="70<=S<90">70 ≤ S &lt; 90 m²</option>
+                            <option value="S>=90" selected>S ≥ 90 m²</option>
+                        </select>
+                        <small style="color: #86868b; font-size: 11px;" id="surfaceHint">Fiche BAR-TH-171 v.A78.4</small>
+                    </div>
+                </div>
+
                 <!-- Auto-détection revenus -->
-                <div class="revenus-section">
+                <div class="revenus-section" style="margin-top: 16px;">
                     <div class="revenus-toggle" onclick="toggleRevenus()">
                         <h3>🎯 Détection automatique du profil MPR 2026</h3>
-                        <span class="toggle-arrow" id="toggleArrow">▼</span>
+                        <span class="toggle-arrow open" id="toggleArrow">▼</span>
                     </div>
-                    <div class="revenus-body" id="revenusBody">
+                    <div class="revenus-body open" id="revenusBody">
                         <div class="revenus-grid">
                             <div>
                                 <label>Région</label>
@@ -1167,54 +1350,90 @@
                         <div class="profil-result" id="profilResult"></div>
                     </div>
                 </div>
-                
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label for="scenario">Scénario</label>
-                        <select id="scenario" onchange="calc()">
-                            <option value="PAC">PAC</option>
-                            <option value="PAC + BALLON ÉLECTRIQUE">PAC + BALLON ÉLECTRIQUE</option>
-                            <option value="PAC + BALLON THERMO">PAC + BALLON THERMO</option>
-                            <option value="PAC + SSC">PAC + SSC</option>
-                        </select>
-                    </div>
 
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label for="categorie">Catégorie MPR</label>
-                        <select id="categorie" onchange="calc()">
-                            <option value="BLEU">MPR Bleu</option>
-                            <option value="JAUNE">MPR Jaune</option>
-                            <option value="VIOLET">MPR Violet</option>
-                            <option value="ROSE">MPR Rose</option>
-                        </select>
+                <!-- ===================== CEE DÉTAIL ===================== -->
+                <div class="cee-section">
+                    <div class="cee-toggle" onclick="toggleCEE()">
+                        <h3>⚡ Calcul CEE détaillé (auto selon scénario)</h3>
+                        <span class="toggle-arrow open" id="ceeToggleArrow">▼</span>
                     </div>
+                    <div class="cee-body open" id="ceeBody">
+                        <div style="background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 14px; margin-bottom: 12px; font-size: 13px; color: #475569;">
+                            <strong id="ceeScenarioLabel">PAC</strong> → <span id="ceeFichesLabel">BAR-TH-171</span>
+                            <span id="ceeNonCumulNote" style="display:none; color: #dc2626; font-size: 11px; margin-left: 8px;">⚠ Non cumulable 171/148/143</span>
+                        </div>
 
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label for="zone">Zone climatique</label>
-                        <select id="zone" onchange="calc()">
-                            <option value="H1">H1</option>
-                            <option value="H2">H2</option>
-                            <option value="H3">H3</option>
-                        </select>
-                    </div>
+                        <div class="cee-grid">
+                            <div>
+                                <label>Catégorie ménage CEE</label>
+                                <select id="menageCEE" onchange="calc()">
+                                    <option value="tm">Très modestes (12,5 €/MWhc)</option>
+                                    <option value="autres">Autres ménages (7,5 €/MWhc)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>Coef surface (auto)</label>
+                                <input type="text" id="ceeCoefSurface" disabled value="—" style="background: #f1f5f9; font-weight: 600;">
+                            </div>
+                        </div>
 
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label for="etas">Plage d'ETAS</label>
-                        <select id="etas" onchange="calc()">
-                            <option value="111-140">111 < ETAS < 140</option>
-                            <option value="140-170" selected>140 < ETAS < 170</option>
-                        </select>
-                    </div>
+                        <!-- Bloc BAR-TH-171 -->
+                        <div id="ceeBloc171" style="margin-top: 12px;">
+                            <div style="font-size: 12px; font-weight: 600; color: #2563eb; margin-bottom: 4px;">📘 BAR-TH-171 — PAC air/eau (v.A78.4)</div>
+                        </div>
 
-                    <div class="form-group" style="margin-bottom: 0; grid-column: 1 / -1;">
-                        <label for="surface">Surface S (m²)</label>
-                        <select id="surface" onchange="calc()">
-                            <option value="S<70">S < 70 m²</option>
-                            <option value="70<S<90">70–90 m²</option>
-                            <option value="90<S<110" selected>90–110 m²</option>
-                            <option value="110<S<130">110–130 m²</option>
-                            <option value="S>130">> 130 m²</option>
-                        </select>
+                        <!-- Bloc BAR-TH-148 (CET séparé) -->
+                        <div id="ceeBloc148" class="cee-hidden" style="margin-top: 12px;">
+                            <div style="font-size: 12px; font-weight: 600; color: #059669; margin-bottom: 8px;">📗 BAR-TH-148 — CET (v.A73.3)</div>
+                            <div class="cee-grid">
+                                <div>
+                                    <label>Forfait officiel</label>
+                                    <input type="text" id="cee148Forfait" disabled value="14 700 kWhc" style="background: #f1f5f9; font-weight: 600;">
+                                    <div class="cee-hint">Maison: 14 700 · Appart: 11 800 kWhc</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bloc BAR-TH-143 -->
+                        <div id="ceeBloc143" class="cee-hidden" style="margin-top: 12px;">
+                            <div style="font-size: 12px; font-weight: 600; color: #2563eb; margin-bottom: 8px;">📙 BAR-TH-143 — SSC (solaire combiné)</div>
+                            <div class="cee-grid">
+                                <div>
+                                    <label>Forfait par zone</label>
+                                    <input type="text" id="cee143Forfait" disabled value="—" style="background: #f1f5f9; font-weight: 600;">
+                                    <div class="cee-hint">H1: 134 800 · H2: 121 000 · H3: 100 500 kWhc</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- KPI CEE -->
+                        <div class="cee-kpi-row" style="grid-template-columns: 1fr 1fr 1fr;">
+                            <div class="cee-kpi">
+                                <div class="kpi-label">Volume CEE</div>
+                                <div class="kpi-value" id="ceeOutKwhc">—</div>
+                                <div class="kpi-detail" id="ceeOutDetail">—</div>
+                            </div>
+                            <div class="cee-kpi">
+                                <div class="kpi-label">Prime CEE</div>
+                                <div class="kpi-value green" id="ceeOutPrime">—</div>
+                                <div class="kpi-detail" id="ceeOutPrix">—</div>
+                            </div>
+                            <div class="cee-kpi" id="ceeKpi148" style="display:none;">
+                                <div class="kpi-label">Dont BAR-TH-148</div>
+                                <div class="kpi-value" id="ceeOut148" style="color: #059669;">—</div>
+                                <div class="kpi-detail" id="ceeOut148Detail">—</div>
+                            </div>
+                        </div>
+
+                        <div class="cee-result" id="ceeResult"></div>
+
+                        <div style="margin-top: 10px; text-align: center;">
+                            <small style="color: #64748b; font-size: 11px;">
+                                <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
+                                    <input type="checkbox" id="ceeOverride" onchange="calc()"> Utiliser ce calcul CEE à la place de la table par défaut
+                                </label>
+                            </small>
+                        </div>
                     </div>
                 </div>
 
@@ -1292,21 +1511,11 @@
                 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                     <div class="form-group" style="margin-bottom: 0;">
-                        <label for="prixCumac">Prix cumac (€/MWhcumac)</label>
-                        <input type="number" id="prixCumac" value="11.78" step="0.01" oninput="calc()">
-                        <small>
-                            <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
-                                <input type="checkbox" id="lockPrice" checked onchange="calc()"> Verrouiller (auto selon délégataire)
-                            </label>
-                        </small>
+                        <label for="prixCumac">Prix cumac (€/MWhc)</label>
+                        <input type="number" id="prixCumac" value="7.0" step="0.01" oninput="calc()">
                     </div>
 
                     <div class="form-group" style="margin-bottom: 0;">
-                        <label>Délégataire</label>
-                        <input type="text" id="delegataire" value="" readonly style="background: #f5f5f7; color: #1d1d1f;">
-                    </div>
-
-                    <div class="form-group" style="margin-bottom: 0; grid-column: 1 / -1;">
                         <label>kWh cumac</label>
                         <input type="text" id="kwhCumac" value="" readonly style="background: #f5f5f7; color: #1d1d1f; font-weight: 600;">
                     </div>
@@ -1361,7 +1570,10 @@
                 </div>
 
                 <div class="result-row-card">
-                    <div class="rrc-label">Certificats CEE</div>
+                    <div>
+                        <div class="rrc-label">Certificats CEE</div>
+                        <div style="font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 2px;" id="ceeSourceLabel">Table par défaut</div>
+                    </div>
                     <div class="rrc-value green" id="aidesCEE" style="font-size: 18px;">—</div>
                 </div>
 
@@ -1482,17 +1694,48 @@
 
 <script>
 // ============================================
-// BARÈMES DE REVENUS MPR 2026 (Source: france-renov.gouv.fr)
+// BARÈMES DE REVENUS MPR 2026
 // ============================================
+// ============================================
+// TABLE DÉPARTEMENTS → ZONE CLIMATIQUE (source officielle)
+// ============================================
+const DEPT_ZONE = {
+    "01":"H1","02":"H1","03":"H1","04":"H2","05":"H1","06":"H3","07":"H2","08":"H1","09":"H2","10":"H1",
+    "11":"H3","12":"H2","13":"H3","14":"H1","15":"H1","16":"H2","17":"H2","18":"H2","19":"H1","20":"H3",
+    "2A":"H3","2B":"H3",
+    "21":"H1","22":"H2","23":"H1","24":"H2","25":"H1","26":"H2","27":"H1","28":"H1","29":"H2","30":"H3",
+    "31":"H2","32":"H2","33":"H2","34":"H3","35":"H2","36":"H2","37":"H2","38":"H1","39":"H1","40":"H2",
+    "41":"H2","42":"H1","43":"H1","44":"H2","45":"H1","46":"H2","47":"H2","48":"H2","49":"H2","50":"H2",
+    "51":"H1","52":"H1","53":"H2","54":"H1","55":"H1","56":"H2","57":"H1","58":"H1","59":"H1","60":"H1",
+    "61":"H1","62":"H1","63":"H1","64":"H2","65":"H2","66":"H3","67":"H1","68":"H1","69":"H1","70":"H1",
+    "71":"H1","72":"H2","73":"H1","74":"H1","75":"H1","76":"H1","77":"H1","78":"H1","79":"H2","80":"H1",
+    "81":"H2","82":"H2","83":"H3","84":"H2","85":"H2","86":"H2","87":"H1","88":"H1","89":"H1","90":"H1",
+    "91":"H1","92":"H1","93":"H1","94":"H1","95":"H1"
+};
+
+function detectZoneFromDept() {
+    const deptInput = document.getElementById('departement').value.trim();
+    if (!deptInput) return;
+    const zone = DEPT_ZONE[deptInput] || DEPT_ZONE[deptInput.padStart(2,'0')];
+    if (zone) {
+        document.getElementById('zone').value = zone;
+        document.getElementById('deptZoneResult').textContent = `→ Zone ${zone}`;
+        document.getElementById('deptZoneResult').style.display = 'inline';
+        calc();
+    } else {
+        document.getElementById('deptZoneResult').textContent = '❌ Département inconnu';
+        document.getElementById('deptZoneResult').style.display = 'inline';
+    }
+}
+
 const REVENUS_2026 = {
     PROVINCE: {
-        // [BLEU_max, JAUNE_max, VIOLET_max] — au-delà = ROSE
         1: [17363, 22259, 31185],
         2: [25393, 32553, 45842],
         3: [30540, 39148, 55196],
         4: [35676, 45735, 64550],
         5: [40835, 52348, 73907],
-        supplement: [5151, 6598, 9357] // par personne supplémentaire
+        supplement: [5151, 6598, 9357]
     },
     IDF: {
         1: [24031, 29253, 40851],
@@ -1507,7 +1750,6 @@ const REVENUS_2026 = {
 function getSeuilsForPersonnes(region, nb) {
     const data = REVENUS_2026[region];
     if (nb <= 5) return data[nb];
-    // Au-delà de 5 personnes, ajouter le supplément
     const base = data[5];
     const sup = data.supplement;
     const extra = nb - 5;
@@ -1543,7 +1785,6 @@ function detectProfil() {
         profil = 'ROSE'; label = '🩷 Profil Rose — Revenus supérieurs'; className = 'profil-rose';
     }
 
-    // Afficher le résultat
     const regionLabel = region === 'IDF' ? 'Île-de-France' : 'Province';
     const seuilInfo = profil === 'ROSE' 
         ? `RFR ${rfr.toLocaleString('fr-FR')} € > ${seuils[2].toLocaleString('fr-FR')} €`
@@ -1552,8 +1793,15 @@ function detectProfil() {
     resultEl.className = `profil-result show ${className}`;
     resultEl.innerHTML = `${label}<br><span style="font-weight:400;font-size:12px;">${regionLabel} • ${nb} pers. • ${seuilInfo}</span>`;
 
-    // Auto-set le select catégorie
     document.getElementById('categorie').value = profil;
+
+    // Sync catégorie ménage CEE
+    if (profil === 'BLEU' || profil === 'JAUNE') {
+        document.getElementById('menageCEE').value = 'tm';
+    } else {
+        document.getElementById('menageCEE').value = 'autres';
+    }
+
     calc();
 }
 
@@ -1565,32 +1813,208 @@ function toggleRevenus() {
 }
 
 // ============================================
+// CEE DÉTAIL — BAR-TH-171 / 143 / 148
+// (Source : fiche BAR-TH-171 vA78.4)
+// ============================================
+const CEE_PRICE = { tm: 12.5, autres: 7.5 }; // €/MWhc
+
+const BAR143 = { H1: 134800, H2: 121000, H3: 100500 };
+
+// BAR-TH-148 v.A73.3 — Forfaits officiels (à compter du 01/11/2025)
+const BAR148 = { maison: 14700, appartement: 11800 };
+
+const BAR171 = {
+    maison: {
+        base: { lt140: 90900, ge140: 109200 },
+        coefSurface: (S) => (S < 70 ? 0.5 : (S < 90 ? 0.7 : 1.0)),
+        tranches: "Maison : S<70→0,5 · 70≤S<90→0,7 · S≥90→1"
+    },
+    appartement: {
+        base: { lt140: 48700, ge140: 58900 },
+        coefSurface: (S) => (S < 35 ? 0.5 : (S < 60 ? 0.7 : 1.0)),
+        tranches: "Appart : S<35→0,5 · 35≤S<60→0,7 · S≥60→1"
+    },
+    coefZone: { H1: 1.2, H2: 1.0, H3: 0.7 }
+};
+
+
+// Surface dropdown → catégorie pour table CEE (maison: les 5 anciennes catégories)
+function surfaceToCategory(surfaceVal) {
+    // surfaceVal comes from the dropdown: "S<70", "70<=S<90", "S>=90" (maison) or "S<35", "35<=S<60", "S>=60" (appart)
+    // Map to table CEE keys
+    const map = {
+        'S<70': 'S<70', '70<=S<90': '70<S<90', 'S>=90': '90<S<110',
+        'S<35': 'S<70', '35<=S<60': '70<S<90', 'S>=60': '90<S<110'
+    };
+    return map[surfaceVal] || '90<S<110';
+}
+
+function getSurfaceLabel() {
+    const sel = document.getElementById('surface');
+    return sel.options[sel.selectedIndex].text;
+}
+
+// Surface coef from dropdown value (BAR-TH-171 officiel)
+function getSurfaceCoef(surfaceVal) {
+    const map = { 'S<70': 0.5, '70<=S<90': 0.7, 'S>=90': 1, 'S<35': 0.5, '35<=S<60': 0.7, 'S>=60': 1 };
+    return map[surfaceVal] || 1;
+}
+
+// Dynamic surface options based on type logement
+function updateSurfaceOptions() {
+    const tl = document.getElementById('typeLogement').value;
+    const sel = document.getElementById('surface');
+    const oldCoef = getSurfaceCoef(sel.value); // preserve coef level
+    sel.innerHTML = '';
+    if (tl === 'maison') {
+        sel.add(new Option('S < 70 m²', 'S<70'));
+        sel.add(new Option('70 ≤ S < 90 m²', '70<=S<90'));
+        sel.add(new Option('S ≥ 90 m²', 'S>=90'));
+    } else {
+        sel.add(new Option('S < 35 m²', 'S<35'));
+        sel.add(new Option('35 ≤ S < 60 m²', '35<=S<60'));
+        sel.add(new Option('S ≥ 60 m²', 'S>=60'));
+    }
+    // Set option with same coef level
+    const coefToMaison = { 0.5: 'S<70', 0.7: '70<=S<90', 1: 'S>=90' };
+    const coefToAppart = { 0.5: 'S<35', 0.7: '35<=S<60', 1: 'S>=60' };
+    const targetMap = tl === 'maison' ? coefToMaison : coefToAppart;
+    sel.value = targetMap[oldCoef] || sel.options[sel.options.length - 1].value;
+}
+
+function onTypeLogementChange() {
+    updateSurfaceOptions();
+    calc();
+}
+
+function onScenarioChange() {
+    calc();
+}
+
+let _calcRunning = false;
+
+let lastCEEDetailPrime = 0;
+
+function toggleCEE() {
+    const body = document.getElementById('ceeBody');
+    const arrow = document.getElementById('ceeToggleArrow');
+    body.classList.toggle('open');
+    arrow.classList.toggle('open');
+}
+
+// Quelle(s) fiche(s) BAR-TH s'appliquent selon le scénario
+// PAC+Ballon Thermo = PAC chauffage seul + CET séparé → 2 opérations distinctes → cumulables
+function getCEEFiches(scenario) {
+    switch(scenario) {
+        case 'PAC':                    return ['171'];
+        case 'PAC + BALLON ÉLECTRIQUE': return ['171'];
+        case 'PAC + BALLON THERMO':     return ['171', '148'];
+        case 'PAC + SSC':              return ['143'];
+        default:                        return ['171'];
+    }
+}
+
+function calcCEEDetail() {
+    const sc = document.getElementById('scenario').value;
+    const zn = document.getElementById('zone').value;
+    const menage = document.getElementById('menageCEE').value;
+    const price = CEE_PRICE[menage] || CEE_PRICE.autres;
+    const tl = document.getElementById('typeLogement').value;
+    const surfaceVal = document.getElementById('surface').value;
+    const coefS = getSurfaceCoef(surfaceVal);
+
+    const fiches = getCEEFiches(sc);
+
+    // Labels
+    document.getElementById('ceeScenarioLabel').textContent = SCENARIO_NAMES[sc] || sc;
+    document.getElementById('ceeFichesLabel').textContent = fiches.map(f => 'BAR-TH-' + f).join(' + ');
+    const noteEl = document.getElementById('ceeNonCumulNote');
+    if (noteEl) noteEl.style.display = 'none';
+
+    // Show/hide blocs
+    document.getElementById('ceeBloc171').classList.toggle('cee-hidden', !fiches.includes('171'));
+    document.getElementById('ceeBloc148').classList.toggle('cee-hidden', !fiches.includes('148'));
+    document.getElementById('ceeBloc143').classList.toggle('cee-hidden', !fiches.includes('143'));
+
+    let totalKwhc = 0;
+    let details = [];
+    let statusParts = [];
+
+    // === BAR-TH-171 ===
+    if (fiches.includes('171')) {
+        const etasKey = document.getElementById('etas').value === '111-140' ? 'lt140' : 'ge140';
+        const base = BAR171[tl].base[etasKey];
+        const cz = BAR171.coefZone[zn];
+        document.getElementById('ceeCoefSurface').value = coefS.toString().replace('.', ',');
+        const kwhc171 = base * coefS * cz;
+        totalKwhc += kwhc171;
+        details.push(`171: ${fmtIntCEE(kwhc171)}`);
+        statusParts.push(`✅ 171: base ${fmtIntCEE(base)} × coef ${coefS} × zone ${cz}`);
+    }
+
+    // === BAR-TH-148 ===
+    if (fiches.includes('148')) {
+        const kwhc148 = BAR148[tl] || 14700;
+        totalKwhc += kwhc148;
+        details.push(`148: ${fmtIntCEE(kwhc148)}`);
+        const typeLabel = tl === 'maison' ? 'Maison' : 'Appart';
+        document.getElementById('cee148Forfait').value = `${fmtIntCEE(kwhc148)} kWhc (${typeLabel})`;
+        const prime148 = (kwhc148 / 1000) * price;
+        document.getElementById('ceeOut148').textContent = fmtEurCEE(prime148);
+        document.getElementById('ceeOut148Detail').textContent = `${fmtIntCEE(kwhc148)} kWhc`;
+        document.getElementById('ceeKpi148').style.display = 'block';
+        statusParts.push(`✅ 148: ${fmtIntCEE(kwhc148)} kWhc (v.A73.3 · ${typeLabel})`);
+    } else {
+        document.getElementById('ceeKpi148').style.display = 'none';
+    }
+
+    // === BAR-TH-143 ===
+    if (fiches.includes('143')) {
+        const kwhc143 = BAR143[zn];
+        totalKwhc += kwhc143;
+        details.push(`143: ${fmtIntCEE(kwhc143)}`);
+        document.getElementById('cee143Forfait').value = `${fmtIntCEE(kwhc143)} kWhc (${zn})`;
+        document.getElementById('ceeCoefSurface').value = '—';
+        statusParts.push(`✅ 143: forfait ${zn} = ${fmtIntCEE(kwhc143)} kWhc`);
+    }
+
+    const primeCEE = (totalKwhc / 1000) * price;
+    lastCEEDetailPrime = primeCEE;
+
+    document.getElementById('ceeOutKwhc').textContent = `${fmtIntCEE(totalKwhc)} kWhc`;
+    document.getElementById('ceeOutDetail').textContent = details.join(' + ');
+    document.getElementById('ceeOutPrime').textContent = fmtEurCEE(primeCEE);
+    document.getElementById('ceeOutPrix').textContent = `${price.toString().replace('.', ',')} €/MWhc · ${menage === 'tm' ? 'Très modestes' : 'Autres'}`;
+
+    const resultEl = document.getElementById('ceeResult');
+    if (statusParts.length > 0) {
+        resultEl.className = 'cee-result show';
+        resultEl.innerHTML = statusParts.join('<br>');
+    } else {
+        resultEl.className = 'cee-result';
+    }
+
+    if (document.getElementById('ceeOverride').checked) {
+        // Will be picked up by calc() next time
+    }
+}
+
+function fmtIntCEE(n) {
+    return isFinite(n) ? Math.round(n).toLocaleString('fr-FR') : '—';
+}
+function fmtEurCEE(n) {
+    return isFinite(n) ? Math.round(n).toLocaleString('fr-FR') + ' €' : '—';
+}
+
+// ============================================
 // DONNÉES PRINCIPALES
 // ============================================
 const D={TTC:{"PAC":10890,"PAC + BALLON ÉLECTRIQUE":13750,"PAC + BALLON THERMO":13750,"PAC + SSC":25850},MPR:{"PAC":{BLEU:5000,JAUNE:4000,VIOLET:3000,ROSE:0},"PAC + BALLON ÉLECTRIQUE":{BLEU:5000,JAUNE:4000,VIOLET:3000,ROSE:0},"PAC + BALLON THERMO":{BLEU:6200,JAUNE:4800,VIOLET:3400,ROSE:0},"PAC + SSC":{BLEU:15000,JAUNE:12000,VIOLET:7000,ROSE:0}},COUT:{"PAC":6200,"PAC + BALLON ÉLECTRIQUE":6400,"PAC + BALLON THERMO":7300,"PAC + SSC":11700},COUT_DETAIL:{"PAC":{pac_materiel:2900,pac_pose:2500,ballon_materiel:0,ballon_pose:0,accessoires:500,admin:300},"PAC + BALLON ÉLECTRIQUE":{pac_materiel:2900,pac_pose:2500,ballon_materiel:200,ballon_pose:0,accessoires:500,admin:300},"PAC + BALLON THERMO":{pac_materiel:2900,pac_pose:2500,ballon_materiel:1100,ballon_pose:500,accessoires:500,admin:300},"PAC + SSC":{pac_materiel:2900,pac_pose:2500,ballon_materiel:3200,ballon_pose:2300,accessoires:500,admin:300}},CEE:{"140-170":{H1:{PAC:{"S<70":274800,"70<S<90":384720,"90<S<110":549600,"110<S<130":604560,"S>130":879360},"BALLON ELECTRIQUE":{"S<70":274800,"70<S<90":384720,"90<S<110":549600,"110<S<130":604560,"S>130":879360},"BALLON THERMO":{"S<70":289500,"70<S<90":399420,"90<S<110":564300,"110<S<130":619260,"S>130":894060},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H2:{PAC:{"S<70":229000,"70<S<90":320600,"90<S<110":458000,"110<S<130":503800,"S>130":732800},"BALLON ELECTRIQUE":{"S<70":229000,"70<S<90":320600,"90<S<110":458000,"110<S<130":503800,"S>130":732800},"BALLON THERMO":{"S<70":243700,"70<S<90":335300,"90<S<110":472700,"110<S<130":518500,"S>130":747500},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H3:{PAC:{"S<70":160300,"70<S<90":224420,"90<S<110":320600,"110<S<130":352660,"S>130":512960},"BALLON ELECTRIQUE":{"S<70":160300,"70<S<90":224420,"90<S<110":320600,"110<S<130":352660,"S>130":512960},"BALLON THERMO":{"S<70":175000,"70<S<90":239120,"90<S<110":335300,"110<S<130":367360,"S>130":527660},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}}},"111-140":{H1:{PAC:{"S<70":238500,"70<S<90":333900,"90<S<110":477000,"110<S<130":524700,"S>130":763200},"BALLON ELECTRIQUE":{"S<70":238500,"70<S<90":333900,"90<S<110":477000,"110<S<130":524700,"S>130":763200},"BALLON THERMO":{"S<70":253200,"70<S<90":348600,"90<S<110":491700,"110<S<130":539400,"S>130":777900},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H2:{PAC:{"S<70":198750,"70<S<90":278250,"90<S<110":397500,"110<S<130":437250,"S>130":636000},"BALLON ELECTRIQUE":{"S<70":198750,"70<S<90":278250,"90<S<110":397500,"110<S<130":437250,"S>130":636000},"BALLON THERMO":{"S<70":213450,"70<S<90":292950,"90<S<110":412200,"110<S<130":451950,"S>130":650700},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H3:{PAC:{"S<70":139125,"70<S<90":194775,"90<S<110":278250,"110<S<130":306075,"S>130":445200},"BALLON ELECTRIQUE":{"S<70":139125,"70<S<90":194775,"90<S<110":278250,"110<S<130":306075,"S>130":445200},"BALLON THERMO":{"S<70":153825,"70<S<90":209475,"90<S<110":292950,"110<S<130":320775,"S>130":459900},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}}}}};
 const M={"PAC":"PAC","PAC + BALLON ÉLECTRIQUE":"BALLON ELECTRIQUE","PAC + BALLON THERMO":"BALLON THERMO","PAC + SSC":"BALLON SSC"};
 
-const SCENARIO_NAMES = {
-    "PAC": "PAC",
-    "PAC + BALLON ÉLECTRIQUE": "PAC + Ballon Électrique",
-    "PAC + BALLON THERMO": "PAC + Ballon Thermo",
-    "PAC + SSC": "PAC + SSC"
-};
-
-const CATEGORIE_NAMES = {
-    "BLEU": "MPR Bleu",
-    "JAUNE": "MPR Jaune",
-    "VIOLET": "MPR Violet",
-    "ROSE": "MPR Rose"
-};
-
-const SURFACE_NAMES = {
-    "S<70": "< 70 m²",
-    "70<S<90": "70-90 m²",
-    "90<S<110": "90-110 m²",
-    "110<S<130": "110-130 m²",
-    "S>130": "> 130 m²"
-};
+const SCENARIO_NAMES = {"PAC":"PAC","PAC + BALLON ÉLECTRIQUE":"PAC + Ballon Électrique","PAC + BALLON THERMO":"PAC + Ballon Thermo","PAC + SSC":"PAC + SSC"};
+const CATEGORIE_NAMES = {"BLEU":"MPR Bleu","JAUNE":"MPR Jaune","VIOLET":"MPR Violet","ROSE":"MPR Rose"};
+const SURFACE_NAMES = {"S<70":"< 70 m²","70<S<90":"70-90 m²","90<S<110":"90-110 m²","110<S<130":"110-130 m²","S>130":"> 130 m²"};
 
 function getCEE(et, zn, cs, sf){
     if(!D.CEE[et]) return 0;
@@ -1620,28 +2044,11 @@ function checkStoredMode(){
 }
 
 function saveMode(){
-    const data = {
-        timestamp: new Date().getTime()
-    };
-    localStorage.setItem('fournisseurAuth', JSON.stringify(data));
+    localStorage.setItem('fournisseurAuth', JSON.stringify({ timestamp: new Date().getTime() }));
 }
 
 function clearMode(){
     localStorage.removeItem('fournisseurAuth');
-}
-
-function deleg(s,c,cee,ch){
-    if(c==='BALLON SSC') return 'VALOREN';
-    return cee>(ch*1.25)?'ECO NEGOCE':'VALOREN';
-}
-
-function prix(d,c){
-    const b=c==='BLEU';
-    return d==='ECO NEGOCE'?(b?12.5:7.4):(b?11.78:7.0);
-}
-
-function prixC(d){
-    return d==='ECO NEGOCE'?6.5:7.0;
 }
 
 function fmt(n){
@@ -1654,54 +2061,45 @@ function updateFromTTC(){
 }
 
 function updateFromDetail(){
-    // Décocher le verrou automatiquement quand on modifie un champ individuel
     document.getElementById('lockCoutHT').checked=false;
     
-    // Calculer les totaux de chaque ligne
-    const coutPACMateriel = parseFloat(document.getElementById('coutPACMateriel').value) || 0;
-    const qtePACMateriel = parseFloat(document.getElementById('qtePACMateriel').value) || 0;
-    const totalPACMateriel = coutPACMateriel * qtePACMateriel;
-    document.getElementById('totalPACMateriel').textContent = fmt(totalPACMateriel);
+    const fields = [
+        ['coutPACMateriel','qtePACMateriel','totalPACMateriel'],
+        ['coutPACPose','qtePACPose','totalPACPose'],
+        ['coutBallonMateriel','qteBallonMateriel','totalBallonMateriel'],
+        ['coutBallonPose','qteBallonPose','totalBallonPose'],
+        ['coutAccessoires','qteAccessoires','totalAccessoires'],
+        ['coutAdmin','qteAdmin','totalAdmin']
+    ];
     
-    const coutPACPose = parseFloat(document.getElementById('coutPACPose').value) || 0;
-    const qtePACPose = parseFloat(document.getElementById('qtePACPose').value) || 0;
-    const totalPACPose = coutPACPose * qtePACPose;
-    document.getElementById('totalPACPose').textContent = fmt(totalPACPose);
+    let totalGlobal = 0;
+    fields.forEach(([cId, qId, tId]) => {
+        const c = parseFloat(document.getElementById(cId).value) || 0;
+        const q = parseFloat(document.getElementById(qId).value) || 0;
+        const t = c * q;
+        document.getElementById(tId).textContent = fmt(t);
+        totalGlobal += t;
+    });
     
-    const coutBallonMateriel = parseFloat(document.getElementById('coutBallonMateriel').value) || 0;
-    const qteBallonMateriel = parseFloat(document.getElementById('qteBallonMateriel').value) || 0;
-    const totalBallonMateriel = coutBallonMateriel * qteBallonMateriel;
-    document.getElementById('totalBallonMateriel').textContent = fmt(totalBallonMateriel);
-    
-    const coutBallonPose = parseFloat(document.getElementById('coutBallonPose').value) || 0;
-    const qteBallonPose = parseFloat(document.getElementById('qteBallonPose').value) || 0;
-    const totalBallonPose = coutBallonPose * qteBallonPose;
-    document.getElementById('totalBallonPose').textContent = fmt(totalBallonPose);
-    
-    const coutAccessoires = parseFloat(document.getElementById('coutAccessoires').value) || 0;
-    const qteAccessoires = parseFloat(document.getElementById('qteAccessoires').value) || 0;
-    const totalAccessoires = coutAccessoires * qteAccessoires;
-    document.getElementById('totalAccessoires').textContent = fmt(totalAccessoires);
-    
-    const coutAdmin = parseFloat(document.getElementById('coutAdmin').value) || 0;
-    const qteAdmin = parseFloat(document.getElementById('qteAdmin').value) || 0;
-    const totalAdmin = coutAdmin * qteAdmin;
-    document.getElementById('totalAdmin').textContent = fmt(totalAdmin);
-    
-    // Calculer et afficher le total global
-    const totalGlobal = totalPACMateriel + totalPACPose + totalBallonMateriel + totalBallonPose + totalAccessoires + totalAdmin;
     document.getElementById('coutTotalHTDisplay').textContent = fmt(totalGlobal);
-    
     calc();
 }
 
 function calc(){
+    _calcRunning = true;
+    
+    // Always recalculate CEE detail first (updates lastCEEDetailPrime)
+    calcCEEDetail();
+    
     const sc=document.getElementById('scenario').value;
     const ct=document.getElementById('categorie').value;
     const zn=document.getElementById('zone').value;
     const et=document.getElementById('etas').value;
-    const sf=document.getElementById('surface').value;
+    const sf=surfaceToCategory(document.getElementById('surface').value);
     const cs=M[sc];
+    
+    // Check if CEE override is active
+    const ceeOverrideActive = document.getElementById('ceeOverride').checked;
     
     let tt;
     if(mode){
@@ -1723,52 +2121,39 @@ function calc(){
         const lockCoutHT=document.getElementById('lockCoutHT').checked;
         
         if(lockCoutHT){
-            // Mode auto : utiliser les coûts du scénario
             if(D.COUT_DETAIL[sc]){
                 const detail=D.COUT_DETAIL[sc];
-                
-                // Mettre à jour les champs individuels
                 document.getElementById('coutPACMateriel').value = detail.pac_materiel;
                 document.getElementById('qtePACMateriel').value = 1;
                 document.getElementById('totalPACMateriel').textContent = fmt(detail.pac_materiel);
-                
                 document.getElementById('coutPACPose').value = detail.pac_pose;
                 document.getElementById('qtePACPose').value = 1;
                 document.getElementById('totalPACPose').textContent = fmt(detail.pac_pose);
-                
                 document.getElementById('coutBallonMateriel').value = detail.ballon_materiel;
                 document.getElementById('qteBallonMateriel').value = detail.ballon_materiel > 0 ? 1 : 0;
                 document.getElementById('totalBallonMateriel').textContent = fmt(detail.ballon_materiel);
-                
                 document.getElementById('coutBallonPose').value = detail.ballon_pose;
                 document.getElementById('qteBallonPose').value = detail.ballon_pose > 0 ? 1 : 0;
                 document.getElementById('totalBallonPose').textContent = fmt(detail.ballon_pose);
-                
                 document.getElementById('coutAccessoires').value = detail.accessoires;
                 document.getElementById('qteAccessoires').value = 1;
                 document.getElementById('totalAccessoires').textContent = fmt(detail.accessoires);
-                
                 document.getElementById('coutAdmin').value = detail.admin;
                 document.getElementById('qteAdmin').value = 1;
                 document.getElementById('totalAdmin').textContent = fmt(detail.admin);
-                
                 ch = detail.pac_materiel + detail.pac_pose + detail.ballon_materiel + detail.ballon_pose + detail.accessoires + detail.admin;
             }else{
                 ch = D.COUT[sc] || 0;
             }
         }else{
-            // Mode manuel : additionner les totaux calculés
             const totalPACMateriel = (parseFloat(document.getElementById('coutPACMateriel').value) || 0) * (parseFloat(document.getElementById('qtePACMateriel').value) || 0);
             const totalPACPose = (parseFloat(document.getElementById('coutPACPose').value) || 0) * (parseFloat(document.getElementById('qtePACPose').value) || 0);
             const totalBallonMateriel = (parseFloat(document.getElementById('coutBallonMateriel').value) || 0) * (parseFloat(document.getElementById('qteBallonMateriel').value) || 0);
             const totalBallonPose = (parseFloat(document.getElementById('coutBallonPose').value) || 0) * (parseFloat(document.getElementById('qteBallonPose').value) || 0);
             const totalAccessoires = (parseFloat(document.getElementById('coutAccessoires').value) || 0) * (parseFloat(document.getElementById('qteAccessoires').value) || 0);
             const totalAdmin = (parseFloat(document.getElementById('coutAdmin').value) || 0) * (parseFloat(document.getElementById('qteAdmin').value) || 0);
-            
             ch = totalPACMateriel + totalPACPose + totalBallonMateriel + totalBallonPose + totalAccessoires + totalAdmin;
         }
-        
-        // Afficher le total
         document.getElementById('coutTotalHTDisplay').textContent = fmt(ch);
     }else{
         ch=D.COUT[sc]||0;
@@ -1776,45 +2161,40 @@ function calc(){
     
     const kw=getCEE(et,zn,cs,sf);
     
-    let px,ce,dg;
+    let px,ce;
     let ceForMarge, taForMarge;
     
     if(mode){
-        const lk=document.getElementById('lockPrice').checked;
-        if(lk){
-            dg=deleg(sf,cs,kw*11.78/1000,ch);
-            px=prix(dg,ct);
-            document.getElementById('prixCumac').value=px.toFixed(2);
-        }else{
-            px=parseFloat(document.getElementById('prixCumac').value)||0;
-            ce=kw*px/1000;
-            dg=deleg(sf,cs,ce,ch);
-        }
+        px=parseFloat(document.getElementById('prixCumac').value)||7.0;
         ce=kw*px/1000;
         ceForMarge=ce;
         taForMarge=ad+ceForMarge;
-        
-        document.getElementById('delegataire').value=dg;
         document.getElementById('kwhCumac').value=Math.round(kw).toLocaleString('fr-FR');
     }else{
-        ce=kw*7.0/1000;
-        dg=deleg(sf,cs,ce,ch);
-        px=prixC(dg);
+        px=7.0;
         ce=kw*px/1000;
-        
-        const dgForMarge=deleg(sf,cs,kw*11.78/1000,ch);
-        const pxForMarge=prix(dgForMarge,ct);
-        ceForMarge=kw*pxForMarge/1000;
+        ceForMarge=ce;
         taForMarge=ad+ceForMarge;
     }
     
-    const ta=ad+ce;
+    // === CEE OVERRIDE: use detailed CEE calculation if checked ===
+    let ceDisplay = ce;
+    let ceeSourceText = 'Table par défaut';
+    if (ceeOverrideActive && lastCEEDetailPrime > 0) {
+        ceDisplay = lastCEEDetailPrime;
+        ceeSourceText = getCEEFiches(sc).map(f => 'BAR-TH-' + f).join(' + ') + ' détaillé';
+        ceForMarge = lastCEEDetailPrime;
+        taForMarge = ad + ceForMarge;
+    }
+    
+    const ta=ad+ceDisplay;
     const rb=tt-ta;
     
     document.getElementById('totalTTC').textContent=fmt(tt);
     document.getElementById('aidesMPR').textContent=fmt(ad);
-    document.getElementById('aidesCEE').textContent=fmt(ce);
+    document.getElementById('aidesCEE').textContent=fmt(ceDisplay);
     document.getElementById('totalAides').textContent=fmt(ta);
+    document.getElementById('ceeSourceLabel').textContent=ceeSourceText;
     
     if(mode) document.getElementById('displayCoutHT').textContent=fmt(ch);
     
@@ -1822,7 +2202,7 @@ function calc(){
     const ct2=document.getElementById('categorie').options[document.getElementById('categorie').selectedIndex].text;
     const zn2=document.getElementById('zone').options[document.getElementById('zone').selectedIndex].text;
     const et2=document.getElementById('etas').options[document.getElementById('etas').selectedIndex].text;
-    const sf2=document.getElementById('surface').options[document.getElementById('surface').selectedIndex].text;
+    const sf2=getSurfaceLabel();
     const colorClass=ct==='BLEU'?'color-bleu':(ct==='JAUNE'?'color-jaune':(ct==='VIOLET'?'color-violet':'color-rose'));
     const borderColor=ct==='BLEU'?'#0071e3':(ct==='JAUNE'?'#fbbf24':(ct==='VIOLET'?'#8b5cf6':'#ec4899'));
     
@@ -1830,6 +2210,8 @@ function calc(){
     document.getElementById('scenarioSummary').style.borderLeftColor=borderColor;
     
     calcRAC(rb,ch,ta,taForMarge,tt);
+    
+    _calcRunning = false;
 }
 
 function calcRAC(rb,ch,ta,taForMarge,tt){
@@ -1847,10 +2229,7 @@ function calcRAC(rb,ch,ta,taForMarge,tt){
         document.getElementById('margeFinal').textContent=fmt(mgForMarge);
     }
     
-    // Récupérer le scénario actuel pour adapter les seuils
     const currentScenario = document.getElementById('scenario').value;
-    
-    // Seuils différents pour PAC + SSC
     const seuilOK = (currentScenario === 'PAC + SSC') ? 6000 : 4000;
     const seuilWarning = (currentScenario === 'PAC + SSC') ? 3000 : 2000;
     
@@ -1872,17 +2251,14 @@ function updatePct(){
     const ct=document.getElementById('categorie').value;
     const zn=document.getElementById('zone').value;
     const et=document.getElementById('etas').value;
-    const sf=document.getElementById('surface').value;
+    const sf=surfaceToCategory(document.getElementById('surface').value);
     const cs=M[sc];
+    const ceeOverrideActive = document.getElementById('ceeOverride').checked;
     
     let tt;
     if(mode){
         const lockTTC=document.getElementById('lockTTC').checked;
-        if(lockTTC){
-            tt = D.TTC[sc] || 0;
-        }else{
-            tt=parseFloat(document.getElementById('totalTTCInput').value)||0;
-        }
+        tt = lockTTC ? (D.TTC[sc] || 0) : (parseFloat(document.getElementById('totalTTCInput').value)||0);
     }else{
         tt=D.TTC[sc]||0;
     }
@@ -1895,58 +2271,38 @@ function updatePct(){
         if(lockCoutHT){
             if(D.COUT_DETAIL[sc]){
                 const detail=D.COUT_DETAIL[sc];
-                const coutPACTotal = detail.pac_materiel + detail.pac_pose; const coutBallonTotal = detail.ballon_materiel + detail.ballon_pose; ch = coutPACTotal + coutBallonTotal + detail.accessoires + detail.admin;
-            }else{
-                ch = D.COUT[sc] || 0;
-            }
+                ch = detail.pac_materiel + detail.pac_pose + detail.ballon_materiel + detail.ballon_pose + detail.accessoires + detail.admin;
+            }else{ ch = D.COUT[sc] || 0; }
         }else{
-            // Mode manuel : additionner les totaux calculés
-            const totalPAC = (parseFloat(document.getElementById('coutPAC').value) || 0) * (parseFloat(document.getElementById('qtePAC').value) || 0);
-            const totalBallon = (parseFloat(document.getElementById('coutBallon').value) || 0) * (parseFloat(document.getElementById('qteBallon').value) || 0);
+            const totalPACMateriel = (parseFloat(document.getElementById('coutPACMateriel').value) || 0) * (parseFloat(document.getElementById('qtePACMateriel').value) || 0);
+            const totalPACPose = (parseFloat(document.getElementById('coutPACPose').value) || 0) * (parseFloat(document.getElementById('qtePACPose').value) || 0);
+            const totalBallonMateriel = (parseFloat(document.getElementById('coutBallonMateriel').value) || 0) * (parseFloat(document.getElementById('qteBallonMateriel').value) || 0);
+            const totalBallonPose = (parseFloat(document.getElementById('coutBallonPose').value) || 0) * (parseFloat(document.getElementById('qteBallonPose').value) || 0);
             const totalAccessoires = (parseFloat(document.getElementById('coutAccessoires').value) || 0) * (parseFloat(document.getElementById('qteAccessoires').value) || 0);
             const totalAdmin = (parseFloat(document.getElementById('coutAdmin').value) || 0) * (parseFloat(document.getElementById('qteAdmin').value) || 0);
-            
-            ch = totalPAC + totalBallon + totalAccessoires + totalAdmin;
+            ch = totalPACMateriel + totalPACPose + totalBallonMateriel + totalBallonPose + totalAccessoires + totalAdmin;
         }
-    }else{
-        ch=D.COUT[sc]||0;
-    }
+    }else{ ch=D.COUT[sc]||0; }
     
     const kw=getCEE(et,zn,cs,sf);
+    let px,ce,ceForMarge,taForMarge;
+    px=mode?(parseFloat(document.getElementById('prixCumac').value)||7.0):7.0;
+    ce=kw*px/1000;
+    ceForMarge=ce;
+    taForMarge=ad+ceForMarge;
     
-    let px,ce,dg;
-    let ceForMarge, taForMarge;
-    
-    if(mode){
-        const lk=document.getElementById('lockPrice').checked;
-        if(lk){
-            ce=kw*11.78/1000;
-            dg=deleg(sf,cs,ce,ch);
-            px=prix(dg,ct);
-        }else{
-            px=parseFloat(document.getElementById('prixCumac').value)||0;
-        }
-        ce=kw*px/1000;
-        ceForMarge=ce;
-        taForMarge=ad+ceForMarge;
-    }else{
-        ce=kw*7.0/1000;
-        dg=deleg(sf,cs,ce,ch);
-        px=prixC(dg);
-        ce=kw*px/1000;
-        
-        const dgForMarge=deleg(sf,cs,kw*11.78/1000,ch);
-        const pxForMarge=prix(dgForMarge,ct);
-        ceForMarge=kw*pxForMarge/1000;
-        taForMarge=ad+ceForMarge;
+    let ceDisplay = ce;
+    if (ceeOverrideActive && lastCEEDetailPrime > 0) {
+        ceDisplay = lastCEEDetailPrime;
+        ceForMarge = lastCEEDetailPrime;
+        taForMarge = ad + ceForMarge;
     }
     
-    const ta=ad+ce;
+    const ta=ad+ceDisplay;
     const rb=tt-ta;
     
     let po=parseFloat(document.getElementById('racPourcent').value)||0;
-    if(po>100)po=100;
-    if(po<0)po=0;
+    if(po>100)po=100; if(po<0)po=0;
     document.getElementById('racPourcent').value=Math.round(po);
     const mo=Math.round(rb*(po/100));
     document.getElementById('racOffert').value=mo;
@@ -1959,20 +2315,15 @@ function updateAmt(){
     const ct=document.getElementById('categorie').value;
     const zn=document.getElementById('zone').value;
     const et=document.getElementById('etas').value;
-    const sf=document.getElementById('surface').value;
+    const sf=surfaceToCategory(document.getElementById('surface').value);
     const cs=M[sc];
+    const ceeOverrideActive = document.getElementById('ceeOverride').checked;
     
     let tt;
     if(mode){
         const lockTTC=document.getElementById('lockTTC').checked;
-        if(lockTTC){
-            tt = D.TTC[sc] || 0;
-        }else{
-            tt=parseFloat(document.getElementById('totalTTCInput').value)||0;
-        }
-    }else{
-        tt=D.TTC[sc]||0;
-    }
+        tt = lockTTC ? (D.TTC[sc] || 0) : (parseFloat(document.getElementById('totalTTCInput').value)||0);
+    }else{ tt=D.TTC[sc]||0; }
     
     const ad=(D.MPR[sc]&&D.MPR[sc][ct])?D.MPR[sc][ct]:0;
     
@@ -1982,63 +2333,41 @@ function updateAmt(){
         if(lockCoutHT){
             if(D.COUT_DETAIL[sc]){
                 const detail=D.COUT_DETAIL[sc];
-                const coutPACTotal = detail.pac_materiel + detail.pac_pose; const coutBallonTotal = detail.ballon_materiel + detail.ballon_pose; ch = coutPACTotal + coutBallonTotal + detail.accessoires + detail.admin;
-            }else{
-                ch = D.COUT[sc] || 0;
-            }
+                ch = detail.pac_materiel + detail.pac_pose + detail.ballon_materiel + detail.ballon_pose + detail.accessoires + detail.admin;
+            }else{ ch = D.COUT[sc] || 0; }
         }else{
-            // Mode manuel : additionner les totaux calculés
-            const totalPAC = (parseFloat(document.getElementById('coutPAC').value) || 0) * (parseFloat(document.getElementById('qtePAC').value) || 0);
-            const totalBallon = (parseFloat(document.getElementById('coutBallon').value) || 0) * (parseFloat(document.getElementById('qteBallon').value) || 0);
+            const totalPACMateriel = (parseFloat(document.getElementById('coutPACMateriel').value) || 0) * (parseFloat(document.getElementById('qtePACMateriel').value) || 0);
+            const totalPACPose = (parseFloat(document.getElementById('coutPACPose').value) || 0) * (parseFloat(document.getElementById('qtePACPose').value) || 0);
+            const totalBallonMateriel = (parseFloat(document.getElementById('coutBallonMateriel').value) || 0) * (parseFloat(document.getElementById('qteBallonMateriel').value) || 0);
+            const totalBallonPose = (parseFloat(document.getElementById('coutBallonPose').value) || 0) * (parseFloat(document.getElementById('qteBallonPose').value) || 0);
             const totalAccessoires = (parseFloat(document.getElementById('coutAccessoires').value) || 0) * (parseFloat(document.getElementById('qteAccessoires').value) || 0);
             const totalAdmin = (parseFloat(document.getElementById('coutAdmin').value) || 0) * (parseFloat(document.getElementById('qteAdmin').value) || 0);
-            
-            ch = totalPAC + totalBallon + totalAccessoires + totalAdmin;
+            ch = totalPACMateriel + totalPACPose + totalBallonMateriel + totalBallonPose + totalAccessoires + totalAdmin;
         }
-    }else{
-        ch=D.COUT[sc]||0;
-    }
+    }else{ ch=D.COUT[sc]||0; }
     
     const kw=getCEE(et,zn,cs,sf);
+    let px,ce,ceForMarge,taForMarge;
+    px=mode?(parseFloat(document.getElementById('prixCumac').value)||7.0):7.0;
+    ce=kw*px/1000;
+    ceForMarge=ce;
+    taForMarge=ad+ceForMarge;
     
-    let px,ce,dg;
-    let ceForMarge, taForMarge;
-    
-    if(mode){
-        const lk=document.getElementById('lockPrice').checked;
-        if(lk){
-            ce=kw*11.78/1000;
-            dg=deleg(sf,cs,ce,ch);
-            px=prix(dg,ct);
-        }else{
-            px=parseFloat(document.getElementById('prixCumac').value)||0;
-        }
-        ce=kw*px/1000;
-        ceForMarge=ce;
-        taForMarge=ad+ceForMarge;
-    }else{
-        ce=kw*7.0/1000;
-        dg=deleg(sf,cs,ce,ch);
-        px=prixC(dg);
-        ce=kw*px/1000;
-        
-        const dgForMarge=deleg(sf,cs,kw*11.78/1000,ch);
-        const pxForMarge=prix(dgForMarge,ct);
-        ceForMarge=kw*pxForMarge/1000;
-        taForMarge=ad+ceForMarge;
+    let ceDisplay = ce;
+    if (ceeOverrideActive && lastCEEDetailPrime > 0) {
+        ceDisplay = lastCEEDetailPrime;
+        ceForMarge = lastCEEDetailPrime;
+        taForMarge = ad + ceForMarge;
     }
     
-    const ta=ad+ce;
+    const ta=ad+ceDisplay;
     const rb=tt-ta;
     
     let mo=parseFloat(document.getElementById('racOffert').value)||0;
-    if(mo>rb)mo=rb;
-    if(mo<0)mo=0;
+    if(mo>rb)mo=rb; if(mo<0)mo=0;
     document.getElementById('racOffert').value=Math.round(mo);
-    
     let po=rb>0?Math.round((mo/rb)*100):0;
-    if(po>100)po=100;
-    if(po<0)po=0;
+    if(po>100)po=100; if(po<0)po=0;
     document.getElementById('racPourcent').value=po;
     
     calcRAC(rb,ch,ta,taForMarge,tt);
@@ -2049,12 +2378,14 @@ function reset(){
     document.getElementById('categorie').value='BLEU';
     document.getElementById('zone').value='H1';
     document.getElementById('etas').value='140-170';
-    document.getElementById('surface').value='90<S<110';
+    document.getElementById('surface').value='S>=90';
+    document.getElementById('typeLogement').value='maison';
+    updateSurfaceOptions();
     document.getElementById('racPourcent').value=0;
     document.getElementById('racOffert').value=0;
+    document.getElementById('ceeOverride').checked=false;
     if(mode){
-        document.getElementById('prixCumac').value=11.78;
-        document.getElementById('lockPrice').checked=true;
+        document.getElementById('prixCumac').value=7.0;
     }
     calc();
 }
@@ -2065,34 +2396,23 @@ function checkExport(){
     const btn=document.getElementById('exportBtn');
     const wBtn=document.getElementById('whatsappBtn');
     if(nom&&prenom){
-        btn.disabled=false;
-        btn.style.cursor='pointer';
-        btn.style.opacity='1';
-        wBtn.disabled=false;
-        wBtn.style.cursor='pointer';
-        wBtn.style.opacity='1';
+        btn.disabled=false; btn.style.cursor='pointer'; btn.style.opacity='1';
+        wBtn.disabled=false; wBtn.style.cursor='pointer'; wBtn.style.opacity='1';
     }else{
-        btn.disabled=true;
-        btn.style.cursor='not-allowed';
-        btn.style.opacity='0.5';
-        wBtn.disabled=true;
-        wBtn.style.cursor='not-allowed';
-        wBtn.style.opacity='0.5';
+        btn.disabled=true; btn.style.cursor='not-allowed'; btn.style.opacity='0.5';
+        wBtn.disabled=true; wBtn.style.cursor='not-allowed'; wBtn.style.opacity='0.5';
     }
 }
 
 function sendWhatsApp(){
     const nom=document.getElementById('nom').value.trim();
     const prenom=document.getElementById('prenom').value.trim();
-    if(!nom||!prenom){
-        alert('Veuillez renseigner le nom et le prénom du client');
-        return;
-    }
+    if(!nom||!prenom){ alert('Veuillez renseigner le nom et le prénom du client'); return; }
     const scenario=document.getElementById('scenario').options[document.getElementById('scenario').selectedIndex].text;
     const categorie=document.getElementById('categorie').options[document.getElementById('categorie').selectedIndex].text;
     const zone=document.getElementById('zone').options[document.getElementById('zone').selectedIndex].text;
     const etas=document.getElementById('etas').options[document.getElementById('etas').selectedIndex].text;
-    const surface=document.getElementById('surface').options[document.getElementById('surface').selectedIndex].text;
+    const surface=getSurfaceLabel();
     const ttc=document.getElementById('totalTTC').textContent;
     const aidesMPR=document.getElementById('aidesMPR').textContent;
     const aidesCEE=document.getElementById('aidesCEE').textContent;
@@ -2105,12 +2425,7 @@ function sendWhatsApp(){
 function exportPDF(){
     const nom=document.getElementById('nom').value.trim();
     const prenom=document.getElementById('prenom').value.trim();
-    
-    if(!nom||!prenom){
-        alert('Veuillez renseigner le nom et le prénom du client');
-        return;
-    }
-    
+    if(!nom||!prenom){ alert('Veuillez renseigner le nom et le prénom du client'); return; }
     document.getElementById('printTitle').textContent=`Dossier — ${prenom} ${nom}`;
     document.getElementById('printDate').textContent=`Date: ${new Date().toLocaleDateString('fr-FR')}`;
     document.getElementById('printScenario').textContent=document.getElementById('scenarioSummary').textContent;
@@ -2121,82 +2436,43 @@ function exportPDF(){
     document.getElementById('printPct').textContent=document.getElementById('racPourcent').value;
     document.getElementById('printOffert').textContent=document.getElementById('racOffert').value+' €';
     document.getElementById('printRAC').textContent=document.getElementById('resteCharge').textContent;
-    
     const badge=document.getElementById('statusBadge');
     const printStatus=document.getElementById('printStatus');
     printStatus.textContent=badge.textContent;
-    if(badge.classList.contains('ok')){
-        printStatus.style.background='#d1f4e0';
-        printStatus.style.color='#0d7f3f';
-    }else if(badge.classList.contains('warning')){
-        printStatus.style.background='#fff3cd';
-        printStatus.style.color='#856404';
-    }else{
-        printStatus.style.background='#f8d7da';
-        printStatus.style.color='#721c24';
-    }
-    
+    if(badge.classList.contains('ok')){ printStatus.style.background='#d1f4e0'; printStatus.style.color='#0d7f3f'; }
+    else if(badge.classList.contains('warning')){ printStatus.style.background='#fff3cd'; printStatus.style.color='#856404'; }
+    else{ printStatus.style.background='#f8d7da'; printStatus.style.color='#721c24'; }
     window.print();
 }
 
 // ============================================
-// SYSTÈME DE RECOMMANDATIONS AUTOMATIQUES
+// SYSTÈME DE RECOMMANDATIONS
 // ============================================
-
 function calculateScenario(scenario, categorie, zone, etas, surface){
     const cs = M[scenario];
     const tt = D.TTC[scenario] || 0;
     const ad = (D.MPR[scenario] && D.MPR[scenario][categorie]) ? D.MPR[scenario][categorie] : 0;
     const ch = D.COUT[scenario] || 0;
     const kw = getCEE(etas, zone, cs, surface);
-    
-    const dg = deleg(surface, cs, kw * 11.78 / 1000, ch);
-    const px = prix(dg, categorie);
+    const px = 7.0;
     const ce = kw * px / 1000;
     const ta = ad + ce;
     const rb = tt - ta;
-    
     const vh = Math.max(0, rb) / 1.055;
     const marge = vh - ch + ta;
-    
-    // Score de vendabilité (0-100)
-    // Seuils adaptés selon le scénario
     const seuilOK = (scenario === 'PAC + SSC') ? 6000 : 4000;
     const seuilWarning = (scenario === 'PAC + SSC') ? 3000 : 2000;
-    
     let scoreVendabilite = 0;
     if(marge >= seuilOK) scoreVendabilite += 50;
     else if(marge >= seuilWarning) scoreVendabilite += 25;
-    
     if(rb <= 3000) scoreVendabilite += 50;
     else if(rb <= 5000) scoreVendabilite += 35;
     else if(rb <= 7000) scoreVendabilite += 20;
-    
-    // Score équilibre (balance entre marge et RAC)
-    // Adapter la cible de marge selon le scénario
     const margeCible = (scenario === 'PAC + SSC') ? 8000 : 6000;
     const ratioMarge = Math.min(100, (marge / margeCible) * 100);
     const ratioRAC = Math.max(0, 100 - ((rb / 10000) * 100));
     const scoreEquilibre = (ratioMarge * 0.6) + (ratioRAC * 0.4);
-    
-    return {
-        scenario,
-        categorie,
-        zone,
-        etas,
-        surface,
-        tt,
-        ad,
-        ce,
-        ta,
-        rb,
-        ch,
-        marge,
-        scoreVendabilite,
-        scoreEquilibre,
-        delegataire: dg,
-        kwhCumac: kw
-    };
+    return { scenario, categorie, zone, etas, surface, tt, ad, ce, ta, rb, ch, marge, scoreVendabilite, scoreEquilibre, kwhCumac: kw };
 }
 
 function analyzeAllScenarios(filters = {}){
@@ -2205,41 +2481,20 @@ function analyzeAllScenarios(filters = {}){
     const zones = ["H1", "H2", "H3"];
     const etasOptions = ["140-170", "111-140"];
     const surfaces = ["S<70", "70<S<90", "90<S<110", "110<S<130", "S>130"];
-    
     const results = [];
-    
-    for(let sc of scenarios){
-        for(let cat of categories){
-            for(let zn of zones){
-                for(let et of etasOptions){
-                    for(let sf of surfaces){
-                        // Appliquer les filtres
-                        if(filters.zone && zn !== filters.zone) continue;
-                        if(filters.surface && sf !== filters.surface) continue;
-                        if(filters.categorie && cat !== filters.categorie) continue;
-                        
-                        const result = calculateScenario(sc, cat, zn, et, sf);
-                        
-                        // Filtrer les marges négatives
-                        if(result.marge >= 0){
-                            results.push(result);
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
+    for(let sc of scenarios){ for(let cat of categories){ for(let zn of zones){ for(let et of etasOptions){ for(let sf of surfaces){
+        if(filters.zone && zn !== filters.zone) continue;
+        if(filters.surface && sf !== filters.surface) continue;
+        if(filters.categorie && cat !== filters.categorie) continue;
+        const result = calculateScenario(sc, cat, zn, et, sf);
+        if(result.marge >= 0) results.push(result);
+    }}}}}
     return results;
 }
 
 function openRecoModal(){
     document.getElementById('recoModal').classList.add('active');
-    
-    // Lancer l'analyse après un court délai pour que la modal s'affiche
-    setTimeout(() => {
-        runRecommendations();
-    }, 100);
+    setTimeout(() => { runRecommendations(); }, 100);
 }
 
 function closeRecoModal(){
@@ -2252,22 +2507,11 @@ function runRecommendations(){
         surface: document.getElementById('filterSurface').value,
         categorie: document.getElementById('filterCategorie').value
     };
-    
     const results = analyzeAllScenarios(filters);
-    
-    // Trier par marge décroissante
     const topMarge = [...results].sort((a, b) => b.marge - a.marge).slice(0, 10);
-    
-    // Trier par RAC croissant
     const topRAC = [...results].sort((a, b) => a.rb - b.rb).slice(0, 10);
-    
-    // Trier par score équilibre
     const topEquilibre = [...results].sort((a, b) => b.scoreEquilibre - a.scoreEquilibre).slice(0, 10);
-    
-    // Trier par score vendabilité
     const topVendable = [...results].sort((a, b) => b.scoreVendabilite - a.scoreVendabilite).slice(0, 10);
-    
-    // Afficher les résultats
     displayRecommendations('recoMarge', topMarge, 'marge');
     displayRecommendations('recoRAC', topRAC, 'rac');
     displayRecommendations('recoEquilibre', topEquilibre, 'equilibre');
@@ -2276,86 +2520,41 @@ function runRecommendations(){
 
 function displayRecommendations(containerId, results, type){
     const container = document.getElementById(containerId);
-    
-    if(results.length === 0){
-        container.innerHTML = '<div class="loading">Aucun résultat trouvé avec ces filtres</div>';
-        return;
-    }
-    
+    if(results.length === 0){ container.innerHTML = '<div class="loading">Aucun résultat trouvé avec ces filtres</div>'; return; }
     let html = '<div class="reco-grid">';
-    
     results.forEach((result, index) => {
         const rank = index + 1;
-        
-        let scoreClass = 'good';
-        let scoreValue = 0;
-        let scoreLabel = '';
-        
+        let scoreClass = 'good', scoreValue = 0, scoreLabel = '';
         if(type === 'marge'){
-            scoreValue = Math.round(result.marge);
-            scoreLabel = `Marge: ${fmt(result.marge)}`;
-            // Seuils adaptés selon le scénario
+            scoreValue = Math.round(result.marge); scoreLabel = `Marge: ${fmt(result.marge)}`;
             const seuilOK = (result.scenario === 'PAC + SSC') ? 6000 : 4000;
             const seuilWarning = (result.scenario === 'PAC + SSC') ? 3000 : 2000;
-            if(result.marge < seuilWarning) scoreClass = 'low';
-            else if(result.marge < seuilOK) scoreClass = 'medium';
+            if(result.marge < seuilWarning) scoreClass = 'low'; else if(result.marge < seuilOK) scoreClass = 'medium';
         } else if(type === 'rac'){
-            scoreValue = Math.round(result.rb);
-            scoreLabel = `RAC: ${fmt(result.rb)}`;
-            if(result.rb > 7000) scoreClass = 'low';
-            else if(result.rb > 5000) scoreClass = 'medium';
+            scoreValue = Math.round(result.rb); scoreLabel = `RAC: ${fmt(result.rb)}`;
+            if(result.rb > 7000) scoreClass = 'low'; else if(result.rb > 5000) scoreClass = 'medium';
         } else if(type === 'equilibre'){
-            scoreValue = Math.round(result.scoreEquilibre);
-            scoreLabel = `Score: ${scoreValue}/100`;
-            if(scoreValue < 50) scoreClass = 'low';
-            else if(scoreValue < 70) scoreClass = 'medium';
+            scoreValue = Math.round(result.scoreEquilibre); scoreLabel = `Score: ${scoreValue}/100`;
+            if(scoreValue < 50) scoreClass = 'low'; else if(scoreValue < 70) scoreClass = 'medium';
         } else if(type === 'vendable'){
-            scoreValue = Math.round(result.scoreVendabilite);
-            scoreLabel = `Vendabilité: ${scoreValue}/100`;
-            if(scoreValue < 50) scoreClass = 'low';
-            else if(scoreValue < 70) scoreClass = 'medium';
+            scoreValue = Math.round(result.scoreVendabilite); scoreLabel = `Vendabilité: ${scoreValue}/100`;
+            if(scoreValue < 50) scoreClass = 'low'; else if(scoreValue < 70) scoreClass = 'medium';
         }
-        
-        html += `
-            <div class="reco-card" onclick="applyRecommendation('${result.scenario}', '${result.categorie}', '${result.zone}', '${result.etas}', '${result.surface}')">
-                <div class="reco-card-header">
-                    <div class="reco-rank">${rank}</div>
-                    <div class="reco-scenario">
-                        <h4>${SCENARIO_NAMES[result.scenario]}</h4>
-                        <p>${CATEGORIE_NAMES[result.categorie]} • Zone ${result.zone} • ${SURFACE_NAMES[result.surface]}</p>
-                    </div>
-                </div>
-                
-                <div class="reco-metrics">
-                    <div class="reco-metric">
-                        <div class="reco-metric-label">Total TTC</div>
-                        <div class="reco-metric-value">${fmt(result.tt)}</div>
-                    </div>
-                    <div class="reco-metric">
-                        <div class="reco-metric-label">Total Aides</div>
-                        <div class="reco-metric-value positive">${fmt(result.ta)}</div>
-                    </div>
-                    <div class="reco-metric">
-                        <div class="reco-metric-label">RAC</div>
-                        <div class="reco-metric-value">${fmt(result.rb)}</div>
-                    </div>
-                    <div class="reco-metric">
-                        <div class="reco-metric-label">Marge HT</div>
-                        <div class="reco-metric-value ${
-                            result.scenario === 'PAC + SSC' 
-                                ? (result.marge >= 6000 ? 'positive' : (result.marge >= 3000 ? '' : 'negative'))
-                                : (result.marge >= 4000 ? 'positive' : (result.marge >= 2000 ? '' : 'negative'))
-                        }">${fmt(result.marge)}</div>
-                    </div>
-                </div>
-                
-                <div class="reco-score ${scoreClass}">
-                    ${scoreLabel}
-                </div>
+        html += `<div class="reco-card" onclick="applyRecommendation('${result.scenario}', '${result.categorie}', '${result.zone}', '${result.etas}', '${result.surface}')">
+            <div class="reco-card-header"><div class="reco-rank">${rank}</div><div class="reco-scenario"><h4>${SCENARIO_NAMES[result.scenario]}</h4><p>${CATEGORIE_NAMES[result.categorie]} • Zone ${result.zone} • ${SURFACE_NAMES[result.surface]}</p></div></div>
+            <div class="reco-metrics">
+                <div class="reco-metric"><div class="reco-metric-label">Total TTC</div><div class="reco-metric-value">${fmt(result.tt)}</div></div>
+                <div class="reco-metric"><div class="reco-metric-label">Total Aides</div><div class="reco-metric-value positive">${fmt(result.ta)}</div></div>
+                <div class="reco-metric"><div class="reco-metric-label">RAC</div><div class="reco-metric-value">${fmt(result.rb)}</div></div>
+                <div class="reco-metric"><div class="reco-metric-label">Marge HT</div><div class="reco-metric-value ${
+                    result.scenario === 'PAC + SSC' 
+                        ? (result.marge >= 6000 ? 'positive' : (result.marge >= 3000 ? '' : 'negative'))
+                        : (result.marge >= 4000 ? 'positive' : (result.marge >= 2000 ? '' : 'negative'))
+                }">${fmt(result.marge)}</div></div>
             </div>
-        `;
+            <div class="reco-score ${scoreClass}">${scoreLabel}</div>
+        </div>`;
     });
-    
     html += '</div>';
     container.innerHTML = html;
 }
@@ -2365,25 +2564,28 @@ function applyRecommendation(scenario, categorie, zone, etas, surface){
     document.getElementById('categorie').value = categorie;
     document.getElementById('zone').value = zone;
     document.getElementById('etas').value = etas;
-    document.getElementById('surface').value = surface;
-    
-    calc();
-    
-    closeRecoModal();
-    
-    // Scroll vers le haut
+    // Map 5-category surface back to 3-category dropdown
+    const tl = document.getElementById('typeLogement').value;
+    if (tl === 'maison') {
+        if (surface === 'S<70') document.getElementById('surface').value = 'S<70';
+        else if (surface === '70<S<90') document.getElementById('surface').value = '70<=S<90';
+        else document.getElementById('surface').value = 'S>=90';
+    } else {
+        if (surface === 'S<70') document.getElementById('surface').value = 'S<35';
+        else if (surface === '70<S<90') document.getElementById('surface').value = '35<=S<60';
+        else document.getElementById('surface').value = 'S>=60';
+    }
+    onScenarioChange(); closeRecoModal();
     window.scrollTo({top: 0, behavior: 'smooth'});
 }
 
-// Event listeners pour les onglets
+// Event listeners
 document.querySelectorAll('.reco-tab').forEach(tab => {
     tab.addEventListener('click', function(){
         document.querySelectorAll('.reco-tab').forEach(t => t.classList.remove('active'));
         this.classList.add('active');
-        
         document.querySelectorAll('.reco-content').forEach(c => c.classList.remove('active'));
         const targetId = this.getAttribute('data-tab');
-        
         if(targetId === 'marge') document.getElementById('recoMarge').classList.add('active');
         else if(targetId === 'rac') document.getElementById('recoRAC').classList.add('active');
         else if(targetId === 'equilibre') document.getElementById('recoEquilibre').classList.add('active');
@@ -2391,15 +2593,13 @@ document.querySelectorAll('.reco-tab').forEach(tab => {
     });
 });
 
-// Event listeners pour les filtres
 document.getElementById('filterZone').addEventListener('change', runRecommendations);
 document.getElementById('filterSurface').addEventListener('change', runRecommendations);
 document.getElementById('filterCategorie').addEventListener('change', runRecommendations);
 
 // ============================================
-// GESTION DE L'AUTHENTIFICATION
+// AUTHENTIFICATION
 // ============================================
-
 document.getElementById('lockBtn').onclick=function(){
     if(!mode){
         const stored = localStorage.getItem('fournisseurAuth');
@@ -2407,19 +2607,14 @@ document.getElementById('lockBtn').onclick=function(){
             const data = JSON.parse(stored);
             const now = new Date().getTime();
             if(now - data.timestamp < 24 * 60 * 60 * 1000){
-                mode=1;
-                document.getElementById('mainContent').classList.add('fournisseur-mode');
-                document.getElementById('lockIcon').textContent='🔓';
-                calc();
-                return;
+                mode=1; document.getElementById('mainContent').classList.add('fournisseur-mode');
+                document.getElementById('lockIcon').textContent='🔓'; calc(); return;
             }
         }
         document.getElementById('passwordModal').classList.add('active');
     }else{
-        mode=0;
-        document.getElementById('mainContent').classList.remove('fournisseur-mode');
-        document.getElementById('lockIcon').textContent='🔒';
-        calc();
+        mode=0; document.getElementById('mainContent').classList.remove('fournisseur-mode');
+        document.getElementById('lockIcon').textContent='🔒'; calc();
     }
 };
 
@@ -2429,72 +2624,54 @@ document.getElementById('whatsappBtn').onclick=sendWhatsApp;
 document.getElementById('unlockBtn').onclick=function(){
     const pw=document.getElementById('passwordInput').value;
     if(pw==='gamberge'||pw==='lav'){
-        mode=1;
-        saveMode();
+        mode=1; saveMode();
         document.getElementById('mainContent').classList.add('fournisseur-mode');
         document.getElementById('passwordModal').classList.remove('active');
         document.getElementById('passwordInput').value='';
-        document.getElementById('lockIcon').textContent='🔓';
-        calc();
-    }else{
-        alert('Mot de passe incorrect');
-    }
+        document.getElementById('lockIcon').textContent='🔓'; calc();
+    }else{ alert('Mot de passe incorrect'); }
 };
 
 document.getElementById('passwordModal').onclick=function(e){
-    if(e.target.id==='passwordModal'){
-        document.getElementById('passwordModal').classList.remove('active');
-    }
+    if(e.target.id==='passwordModal') document.getElementById('passwordModal').classList.remove('active');
 };
 
 document.getElementById('recoModal').onclick=function(e){
-    if(e.target.id==='recoModal'){
-        closeRecoModal();
-    }
+    if(e.target.id==='recoModal') closeRecoModal();
 };
 
 // ============================================
-// SCROLL-BASED GRADIENT ANIMATION
+// SCROLL GRADIENT
 // ============================================
-
 (function() {
     const gradients = [
-        'linear-gradient(90deg, #34d399, #22d3ee, #818cf8)',   // green → cyan → indigo
-        'linear-gradient(90deg, #22d3ee, #818cf8, #c084fc)',   // cyan → indigo → purple
-        'linear-gradient(90deg, #818cf8, #c084fc, #f472b6)',   // indigo → purple → pink
-        'linear-gradient(90deg, #c084fc, #f472b6, #fb923c)',   // purple → pink → orange
-        'linear-gradient(90deg, #f472b6, #fb923c, #fbbf24)',   // pink → orange → yellow
-        'linear-gradient(90deg, #fb923c, #fbbf24, #34d399)',   // orange → yellow → green
+        'linear-gradient(90deg, #34d399, #22d3ee, #818cf8)',
+        'linear-gradient(90deg, #22d3ee, #818cf8, #c084fc)',
+        'linear-gradient(90deg, #818cf8, #c084fc, #f472b6)',
+        'linear-gradient(90deg, #c084fc, #f472b6, #fb923c)',
+        'linear-gradient(90deg, #f472b6, #fb923c, #fbbf24)',
+        'linear-gradient(90deg, #fb923c, #fbbf24, #34d399)',
     ];
-
     let ticking = false;
-
     function updateScrollGradient() {
         const scrollTop = window.scrollY || document.documentElement.scrollTop;
         const docHeight = document.documentElement.scrollHeight - window.innerHeight;
         const scrollPercent = docHeight > 0 ? scrollTop / docHeight : 0;
         const idx = Math.min(Math.floor(scrollPercent * gradients.length), gradients.length - 1);
-        const gradient = gradients[idx];
-
-        document.documentElement.style.setProperty('--scroll-gradient', gradient);
+        document.documentElement.style.setProperty('--scroll-gradient', gradients[idx]);
         ticking = false;
     }
-
     window.addEventListener('scroll', function() {
-        if (!ticking) {
-            requestAnimationFrame(updateScrollGradient);
-            ticking = true;
-        }
+        if (!ticking) { requestAnimationFrame(updateScrollGradient); ticking = true; }
     }, { passive: true });
-
     updateScrollGradient();
 })();
 
 // ============================================
-// INITIALISATION
+// INIT
 // ============================================
-
 checkStoredMode();
+updateSurfaceOptions();
 calc();
 </script>
 </body>
