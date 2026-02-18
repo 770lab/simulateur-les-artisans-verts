@@ -1170,24 +1170,118 @@
             <!-- ===================== BARÈME PAC (client) ===================== -->
             <div class="card" id="baremeCard">
                 <h2 class="card-title">📐 Puissance PAC recommandée</h2>
-                <div style="font-size: 12px; color: #64748b; margin-bottom: 14px;">Estimation selon la surface chauffée (ratio 1 kW / 10 m²)</div>
+                <div style="font-size: 12px; color: #64748b; margin-bottom: 14px;">Estimation selon la surface, l'année de construction et l'isolation</div>
 
-                <div class="dim-row">
-                    <div class="dim-field">
-                        <label>Surface chauffée (m²) <span class="req">*</span></label>
-                        <input type="number" id="baremeSurface" value="100" min="20" max="300" oninput="calcBareme(); syncSurfaces('bareme');">
+                <!-- Hidden input for sync -->
+                <input type="hidden" id="baremeSurface" value="100">
+
+                <!-- Année de construction -->
+                <div class="form-group" style="margin-bottom: 14px;">
+                    <label>Année de construction</label>
+                    <input type="number" id="dimAnnee" value="2000" min="1900" max="2026" oninput="evalIsolation(); calcBareme(); calcDim()">
+                </div>
+
+                <!-- Questionnaire isolation -->
+                <div style="margin-bottom: 14px;">
+                    <label style="font-weight: 600; color: #1d1d1f; font-size: 13px; display: block; margin-bottom: 10px;">Travaux d'isolation réalisés</label>
+                    <div style="display: flex; flex-direction: column; gap: 6px;" id="isoChecklist">
+                        <label class="iso-check" onclick="setTimeout(function(){evalIsolation();calcBareme()},10)">
+                            <input type="checkbox" name="isoWork" value="combles">
+                            <span class="iso-info">
+                                <span class="iso-title">Combles / Toiture</span>
+                                <span class="iso-sub">Isolation soufflée, rampants, sarking…</span>
+                            </span>
+                            <select class="iso-quand" onchange="evalIsolation();calcBareme()">
+                                <option value="recent">&lt; 5 ans</option>
+                                <option value="ancien">&gt; 5 ans</option>
+                            </select>
+                        </label>
+                        <label class="iso-check" onclick="setTimeout(function(){evalIsolation();calcBareme()},10)">
+                            <input type="checkbox" name="isoWork" value="murs">
+                            <span class="iso-info">
+                                <span class="iso-title">Murs (ITE / ITI)</span>
+                                <span class="iso-sub">Isolation thermique extérieure ou intérieure</span>
+                            </span>
+                            <select class="iso-quand" onchange="evalIsolation();calcBareme()">
+                                <option value="recent">&lt; 5 ans</option>
+                                <option value="ancien">&gt; 5 ans</option>
+                            </select>
+                        </label>
+                        <label class="iso-check" onclick="setTimeout(function(){evalIsolation();calcBareme()},10)">
+                            <input type="checkbox" name="isoWork" value="fenetres">
+                            <span class="iso-info">
+                                <span class="iso-title">Fenêtres double / triple vitrage</span>
+                                <span class="iso-sub">Remplacement des menuiseries</span>
+                            </span>
+                            <select class="iso-quand" onchange="evalIsolation();calcBareme()">
+                                <option value="recent">&lt; 5 ans</option>
+                                <option value="ancien">&gt; 5 ans</option>
+                            </select>
+                        </label>
+                        <label class="iso-check" onclick="setTimeout(function(){evalIsolation();calcBareme()},10)">
+                            <input type="checkbox" name="isoWork" value="plancher">
+                            <span class="iso-info">
+                                <span class="iso-title">Plancher bas</span>
+                                <span class="iso-sub">Isolation vide sanitaire, sous-sol, terre-plein</span>
+                            </span>
+                            <select class="iso-quand" onchange="evalIsolation();calcBareme()">
+                                <option value="recent">&lt; 5 ans</option>
+                                <option value="ancien">&gt; 5 ans</option>
+                            </select>
+                        </label>
+                        <label class="iso-check" onclick="setTimeout(function(){evalIsolation();calcBareme()},10)">
+                            <input type="checkbox" name="isoWork" value="vmc">
+                            <span class="iso-info">
+                                <span class="iso-title">VMC double flux</span>
+                                <span class="iso-sub">Ventilation mécanique contrôlée performante</span>
+                            </span>
+                            <select class="iso-quand" onchange="evalIsolation();calcBareme()">
+                                <option value="recent">&lt; 5 ans</option>
+                                <option value="ancien">&gt; 5 ans</option>
+                            </select>
+                        </label>
+                    </div>
+                    <!-- Résultat isolation (fournisseur only) -->
+                    <div id="isoResult" class="fournisseur-only" style="margin-top: 10px; padding: 10px 14px; border-radius: 8px; font-size: 13px; background: #f8fafc; border: 1.5px solid #e2e8f0;">
+                        <span style="font-weight: 600;" id="isoStateName">État d'origine / Non précisé</span>
+                        <span style="color: #64748b;"> — </span>
+                        <span style="font-weight: 700; color: #16a34a;" id="dimGDisplay">G = 0,95</span>
                     </div>
                 </div>
 
-                <!-- Résultat barème -->
-                <div id="baremeResult" style="margin-top: 4px; text-align: center;">
-                    <div style="font-size: 12px; color: #64748b; margin-bottom: 6px;">PAC recommandée :</div>
-                    <div id="baremeReco" style="font-size: 28px; font-weight: 800; color: #16a34a;">10 kW</div>
-                    <div id="baremeAlt" style="font-size: 13px; color: #64748b; margin-top: 4px;"></div>
+                <!-- Résultat barème visuel -->
+                <div id="baremeResult" style="padding: 20px; background: linear-gradient(135deg, #f0fdf4, #ecfdf5); border-radius: 12px; border: 1.5px solid #bbf7d0;">
+                    <div style="font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; text-align: center;">PAC recommandée</div>
+                    
+                    <!-- Gauge visuelle -->
+                    <div id="baremeGauge" style="position: relative; margin: 0 auto; max-width: 340px;">
+                        <!-- Labels puissance -->
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                            <span id="baremeLow" style="font-size: 20px; font-weight: 800; color: #16a34a;">10 kW</span>
+                            <span id="baremeHigh" style="font-size: 20px; font-weight: 800; color: #dc2626;">12 kW</span>
+                        </div>
+                        <!-- Barre -->
+                        <div style="position: relative; height: 12px; border-radius: 6px; background: linear-gradient(90deg, #22c55e 0%, #eab308 50%, #ef4444 100%); margin-bottom: 4px;">
+                            <!-- Curseur -->
+                            <div id="baremeCursor" style="position: absolute; top: -6px; width: 24px; height: 24px; border-radius: 50%; background: white; border: 3px solid #0f172a; box-shadow: 0 2px 8px rgba(0,0,0,0.25); transition: left 0.4s ease; left: 50%;" ></div>
+                        </div>
+                        <!-- Labels bas -->
+                        <div style="display: flex; justify-content: space-between; font-size: 10px; color: #94a3b8;">
+                            <span>Bien isolé</span>
+                            <span>Mal isolé</span>
+                        </div>
+                    </div>
+
+                    <!-- Résultat texte -->
+                    <div style="text-align: center; margin-top: 14px;">
+                        <div id="baremeReco" style="font-size: 32px; font-weight: 800; color: #16a34a;">10 kW</div>
+                        <div id="baremeAlt" style="font-size: 13px; color: #64748b; margin-top: 2px;"></div>
+                        <div id="baremeIsoHint" style="font-size: 11px; color: #64748b; margin-top: 4px;"></div>
+                    </div>
                 </div>
 
-                <!-- Tableau récap -->
-                <div style="margin-top: 14px; overflow: hidden; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <!-- Tableau fournisseur only -->
+                <div class="fournisseur-only" style="margin-top: 8px; overflow: hidden; border-radius: 8px; border: 1px solid #e2e8f0;">
                     <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
                         <thead>
                             <tr style="background: #f1f5f9;">
@@ -1217,83 +1311,6 @@
                         <label>Hauteur sous plafond (m)</label>
                         <input type="number" id="dimHauteur" value="2.5" min="1.5" max="5" step="0.1" oninput="calcDim()">
                         <div class="dim-hint">Défaut : 2,5 m</div>
-                    </div>
-                </div>
-
-                <!-- Année de construction -->
-                <div class="dim-row" style="grid-template-columns: 1fr;">
-                    <div class="dim-field">
-                        <label>Année de construction <span class="req">*</span></label>
-                        <input type="number" id="dimAnnee" value="2000" min="1900" max="2026" oninput="calcDim()">
-                        <div class="dim-hint">Base de calcul pour le coefficient G</div>
-                    </div>
-                </div>
-
-                <!-- Questionnaire isolation -->
-                <div style="margin-bottom: 16px;">
-                    <label style="font-weight: 600; color: #1d1d1f; font-size: 13px; display: block; margin-bottom: 10px;">Travaux d'isolation réalisés</label>
-                    <div style="display: flex; flex-direction: column; gap: 6px;" id="isoChecklist">
-                        <label class="iso-check" onclick="setTimeout(evalIsolation,10)">
-                            <input type="checkbox" name="isoWork" value="combles">
-                            <span class="iso-info">
-                                <span class="iso-title">Combles / Toiture</span>
-                                <span class="iso-sub">Isolation soufflée, rampants, sarking…</span>
-                            </span>
-                            <select class="iso-quand" onchange="evalIsolation()">
-                                <option value="recent">&lt; 5 ans</option>
-                                <option value="ancien">&gt; 5 ans</option>
-                            </select>
-                        </label>
-                        <label class="iso-check" onclick="setTimeout(evalIsolation,10)">
-                            <input type="checkbox" name="isoWork" value="murs">
-                            <span class="iso-info">
-                                <span class="iso-title">Murs (ITE / ITI)</span>
-                                <span class="iso-sub">Isolation thermique extérieure ou intérieure</span>
-                            </span>
-                            <select class="iso-quand" onchange="evalIsolation()">
-                                <option value="recent">&lt; 5 ans</option>
-                                <option value="ancien">&gt; 5 ans</option>
-                            </select>
-                        </label>
-                        <label class="iso-check" onclick="setTimeout(evalIsolation,10)">
-                            <input type="checkbox" name="isoWork" value="fenetres">
-                            <span class="iso-info">
-                                <span class="iso-title">Fenêtres double / triple vitrage</span>
-                                <span class="iso-sub">Remplacement des menuiseries</span>
-                            </span>
-                            <select class="iso-quand" onchange="evalIsolation()">
-                                <option value="recent">&lt; 5 ans</option>
-                                <option value="ancien">&gt; 5 ans</option>
-                            </select>
-                        </label>
-                        <label class="iso-check" onclick="setTimeout(evalIsolation,10)">
-                            <input type="checkbox" name="isoWork" value="plancher">
-                            <span class="iso-info">
-                                <span class="iso-title">Plancher bas</span>
-                                <span class="iso-sub">Isolation vide sanitaire, sous-sol, terre-plein</span>
-                            </span>
-                            <select class="iso-quand" onchange="evalIsolation()">
-                                <option value="recent">&lt; 5 ans</option>
-                                <option value="ancien">&gt; 5 ans</option>
-                            </select>
-                        </label>
-                        <label class="iso-check" onclick="setTimeout(evalIsolation,10)">
-                            <input type="checkbox" name="isoWork" value="vmc">
-                            <span class="iso-info">
-                                <span class="iso-title">VMC double flux</span>
-                                <span class="iso-sub">Ventilation mécanique contrôlée performante</span>
-                            </span>
-                            <select class="iso-quand" onchange="evalIsolation()">
-                                <option value="recent">&lt; 5 ans</option>
-                                <option value="ancien">&gt; 5 ans</option>
-                            </select>
-                        </label>
-                    </div>
-                    <!-- Résultat auto -->
-                    <div id="isoResult" style="margin-top: 10px; padding: 10px 14px; border-radius: 8px; font-size: 13px; background: #f8fafc; border: 1.5px solid #e2e8f0;">
-                        <span style="font-weight: 600;" id="isoStateName">État d'origine / Non précisé</span>
-                        <span style="color: #64748b;"> — </span>
-                        <span style="font-weight: 700; color: #16a34a;" id="dimGDisplay">G = 0,95</span>
                     </div>
                 </div>
 
@@ -1401,11 +1418,37 @@
                     </div>
                     
                     <!-- Admin -->
-                    <div style="display: grid; grid-template-columns: 120px 1fr 80px 100px; gap: 8px; align-items: center;">
+                    <div style="display: grid; grid-template-columns: 120px 1fr 80px 100px; gap: 8px; align-items: center; margin-bottom: 10px;">
                         <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">Admin</label>
-                        <input type="number" id="coutAdmin" value="300" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
+                        <input type="number" id="coutAdmin" value="400" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
                         <input type="number" id="qteAdmin" value="1" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
-                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalAdmin">300 €</div>
+                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalAdmin">400 €</div>
+                    </div>
+                    
+                    <!-- Mandat MPR -->
+                    <div style="display: grid; grid-template-columns: 120px 1fr 80px 100px; gap: 8px; align-items: center; margin-bottom: 10px;">
+                        <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">Mandat MPR</label>
+                        <input type="number" id="coutMandat" value="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
+                        <input type="number" id="qteMandat" value="1" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
+                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalMandat">0 €</div>
+                    </div>
+                    
+                    <!-- Demande mairie -->
+                    <div style="display: grid; grid-template-columns: 120px 1fr 80px 100px; gap: 8px; align-items: center; margin-bottom: 10px;">
+                        <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">Mairie</label>
+                        <input type="number" id="coutMairie" value="250" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
+                        <input type="number" id="qteMairie" value="1" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
+                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalMairie">250 €</div>
+                    </div>
+                    
+                    <!-- Prévisite -->
+                    <div style="display: grid; grid-template-columns: 120px 1fr 80px 100px; gap: 8px; align-items: center;">
+                        <label style="color: #1d1d1f; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 6px;">
+                            <input type="checkbox" id="checkPrevisite" onchange="updateFromDetail()" style="width: 16px; height: 16px;"> Prévisite
+                        </label>
+                        <input type="number" id="coutPrevisite" value="200" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
+                        <div style="text-align: center; font-weight: 600; color: #64748b;">—</div>
+                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalPrevisite">0 €</div>
                     </div>
                 </div>
                 
@@ -1532,11 +1575,11 @@
 
                 <div class="status-badge ok" id="statusBadge" style="margin-bottom: 14px; margin-top: 4px;">DOSSIER OK</div>
 
-                <button id="exportBtn" class="btn-dark-export pdf" disabled>
+                <button id="exportBtn" class="btn-dark-export pdf" onclick="exportPDF()">
                     📄 Exporter en PDF
                 </button>
                 
-                <button id="whatsappBtn" class="btn-dark-export whatsapp" disabled>
+                <button id="whatsappBtn" class="btn-dark-export whatsapp" onclick="sendWhatsApp()">
                     💬 Demander un devis
                 </button>
             </div>
@@ -2000,7 +2043,7 @@ function fmtEurCEE(n) {
 // ============================================
 // DONNÉES PRINCIPALES
 // ============================================
-const D={TTC:{"PAC":10890,"PAC + BALLON ÉLECTRIQUE":13750,"PAC + BALLON THERMO":13750,"PAC + SSC":25850},MPR:{"PAC":{BLEU:5000,JAUNE:4000,VIOLET:3000,ROSE:0},"PAC + BALLON ÉLECTRIQUE":{BLEU:5000,JAUNE:4000,VIOLET:3000,ROSE:0},"PAC + BALLON THERMO":{BLEU:6200,JAUNE:4800,VIOLET:3400,ROSE:0},"PAC + SSC":{BLEU:15000,JAUNE:12000,VIOLET:7000,ROSE:0}},COUT:{"PAC":6200,"PAC + BALLON ÉLECTRIQUE":6400,"PAC + BALLON THERMO":7300,"PAC + SSC":11700},COUT_DETAIL:{"PAC":{pac_materiel:2900,pac_pose:2500,ballon_materiel:0,ballon_pose:0,accessoires:500,admin:300},"PAC + BALLON ÉLECTRIQUE":{pac_materiel:2900,pac_pose:2500,ballon_materiel:200,ballon_pose:0,accessoires:500,admin:300},"PAC + BALLON THERMO":{pac_materiel:2900,pac_pose:2500,ballon_materiel:1100,ballon_pose:500,accessoires:500,admin:300},"PAC + SSC":{pac_materiel:2900,pac_pose:2500,ballon_materiel:3200,ballon_pose:2300,accessoires:500,admin:300}},CEE:{"140-170":{H1:{PAC:{"S<70":274800,"70<S<90":384720,"90<S<110":549600,"110<S<130":604560,"S>130":879360},"BALLON ELECTRIQUE":{"S<70":274800,"70<S<90":384720,"90<S<110":549600,"110<S<130":604560,"S>130":879360},"BALLON THERMO":{"S<70":289500,"70<S<90":399420,"90<S<110":564300,"110<S<130":619260,"S>130":894060},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H2:{PAC:{"S<70":229000,"70<S<90":320600,"90<S<110":458000,"110<S<130":503800,"S>130":732800},"BALLON ELECTRIQUE":{"S<70":229000,"70<S<90":320600,"90<S<110":458000,"110<S<130":503800,"S>130":732800},"BALLON THERMO":{"S<70":243700,"70<S<90":335300,"90<S<110":472700,"110<S<130":518500,"S>130":747500},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H3:{PAC:{"S<70":160300,"70<S<90":224420,"90<S<110":320600,"110<S<130":352660,"S>130":512960},"BALLON ELECTRIQUE":{"S<70":160300,"70<S<90":224420,"90<S<110":320600,"110<S<130":352660,"S>130":512960},"BALLON THERMO":{"S<70":175000,"70<S<90":239120,"90<S<110":335300,"110<S<130":367360,"S>130":527660},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}}},"111-140":{H1:{PAC:{"S<70":238500,"70<S<90":333900,"90<S<110":477000,"110<S<130":524700,"S>130":763200},"BALLON ELECTRIQUE":{"S<70":238500,"70<S<90":333900,"90<S<110":477000,"110<S<130":524700,"S>130":763200},"BALLON THERMO":{"S<70":253200,"70<S<90":348600,"90<S<110":491700,"110<S<130":539400,"S>130":777900},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H2:{PAC:{"S<70":198750,"70<S<90":278250,"90<S<110":397500,"110<S<130":437250,"S>130":636000},"BALLON ELECTRIQUE":{"S<70":198750,"70<S<90":278250,"90<S<110":397500,"110<S<130":437250,"S>130":636000},"BALLON THERMO":{"S<70":213450,"70<S<90":292950,"90<S<110":412200,"110<S<130":451950,"S>130":650700},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H3:{PAC:{"S<70":139125,"70<S<90":194775,"90<S<110":278250,"110<S<130":306075,"S>130":445200},"BALLON ELECTRIQUE":{"S<70":139125,"70<S<90":194775,"90<S<110":278250,"110<S<130":306075,"S>130":445200},"BALLON THERMO":{"S<70":153825,"70<S<90":209475,"90<S<110":292950,"110<S<130":320775,"S>130":459900},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}}}}};
+const D={TTC:{"PAC":10890,"PAC + BALLON ÉLECTRIQUE":13750,"PAC + BALLON THERMO":13750,"PAC + SSC":25850},MPR:{"PAC":{BLEU:5000,JAUNE:4000,VIOLET:3000,ROSE:0},"PAC + BALLON ÉLECTRIQUE":{BLEU:5000,JAUNE:4000,VIOLET:3000,ROSE:0},"PAC + BALLON THERMO":{BLEU:6200,JAUNE:4800,VIOLET:3400,ROSE:0},"PAC + SSC":{BLEU:15000,JAUNE:12000,VIOLET:7000,ROSE:0}},COUT:{"PAC":6850,"PAC + BALLON ÉLECTRIQUE":7050,"PAC + BALLON THERMO":8450,"PAC + SSC":11650},COUT_DETAIL:{"PAC":{pac_materiel:2900,pac_pose:2500,ballon_materiel:0,ballon_pose:0,accessoires:800,admin:400,mairie:250},"PAC + BALLON ÉLECTRIQUE":{pac_materiel:2900,pac_pose:2500,ballon_materiel:200,ballon_pose:0,accessoires:800,admin:400,mairie:250},"PAC + BALLON THERMO":{pac_materiel:2900,pac_pose:2500,ballon_materiel:1100,ballon_pose:500,accessoires:800,admin:400,mairie:250},"PAC + SSC":{pac_materiel:5700,pac_pose:4500,ballon_materiel:0,ballon_pose:0,accessoires:800,admin:400,mairie:250}},CEE:{"140-170":{H1:{PAC:{"S<70":274800,"70<S<90":384720,"90<S<110":549600,"110<S<130":604560,"S>130":879360},"BALLON ELECTRIQUE":{"S<70":274800,"70<S<90":384720,"90<S<110":549600,"110<S<130":604560,"S>130":879360},"BALLON THERMO":{"S<70":289500,"70<S<90":399420,"90<S<110":564300,"110<S<130":619260,"S>130":894060},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H2:{PAC:{"S<70":229000,"70<S<90":320600,"90<S<110":458000,"110<S<130":503800,"S>130":732800},"BALLON ELECTRIQUE":{"S<70":229000,"70<S<90":320600,"90<S<110":458000,"110<S<130":503800,"S>130":732800},"BALLON THERMO":{"S<70":243700,"70<S<90":335300,"90<S<110":472700,"110<S<130":518500,"S>130":747500},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H3:{PAC:{"S<70":160300,"70<S<90":224420,"90<S<110":320600,"110<S<130":352660,"S>130":512960},"BALLON ELECTRIQUE":{"S<70":160300,"70<S<90":224420,"90<S<110":320600,"110<S<130":352660,"S>130":512960},"BALLON THERMO":{"S<70":175000,"70<S<90":239120,"90<S<110":335300,"110<S<130":367360,"S>130":527660},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}}},"111-140":{H1:{PAC:{"S<70":238500,"70<S<90":333900,"90<S<110":477000,"110<S<130":524700,"S>130":763200},"BALLON ELECTRIQUE":{"S<70":238500,"70<S<90":333900,"90<S<110":477000,"110<S<130":524700,"S>130":763200},"BALLON THERMO":{"S<70":253200,"70<S<90":348600,"90<S<110":491700,"110<S<130":539400,"S>130":777900},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H2:{PAC:{"S<70":198750,"70<S<90":278250,"90<S<110":397500,"110<S<130":437250,"S>130":636000},"BALLON ELECTRIQUE":{"S<70":198750,"70<S<90":278250,"90<S<110":397500,"110<S<130":437250,"S>130":636000},"BALLON THERMO":{"S<70":213450,"70<S<90":292950,"90<S<110":412200,"110<S<130":451950,"S>130":650700},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H3:{PAC:{"S<70":139125,"70<S<90":194775,"90<S<110":278250,"110<S<130":306075,"S>130":445200},"BALLON ELECTRIQUE":{"S<70":139125,"70<S<90":194775,"90<S<110":278250,"110<S<130":306075,"S>130":445200},"BALLON THERMO":{"S<70":153825,"70<S<90":209475,"90<S<110":292950,"110<S<130":320775,"S>130":459900},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}}}}};
 const M={"PAC":"PAC","PAC + BALLON ÉLECTRIQUE":"BALLON ELECTRIQUE","PAC + BALLON THERMO":"BALLON THERMO","PAC + SSC":"BALLON SSC"};
 
 const SCENARIO_NAMES = {"PAC":"PAC","PAC + BALLON ÉLECTRIQUE":"PAC + Ballon Électrique","PAC + BALLON THERMO":"PAC + Ballon Thermo","PAC + SSC":"PAC + SSC"};
@@ -2058,7 +2101,9 @@ function updateFromDetail(){
         ['coutBallonMateriel','qteBallonMateriel','totalBallonMateriel'],
         ['coutBallonPose','qteBallonPose','totalBallonPose'],
         ['coutAccessoires','qteAccessoires','totalAccessoires'],
-        ['coutAdmin','qteAdmin','totalAdmin']
+        ['coutAdmin','qteAdmin','totalAdmin'],
+        ['coutMandat','qteMandat','totalMandat'],
+        ['coutMairie','qteMairie','totalMairie']
     ];
     
     let totalGlobal = 0;
@@ -2070,8 +2115,34 @@ function updateFromDetail(){
         totalGlobal += t;
     });
     
+    // Prévisite (checkbox)
+    const prevChecked = document.getElementById('checkPrevisite').checked;
+    const prevCost = prevChecked ? (parseFloat(document.getElementById('coutPrevisite').value) || 0) : 0;
+    document.getElementById('totalPrevisite').textContent = prevChecked ? fmt(prevCost) : '0 €';
+    totalGlobal += prevCost;
+    
     document.getElementById('coutTotalHTDisplay').textContent = fmt(totalGlobal);
     calc();
+}
+
+function getCoutFromFields() {
+    const f = ['coutPACMateriel','coutPACPose','coutBallonMateriel','coutBallonPose','coutAccessoires','coutAdmin','coutMandat','coutMairie'];
+    const q = ['qtePACMateriel','qtePACPose','qteBallonMateriel','qteBallonPose','qteAccessoires','qteAdmin','qteMandat','qteMairie'];
+    let t = 0;
+    for (let i = 0; i < f.length; i++) {
+        t += (parseFloat(document.getElementById(f[i]).value)||0) * (parseFloat(document.getElementById(q[i]).value)||0);
+    }
+    if (document.getElementById('checkPrevisite').checked) t += parseFloat(document.getElementById('coutPrevisite').value)||0;
+    return t;
+}
+
+function getCoutFromDetail(sc, ad) {
+    if (!D.COUT_DETAIL[sc]) return D.COUT[sc] || 0;
+    const d = D.COUT_DETAIL[sc];
+    let t = d.pac_materiel + d.pac_pose + d.ballon_materiel + d.ballon_pose + d.accessoires + d.admin + (d.mairie || 250);
+    if (ad > 0) t += Math.round(ad * 0.12);
+    if (document.getElementById('checkPrevisite').checked) t += parseFloat(document.getElementById('coutPrevisite').value)||200;
+    return t;
 }
 
 function calc(){
@@ -2130,7 +2201,20 @@ function calc(){
                 document.getElementById('coutAdmin').value = detail.admin;
                 document.getElementById('qteAdmin').value = 1;
                 document.getElementById('totalAdmin').textContent = fmt(detail.admin);
-                ch = detail.pac_materiel + detail.pac_pose + detail.ballon_materiel + detail.ballon_pose + detail.accessoires + detail.admin;
+                // Mandat MPR = 12% de l'aide MPR
+                const mandatVal = Math.round(ad * 0.12);
+                document.getElementById('coutMandat').value = mandatVal;
+                document.getElementById('qteMandat').value = ad > 0 ? 1 : 0;
+                document.getElementById('totalMandat').textContent = fmt(ad > 0 ? mandatVal : 0);
+                // Demande mairie
+                document.getElementById('coutMairie').value = detail.mairie || 250;
+                document.getElementById('qteMairie').value = 1;
+                document.getElementById('totalMairie').textContent = fmt(detail.mairie || 250);
+                // Prévisite
+                const prevOn = document.getElementById('checkPrevisite').checked;
+                const prevCost = prevOn ? (parseFloat(document.getElementById('coutPrevisite').value) || 200) : 0;
+                document.getElementById('totalPrevisite').textContent = prevOn ? fmt(prevCost) : '0 €';
+                ch = detail.pac_materiel + detail.pac_pose + detail.ballon_materiel + detail.ballon_pose + detail.accessoires + detail.admin + (ad > 0 ? mandatVal : 0) + (detail.mairie || 250) + prevCost;
             }else{
                 ch = D.COUT[sc] || 0;
             }
@@ -2142,10 +2226,13 @@ function calc(){
             const totalAccessoires = (parseFloat(document.getElementById('coutAccessoires').value) || 0) * (parseFloat(document.getElementById('qteAccessoires').value) || 0);
             const totalAdmin = (parseFloat(document.getElementById('coutAdmin').value) || 0) * (parseFloat(document.getElementById('qteAdmin').value) || 0);
             ch = totalPACMateriel + totalPACPose + totalBallonMateriel + totalBallonPose + totalAccessoires + totalAdmin;
+            ch += (parseFloat(document.getElementById('coutMandat').value)||0) * (parseFloat(document.getElementById('qteMandat').value)||0);
+            ch += (parseFloat(document.getElementById('coutMairie').value)||0) * (parseFloat(document.getElementById('qteMairie').value)||0);
+            if(document.getElementById('checkPrevisite').checked) ch += parseFloat(document.getElementById('coutPrevisite').value)||0;
         }
         document.getElementById('coutTotalHTDisplay').textContent = fmt(ch);
     }else{
-        ch=D.COUT[sc]||0;
+        ch=getCoutFromDetail(sc, ad);
     }
     
     let ce;
@@ -2258,7 +2345,7 @@ function updatePct(){
         if(lockCoutHT){
             if(D.COUT_DETAIL[sc]){
                 const detail=D.COUT_DETAIL[sc];
-                ch = detail.pac_materiel + detail.pac_pose + detail.ballon_materiel + detail.ballon_pose + detail.accessoires + detail.admin;
+                ch = detail.pac_materiel + detail.pac_pose + detail.ballon_materiel + detail.ballon_pose + detail.accessoires + detail.admin + (ad > 0 ? Math.round(ad * 0.12) : 0) + (detail.mairie || 250) + (document.getElementById("checkPrevisite").checked ? (parseFloat(document.getElementById("coutPrevisite").value) || 200) : 0);
             }else{ ch = D.COUT[sc] || 0; }
         }else{
             const totalPACMateriel = (parseFloat(document.getElementById('coutPACMateriel').value) || 0) * (parseFloat(document.getElementById('qtePACMateriel').value) || 0);
@@ -2268,8 +2355,11 @@ function updatePct(){
             const totalAccessoires = (parseFloat(document.getElementById('coutAccessoires').value) || 0) * (parseFloat(document.getElementById('qteAccessoires').value) || 0);
             const totalAdmin = (parseFloat(document.getElementById('coutAdmin').value) || 0) * (parseFloat(document.getElementById('qteAdmin').value) || 0);
             ch = totalPACMateriel + totalPACPose + totalBallonMateriel + totalBallonPose + totalAccessoires + totalAdmin;
+            ch += (parseFloat(document.getElementById('coutMandat').value)||0) * (parseFloat(document.getElementById('qteMandat').value)||0);
+            ch += (parseFloat(document.getElementById('coutMairie').value)||0) * (parseFloat(document.getElementById('qteMairie').value)||0);
+            if(document.getElementById('checkPrevisite').checked) ch += parseFloat(document.getElementById('coutPrevisite').value)||0;
         }
-    }else{ ch=D.COUT[sc]||0; }
+    }else{ ch=getCoutFromDetail(sc, ad); }
     
     let ce = lastCEEDetailPrime;
     let ceForMarge = ce;
@@ -2319,8 +2409,11 @@ function updateAmt(){
             const totalAccessoires = (parseFloat(document.getElementById('coutAccessoires').value) || 0) * (parseFloat(document.getElementById('qteAccessoires').value) || 0);
             const totalAdmin = (parseFloat(document.getElementById('coutAdmin').value) || 0) * (parseFloat(document.getElementById('qteAdmin').value) || 0);
             ch = totalPACMateriel + totalPACPose + totalBallonMateriel + totalBallonPose + totalAccessoires + totalAdmin;
+            ch += (parseFloat(document.getElementById('coutMandat').value)||0) * (parseFloat(document.getElementById('qteMandat').value)||0);
+            ch += (parseFloat(document.getElementById('coutMairie').value)||0) * (parseFloat(document.getElementById('qteMairie').value)||0);
+            if(document.getElementById('checkPrevisite').checked) ch += parseFloat(document.getElementById('coutPrevisite').value)||0;
         }
-    }else{ ch=D.COUT[sc]||0; }
+    }else{ ch=getCoutFromDetail(sc, ad); }
     
     let ce = lastCEEDetailPrime;
     let ceForMarge = ce;
@@ -2363,19 +2456,21 @@ function checkExport(){
     const prenom=document.getElementById('prenom').value.trim();
     const btn=document.getElementById('exportBtn');
     const wBtn=document.getElementById('whatsappBtn');
+    const hint=document.getElementById('exportHint');
     if(nom&&prenom){
         btn.disabled=false; btn.style.cursor='pointer'; btn.style.opacity='1';
         wBtn.disabled=false; wBtn.style.cursor='pointer'; wBtn.style.opacity='1';
+        if(hint) hint.style.display='none';
     }else{
         btn.disabled=true; btn.style.cursor='not-allowed'; btn.style.opacity='0.5';
         wBtn.disabled=true; wBtn.style.cursor='not-allowed'; wBtn.style.opacity='0.5';
+        if(hint) hint.style.display='block';
     }
 }
 
 function sendWhatsApp(){
-    const nom=document.getElementById('nom').value.trim();
-    const prenom=document.getElementById('prenom').value.trim();
-    if(!nom||!prenom){ alert('Veuillez renseigner le nom et le prénom du client'); return; }
+    const nom=document.getElementById('nom').value.trim() || 'Client';
+    const prenom=document.getElementById('prenom').value.trim() || '';
     const scenario=document.getElementById('scenario').options[document.getElementById('scenario').selectedIndex].text;
     const categorie=document.getElementById('categorie').options[document.getElementById('categorie').selectedIndex].text;
     const zone=document.getElementById('zone').options[document.getElementById('zone').selectedIndex].text;
@@ -2391,10 +2486,9 @@ function sendWhatsApp(){
 }
 
 function exportPDF(){
-    const nom=document.getElementById('nom').value.trim();
-    const prenom=document.getElementById('prenom').value.trim();
-    if(!nom||!prenom){ alert('Veuillez renseigner le nom et le prénom du client'); return; }
-    document.getElementById('printTitle').textContent=`Dossier — ${prenom} ${nom}`;
+    const nom=document.getElementById('nom').value.trim() || 'Client';
+    const prenom=document.getElementById('prenom').value.trim() || '';
+    document.getElementById('printTitle').textContent=`Dossier — ${prenom} ${nom}`.trim();
     document.getElementById('printDate').textContent=`Date: ${new Date().toLocaleDateString('fr-FR')}`;
     document.getElementById('printScenario').textContent=document.getElementById('scenarioSummary').textContent;
     document.getElementById('printTTC').textContent=document.getElementById('totalTTC').textContent;
@@ -2434,8 +2528,7 @@ document.getElementById('lockBtn').onclick=function(){
     }
 };
 
-document.getElementById('exportBtn').onclick=exportPDF;
-document.getElementById('whatsappBtn').onclick=sendWhatsApp;
+// Export buttons use inline onclick
 
 document.getElementById('unlockBtn').onclick=function(){
     const pw=document.getElementById('passwordInput').value;
@@ -2585,14 +2678,66 @@ function calcBareme() {
     const reco = getBaremePAC(s);
     const el = document.getElementById('baremeReco');
     const alt = document.getElementById('baremeAlt');
-    if (reco.length === 1) {
-        el.textContent = reco[0] + ' kW';
-        alt.textContent = '';
+    const hint = document.getElementById('baremeIsoHint');
+    const cursor = document.getElementById('baremeCursor');
+    const lowEl = document.getElementById('baremeLow');
+    const highEl = document.getElementById('baremeHigh');
+
+    // Determine low and high power
+    let lowKW, highKW;
+    if (reco.length === 2) {
+        lowKW = reco[0];
+        highKW = reco[1];
     } else {
-        el.textContent = reco[0] + ' ou ' + reco[1] + ' kW';
-        alt.textContent = `${reco[0]} kW = économique · ${reco[1]} kW = confort`;
+        // Single recommendation — create a range
+        lowKW = reco[0];
+        highKW = reco[0] < 20 ? reco[0] + 2 : reco[0];
     }
-    // Highlight matching row
+
+    lowEl.textContent = lowKW + ' kW';
+    highEl.textContent = highKW + ' kW';
+
+    // Score: 0 = well insulated (left), 100 = poorly insulated (right)
+    const annee = parseInt(document.getElementById('dimAnnee').value) || 2000;
+    let score = 50; // default middle
+
+    // Année factor: older = worse isolation
+    if (annee < 1975) score += 20;
+    else if (annee < 1990) score += 10;
+    else if (annee < 2005) score += 0;
+    else if (annee < 2012) score -= 10;
+    else score -= 15;
+
+    // Isolation factor
+    if (currentIsolation === 'totale') score -= 30;
+    else if (currentIsolation === 'partielle') score -= 10;
+    else score += 10; // origine
+
+    // Clamp 5-95%
+    score = Math.max(5, Math.min(95, score));
+
+    // Position cursor (left = bien isolé = lowKW)
+    cursor.style.left = `calc(${score}% - 12px)`;
+
+    // Determine recommendation
+    if (score <= 30) {
+        el.textContent = lowKW + ' kW';
+        el.style.color = '#16a34a';
+        alt.textContent = 'Isolation performante → puissance optimisée';
+        if (hint) hint.textContent = '';
+    } else if (score >= 70) {
+        el.textContent = highKW + ' kW';
+        el.style.color = '#dc2626';
+        alt.textContent = 'Isolation faible → puissance supérieure conseillée';
+        if (hint) hint.textContent = '';
+    } else {
+        el.textContent = lowKW + ' ou ' + highKW + ' kW';
+        el.style.color = '#d97706';
+        alt.textContent = lowKW + ' kW = économique · ' + highKW + ' kW = confort';
+        if (hint) hint.textContent = '';
+    }
+
+    // Highlight matching row in table
     const maxVals = [40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,9999];
     const rows = document.querySelectorAll('#baremeTableBody tr');
     let matched = false;
