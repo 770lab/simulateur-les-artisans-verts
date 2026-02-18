@@ -346,81 +346,6 @@
             font-weight: 600;
         }
 
-        .lock-btn {
-            background: #f5f5f7;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .lock-btn:hover {
-            background: #e8e8ed;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            overflow-y: auto;
-            padding: 20px;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 40px;
-            border-radius: 16px;
-            max-width: 400px;
-            width: 90%;
-        }
-
-        .modal-content h2 {
-            font-size: 20px;
-            margin-bottom: 20px;
-        }
-
-        .modal-content input {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1px solid #d2d2d7;
-            border-radius: 8px;
-            font-size: 15px;
-            margin-bottom: 16px;
-        }
-
-        .modal-content button {
-            width: 100%;
-            padding: 12px;
-            background: #0071e3;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 500;
-            cursor: pointer;
-        }
-
-        .modal-content button:hover {
-            background: #0077ed;
-        }
-
 
 
         .btn-apply {
@@ -874,7 +799,7 @@
         }
 
         @media print {
-            .header, .lock-btn, .btn-reset, .footer, .parameters-section, .main-content {
+            .header, .user-bar, .btn-reset, .footer, .parameters-section, .main-content {
                 display: none !important;
             }
             
@@ -926,9 +851,80 @@
             40% { content: '..'; }
             60%, 100% { content: '...'; }
         }
+        /* LOGIN SCREEN */
+        .login-container { display:flex; align-items:center; justify-content:center; min-height:100vh; background:linear-gradient(135deg, #0f172a 0%, #1e3a5f 40%, #134e4a 100%); }
+        .login-box { background:white; padding:40px; border-radius:16px; width:360px; box-shadow:0 20px 60px rgba(0,0,0,0.3); }
+        .login-box h2 { text-align:center; margin:0 0 6px; font-size:20px; }
+        .login-box h2 span { color:#16a34a; }
+        .login-box .login-sub { text-align:center; color:#6b7280; font-size:13px; margin-bottom:24px; }
+        .login-box .form-group { margin-bottom:16px; }
+        .login-box .form-group label { display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:6px; }
+        .login-box .form-group input { width:100%; padding:10px 14px; border:1px solid #d1d5db; border-radius:8px; font-size:14px; box-sizing:border-box; }
+        .login-box .form-group input:focus { border-color:#16a34a; outline:none; box-shadow:0 0 0 3px rgba(22,163,74,0.15); }
+        .login-box .btn-login { width:100%; padding:12px; background:linear-gradient(135deg,#16a34a,#15803d); color:white; border:none; border-radius:8px; font-size:15px; font-weight:700; cursor:pointer; }
+        .login-box .btn-login:hover { opacity:0.9; }
+        .login-error { color:#dc2626; text-align:center; margin-top:12px; font-size:13px; display:none; }
+        .login-logo { text-align:center; margin-bottom:20px; }
+        .login-logo span { background:linear-gradient(135deg,#16a34a,#15803d); color:white; padding:10px 18px; border-radius:10px; font-weight:700; font-size:14px; display:inline-block; }
+
+        /* USER BAR */
+        .user-bar { display:flex; align-items:center; gap:8px; }
+        .user-bar .user-name { font-size:12px; color:#6b7280; font-weight:600; }
+        .user-bar .user-role { font-size:10px; color:white; background:#16a34a; padding:1px 6px; border-radius:4px; font-weight:600; }
+        .user-bar .btn-hist { padding:4px 10px; font-size:11px; background:#f3f4f6; border:1px solid #d1d5db; border-radius:6px; cursor:pointer; font-weight:600; color:#374151; }
+        .user-bar .btn-hist:hover { background:#e5e7eb; }
+        .user-bar .btn-logout { padding:4px 10px; font-size:11px; background:#fef2f2; border:1px solid #fecaca; border-radius:6px; cursor:pointer; font-weight:600; color:#dc2626; }
+        .user-bar .btn-logout:hover { background:#fee2e2; }
+
+        /* HISTORY MODAL */
+        .hist-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-items:center; }
+        .hist-overlay.active { display:flex; }
+        .hist-modal { background:white; border-radius:14px; width:90%; max-width:500px; max-height:80vh; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.3); }
+        .hist-modal-header { padding:16px 20px; border-bottom:1px solid #e5e7eb; display:flex; justify-content:space-between; align-items:center; }
+        .hist-modal-header h3 { margin:0; font-size:16px; }
+        .hist-modal-close { background:none; border:none; font-size:22px; cursor:pointer; color:#6b7280; padding:0 4px; }
+        .hist-modal-body { padding:16px 20px; overflow-y:auto; max-height:60vh; }
+        .hist-entry { padding:10px 0; border-bottom:1px solid #f3f4f6; }
+        .hist-entry:last-child { border-bottom:none; }
+        .hist-meta { display:flex; gap:8px; align-items:center; margin-bottom:4px; }
+        .hist-date { font-size:11px; color:#9ca3af; }
+        .hist-user { font-size:11px; font-weight:700; color:#16a34a; }
+        .hist-action { font-size:13px; color:#1f2937; }
+        .hist-detail { font-size:11px; color:#6b7280; margin-top:2px; }
+        .hist-empty { text-align:center; color:#9ca3af; padding:30px 0; }
+        .hist-clear { margin-top:12px; text-align:center; }
+        .hist-clear button { font-size:12px; color:#dc2626; background:none; border:1px solid #fecaca; padding:4px 12px; border-radius:6px; cursor:pointer; }
+
     </style>
 </head>
 <body>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen" class="login-container">
+    <div class="login-box">
+        <div class="login-logo"><span>🏠 LES ARTISANS VERTS</span></div>
+        <h2>Simulateur <span>PAC 2026</span></h2>
+        <p class="login-sub">Connexion commerciale</p>
+        <div class="form-group"><label>Nom d'utilisateur</label><input type="text" id="loginUser" placeholder="Utilisateur" autofocus></div>
+        <div class="form-group"><label>Mot de passe</label><input type="password" id="loginPass" placeholder="Mot de passe"></div>
+        <button class="btn-login" onclick="doLogin()">Se connecter</button>
+        <p id="loginError" class="login-error"></p>
+    </div>
+</div>
+
+<!-- HISTORY MODAL -->
+<div id="historyModal" class="hist-overlay" onclick="if(event.target===this)this.classList.remove('active')">
+    <div class="hist-modal">
+        <div class="hist-modal-header">
+            <h3>📋 Journal des modifications</h3>
+            <button class="hist-modal-close" onclick="document.getElementById('historyModal').classList.remove('active')">&times;</button>
+        </div>
+        <div class="hist-modal-body" id="historyBody"></div>
+    </div>
+</div>
+
+<!-- APP (hidden until login) -->
+<div id="appScreen" style="display:none;">
     <div class="header">
         <div class="container">
             <div class="header-content">
@@ -939,18 +935,13 @@
                     <h1 style="margin: 0; font-size: 22px;">Simulateur Aides PAC <span style="font-size: 14px; background: #16a34a; color: white; padding: 2px 8px; border-radius: 6px; vertical-align: middle; margin-left: 6px;">2026</span></h1>
                 </div>
                 <button class="btn-reset" onclick="reset()" style="padding: 8px 16px; font-size: 12px; width: auto;">↻ Reset</button>
-                <button class="lock-btn" id="lockBtn">
-                    <span id="lockIcon">🔒</span>
-                </button>
+                <div class="user-bar">
+                    <span class="user-name" id="userNameDisplay">—</span>
+                    <span class="user-role" id="userRoleDisplay">—</span>
+                    <button class="btn-hist" onclick="openHistory()">📋</button>
+                    <button class="btn-logout" onclick="doLogout()">↪</button>
+                </div>
             </div>
-        </div>
-    </div>
-
-    <div class="modal" id="passwordModal">
-        <div class="modal-content">
-            <h2>Accès Vue fournisseur</h2>
-            <input type="password" id="passwordInput" placeholder="Mot de passe">
-            <button id="unlockBtn">Déverrouiller</button>
         </div>
     </div>
 
@@ -964,11 +955,11 @@
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
                     <div class="form-group" style="margin-bottom: 0;">
                         <label>Nom</label>
-                        <input type="text" id="nom" placeholder="Nom du client" oninput="checkExport()">
+                        <input type="text" id="nom" placeholder="Nom du client" oninput="checkExport()" onchange="logClientChange()">
                     </div>
                     <div class="form-group" style="margin-bottom: 0;">
                         <label>Prénom</label>
-                        <input type="text" id="prenom" placeholder="Prénom du client" oninput="checkExport()">
+                        <input type="text" id="prenom" placeholder="Prénom du client" oninput="checkExport()" onchange="logClientChange()">
                     </div>
                 </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
@@ -1547,11 +1538,11 @@
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
                         <div>
                             <div class="amount-label" style="color: rgba(255,255,255,0.45); margin-bottom: 4px;">Pourcentage (%)</div>
-                            <input type="number" id="racPourcent" value="0" min="0" max="100" step="1" oninput="updatePct()">
+                            <input type="number" id="racPourcent" value="0" min="0" max="100" step="1" oninput="updatePct()" onchange="logRACChange()">
                         </div>
                         <div>
                             <div class="amount-label" style="color: rgba(255,255,255,0.45); margin-bottom: 4px;">RAC offert (€)</div>
-                            <input type="number" id="racOffert" value="0" min="0" step="1" oninput="updateAmt()">
+                            <input type="number" id="racOffert" value="0" min="0" step="1" oninput="updateAmt()" onchange="logRACChange()">
                         </div>
                     </div>
                     <div id="maxPctInfo" style="font-size: 12px; padding: 10px 14px; border-radius: 8px; background: rgba(5,150,105,0.12); border: 1px solid rgba(5,150,105,0.25); color: #34d399; margin-bottom: 6px;">
@@ -1580,6 +1571,7 @@
     <div class="footer">
         <p style="margin: 0;">Propulsé par 770 Lab</p>
     </div>
+</div><!-- /appScreen -->
     <div id="debugPanel" style="position:fixed;bottom:0;left:0;right:0;max-height:40vh;overflow-y:auto;background:#1a1a2e;color:#0f0;font-family:monospace;font-size:11px;padding:10px;z-index:99999;display:none;border-top:3px solid #f00;">
         <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
             <strong style="color:#ff0;">🔧 DEBUG</strong>
@@ -1912,6 +1904,7 @@ function syncEtas() {
 function onScenarioChange() {
     detectProfil();
     calc();
+    if(typeof logScenarioChange==='function') logScenarioChange();
 }
 
 let _calcRunning = false;
@@ -2085,33 +2078,6 @@ function getCEE(et, zn, cs, sf){
 }
 
 let mode=0;
-
-function checkStoredMode(){
-    try {
-        const stored = localStorage.getItem('fournisseurAuth');
-        if(stored){
-            const data = JSON.parse(stored);
-            const now = new Date().getTime();
-            if(now - data.timestamp < 24 * 60 * 60 * 1000){
-                mode = 1;
-                document.getElementById('mainContent').classList.add('fournisseur-mode');
-                document.getElementById('lockIcon').textContent='🔓';
-                return true;
-            } else {
-                localStorage.removeItem('fournisseurAuth');
-            }
-        }
-    } catch(e) {}
-    return false;
-}
-
-function saveMode(){
-    try { localStorage.setItem('fournisseurAuth', JSON.stringify({ timestamp: new Date().getTime() })); } catch(e) {}
-}
-
-function clearMode(){
-    try { localStorage.removeItem('fournisseurAuth'); } catch(e) {}
-}
 
 function fmt(n){
     return Math.round(n).toLocaleString('fr-FR')+' €';
@@ -2598,6 +2564,7 @@ function checkExport(){
 }
 
 function sendWhatsApp(){
+    if(typeof logExport==='function') logExport('WhatsApp');
     const nom=document.getElementById('nom').value.trim() || 'Client';
     const prenom=document.getElementById('prenom').value.trim() || '';
     const scenario=document.getElementById('scenario').options[document.getElementById('scenario').selectedIndex].text;
@@ -2615,6 +2582,7 @@ function sendWhatsApp(){
 }
 
 function exportPDF(){
+    if(typeof logExport==='function') logExport('PDF');
     const nom=document.getElementById('nom').value.trim() || 'Client';
     const prenom=document.getElementById('prenom').value.trim() || '';
     document.getElementById('printTitle').textContent=`Dossier — ${prenom} ${nom}`.trim();
@@ -2636,44 +2604,152 @@ function exportPDF(){
 }
 
 // ============================================
-// AUTHENTIFICATION
+// AUTHENTIFICATION PAR COMMERCIAL
 // ============================================
-document.getElementById('lockBtn').onclick=function(){
-    if(!mode){
-        try {
-            const stored = localStorage.getItem('fournisseurAuth');
-            if(stored){
-                const data = JSON.parse(stored);
-                const now = new Date().getTime();
-                if(now - data.timestamp < 24 * 60 * 60 * 1000){
-                    mode=1; document.getElementById('mainContent').classList.add('fournisseur-mode');
-                    document.getElementById('lockIcon').textContent='🔓'; calc(); return;
-                }
-            }
-        } catch(e) {}
-        document.getElementById('passwordModal').classList.add('active');
-    }else{
-        mode=0; document.getElementById('mainContent').classList.remove('fournisseur-mode');
-        document.getElementById('lockIcon').textContent='🔒'; calc();
+const USERS = {
+    'ishay':   { pass:'lav',       name:'Ishay',       role:'admin' },
+    'admin':   { pass:'gamberge',  name:'Admin',       role:'admin' },
+    'david':   { pass:'david26',   name:'David',       role:'commercial' },
+    'sarah':   { pass:'sarah26',   name:'Sarah',       role:'commercial' },
+    'marc':    { pass:'marc26',    name:'Marc',        role:'commercial' },
+    'julie':   { pass:'julie26',   name:'Julie',       role:'commercial' },
+    'thomas':  { pass:'thomas26',  name:'Thomas',      role:'commercial' },
+};
+let currentUser = null;
+
+function doLogin(){
+    const u = document.getElementById('loginUser').value.trim().toLowerCase();
+    const p = document.getElementById('loginPass').value;
+    const errEl = document.getElementById('loginError');
+    errEl.style.display = 'none';
+    if(!u){ errEl.textContent='Veuillez saisir un identifiant'; errEl.style.display='block'; return; }
+    const account = USERS[u];
+    if(!account || account.pass !== p){
+        errEl.textContent='Identifiant ou mot de passe incorrect';
+        errEl.style.display='block';
+        return;
     }
-};
+    currentUser = { id:u, name:account.name, role:account.role };
+    try{ localStorage.setItem('pac_user', JSON.stringify(currentUser)); }catch(e){}
+    showApp();
+    logAction('Connexion', account.name + ' (' + account.role + ')');
+}
+document.getElementById('loginPass').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+document.getElementById('loginUser').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
 
-// Export buttons use inline onclick
+function doLogout(){
+    logAction('Déconnexion', currentUser ? currentUser.name : '');
+    currentUser = null;
+    try{ localStorage.removeItem('pac_user'); }catch(e){}
+    location.reload();
+}
 
-document.getElementById('unlockBtn').onclick=function(){
-    const pw=document.getElementById('passwordInput').value;
-    if(pw==='gamberge'||pw==='lav'){
-        mode=1; saveMode();
-        document.getElementById('mainContent').classList.add('fournisseur-mode');
-        document.getElementById('passwordModal').classList.remove('active');
-        document.getElementById('passwordInput').value='';
-        document.getElementById('lockIcon').textContent='🔓'; calc();
-    }else{ alert('Mot de passe incorrect'); }
-};
+function showApp(){
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('appScreen').style.display = 'block';
+    // Always fournisseur mode when logged in
+    mode = 1;
+    document.getElementById('mainContent').classList.add('fournisseur-mode');
+    // Display user info
+    document.getElementById('userNameDisplay').textContent = currentUser.name;
+    document.getElementById('userRoleDisplay').textContent = currentUser.role === 'admin' ? '👑 Admin' : '📊 Commercial';
+    // Initialize simulator
+    try { updateSurfaceOptions(); } catch(e){}
+    try { calc(); } catch(e){}
+    try { buildBaremeTable(); } catch(e){}
+    try { calcBareme(); } catch(e){}
+    try { syncEtas(); } catch(e){}
+    try { calcDim(); } catch(e){}
+}
 
-document.getElementById('passwordModal').onclick=function(e){
-    if(e.target.id==='passwordModal') document.getElementById('passwordModal').classList.remove('active');
-};
+function checkAutoLogin(){
+    try{
+        const stored = localStorage.getItem('pac_user');
+        if(stored){
+            const data = JSON.parse(stored);
+            if(data && data.id && USERS[data.id]){
+                currentUser = data;
+                showApp();
+                return true;
+            }
+        }
+    }catch(e){}
+    return false;
+}
+
+// ============================================
+// JOURNAL DES MODIFICATIONS
+// ============================================
+function getJournal(){
+    try{ return JSON.parse(localStorage.getItem('pac_journal') || '[]'); }catch(e){ return []; }
+}
+function saveJournal(j){
+    try{
+        // Keep max 200 entries
+        if(j.length > 200) j = j.slice(j.length - 200);
+        localStorage.setItem('pac_journal', JSON.stringify(j));
+    }catch(e){}
+}
+function logAction(action, detail){
+    const j = getJournal();
+    j.push({
+        date: new Date().toISOString(),
+        user: currentUser ? currentUser.name : '?',
+        role: currentUser ? currentUser.role : '?',
+        action: action,
+        detail: detail || ''
+    });
+    saveJournal(j);
+}
+function openHistory(){
+    const j = getJournal().reverse().slice(0, 100);
+    const body = document.getElementById('historyBody');
+    if(j.length === 0){
+        body.innerHTML = '<div class="hist-empty">Aucune entrée dans le journal</div>';
+    } else {
+        let html = '';
+        j.forEach(e => {
+            const d = new Date(e.date);
+            const dateStr = d.toLocaleDateString('fr-FR') + ' ' + d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+            html += '<div class="hist-entry">';
+            html += '<div class="hist-meta"><span class="hist-user">' + (e.user||'?') + '</span><span class="hist-date">' + dateStr + '</span></div>';
+            html += '<div class="hist-action">' + (e.action||'') + '</div>';
+            if(e.detail) html += '<div class="hist-detail">' + e.detail + '</div>';
+            html += '</div>';
+        });
+        if(currentUser && currentUser.role === 'admin'){
+            html += '<div class="hist-clear"><button onclick="clearJournal()">🗑️ Vider le journal</button></div>';
+        }
+        body.innerHTML = html;
+    }
+    document.getElementById('historyModal').classList.add('active');
+}
+function clearJournal(){
+    if(confirm('Vider tout le journal ?')){
+        try{ localStorage.setItem('pac_journal','[]'); }catch(e){}
+        openHistory();
+    }
+}
+
+// Log key actions
+function logScenarioChange(){
+    const sc = document.getElementById('scenario').value;
+    logAction('Changement scénario', sc);
+}
+function logClientChange(){
+    const nom = document.getElementById('nom').value.trim();
+    const prenom = document.getElementById('prenom').value.trim();
+    if(nom || prenom) logAction('Client modifié', (prenom + ' ' + nom).trim());
+}
+function logExport(type){
+    const nom = document.getElementById('nom').value.trim() || 'Client';
+    logAction('Export ' + type, nom);
+}
+function logRACChange(){
+    const pct = document.getElementById('racPourcent').value;
+    const offert = document.getElementById('racOffert').value;
+    logAction('RAC modifié', pct + '% / ' + offert + ' €');
+}
 
 
 // ============================================
@@ -2975,13 +3051,7 @@ function calcDim() {
 // INIT
 // ============================================
 dbg('🚀 Init start');
-try { checkStoredMode(); dbg('✅ checkStoredMode, mode='+mode); } catch(e) { dbg('❌ checkStoredMode: '+e.message); }
-try { updateSurfaceOptions(); dbg('✅ updateSurfaceOptions'); } catch(e) { dbg('❌ updateSurfaceOptions: '+e.message); }
-try { calc(); dbg('✅ calc done'); } catch(e) { dbg('❌ calc: '+e.message); }
-try { buildBaremeTable(); } catch(e) { dbg('❌ buildBaremeTable: '+e.message); }
-try { calcBareme(); } catch(e) { dbg('❌ calcBareme: '+e.message); }
-try { syncEtas(); } catch(e) { dbg('❌ syncEtas: '+e.message); }
-try { calcDim(); } catch(e) { dbg('❌ calcDim: '+e.message); }
+checkAutoLogin();
 dbg('🏁 Init complete');
 // Triple-tap to show debug panel
 </script>
