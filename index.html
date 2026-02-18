@@ -946,22 +946,6 @@
         </div>
     </div>
 
-    <!-- Bandeau Info 2026 -->
-    <div class="info-banner-2026">
-        <span>📋</span>
-        <span><strong>MPR 2026</strong> — Barèmes à jour</span>
-        <span class="separator-dot">•</span>
-        <span>Logement <strong>+15 ans</strong> requis</span>
-        <span class="separator-dot">•</span>
-        <span>Isolation murs & biomasse <strong>retirés du monogeste</strong></span>
-        <span class="separator-dot">•</span>
-        <span>Guichet réouverture <strong>≈ 12 fév. 2026</strong></span>
-        <span class="separator-dot">•</span>
-        <span>CEE : <strong>BAR-TH-171 / 143 / 148</strong> intégrés</span>
-        <span class="separator-dot">•</span>
-        <span>Zone auto par <strong>n° département</strong></span>
-    </div>
-
     <div class="modal" id="passwordModal">
         <div class="modal-content">
             <h2>Accès Vue fournisseur</h2>
@@ -1437,8 +1421,8 @@
                     <div style="display: grid; grid-template-columns: 120px 1fr 80px 100px; gap: 8px; align-items: center; margin-bottom: 10px;">
                         <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">Mairie</label>
                         <input type="number" id="coutMairie" value="250" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
-                        <input type="number" id="qteMairie" value="1" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
-                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalMairie">250 €</div>
+                        <input type="number" id="qteMairie" value="0" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
+                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalMairie">0 €</div>
                     </div>
                     
                     <!-- Prévisite -->
@@ -2087,7 +2071,7 @@ function fmtEurCEE(n) {
 // ============================================
 // DONNÉES PRINCIPALES
 // ============================================
-const D={TTC:{"PAC":10890,"PAC + BALLON ÉLECTRIQUE":13750,"PAC + BALLON THERMO":13750,"PAC + SSC":25850},MPR:{"PAC":{BLEU:5000,JAUNE:4000,VIOLET:3000,ROSE:0},"PAC + BALLON ÉLECTRIQUE":{BLEU:5000,JAUNE:4000,VIOLET:3000,ROSE:0},"PAC + BALLON THERMO":{BLEU:6200,JAUNE:4800,VIOLET:3400,ROSE:0},"PAC + SSC":{BLEU:15000,JAUNE:12000,VIOLET:7000,ROSE:0}},COUT:{"PAC":6850,"PAC + BALLON ÉLECTRIQUE":7050,"PAC + BALLON THERMO":8450,"PAC + SSC":11650},COUT_DETAIL:{"PAC":{pac_materiel:2900,pac_pose:2500,ballon_materiel:0,ballon_pose:0,accessoires:800,admin:400,mairie:250},"PAC + BALLON ÉLECTRIQUE":{pac_materiel:2900,pac_pose:2500,ballon_materiel:200,ballon_pose:0,accessoires:800,admin:400,mairie:250},"PAC + BALLON THERMO":{pac_materiel:2900,pac_pose:2500,ballon_materiel:1100,ballon_pose:500,accessoires:800,admin:400,mairie:250},"PAC + SSC":{pac_materiel:5700,pac_pose:4500,ballon_materiel:0,ballon_pose:0,accessoires:800,admin:400,mairie:250}},CEE:{"140-170":{H1:{PAC:{"S<70":274800,"70<S<90":384720,"90<S<110":549600,"110<S<130":604560,"S>130":879360},"BALLON ELECTRIQUE":{"S<70":274800,"70<S<90":384720,"90<S<110":549600,"110<S<130":604560,"S>130":879360},"BALLON THERMO":{"S<70":289500,"70<S<90":399420,"90<S<110":564300,"110<S<130":619260,"S>130":894060},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H2:{PAC:{"S<70":229000,"70<S<90":320600,"90<S<110":458000,"110<S<130":503800,"S>130":732800},"BALLON ELECTRIQUE":{"S<70":229000,"70<S<90":320600,"90<S<110":458000,"110<S<130":503800,"S>130":732800},"BALLON THERMO":{"S<70":243700,"70<S<90":335300,"90<S<110":472700,"110<S<130":518500,"S>130":747500},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H3:{PAC:{"S<70":160300,"70<S<90":224420,"90<S<110":320600,"110<S<130":352660,"S>130":512960},"BALLON ELECTRIQUE":{"S<70":160300,"70<S<90":224420,"90<S<110":320600,"110<S<130":352660,"S>130":512960},"BALLON THERMO":{"S<70":175000,"70<S<90":239120,"90<S<110":335300,"110<S<130":367360,"S>130":527660},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}}},"111-140":{H1:{PAC:{"S<70":238500,"70<S<90":333900,"90<S<110":477000,"110<S<130":524700,"S>130":763200},"BALLON ELECTRIQUE":{"S<70":238500,"70<S<90":333900,"90<S<110":477000,"110<S<130":524700,"S>130":763200},"BALLON THERMO":{"S<70":253200,"70<S<90":348600,"90<S<110":491700,"110<S<130":539400,"S>130":777900},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H2:{PAC:{"S<70":198750,"70<S<90":278250,"90<S<110":397500,"110<S<130":437250,"S>130":636000},"BALLON ELECTRIQUE":{"S<70":198750,"70<S<90":278250,"90<S<110":397500,"110<S<130":437250,"S>130":636000},"BALLON THERMO":{"S<70":213450,"70<S<90":292950,"90<S<110":412200,"110<S<130":451950,"S>130":650700},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H3:{PAC:{"S<70":139125,"70<S<90":194775,"90<S<110":278250,"110<S<130":306075,"S>130":445200},"BALLON ELECTRIQUE":{"S<70":139125,"70<S<90":194775,"90<S<110":278250,"110<S<130":306075,"S>130":445200},"BALLON THERMO":{"S<70":153825,"70<S<90":209475,"90<S<110":292950,"110<S<130":320775,"S>130":459900},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}}}}};
+const D={TTC:{"PAC":10890,"PAC + BALLON ÉLECTRIQUE":13750,"PAC + BALLON THERMO":13750,"PAC + SSC":25850},MPR:{"PAC":{BLEU:5000,JAUNE:4000,VIOLET:3000,ROSE:0},"PAC + BALLON ÉLECTRIQUE":{BLEU:5000,JAUNE:4000,VIOLET:3000,ROSE:0},"PAC + BALLON THERMO":{BLEU:6200,JAUNE:4800,VIOLET:3400,ROSE:0},"PAC + SSC":{BLEU:15000,JAUNE:12000,VIOLET:7000,ROSE:0}},COUT:{"PAC":6600,"PAC + BALLON ÉLECTRIQUE":6800,"PAC + BALLON THERMO":7200,"PAC + SSC":11650},COUT_DETAIL:{"PAC":{pac_materiel:2900,pac_pose:2500,ballon_materiel:0,ballon_pose:0,accessoires:800,admin:400,mairie:0},"PAC + BALLON ÉLECTRIQUE":{pac_materiel:2900,pac_pose:2500,ballon_materiel:200,ballon_pose:0,accessoires:800,admin:400,mairie:0},"PAC + BALLON THERMO":{pac_materiel:2900,pac_pose:2500,ballon_materiel:1100,ballon_pose:500,accessoires:800,admin:400,mairie:0},"PAC + SSC":{pac_materiel:5700,pac_pose:4500,ballon_materiel:0,ballon_pose:0,accessoires:800,admin:400,mairie:250}},CEE:{"140-170":{H1:{PAC:{"S<70":274800,"70<S<90":384720,"90<S<110":549600,"110<S<130":604560,"S>130":879360},"BALLON ELECTRIQUE":{"S<70":274800,"70<S<90":384720,"90<S<110":549600,"110<S<130":604560,"S>130":879360},"BALLON THERMO":{"S<70":289500,"70<S<90":399420,"90<S<110":564300,"110<S<130":619260,"S>130":894060},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H2:{PAC:{"S<70":229000,"70<S<90":320600,"90<S<110":458000,"110<S<130":503800,"S>130":732800},"BALLON ELECTRIQUE":{"S<70":229000,"70<S<90":320600,"90<S<110":458000,"110<S<130":503800,"S>130":732800},"BALLON THERMO":{"S<70":243700,"70<S<90":335300,"90<S<110":472700,"110<S<130":518500,"S>130":747500},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H3:{PAC:{"S<70":160300,"70<S<90":224420,"90<S<110":320600,"110<S<130":352660,"S>130":512960},"BALLON ELECTRIQUE":{"S<70":160300,"70<S<90":224420,"90<S<110":320600,"110<S<130":352660,"S>130":512960},"BALLON THERMO":{"S<70":175000,"70<S<90":239120,"90<S<110":335300,"110<S<130":367360,"S>130":527660},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}}},"111-140":{H1:{PAC:{"S<70":238500,"70<S<90":333900,"90<S<110":477000,"110<S<130":524700,"S>130":763200},"BALLON ELECTRIQUE":{"S<70":238500,"70<S<90":333900,"90<S<110":477000,"110<S<130":524700,"S>130":763200},"BALLON THERMO":{"S<70":253200,"70<S<90":348600,"90<S<110":491700,"110<S<130":539400,"S>130":777900},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H2:{PAC:{"S<70":198750,"70<S<90":278250,"90<S<110":397500,"110<S<130":437250,"S>130":636000},"BALLON ELECTRIQUE":{"S<70":198750,"70<S<90":278250,"90<S<110":397500,"110<S<130":437250,"S>130":636000},"BALLON THERMO":{"S<70":213450,"70<S<90":292950,"90<S<110":412200,"110<S<130":451950,"S>130":650700},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H3:{PAC:{"S<70":139125,"70<S<90":194775,"90<S<110":278250,"110<S<130":306075,"S>130":445200},"BALLON ELECTRIQUE":{"S<70":139125,"70<S<90":194775,"90<S<110":278250,"110<S<130":306075,"S>130":445200},"BALLON THERMO":{"S<70":153825,"70<S<90":209475,"90<S<110":292950,"110<S<130":320775,"S>130":459900},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}}}}};
 const M={"PAC":"PAC","PAC + BALLON ÉLECTRIQUE":"BALLON ELECTRIQUE","PAC + BALLON THERMO":"BALLON THERMO","PAC + SSC":"BALLON SSC"};
 
 const SCENARIO_NAMES = {"PAC":"PAC","PAC + BALLON ÉLECTRIQUE":"PAC + Ballon Électrique","PAC + BALLON THERMO":"PAC + Ballon Thermo","PAC + SSC":"PAC + SSC"};
@@ -2185,7 +2169,7 @@ function getCoutFromFields() {
 function getCoutFromDetail(sc, ad) {
     if (!D.COUT_DETAIL[sc]) return D.COUT[sc] || 0;
     const d = D.COUT_DETAIL[sc];
-    let t = d.pac_materiel + d.pac_pose + d.ballon_materiel + d.ballon_pose + d.accessoires + d.admin + (d.mairie || 250);
+    let t = d.pac_materiel + d.pac_pose + d.ballon_materiel + d.ballon_pose + d.accessoires + d.admin + (d.mairie || 0);
     if (ad > 0) t += Math.round(ad * 0.12);
     if (document.getElementById('checkPrevisite').checked) t += parseFloat(document.getElementById('coutPrevisite').value)||200;
     return t;
@@ -2205,7 +2189,7 @@ function getPassThrough() {
         const ct = document.getElementById('categorie').value;
         const ad = (D.MPR[sc]&&D.MPR[sc][ct])?D.MPR[sc][ct]:0;
         const d = D.COUT_DETAIL[sc];
-        let pt = (d ? (d.mairie||250) : 250);
+        let pt = (d ? (d.mairie||0) : 0);
         if(ad > 0) pt += Math.round(ad * 0.12);
         if(document.getElementById('checkPrevisite').checked) pt += parseFloat(document.getElementById('coutPrevisite').value)||200;
         return pt;
@@ -2273,15 +2257,16 @@ function calc(){
                 document.getElementById('coutMandat').value = mandatVal;
                 document.getElementById('qteMandat').value = ad > 0 ? 1 : 0;
                 document.getElementById('totalMandat').textContent = fmt(ad > 0 ? mandatVal : 0);
-                // Demande mairie
-                document.getElementById('coutMairie').value = detail.mairie || 250;
-                document.getElementById('qteMairie').value = 1;
-                document.getElementById('totalMairie').textContent = fmt(detail.mairie || 250);
+                // Demande mairie (SSC uniquement)
+                const mairieVal = detail.mairie || 0;
+                document.getElementById('coutMairie').value = mairieVal > 0 ? mairieVal : 250;
+                document.getElementById('qteMairie').value = mairieVal > 0 ? 1 : 0;
+                document.getElementById('totalMairie').textContent = fmt(mairieVal);
                 // Prévisite
                 const prevOn = document.getElementById('checkPrevisite').checked;
                 const prevCost = prevOn ? (parseFloat(document.getElementById('coutPrevisite').value) || 200) : 0;
                 document.getElementById('totalPrevisite').textContent = prevOn ? fmt(prevCost) : '0 €';
-                ch = detail.pac_materiel + detail.pac_pose + detail.ballon_materiel + detail.ballon_pose + detail.accessoires + detail.admin + (ad > 0 ? mandatVal : 0) + (detail.mairie || 250) + prevCost;
+                ch = detail.pac_materiel + detail.pac_pose + detail.ballon_materiel + detail.ballon_pose + detail.accessoires + detail.admin + (ad > 0 ? mandatVal : 0) + mairieVal + prevCost;
             }else{
                 ch = D.COUT[sc] || 0;
             }
@@ -2487,7 +2472,7 @@ function updatePct(){
         if(lockCoutHT){
             if(D.COUT_DETAIL[sc]){
                 const detail=D.COUT_DETAIL[sc];
-                ch = detail.pac_materiel + detail.pac_pose + detail.ballon_materiel + detail.ballon_pose + detail.accessoires + detail.admin + (ad > 0 ? Math.round(ad * 0.12) : 0) + (detail.mairie || 250) + (document.getElementById("checkPrevisite").checked ? (parseFloat(document.getElementById("coutPrevisite").value) || 200) : 0);
+                ch = detail.pac_materiel + detail.pac_pose + detail.ballon_materiel + detail.ballon_pose + detail.accessoires + detail.admin + (ad > 0 ? Math.round(ad * 0.12) : 0) + (detail.mairie || 0) + (document.getElementById("checkPrevisite").checked ? (parseFloat(document.getElementById("coutPrevisite").value) || 200) : 0);
             }else{ ch = D.COUT[sc] || 0; }
         }else{
             const totalPACMateriel = (parseFloat(document.getElementById('coutPACMateriel').value) || 0) * (parseFloat(document.getElementById('qtePACMateriel').value) || 0);
