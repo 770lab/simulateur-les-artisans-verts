@@ -703,30 +703,25 @@
 
         .btn-dark-export {
             width: 100%;
-            border: none;
-            padding: 13px 20px;
-            border-radius: 10px;
-            font-size: 14px;
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.25s;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            background: rgba(255,255,255,0.05);
+            color: rgba(255,255,255,0.6);
+            letter-spacing: 0.3px;
         }
-        .btn-dark-export.pdf {
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
+        .btn-dark-export:hover {
+            background: rgba(255,255,255,0.12);
             color: white;
+            border-color: rgba(255,255,255,0.2);
         }
-        .btn-dark-export.pdf:hover { background: linear-gradient(135deg, #60a5fa, #3b82f6); }
-        .btn-dark-export.whatsapp {
-            background: linear-gradient(135deg, #22c55e, #16a34a);
-            color: white;
-        }
-        .btn-dark-export.whatsapp:hover { background: linear-gradient(135deg, #34d399, #22c55e); }
-        .btn-dark-export:disabled {
-            opacity: 0.35;
-            cursor: not-allowed;
-            filter: grayscale(0.3);
-        }
+        .btn-dark-export.pdf { }
+        .btn-dark-export.whatsapp { }
 
         .summary-header {
             font-size: 12px;
@@ -823,30 +818,35 @@
         }
 
         .status-badge {
-            display: inline-block;
-            padding: 14px 32px;
+            padding: 18px 24px;
             font-weight: 700;
-            font-size: 18px;
-            border-radius: 12px;
+            font-size: 15px;
+            border-radius: 14px;
             text-align: center;
             width: 100%;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
             transition: all 0.3s;
+            cursor: default;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
-
         .status-badge.ok {
-            background: #d1f4e0;
-            color: #0d7f3f;
+            background: linear-gradient(135deg, #065f46, #059669);
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(5, 150, 105, 0.35);
         }
-
-        .status-badge.warning {
-            background: #fff3cd;
-            color: #856404;
+        .status-badge.ok:hover {
+            box-shadow: 0 6px 28px rgba(5, 150, 105, 0.5);
+            transform: translateY(-1px);
         }
-
+        .status-badge.ok:active { transform: translateY(0); }
         .status-badge.danger {
-            background: #f8d7da;
-            color: #721c24;
+            background: linear-gradient(135deg, #7f1d1d, #dc2626);
+            color: white;
+            box-shadow: 0 4px 16px rgba(220, 38, 38, 0.25);
         }
 
         .btn-reset {
@@ -1557,8 +1557,8 @@
 
                 <div class="glow-separator"></div>
 
-                <!-- RAC Section -->
-                <div class="rac-dark-section" style="margin-bottom: 14px;">
+                <!-- RAC Section (fournisseur only) -->
+                <div class="rac-dark-section fournisseur-only" style="margin-bottom: 14px;">
                     <div class="dark-section-title" style="margin-bottom: 10px;">Prise en charge du RAC</div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
                         <div>
@@ -1570,17 +1570,24 @@
                             <input type="number" id="racOffert" value="0" min="0" step="1" oninput="updateAmt()">
                         </div>
                     </div>
-                    <div class="note-small fournisseur-only" style="font-size: 11px; margin-bottom: 8px;">Appliqué sur le RAC brut. N'affecte pas le prix cumac.</div>
+                    <div id="maxPctInfo" style="font-size: 12px; padding: 10px 14px; border-radius: 8px; background: rgba(5,150,105,0.12); border: 1px solid rgba(5,150,105,0.25); color: #34d399; margin-bottom: 6px;">
+                        Max offrable : <strong id="maxPctValue">—</strong> pour rester en dossier vert
+                    </div>
+                    <div class="note-small" style="font-size: 11px; margin-bottom: 8px; color: rgba(255,255,255,0.3);">Appliqué sur le RAC brut. N'affecte pas le prix cumac.</div>
                 </div>
 
-                <div class="status-badge ok" id="statusBadge" style="margin-bottom: 14px; margin-top: 4px;">DOSSIER OK</div>
+                <!-- Status + Actions -->
+                <div id="statusBadge" class="status-badge ok" style="margin-bottom: 14px;" onclick="shareDevis()">
+                    <span id="statusIcon">✅</span>
+                    <span id="statusText">Voulez-vous un devis ?</span>
+                </div>
 
                 <button id="exportBtn" class="btn-dark-export pdf" onclick="exportPDF()">
                     📄 Exporter en PDF
                 </button>
                 
                 <button id="whatsappBtn" class="btn-dark-export whatsapp" onclick="sendWhatsApp()">
-                    💬 Demander un devis
+                    💬 Envoyer par WhatsApp
                 </button>
             </div>
         </div>
@@ -2306,18 +2313,74 @@ function calcRAC(rb,ch,ta,taForMarge,tt){
     
     const currentScenario = document.getElementById('scenario').value;
     const seuilOK = (currentScenario === 'PAC + SSC') ? 6000 : 4000;
-    const seuilWarning = (currentScenario === 'PAC + SSC') ? 3000 : 2000;
+    
+    // Calculate max % offerable (fournisseur)
+    if(mode){
+        // Find max offert where marge >= seuilOK
+        // marge = (rbForMarge - offert)/1.055 - ch + taForMarge >= seuilOK
+        // (rbForMarge - offert)/1.055 >= seuilOK + ch - taForMarge
+        // rbForMarge - offert >= (seuilOK + ch - taForMarge) * 1.055
+        // offert <= rbForMarge - (seuilOK + ch - taForMarge) * 1.055
+        const maxOffert = rbForMarge - (seuilOK + ch - taForMarge) * 1.055;
+        const maxPct = rb > 0 ? Math.max(0, Math.floor((maxOffert / rb) * 100)) : 0;
+        const maxPctEl = document.getElementById('maxPctValue');
+        const maxPctBox = document.getElementById('maxPctInfo');
+        if(maxPctEl){
+            if(maxOffert > 0){
+                maxPctEl.textContent = maxPct + '% (' + fmt(Math.floor(maxOffert)) + ')';
+                maxPctBox.style.background = 'rgba(5,150,105,0.12)';
+                maxPctBox.style.borderColor = 'rgba(5,150,105,0.25)';
+                maxPctBox.style.color = '#34d399';
+            } else {
+                maxPctEl.textContent = '0% — marge insuffisante';
+                maxPctBox.style.background = 'rgba(220,38,38,0.12)';
+                maxPctBox.style.borderColor = 'rgba(220,38,38,0.25)';
+                maxPctBox.style.color = '#f87171';
+            }
+        }
+    }
     
     const bd=document.getElementById('statusBadge');
+    const icon=document.getElementById('statusIcon');
+    const txt=document.getElementById('statusText');
     if(mgForMarge>=seuilOK){
         bd.className='status-badge ok';
-        bd.textContent='DOSSIER OK'
-    }else if(mgForMarge>=seuilWarning){
-        bd.className='status-badge warning';
-        bd.textContent='DOSSIER À AMÉLIORER'
+        bd.onclick=shareDevis;
+        icon.textContent='✅';
+        txt.textContent='Voulez-vous un devis ?';
     }else{
         bd.className='status-badge danger';
-        bd.textContent='DOSSIER REFUSÉ'
+        bd.onclick=null;
+        icon.textContent='❌';
+        txt.textContent='Dossier refusé';
+    }
+}
+
+function shareDevis(){
+    const nom=document.getElementById('nom').value.trim()||'Client';
+    const prenom=document.getElementById('prenom').value.trim()||'';
+    const scenario=document.getElementById('scenario').options[document.getElementById('scenario').selectedIndex].text;
+    const ttc=document.getElementById('totalTTC').textContent;
+    const totalAides=document.getElementById('totalAides').textContent;
+    const rac=document.getElementById('resteCharge').textContent;
+    
+    const text = `🏠 Estimation PAC — ${prenom} ${nom}\n\n📋 ${scenario}\n💰 Installation TTC : ${ttc}\n🎁 Total aides : ${totalAides}\n🏠 Reste à charge : ${rac}\n\nSimulation réalisée par Les Artisans Verts`;
+    
+    if(navigator.share){
+        navigator.share({
+            title: 'Devis PAC — ' + (prenom + ' ' + nom).trim(),
+            text: text
+        }).catch(()=>{});
+    }else{
+        // Fallback: copy to clipboard
+        navigator.clipboard.writeText(text).then(()=>{
+            const bd=document.getElementById('statusBadge');
+            const oldTxt=document.getElementById('statusText').textContent;
+            document.getElementById('statusText').textContent='✓ Copié !';
+            setTimeout(()=>{ document.getElementById('statusText').textContent=oldTxt; }, 2000);
+        }).catch(()=>{
+            window.open('https://api.whatsapp.com/send?text='+encodeURIComponent(text),'_blank');
+        });
     }
 }
 
@@ -2500,9 +2563,8 @@ function exportPDF(){
     document.getElementById('printRAC').textContent=document.getElementById('resteCharge').textContent;
     const badge=document.getElementById('statusBadge');
     const printStatus=document.getElementById('printStatus');
-    printStatus.textContent=badge.textContent;
+    printStatus.textContent=document.getElementById('statusText').textContent;
     if(badge.classList.contains('ok')){ printStatus.style.background='#d1f4e0'; printStatus.style.color='#0d7f3f'; }
-    else if(badge.classList.contains('warning')){ printStatus.style.background='#fff3cd'; printStatus.style.color='#856404'; }
     else{ printStatus.style.background='#f8d7da'; printStatus.style.color='#721c24'; }
     window.print();
 }
