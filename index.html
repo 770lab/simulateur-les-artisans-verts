@@ -232,6 +232,18 @@
             transition: all 0.3s ease;
         }
         .cee-hidden { display: none !important; }
+
+        /* G coefficient radio buttons */
+        .g-radio {
+            display: flex; align-items: center; gap: 10px; padding: 8px 12px;
+            border: 1px solid #e2e8f0; border-radius: 8px; cursor: pointer;
+            transition: all 0.15s ease; font-size: 13px; background: white;
+        }
+        .g-radio:hover { border-color: #93c5fd; background: #f0f7ff; }
+        .g-radio.selected { border-color: #2563eb; background: #eff6ff; box-shadow: 0 0 0 2px rgba(37,99,235,0.15); }
+        .g-radio input[type="radio"] { accent-color: #2563eb; margin: 0; }
+        .g-label { flex: 1; color: #334155; }
+        .g-value { font-weight: 700; color: #2563eb; min-width: 36px; text-align: right; }
         .cee-kpi-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -1379,7 +1391,7 @@
 
                         <!-- Bloc BAR-TH-171 -->
                         <div id="ceeBloc171" style="margin-top: 12px;">
-                            <div style="font-size: 12px; font-weight: 600; color: #2563eb; margin-bottom: 4px;">📘 BAR-TH-171 — PAC air/eau (v.A78.4)</div>
+                            <div style="font-size: 12px; font-weight: 600; color: #2563eb; margin-bottom: 4px;">📘 BAR-TH-171 — PAC air/eau (v.A78.4) · <span style="color: #059669;">Coup de pouce ×5</span></div>
                         </div>
 
                         <!-- Bloc BAR-TH-148 (CET séparé) -->
@@ -1396,7 +1408,7 @@
 
                         <!-- Bloc BAR-TH-143 -->
                         <div id="ceeBloc143" class="cee-hidden" style="margin-top: 12px;">
-                            <div style="font-size: 12px; font-weight: 600; color: #2563eb; margin-bottom: 8px;">📙 BAR-TH-143 — SSC (solaire combiné)</div>
+                            <div style="font-size: 12px; font-weight: 600; color: #2563eb; margin-bottom: 8px;">📙 BAR-TH-143 — SSC (solaire combiné) · <span style="color: #059669;">Coup de pouce ×2</span></div>
                             <div class="cee-grid">
                                 <div>
                                     <label>Forfait par zone</label>
@@ -1427,19 +1439,134 @@
 
                         <div class="cee-result" id="ceeResult"></div>
 
-                        <div style="margin-top: 10px; text-align: center;">
-                            <small style="color: #64748b; font-size: 11px;">
-                                <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
-                                    <input type="checkbox" id="ceeOverride" onchange="calc()"> Utiliser ce calcul CEE à la place de la table par défaut
-                                </label>
-                            </small>
-                        </div>
                     </div>
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                     <button class="btn-reset" onclick="reset()">Réinitialiser</button>
                     <button class="btn-reco fournisseur-only" onclick="openRecoModal()">🎯 Recommandations</button>
+                </div>
+                <div id="calcErrorDebug" style="color: red; font-size: 12px; font-weight: 600; margin-top: 8px; padding: 6px; background: #fef2f2; border-radius: 6px;"></div>
+            </div>
+
+            <!-- ===================== NOTE DE DIMENSIONNEMENT ===================== -->
+            <div class="card" id="dimensionnementCard">
+                <h2 class="card-title">📐 Note de dimensionnement PAC</h2>
+                <div style="font-size: 11px; color: #64748b; margin-bottom: 16px;">Formule : P = G × V × ΔT — Conforme BAR-TH-171 v.A78.4</div>
+
+                <!-- Coefficient G -->
+                <div style="margin-bottom: 16px;">
+                    <label style="font-weight: 600; color: #1d1d1f; font-size: 13px; display: block; margin-bottom: 8px;">G = Coefficient de déperdition de la maison</label>
+                    <div id="gCoefOptions" style="display: flex; flex-direction: column; gap: 6px;">
+                        <label class="g-radio" onclick="selectG(0.6)"><input type="radio" name="gCoef" value="0.6"><span class="g-label">Maison bioclimatique (RE 2020)</span><span class="g-value">0,6</span></label>
+                        <label class="g-radio" onclick="selectG(0.7)"><input type="radio" name="gCoef" value="0.7"><span class="g-label">Maison RT 2012</span><span class="g-value">0,7</span></label>
+                        <label class="g-radio" onclick="selectG(0.75)"><input type="radio" name="gCoef" value="0.75"><span class="g-label">Maison RT 2005</span><span class="g-value">0,75</span></label>
+                        <label class="g-radio" onclick="selectG(0.95)"><input type="radio" name="gCoef" value="0.95"><span class="g-label">Maison RT 2000</span><span class="g-value">0,95</span></label>
+                        <label class="g-radio" onclick="selectG(1.1)"><input type="radio" name="gCoef" value="1.1"><span class="g-label">Maison excellente isolation</span><span class="g-value">1,1</span></label>
+                        <label class="g-radio selected" onclick="selectG(1.3)"><input type="radio" name="gCoef" value="1.3" checked><span class="g-label">Maison mauvaise isolation</span><span class="g-value">1,3</span></label>
+                        <label class="g-radio" onclick="selectG(1.6)"><input type="radio" name="gCoef" value="1.6"><span class="g-label">Maison très mauvaise isolation</span><span class="g-value">1,6</span></label>
+                    </div>
+                </div>
+
+                <!-- Volume -->
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; margin-bottom: 16px;">
+                    <div style="font-weight: 600; color: #1d1d1f; font-size: 13px; margin-bottom: 10px;">V = Volume de la maison</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; align-items: end;">
+                        <div>
+                            <label style="font-size: 12px; color: #64748b;">Surface chauffée (m²)</label>
+                            <input type="number" id="dimSurface" value="100" min="1" oninput="calcDim()" style="width: 100%; padding: 8px 10px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; color: #64748b;">Hauteur sous plafond (m)</label>
+                            <input type="number" id="dimHauteur" value="2.5" min="1" step="0.1" oninput="calcDim()" style="width: 100%; padding: 8px 10px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; color: #64748b;">Volume (m³)</label>
+                            <input type="text" id="dimVolume" value="250" disabled style="width: 100%; padding: 8px 10px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 700; text-align: center; background: #e2e8f0; color: #0f172a;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Températures -->
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; margin-bottom: 16px;">
+                    <div style="font-weight: 600; color: #1d1d1f; font-size: 13px; margin-bottom: 10px;">ΔT = Différence de température</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; align-items: end;">
+                        <div>
+                            <label style="font-size: 12px; color: #64748b;">T° extérieure de base (°C)</label>
+                            <input type="number" id="dimTbase" value="-7" step="1" oninput="calcDim()" style="width: 100%; padding: 8px 10px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
+                            <div style="font-size: 10px; color: #94a3b8; margin-top: 2px;" id="dimTbaseHint">Auto via n° département</div>
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; color: #64748b;">T° ambiante souhaitée (°C)</label>
+                            <input type="number" id="dimTint" value="21" step="1" oninput="calcDim()" style="width: 100%; padding: 8px 10px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; color: #64748b;">ΔT (°C)</label>
+                            <input type="text" id="dimDeltaT" value="28" disabled style="width: 100%; padding: 8px 10px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 700; text-align: center; background: #e2e8f0; color: #0f172a;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Taux de couverture -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;">
+                    <div>
+                        <label style="font-size: 12px; color: #64748b;">T1 : Taux PAC seule (%)</label>
+                        <input type="number" id="dimT1" value="60" min="1" max="100" oninput="calcDim()" style="width: 100%; padding: 8px 10px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
+                    </div>
+                    <div>
+                        <label style="font-size: 12px; color: #64748b;">T2 : Taux PAC + appoint (%)</label>
+                        <input type="number" id="dimT2" value="140" min="100" max="200" oninput="calcDim()" style="width: 100%; padding: 8px 10px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
+                    </div>
+                </div>
+
+                <!-- Température d'eau -->
+                <div style="margin-bottom: 16px;">
+                    <label style="font-size: 12px; color: #64748b;">Température d'eau au sein du circuit (°C)</label>
+                    <input type="number" id="dimTeau" value="60" step="5" style="width: 100%; padding: 8px 10px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
+                </div>
+
+                <!-- RÉSULTATS -->
+                <div style="background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%); border-radius: 12px; padding: 20px; margin-bottom: 16px;">
+                    <div style="font-weight: 700; color: white; font-size: 14px; margin-bottom: 14px; text-align: center;">RÉSULTATS DU DIMENSIONNEMENT</div>
+                    
+                    <div style="background: rgba(255,255,255,0.1); border-radius: 8px; padding: 12px; margin-bottom: 10px; text-align: center;">
+                        <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">Déperditions totales (P = G × V × ΔT)</div>
+                        <div style="font-size: 28px; font-weight: 800; color: #fbbf24;" id="dimDeperditions">9 100 W</div>
+                        <div style="font-size: 12px; color: #cbd5e1;" id="dimDepFormula">1,3 × 250 × 28</div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div style="background: rgba(255,255,255,0.1); border-radius: 8px; padding: 12px; text-align: center;">
+                            <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase;">Puissance PAC</div>
+                            <div style="font-size: 24px; font-weight: 800; color: #34d399;" id="dimPuissancePAC">5,5 kW</div>
+                            <div style="font-size: 11px; color: #cbd5e1;" id="dimPuissancePACDetail">P × 60%</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.1); border-radius: 8px; padding: 12px; text-align: center;">
+                            <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase;">Puissance appoint</div>
+                            <div style="font-size: 24px; font-weight: 800; color: #f97316;" id="dimPuissanceAppoint">7,3 kW</div>
+                            <div style="font-size: 11px; color: #cbd5e1;" id="dimPuissanceAppointDetail">(P × 140% − PAC)</div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: rgba(255,255,255,0.08); border-radius: 8px; padding: 10px; margin-top: 10px; text-align: center;">
+                        <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase;">Puissance totale (PAC + appoint)</div>
+                        <div style="font-size: 20px; font-weight: 700; color: white;" id="dimPuissanceTotale">12,7 kW</div>
+                    </div>
+                </div>
+
+                <!-- Équipement -->
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px;">
+                    <div style="font-weight: 600; color: #1d1d1f; font-size: 13px; margin-bottom: 10px;">Matériel installé</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <div>
+                            <label style="font-size: 12px; color: #64748b;">Marque PAC</label>
+                            <input type="text" id="dimMarque" placeholder="Ex: Daikin, Atlantic…" style="width: 100%; padding: 8px 10px; border: 1px solid #d2d2d7; border-radius: 6px;">
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; color: #64748b;">Référence PAC</label>
+                            <input type="text" id="dimReference" placeholder="Réf. modèle" style="width: 100%; padding: 8px 10px; border: 1px solid #d2d2d7; border-radius: 6px;">
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -1572,7 +1699,7 @@
                 <div class="result-row-card">
                     <div>
                         <div class="rrc-label">Certificats CEE</div>
-                        <div style="font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 2px;" id="ceeSourceLabel">Table par défaut</div>
+                        <div style="font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 2px;" id="ceeSourceLabel">BAR-TH détaillé</div>
                     </div>
                     <div class="rrc-value green" id="aidesCEE" style="font-size: 18px;">—</div>
                 </div>
@@ -1721,6 +1848,14 @@ function detectZoneFromDept() {
         document.getElementById('zone').value = zone;
         document.getElementById('deptZoneResult').textContent = `→ Zone ${zone}`;
         document.getElementById('deptZoneResult').style.display = 'inline';
+        // Auto Tbase dimensionnement
+        const deptKey = deptInput.padStart(2,'0');
+        const tbase = DEPT_TBASE[deptKey] || DEPT_TBASE[deptInput];
+        if (tbase !== undefined) {
+            document.getElementById('dimTbase').value = tbase;
+            document.getElementById('dimTbaseHint').textContent = `Dept ${deptInput} → Tbase = ${tbase}°C`;
+            calcDim();
+        }
         calc();
     } else {
         document.getElementById('deptZoneResult').textContent = '❌ Département inconnu';
@@ -1903,18 +2038,19 @@ function toggleCEE() {
 }
 
 // Quelle(s) fiche(s) BAR-TH s'appliquent selon le scénario
-// PAC+Ballon Thermo = PAC chauffage seul + CET séparé → 2 opérations distinctes → cumulables
+// Depuis 01/01/2026 : BAR-TH-148 NON cumulable avec BAR-TH-171 (arrêté 15/12/2025)
 function getCEEFiches(scenario) {
     switch(scenario) {
         case 'PAC':                    return ['171'];
         case 'PAC + BALLON ÉLECTRIQUE': return ['171'];
-        case 'PAC + BALLON THERMO':     return ['171', '148'];
+        case 'PAC + BALLON THERMO':     return ['171']; // 148 non cumulable depuis 01/2026
         case 'PAC + SSC':              return ['143'];
         default:                        return ['171'];
     }
 }
 
 function calcCEEDetail() {
+  try {
     const sc = document.getElementById('scenario').value;
     const zn = document.getElementById('zone').value;
     const menage = document.getElementById('menageCEE').value;
@@ -1929,7 +2065,14 @@ function calcCEEDetail() {
     document.getElementById('ceeScenarioLabel').textContent = SCENARIO_NAMES[sc] || sc;
     document.getElementById('ceeFichesLabel').textContent = fiches.map(f => 'BAR-TH-' + f).join(' + ');
     const noteEl = document.getElementById('ceeNonCumulNote');
-    if (noteEl) noteEl.style.display = 'none';
+    if (noteEl) {
+        if (sc === 'PAC + BALLON THERMO') {
+            noteEl.style.display = 'inline';
+            noteEl.textContent = '⚠ BAR-TH-148 non cumulable avec 171 depuis 01/2026';
+        } else {
+            noteEl.style.display = 'none';
+        }
+    }
 
     // Show/hide blocs
     document.getElementById('ceeBloc171').classList.toggle('cee-hidden', !fiches.includes('171'));
@@ -1946,10 +2089,11 @@ function calcCEEDetail() {
         const base = BAR171[tl].base[etasKey];
         const cz = BAR171.coefZone[zn];
         document.getElementById('ceeCoefSurface').value = coefS.toString().replace('.', ',');
-        const kwhc171 = base * coefS * cz;
+        const CDP = 5; // Coup de pouce Chauffage ×5 (arrêté 74e, oct 2025)
+        const kwhc171 = base * coefS * cz * CDP;
         totalKwhc += kwhc171;
         details.push(`171: ${fmtIntCEE(kwhc171)}`);
-        statusParts.push(`✅ 171: base ${fmtIntCEE(base)} × coef ${coefS} × zone ${cz}`);
+        statusParts.push(`✅ 171: base ${fmtIntCEE(base)} × coef ${coefS} × zone ${cz} × CdP ×${CDP}`);
     }
 
     // === BAR-TH-148 ===
@@ -1970,12 +2114,13 @@ function calcCEEDetail() {
 
     // === BAR-TH-143 ===
     if (fiches.includes('143')) {
-        const kwhc143 = BAR143[zn];
+        const CDP143 = 2; // Coup de pouce Chauffage ×2 (arrêté 27/12/2025, depuis 01/2026)
+        const kwhc143 = BAR143[zn] * CDP143;
         totalKwhc += kwhc143;
         details.push(`143: ${fmtIntCEE(kwhc143)}`);
-        document.getElementById('cee143Forfait').value = `${fmtIntCEE(kwhc143)} kWhc (${zn})`;
+        document.getElementById('cee143Forfait').value = `${fmtIntCEE(BAR143[zn])} × ${CDP143} = ${fmtIntCEE(kwhc143)} kWhc (${zn})`;
         document.getElementById('ceeCoefSurface').value = '—';
-        statusParts.push(`✅ 143: forfait ${zn} = ${fmtIntCEE(kwhc143)} kWhc`);
+        statusParts.push(`✅ 143: forfait ${zn} ${fmtIntCEE(BAR143[zn])} × CdP ×${CDP143} = ${fmtIntCEE(kwhc143)} kWhc`);
     }
 
     const primeCEE = (totalKwhc / 1000) * price;
@@ -1994,9 +2139,11 @@ function calcCEEDetail() {
         resultEl.className = 'cee-result';
     }
 
-    if (document.getElementById('ceeOverride').checked) {
-        // Will be picked up by calc() next time
-    }
+  } catch(e) {
+    console.error('calcCEEDetail() error:', e);
+    const errDiv = document.getElementById('calcErrorDebug');
+    if (errDiv) { errDiv.textContent = '⚠ CEEDetail: ' + e.message; errDiv.style.display = 'block'; errDiv.style.color = '#dc2626'; errDiv.style.background = '#fef2f2'; }
+  }
 }
 
 function fmtIntCEE(n) {
@@ -2086,6 +2233,7 @@ function updateFromDetail(){
 }
 
 function calc(){
+  try {
     _calcRunning = true;
     
     // Always recalculate CEE detail first (updates lastCEEDetailPrime)
@@ -2099,7 +2247,6 @@ function calc(){
     const cs=M[sc];
     
     // Check if CEE override is active
-    const ceeOverrideActive = document.getElementById('ceeOverride').checked;
     
     let tt;
     if(mode){
@@ -2164,28 +2311,18 @@ function calc(){
     let px,ce;
     let ceForMarge, taForMarge;
     
+    // Always use detailed CEE calculation
+    ce = lastCEEDetailPrime;
+    ceForMarge = ce;
+    taForMarge = ad + ceForMarge;
+    
     if(mode){
         px=parseFloat(document.getElementById('prixCumac').value)||7.0;
-        ce=kw*px/1000;
-        ceForMarge=ce;
-        taForMarge=ad+ceForMarge;
         document.getElementById('kwhCumac').value=Math.round(kw).toLocaleString('fr-FR');
-    }else{
-        px=7.0;
-        ce=kw*px/1000;
-        ceForMarge=ce;
-        taForMarge=ad+ceForMarge;
     }
     
-    // === CEE OVERRIDE: use detailed CEE calculation if checked ===
-    let ceDisplay = ce;
-    let ceeSourceText = 'Table par défaut';
-    if (ceeOverrideActive && lastCEEDetailPrime > 0) {
-        ceDisplay = lastCEEDetailPrime;
-        ceeSourceText = getCEEFiches(sc).map(f => 'BAR-TH-' + f).join(' + ') + ' détaillé';
-        ceForMarge = lastCEEDetailPrime;
-        taForMarge = ad + ceForMarge;
-    }
+    const ceDisplay = ce;
+    const ceeSourceText = getCEEFiches(sc).map(f => 'BAR-TH-' + f).join(' + ') + ' détaillé';
     
     const ta=ad+ceDisplay;
     const rb=tt-ta;
@@ -2212,6 +2349,14 @@ function calc(){
     calcRAC(rb,ch,ta,taForMarge,tt);
     
     _calcRunning = false;
+    const errDiv = document.getElementById('calcErrorDebug');
+    if (errDiv) { errDiv.textContent = ''; errDiv.style.display = 'none'; }
+  } catch(e) {
+    _calcRunning = false;
+    console.error('calc() error:', e);
+    const errDiv = document.getElementById('calcErrorDebug');
+    if (errDiv) { errDiv.textContent = '⚠ calc(): ' + e.message; errDiv.style.display = 'block'; errDiv.style.color = '#dc2626'; errDiv.style.background = '#fef2f2'; }
+  }
 }
 
 function calcRAC(rb,ch,ta,taForMarge,tt){
@@ -2253,7 +2398,6 @@ function updatePct(){
     const et=document.getElementById('etas').value;
     const sf=surfaceToCategory(document.getElementById('surface').value);
     const cs=M[sc];
-    const ceeOverrideActive = document.getElementById('ceeOverride').checked;
     
     let tt;
     if(mode){
@@ -2291,14 +2435,11 @@ function updatePct(){
     ceForMarge=ce;
     taForMarge=ad+ceForMarge;
     
-    let ceDisplay = ce;
-    if (ceeOverrideActive && lastCEEDetailPrime > 0) {
-        ceDisplay = lastCEEDetailPrime;
-        ceForMarge = lastCEEDetailPrime;
-        taForMarge = ad + ceForMarge;
-    }
+    ce = lastCEEDetailPrime;
+    ceForMarge = ce;
+    taForMarge = ad + ceForMarge;
     
-    const ta=ad+ceDisplay;
+    const ta=ad+ce;
     const rb=tt-ta;
     
     let po=parseFloat(document.getElementById('racPourcent').value)||0;
@@ -2317,7 +2458,6 @@ function updateAmt(){
     const et=document.getElementById('etas').value;
     const sf=surfaceToCategory(document.getElementById('surface').value);
     const cs=M[sc];
-    const ceeOverrideActive = document.getElementById('ceeOverride').checked;
     
     let tt;
     if(mode){
@@ -2353,14 +2493,11 @@ function updateAmt(){
     ceForMarge=ce;
     taForMarge=ad+ceForMarge;
     
-    let ceDisplay = ce;
-    if (ceeOverrideActive && lastCEEDetailPrime > 0) {
-        ceDisplay = lastCEEDetailPrime;
-        ceForMarge = lastCEEDetailPrime;
-        taForMarge = ad + ceForMarge;
-    }
+    ce = lastCEEDetailPrime;
+    ceForMarge = ce;
+    taForMarge = ad + ceForMarge;
     
-    const ta=ad+ceDisplay;
+    const ta=ad+ce;
     const rb=tt-ta;
     
     let mo=parseFloat(document.getElementById('racOffert').value)||0;
@@ -2383,7 +2520,6 @@ function reset(){
     updateSurfaceOptions();
     document.getElementById('racPourcent').value=0;
     document.getElementById('racOffert').value=0;
-    document.getElementById('ceeOverride').checked=false;
     if(mode){
         document.getElementById('prixCumac').value=7.0;
     }
@@ -2668,11 +2804,75 @@ document.getElementById('recoModal').onclick=function(e){
 })();
 
 // ============================================
+// DIMENSIONNEMENT PAC
+// ============================================
+
+// Tbase par département (°C) - valeurs conventionnelles
+const DEPT_TBASE = {
+    '01':-10,'02':-9,'03':-8,'04':-8,'05':-10,'06':-5,'07':-6,'08':-10,'09':-8,'10':-10,
+    '11':-5,'12':-8,'13':-5,'14':-7,'15':-10,'16':-5,'17':-5,'18':-8,'19':-8,'20':-2,
+    '2A':-2,'2B':-2,'21':-10,'22':-4,'23':-8,'24':-5,'25':-12,'26':-6,'27':-7,'28':-7,
+    '29':-4,'30':-5,'31':-5,'32':-5,'33':-5,'34':-5,'35':-5,'36':-7,'37':-7,'38':-10,
+    '39':-10,'40':-5,'41':-7,'42':-8,'43':-10,'44':-5,'45':-7,'46':-5,'47':-5,'48':-10,
+    '49':-5,'50':-5,'51':-10,'52':-10,'53':-5,'54':-12,'55':-10,'56':-4,'57':-12,'58':-10,
+    '59':-9,'60':-7,'61':-7,'62':-9,'63':-8,'64':-5,'65':-5,'66':-5,'67':-12,'68':-12,
+    '69':-8,'70':-12,'71':-10,'72':-7,'73':-12,'74':-12,'75':-7,'76':-7,'77':-7,'78':-7,
+    '79':-5,'80':-9,'81':-5,'82':-5,'83':-3,'84':-6,'85':-5,'86':-5,'87':-8,'88':-12,
+    '89':-10,'90':-12,'91':-7,'92':-7,'93':-7,'94':-7,'95':-7
+};
+
+let currentG = 1.3;
+
+function selectG(g) {
+    currentG = g;
+    document.querySelectorAll('.g-radio').forEach(el => {
+        const val = parseFloat(el.querySelector('input').value);
+        el.classList.toggle('selected', val === g);
+        if (val === g) el.querySelector('input').checked = true;
+    });
+    calcDim();
+}
+
+function calcDim() {
+    const S = parseFloat(document.getElementById('dimSurface').value) || 0;
+    const H = parseFloat(document.getElementById('dimHauteur').value) || 2.5;
+    const V = S * H;
+    document.getElementById('dimVolume').value = Math.round(V);
+
+    const Tbase = parseFloat(document.getElementById('dimTbase').value) || 0;
+    const Tint = parseFloat(document.getElementById('dimTint').value) || 21;
+    const deltaT = Tint - Tbase;
+    document.getElementById('dimDeltaT').value = deltaT;
+
+    const G = currentG;
+    const P = G * V * deltaT; // Watts
+    const T1 = parseFloat(document.getElementById('dimT1').value) || 60;
+    const T2 = parseFloat(document.getElementById('dimT2').value) || 140;
+
+    const puissancePAC = P * T1 / 100;
+    const puissanceTotale = P * T2 / 100;
+    const puissanceAppoint = puissanceTotale - puissancePAC;
+
+    // Affichage
+    document.getElementById('dimDeperditions').textContent = Math.round(P).toLocaleString('fr-FR') + ' W';
+    document.getElementById('dimDepFormula').textContent = `${G.toString().replace('.', ',')} × ${Math.round(V)} × ${deltaT}`;
+
+    document.getElementById('dimPuissancePAC').textContent = (puissancePAC / 1000).toFixed(1).replace('.', ',') + ' kW';
+    document.getElementById('dimPuissancePACDetail').textContent = `${Math.round(P).toLocaleString('fr-FR')} W × ${T1}%`;
+
+    document.getElementById('dimPuissanceAppoint').textContent = (puissanceAppoint / 1000).toFixed(1).replace('.', ',') + ' kW';
+    document.getElementById('dimPuissanceAppointDetail').textContent = `(P × ${T2}% − PAC)`;
+
+    document.getElementById('dimPuissanceTotale').textContent = (puissanceTotale / 1000).toFixed(1).replace('.', ',') + ' kW';
+}
+
+// ============================================
 // INIT
 // ============================================
 checkStoredMode();
 updateSurfaceOptions();
 calc();
+calcDim();
 </script>
 </body>
 </html>
