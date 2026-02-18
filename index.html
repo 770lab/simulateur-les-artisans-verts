@@ -269,6 +269,24 @@
         input.confort-slider::-moz-range-thumb { width: 26px; height: 26px; border-radius: 50%; background: white; border: 3px solid #16a34a; cursor: pointer; box-shadow: 0 1px 6px rgba(0,0,0,0.15); }
         .confort-labels { display: flex; justify-content: space-between; font-size: 11px; color: #94a3b8; margin-top: 2px; }
         .confort-desc { font-size: 12px; color: #64748b; margin-top: 10px; font-style: italic; }
+
+        /* Isolation checklist */
+        .iso-check {
+            display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+            border: 1.5px solid #e2e8f0; border-radius: 8px; cursor: pointer;
+            transition: all 0.15s ease; background: white;
+        }
+        .iso-check:hover { border-color: #a3cfbb; background: #f8fdfb; }
+        .iso-check:has(input:checked) { border-color: #16a34a; background: #f0fdf4; }
+        .iso-check input[type="checkbox"] { accent-color: #16a34a; width: 18px; height: 18px; flex-shrink: 0; cursor: pointer; }
+        .iso-info { flex: 1; }
+        .iso-title { font-weight: 600; color: #1d1d1f; font-size: 13px; display: block; }
+        .iso-sub { font-size: 11px; color: #94a3b8; }
+        .iso-quand {
+            padding: 4px 8px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 11px;
+            color: #64748b; background: #f8fafc; display: none; cursor: pointer;
+        }
+        .iso-check:has(input:checked) .iso-quand { display: block; }
         .cee-kpi-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -1177,8 +1195,42 @@
                 <div id="calcErrorDebug" style="color: red; font-size: 12px; font-weight: 600; margin-top: 8px; padding: 6px; background: #fef2f2; border-radius: 6px;"></div>
             </div>
 
-            <!-- ===================== NOTE DE DIMENSIONNEMENT ===================== -->
-            <div class="card" id="dimensionnementCard">
+            <!-- ===================== BARÈME PAC (client) ===================== -->
+            <div class="card" id="baremeCard">
+                <h2 class="card-title">📐 Puissance PAC recommandée</h2>
+                <div style="font-size: 12px; color: #64748b; margin-bottom: 14px;">Estimation selon la surface chauffée (ratio 1 kW / 10 m²)</div>
+
+                <div class="dim-row">
+                    <div class="dim-field">
+                        <label>Surface chauffée (m²) <span class="req">*</span></label>
+                        <input type="number" id="baremeSurface" value="100" min="20" max="300" oninput="calcBareme(); syncSurfaces('bareme');">
+                    </div>
+                </div>
+
+                <!-- Résultat barème -->
+                <div id="baremeResult" style="margin-top: 4px; text-align: center;">
+                    <div style="font-size: 12px; color: #64748b; margin-bottom: 6px;">PAC recommandée :</div>
+                    <div id="baremeReco" style="font-size: 28px; font-weight: 800; color: #16a34a;">10 kW</div>
+                    <div id="baremeAlt" style="font-size: 13px; color: #64748b; margin-top: 4px;"></div>
+                </div>
+
+                <!-- Tableau récap -->
+                <div style="margin-top: 14px; overflow: hidden; border-radius: 8px; border: 1px solid #e2e8f0;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+                        <thead>
+                            <tr style="background: #f1f5f9;">
+                                <th style="padding: 6px 10px; text-align: left; font-weight: 600; color: #475569;">Surface</th>
+                                <th style="padding: 6px 10px; text-align: center; font-weight: 600; color: #475569;">PAC</th>
+                            </tr>
+                        </thead>
+                        <tbody id="baremeTableBody" style="color: #334155;">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ===================== NOTE DE DIMENSIONNEMENT (fournisseur) ===================== -->
+            <div class="card fournisseur-only" id="dimensionnementCard">
                 <h2 class="card-title">📐 Dimensionnement PAC</h2>
                 <div style="font-size: 12px; color: #64748b; margin-bottom: 18px;">Estimation de la puissance recommandée · Formule : P = G × V × ΔT</div>
 
@@ -1186,7 +1238,7 @@
                 <div class="dim-row">
                     <div class="dim-field">
                         <label>Surface au sol (m²) <span class="req">*</span></label>
-                        <input type="number" id="dimSurface" value="100" min="1" oninput="calcDim()">
+                        <input type="number" id="dimSurface" value="100" min="1" oninput="syncSurfaces('dim')">
                         <div class="dim-hint">Exemple : 100 m²</div>
                     </div>
                     <div class="dim-field">
@@ -1205,50 +1257,71 @@
                     </div>
                 </div>
 
-                <!-- État de l'isolation -->
+                <!-- Questionnaire isolation -->
                 <div style="margin-bottom: 16px;">
-                    <label style="font-weight: 600; color: #1d1d1f; font-size: 13px; display: block; margin-bottom: 8px;">État de l'isolation <span style="color: #dc2626;">*</span></label>
-                    <div id="gCoefOptions" style="display: flex; flex-direction: column; gap: 8px;">
-                        <label class="g-radio selected" onclick="selectIsolation('origine')">
-                            <input type="radio" name="dimIsolation" value="origine" checked>
-                            <span class="g-label">
-                                <div class="g-label-title">État d'origine / Non précisé</div>
-                                <div class="g-label-sub">Coefficient standard selon l'année.</div>
+                    <label style="font-weight: 600; color: #1d1d1f; font-size: 13px; display: block; margin-bottom: 10px;">Travaux d'isolation réalisés</label>
+                    <div style="display: flex; flex-direction: column; gap: 6px;" id="isoChecklist">
+                        <label class="iso-check" onclick="setTimeout(evalIsolation,10)">
+                            <input type="checkbox" name="isoWork" value="combles">
+                            <span class="iso-info">
+                                <span class="iso-title">Combles / Toiture</span>
+                                <span class="iso-sub">Isolation soufflée, rampants, sarking…</span>
                             </span>
+                            <select class="iso-quand" onchange="evalIsolation()">
+                                <option value="recent">&lt; 5 ans</option>
+                                <option value="ancien">&gt; 5 ans</option>
+                            </select>
                         </label>
-                        <label class="g-radio" onclick="selectIsolation('partielle')">
-                            <input type="radio" name="dimIsolation" value="partielle">
-                            <span class="g-label">
-                                <div class="g-label-title">Rénovation partielle</div>
-                                <div class="g-label-sub">Bonus d'isolation (−0,2 sur G).</div>
+                        <label class="iso-check" onclick="setTimeout(evalIsolation,10)">
+                            <input type="checkbox" name="isoWork" value="murs">
+                            <span class="iso-info">
+                                <span class="iso-title">Murs (ITE / ITI)</span>
+                                <span class="iso-sub">Isolation thermique extérieure ou intérieure</span>
                             </span>
+                            <select class="iso-quand" onchange="evalIsolation()">
+                                <option value="recent">&lt; 5 ans</option>
+                                <option value="ancien">&gt; 5 ans</option>
+                            </select>
                         </label>
-                        <label class="g-radio" onclick="selectIsolation('totale')">
-                            <input type="radio" name="dimIsolation" value="totale">
-                            <span class="g-label">
-                                <div class="g-label-title">Rénovation totale</div>
-                                <div class="g-label-sub">Isolation refaite à neuf (rénovation performante).</div>
+                        <label class="iso-check" onclick="setTimeout(evalIsolation,10)">
+                            <input type="checkbox" name="isoWork" value="fenetres">
+                            <span class="iso-info">
+                                <span class="iso-title">Fenêtres double / triple vitrage</span>
+                                <span class="iso-sub">Remplacement des menuiseries</span>
                             </span>
+                            <select class="iso-quand" onchange="evalIsolation()">
+                                <option value="recent">&lt; 5 ans</option>
+                                <option value="ancien">&gt; 5 ans</option>
+                            </select>
+                        </label>
+                        <label class="iso-check" onclick="setTimeout(evalIsolation,10)">
+                            <input type="checkbox" name="isoWork" value="plancher">
+                            <span class="iso-info">
+                                <span class="iso-title">Plancher bas</span>
+                                <span class="iso-sub">Isolation vide sanitaire, sous-sol, terre-plein</span>
+                            </span>
+                            <select class="iso-quand" onchange="evalIsolation()">
+                                <option value="recent">&lt; 5 ans</option>
+                                <option value="ancien">&gt; 5 ans</option>
+                            </select>
+                        </label>
+                        <label class="iso-check" onclick="setTimeout(evalIsolation,10)">
+                            <input type="checkbox" name="isoWork" value="vmc">
+                            <span class="iso-info">
+                                <span class="iso-title">VMC double flux</span>
+                                <span class="iso-sub">Ventilation mécanique contrôlée performante</span>
+                            </span>
+                            <select class="iso-quand" onchange="evalIsolation()">
+                                <option value="recent">&lt; 5 ans</option>
+                                <option value="ancien">&gt; 5 ans</option>
+                            </select>
                         </label>
                     </div>
-                    <div style="margin-top: 8px; font-size: 12px; color: #334155; font-weight: 600;" id="dimGDisplay">G = 0,95</div>
-                </div>
-
-                <!-- Niveau de confort -->
-                <div style="margin-bottom: 16px;">
-                    <label style="font-weight: 600; color: #1d1d1f; font-size: 13px; display: block; margin-bottom: 8px;">Niveau de confort <span style="color: #dc2626;">*</span></label>
-                    <div class="confort-box">
-                        <div class="confort-header">
-                            <span class="confort-val" id="confortPct">100%</span>
-                            <span class="confort-lbl" id="confortName">Standard</span>
-                        </div>
-                        <input type="range" class="confort-slider" id="dimConfort" min="60" max="140" value="100" step="5" oninput="updateConfort(); calcDim();">
-                        <div class="confort-labels">
-                            <span>Économie</span>
-                            <span>Standard</span>
-                            <span>Confort +</span>
-                        </div>
-                        <div class="confort-desc" id="confortDesc">Le choix recommandé pour un confort équilibré.</div>
+                    <!-- Résultat auto -->
+                    <div id="isoResult" style="margin-top: 10px; padding: 10px 14px; border-radius: 8px; font-size: 13px; background: #f8fafc; border: 1.5px solid #e2e8f0;">
+                        <span style="font-weight: 600;" id="isoStateName">État d'origine / Non précisé</span>
+                        <span style="color: #64748b;"> — </span>
+                        <span style="font-weight: 700; color: #16a34a;" id="dimGDisplay">G = 0,95</span>
                     </div>
                 </div>
 
@@ -1581,7 +1654,7 @@ const DEPT_ZONE = {
     "91":"H1","92":"H1","93":"H1","94":"H1","95":"H1"
 };
 
-function detectZoneFromDept() {
+function detectDept() {
     const deptInput = document.getElementById('departement').value.trim();
     if (!deptInput) return;
     const zone = DEPT_ZONE[deptInput] || DEPT_ZONE[deptInput.padStart(2,'0')];
@@ -1785,7 +1858,7 @@ function getCEEFiches(scenario) {
         case 'PAC':                    return ['171'];
         case 'PAC + BALLON ÉLECTRIQUE': return ['171'];
         case 'PAC + BALLON THERMO':     return ['171']; // 148 non cumulable depuis 01/2026
-        case 'PAC + SSC':              return ['143'];
+        case 'PAC + SSC':              return ['171', '143']; // cumul 171+143, CdP sur 171 uniquement
         default:                        return ['171'];
     }
 }
@@ -1810,6 +1883,10 @@ function calcCEEDetail() {
         if (sc === 'PAC + BALLON THERMO') {
             noteEl.style.display = 'inline';
             noteEl.textContent = '⚠ BAR-TH-148 non cumulable avec 171 depuis 01/2026';
+        } else if (sc === 'PAC + SSC') {
+            noteEl.style.display = 'inline';
+            noteEl.innerHTML = '💡 CdP ×5 sur 171 (prioritaire vs ×2 sur 143)';
+            noteEl.style.color = '#059669';
         } else {
             noteEl.style.display = 'none';
         }
@@ -1855,13 +1932,22 @@ function calcCEEDetail() {
 
     // === BAR-TH-143 ===
     if (fiches.includes('143')) {
-        const CDP143 = 2; // Coup de pouce Chauffage ×2 (arrêté 27/12/2025, depuis 01/2026)
-        const kwhc143 = BAR143[zn] * CDP143;
+        const base143 = BAR143[zn];
+        const CDP143 = 2;
+        const kwhc143avecCdP = base143 * CDP143;
+        // Si cumul avec 171 : CdP va sur 171 (×5 > ×2), 143 = forfait base
+        // Si 143 seul : CdP ×2 applicable
+        const has171 = fiches.includes('171');
+        const kwhc143 = has171 ? base143 : kwhc143avecCdP;
         totalKwhc += kwhc143;
         details.push(`143: ${fmtIntCEE(kwhc143)}`);
-        document.getElementById('cee143Forfait').value = `${fmtIntCEE(BAR143[zn])} × ${CDP143} = ${fmtIntCEE(kwhc143)} kWhc (${zn})`;
-        document.getElementById('ceeCoefSurface').value = '—';
-        statusParts.push(`✅ 143: forfait ${zn} ${fmtIntCEE(BAR143[zn])} × CdP ×${CDP143} = ${fmtIntCEE(kwhc143)} kWhc`);
+        if (has171) {
+            document.getElementById('cee143Forfait').value = `${fmtIntCEE(base143)} kWhc (${zn}) — CdP sur 171`;
+            statusParts.push(`✅ 143: forfait ${zn} = ${fmtIntCEE(base143)} kWhc (CdP ×${CDP143} = ${fmtIntCEE(kwhc143avecCdP)} si seul)`);
+        } else {
+            document.getElementById('cee143Forfait').value = `${fmtIntCEE(base143)} × ${CDP143} = ${fmtIntCEE(kwhc143avecCdP)} kWhc (${zn})`;
+            statusParts.push(`✅ 143: forfait ${zn} ${fmtIntCEE(base143)} × CdP ×${CDP143} = ${fmtIntCEE(kwhc143avecCdP)} kWhc`);
+        }
     }
 
     const primeCEE = (totalKwhc / 1000) * price;
@@ -2411,15 +2497,33 @@ function getGFromAnnee(annee) {
 
 let currentIsolation = 'origine';
 
-function selectIsolation(state) {
-    currentIsolation = state;
-    document.querySelectorAll('#gCoefOptions .g-radio').forEach(el => {
-        const val = el.querySelector('input').value;
-        el.classList.toggle('selected', val === state);
-        if (val === state) el.querySelector('input').checked = true;
+function evalIsolation() {
+    const checks = document.querySelectorAll('#isoChecklist input[type="checkbox"]:checked');
+    const count = checks.length;
+    let recentCount = 0;
+    checks.forEach(cb => {
+        const quand = cb.closest('.iso-check').querySelector('.iso-quand');
+        if (quand && quand.value === 'recent') recentCount++;
     });
+
+    // Détermination auto de l'état
+    if (count === 0) {
+        currentIsolation = 'origine';
+    } else if (count >= 3 && recentCount >= 2) {
+        currentIsolation = 'totale';
+    } else {
+        currentIsolation = 'partielle';
+    }
+
+    // Affichage
+    const names = { origine: 'État d\'origine / Non précisé', partielle: 'Rénovation partielle', totale: 'Rénovation totale' };
+    const colors = { origine: '#64748b', partielle: '#d97706', totale: '#16a34a' };
+    const el = document.getElementById('isoStateName');
+    if (el) { el.textContent = names[currentIsolation]; el.style.color = colors[currentIsolation]; }
     calcDim();
 }
+
+function selectIsolation(state) { currentIsolation = state; calcDim(); }
 
 function getEffectiveG() {
     const annee = parseInt(document.getElementById('dimAnnee').value) || 2000;
@@ -2429,18 +2533,85 @@ function getEffectiveG() {
     return g;
 }
 
-function updateConfort() {
-    const val = parseInt(document.getElementById('dimConfort').value);
-    document.getElementById('confortPct').textContent = val + '%';
-    let name, desc;
-    if (val <= 75) { name = 'ÉCONOMIE'; desc = 'Dimensionnement réduit, couverture minimale.'; }
-    else if (val <= 115) { name = 'STANDARD'; desc = 'Le choix recommandé pour un confort équilibré.'; }
-    else { name = 'CONFORT +'; desc = 'Surdimensionnement pour un confort maximal.'; }
-    document.getElementById('confortName').textContent = name;
-    document.getElementById('confortDesc').textContent = desc;
-    // Map confort to T1 (taux PAC seule): 60→40%, 100→60%, 140→80%
-    const t1 = 40 + (val - 60) * (40 / 80); // linear 40..80
-    document.getElementById('dimT1').value = Math.round(t1);
+// ============ BARÈME PAC ============
+const BAREME_PAC = [
+    { max: 40, reco: [4] },
+    { max: 50, reco: [6] },
+    { max: 60, reco: [6, 8] },
+    { max: 70, reco: [6, 8] },
+    { max: 80, reco: [8] },
+    { max: 90, reco: [8, 10] },
+    { max: 100, reco: [10] },
+    { max: 110, reco: [10, 12] },
+    { max: 120, reco: [12] },
+    { max: 130, reco: [12, 14] },
+    { max: 140, reco: [14] },
+    { max: 150, reco: [14, 16] },
+    { max: 160, reco: [16] },
+    { max: 170, reco: [16, 18] },
+    { max: 180, reco: [18] },
+    { max: 190, reco: [18, 20] },
+    { max: Infinity, reco: [20] }
+];
+
+function getBaremePAC(surface) {
+    for (const row of BAREME_PAC) {
+        if (surface <= row.max) return row.reco;
+    }
+    return [20];
+}
+
+function calcBareme() {
+    const s = parseInt(document.getElementById('baremeSurface').value) || 100;
+    const reco = getBaremePAC(s);
+    const el = document.getElementById('baremeReco');
+    const alt = document.getElementById('baremeAlt');
+    if (reco.length === 1) {
+        el.textContent = reco[0] + ' kW';
+        alt.textContent = '';
+    } else {
+        el.textContent = reco[0] + ' ou ' + reco[1] + ' kW';
+        alt.textContent = `${reco[0]} kW = économique · ${reco[1]} kW = confort`;
+    }
+    // Highlight matching row
+    const maxVals = [40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,9999];
+    const rows = document.querySelectorAll('#baremeTableBody tr');
+    let matched = false;
+    rows.forEach((tr, i) => {
+        const isMatch = !matched && s <= maxVals[i];
+        tr.style.background = isMatch ? '#f0fdf4' : '';
+        tr.style.fontWeight = isMatch ? '600' : '';
+        if (isMatch) matched = true;
+    });
+}
+
+function syncSurfaces(from) {
+    const val = (from === 'bareme')
+        ? document.getElementById('baremeSurface').value
+        : document.getElementById('dimSurface').value;
+    document.getElementById('baremeSurface').value = val;
+    document.getElementById('dimSurface').value = val;
+    calcBareme();
+    calcDim();
+}
+
+function buildBaremeTable() {
+    const tbody = document.getElementById('baremeTableBody');
+    const rows = [
+        ['≤ 40 m²', '4 kW'], ['50 m²', '6 kW'], ['60 m²', '6 ou 8 kW'],
+        ['70 m²', '6 ou 8 kW'], ['80 m²', '8 kW'], ['90 m²', '8 ou 10 kW'],
+        ['100 m²', '10 kW'], ['110 m²', '10 ou 12 kW'], ['120 m²', '12 kW'],
+        ['130 m²', '12 ou 14 kW'], ['140 m²', '14 kW'], ['150 m²', '14 ou 16 kW'],
+        ['160 m²', '16 kW'], ['170 m²', '16 ou 18 kW'], ['180 m²', '18 kW'],
+        ['190 m²', '18 ou 20 kW'], ['≥ 200 m²', '20 kW']
+    ];
+    const maxVals = [40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,9999];
+    tbody.innerHTML = rows.map((r, i) =>
+        `<tr data-max="${maxVals[i]}" style="border-top: 1px solid #f1f5f9;">
+            <td style="padding: 5px 10px;">${r[0]}</td>
+            <td style="padding: 5px 10px; text-align: center; font-weight: 500;">${r[1]}</td>
+        </tr>`
+    ).join('');
 }
 
 function selectG(g) { /* legacy compat */ currentG = g; calcDim(); }
@@ -2485,7 +2656,8 @@ function calcDim() {
 checkStoredMode();
 updateSurfaceOptions();
 calc();
-updateConfort();
+buildBaremeTable();
+calcBareme();
 calcDim();
 </script>
 </body>
