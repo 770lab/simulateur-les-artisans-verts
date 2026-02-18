@@ -875,6 +875,14 @@
         .user-bar .btn-hist:hover { background:#e5e7eb; }
         .user-bar .btn-logout { padding:4px 10px; font-size:11px; background:#fef2f2; border:1px solid #fecaca; border-radius:6px; cursor:pointer; font-weight:600; color:#dc2626; }
         .user-bar .btn-logout:hover { background:#fee2e2; }
+        .guest-bar { display:flex; align-items:center; gap:8px; }
+        .guest-bar .btn-login-small { padding:6px 14px; font-size:12px; background:linear-gradient(135deg,#16a34a,#15803d); color:white; border:none; border-radius:6px; cursor:pointer; font-weight:600; }
+
+        /* VIEW TOGGLE SWITCH */
+        .view-toggle { display:flex; align-items:center; gap:8px; background:#f3f4f6; border-radius:8px; padding:3px; }
+        .view-toggle .toggle-opt { padding:5px 12px; border-radius:6px; font-size:11px; font-weight:600; cursor:pointer; color:#6b7280; transition:all 0.2s; border:none; background:none; }
+        .view-toggle .toggle-opt.active { background:white; color:#1f2937; box-shadow:0 1px 3px rgba(0,0,0,0.1); }
+        .view-toggle .toggle-opt:hover:not(.active) { color:#374151; }
 
         /* HISTORY MODAL */
         .hist-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-items:center; }
@@ -909,6 +917,10 @@
         <div class="form-group"><label>Mot de passe</label><input type="password" id="loginPass" placeholder="Mot de passe"></div>
         <button class="btn-login" onclick="doLogin()">Se connecter</button>
         <p id="loginError" class="login-error"></p>
+        <div style="margin-top:20px;padding-top:18px;border-top:1px solid #e5e7eb;text-align:center;">
+            <p style="color:#9ca3af;font-size:12px;margin-bottom:10px;">Pas de compte ?</p>
+            <button onclick="doGuestLogin()" style="width:100%;padding:11px;background:#f3f4f6;color:#374151;border:1px solid #d1d5db;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;">👤 Continuer en vue client</button>
+        </div>
     </div>
 </div>
 
@@ -920,6 +932,33 @@
             <button class="hist-modal-close" onclick="document.getElementById('historyModal').classList.remove('active')">&times;</button>
         </div>
         <div class="hist-modal-body" id="historyBody"></div>
+    </div>
+</div>
+
+<!-- PASSWORD CHANGE MODAL -->
+<div id="pwdModal" class="hist-overlay" onclick="if(event.target===this)this.classList.remove('active')">
+    <div class="hist-modal" style="max-width:380px;">
+        <div class="hist-modal-header">
+            <h3>🔑 Changer mon mot de passe</h3>
+            <button class="hist-modal-close" onclick="document.getElementById('pwdModal').classList.remove('active')">&times;</button>
+        </div>
+        <div class="hist-modal-body">
+            <div style="margin-bottom:14px;">
+                <label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:4px;">Ancien mot de passe</label>
+                <input type="password" id="pwdOld" style="width:100%;padding:10px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box;">
+            </div>
+            <div style="margin-bottom:14px;">
+                <label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:4px;">Nouveau mot de passe</label>
+                <input type="password" id="pwdNew" style="width:100%;padding:10px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box;">
+            </div>
+            <div style="margin-bottom:14px;">
+                <label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:4px;">Confirmer</label>
+                <input type="password" id="pwdConfirm" style="width:100%;padding:10px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box;">
+            </div>
+            <button onclick="doChangePassword()" style="width:100%;padding:12px;background:linear-gradient(135deg,#16a34a,#15803d);color:white;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;">Modifier</button>
+            <p id="pwdError" style="color:#dc2626;text-align:center;margin-top:10px;font-size:13px;display:none;"></p>
+            <p id="pwdSuccess" style="color:#16a34a;text-align:center;margin-top:10px;font-size:13px;display:none;"></p>
+        </div>
     </div>
 </div>
 
@@ -935,10 +974,20 @@
                     <h1 style="margin: 0; font-size: 22px;">Simulateur Aides PAC <span style="font-size: 14px; background: #16a34a; color: white; padding: 2px 8px; border-radius: 6px; vertical-align: middle; margin-left: 6px;">2026</span></h1>
                 </div>
                 <button class="btn-reset" onclick="reset()" style="padding: 8px 16px; font-size: 12px; width: auto;">↻ Reset</button>
-                <div class="user-bar">
+                <!-- GUEST BAR (vue client sans compte) -->
+                <div class="guest-bar" id="guestBar" style="display:none;">
+                    <button class="btn-login-small" onclick="goToLogin()">🔑 Se connecter</button>
+                </div>
+                <!-- USER BAR (commercial/admin connecté) -->
+                <div class="user-bar" id="userBar" style="display:none;">
                     <span class="user-name" id="userNameDisplay">—</span>
                     <span class="user-role" id="userRoleDisplay">—</span>
+                    <div class="view-toggle" id="viewToggle">
+                        <button class="toggle-opt active" id="togClient" onclick="switchView('client')">👤 Client</button>
+                        <button class="toggle-opt" id="togFournisseur" onclick="switchView('fournisseur')">📊 Fournisseur</button>
+                    </div>
                     <button class="btn-hist" onclick="openHistory()">📋</button>
+                    <button class="btn-hist" onclick="openPwdModal()" title="Changer mot de passe">🔑</button>
                     <button class="btn-logout" onclick="doLogout()">↪</button>
                 </div>
             </div>
@@ -2604,11 +2653,13 @@ function exportPDF(){
 }
 
 // ============================================
-// AUTHENTIFICATION PAR COMMERCIAL
+// AUTHENTIFICATION PAR COMMERCIAL (API)
 // ============================================
-const USERS = {
+const API_URL = ''; // ← COLLER L'URL APPS SCRIPT ICI
+const FALLBACK_USERS = {
     'ishay':   { pass:'lav',       name:'Ishay',       role:'admin' },
     'admin':   { pass:'gamberge',  name:'Admin',       role:'admin' },
+    'mendy':   { pass:'mendy5786', name:'Mendy',       role:'commercial' },
     'david':   { pass:'david26',   name:'David',       role:'commercial' },
     'sarah':   { pass:'sarah26',   name:'Sarah',       role:'commercial' },
     'marc':    { pass:'marc26',    name:'Marc',        role:'commercial' },
@@ -2616,6 +2667,24 @@ const USERS = {
     'thomas':  { pass:'thomas26',  name:'Thomas',      role:'commercial' },
 };
 let currentUser = null;
+let useAPI = false;
+
+function apiCall(params, callback, errorCallback) {
+    if (!API_URL) { if(errorCallback) errorCallback('Pas de serveur'); return; }
+    const qs = Object.entries(params).map(([k,v])=>k+'='+encodeURIComponent(v)).join('&');
+    fetch(API_URL + '?' + qs, {redirect:'follow'})
+        .then(r => r.text())
+        .then(txt => {
+            let d;
+            try { d = JSON.parse(txt); } catch(e) {
+                const m = txt.match(/\{[\s\S]*\}/);
+                if(m) try { d = JSON.parse(m[0]); } catch(e2){}
+            }
+            if(d) callback(d);
+            else if(errorCallback) errorCallback('Réponse invalide');
+        })
+        .catch(e => { if(errorCallback) errorCallback(e.message); });
+}
 
 function doLogin(){
     const u = document.getElementById('loginUser').value.trim().toLowerCase();
@@ -2623,16 +2692,48 @@ function doLogin(){
     const errEl = document.getElementById('loginError');
     errEl.style.display = 'none';
     if(!u){ errEl.textContent='Veuillez saisir un identifiant'; errEl.style.display='block'; return; }
-    const account = USERS[u];
+
+    if(API_URL) {
+        // API mode
+        errEl.textContent = 'Connexion...'; errEl.style.display='block'; errEl.style.color='#6b7280';
+        apiCall({action:'login', user:u, pass:p}, function(d){
+            errEl.style.color = '#dc2626';
+            if(d.success){
+                useAPI = true;
+                const usr = d.user || {};
+                currentUser = {
+                    id: usr.username || u,
+                    name: usr.name || u,
+                    role: usr.role || 'commercial'
+                };
+                try{ localStorage.setItem('pac_user', JSON.stringify(currentUser)); localStorage.setItem('pac_api','1'); }catch(e){}
+                showApp();
+            } else {
+                errEl.textContent = d.error || 'Identifiants incorrects';
+                errEl.style.display = 'block';
+            }
+        }, function(err){
+            // Fallback local
+            errEl.style.color = '#dc2626';
+            doLoginLocal(u, p, errEl);
+        });
+    } else {
+        doLoginLocal(u, p, errEl);
+    }
+}
+function doLoginLocal(u, p, errEl){
+    const account = FALLBACK_USERS[u];
     if(!account || account.pass !== p){
-        errEl.textContent='Identifiant ou mot de passe incorrect';
-        errEl.style.display='block';
+        errEl.textContent = 'Identifiant ou mot de passe incorrect';
+        errEl.style.display = 'block';
+        errEl.style.color = '#dc2626';
         return;
     }
+    useAPI = false;
     currentUser = { id:u, name:account.name, role:account.role };
-    try{ localStorage.setItem('pac_user', JSON.stringify(currentUser)); }catch(e){}
+    try{ localStorage.setItem('pac_user', JSON.stringify(currentUser)); localStorage.removeItem('pac_api'); }catch(e){}
     showApp();
-    logAction('Connexion', account.name + ' (' + account.role + ')');
+    logAction('Connexion (local)', account.name);
 }
 document.getElementById('loginPass').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
 document.getElementById('loginUser').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
@@ -2640,20 +2741,64 @@ document.getElementById('loginUser').addEventListener('keydown', e=>{ if(e.key==
 function doLogout(){
     logAction('Déconnexion', currentUser ? currentUser.name : '');
     currentUser = null;
-    try{ localStorage.removeItem('pac_user'); }catch(e){}
+    try{ localStorage.removeItem('pac_user'); localStorage.removeItem('pac_api'); }catch(e){}
     location.reload();
+}
+
+function goToLogin(){
+    currentUser = null;
+    try{ localStorage.removeItem('pac_user'); }catch(e){}
+    document.getElementById('appScreen').style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'flex';
+}
+
+function doGuestLogin(){
+    currentUser = { id:'guest', name:'Client', role:'guest' };
+    try{ localStorage.setItem('pac_user', JSON.stringify(currentUser)); }catch(e){}
+    showApp();
+}
+
+function switchView(v){
+    if(v === 'fournisseur'){
+        mode = 1;
+        document.getElementById('mainContent').classList.add('fournisseur-mode');
+        document.getElementById('togFournisseur').classList.add('active');
+        document.getElementById('togClient').classList.remove('active');
+        logAction('Vue fournisseur', '');
+    } else {
+        mode = 0;
+        document.getElementById('mainContent').classList.remove('fournisseur-mode');
+        document.getElementById('togClient').classList.add('active');
+        document.getElementById('togFournisseur').classList.remove('active');
+    }
+    try{ calc(); }catch(e){}
 }
 
 function showApp(){
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('appScreen').style.display = 'block';
-    // Always fournisseur mode when logged in
-    mode = 1;
-    document.getElementById('mainContent').classList.add('fournisseur-mode');
-    // Display user info
-    document.getElementById('userNameDisplay').textContent = currentUser.name;
-    document.getElementById('userRoleDisplay').textContent = currentUser.role === 'admin' ? '👑 Admin' : '📊 Commercial';
-    // Initialize simulator
+
+    const isGuest = !currentUser || currentUser.role === 'guest';
+
+    if(isGuest){
+        // Vue client uniquement
+        mode = 0;
+        document.getElementById('mainContent').classList.remove('fournisseur-mode');
+        document.getElementById('guestBar').style.display = 'flex';
+        document.getElementById('userBar').style.display = 'none';
+    } else {
+        // Commercial/admin : vue fournisseur par défaut
+        mode = 1;
+        document.getElementById('mainContent').classList.add('fournisseur-mode');
+        document.getElementById('guestBar').style.display = 'none';
+        document.getElementById('userBar').style.display = 'flex';
+        document.getElementById('userNameDisplay').textContent = currentUser.name;
+        document.getElementById('userRoleDisplay').textContent = currentUser.role === 'admin' ? '👑 Admin' : '📊 Commercial';
+        // Toggle default to fournisseur
+        document.getElementById('togFournisseur').classList.add('active');
+        document.getElementById('togClient').classList.remove('active');
+    }
+
     try { updateSurfaceOptions(); } catch(e){}
     try { calc(); } catch(e){}
     try { buildBaremeTable(); } catch(e){}
@@ -2667,7 +2812,8 @@ function checkAutoLogin(){
         const stored = localStorage.getItem('pac_user');
         if(stored){
             const data = JSON.parse(stored);
-            if(data && data.id && USERS[data.id]){
+            if(data && data.id){
+                if(localStorage.getItem('pac_api')) useAPI = true;
                 currentUser = data;
                 showApp();
                 return true;
@@ -2678,6 +2824,61 @@ function checkAutoLogin(){
 }
 
 // ============================================
+// CHANGEMENT DE MOT DE PASSE
+// ============================================
+function openPwdModal(){
+    document.getElementById('pwdOld').value = '';
+    document.getElementById('pwdNew').value = '';
+    document.getElementById('pwdConfirm').value = '';
+    document.getElementById('pwdError').style.display = 'none';
+    document.getElementById('pwdSuccess').style.display = 'none';
+    document.getElementById('pwdModal').classList.add('active');
+}
+function doChangePassword(){
+    const oldP = document.getElementById('pwdOld').value;
+    const newP = document.getElementById('pwdNew').value;
+    const conf = document.getElementById('pwdConfirm').value;
+    const errEl = document.getElementById('pwdError');
+    const okEl = document.getElementById('pwdSuccess');
+    errEl.style.display = 'none';
+    okEl.style.display = 'none';
+
+    if(!oldP || !newP){ errEl.textContent='Tous les champs sont requis'; errEl.style.display='block'; return; }
+    if(newP.length < 4){ errEl.textContent='Minimum 4 caractères'; errEl.style.display='block'; return; }
+    if(newP !== conf){ errEl.textContent='Les mots de passe ne correspondent pas'; errEl.style.display='block'; return; }
+
+    if(useAPI && API_URL){
+        errEl.textContent = 'Modification...'; errEl.style.display='block'; errEl.style.color='#6b7280';
+        apiCall({action:'changePassword', user:currentUser.id, oldPass:oldP, newPass:newP}, function(d){
+            errEl.style.color = '#dc2626';
+            if(d.success){
+                errEl.style.display = 'none';
+                okEl.textContent = '✅ Mot de passe modifié !';
+                okEl.style.display = 'block';
+                setTimeout(()=>{ document.getElementById('pwdModal').classList.remove('active'); }, 1500);
+            } else {
+                errEl.textContent = d.error || 'Erreur';
+                errEl.style.display = 'block';
+            }
+        }, function(err){
+            errEl.textContent = 'Erreur serveur: ' + err;
+            errEl.style.display = 'block';
+            errEl.style.color = '#dc2626';
+        });
+    } else {
+        // Mode local: update FALLBACK_USERS
+        const account = FALLBACK_USERS[currentUser.id];
+        if(!account){ errEl.textContent='Compte introuvable'; errEl.style.display='block'; return; }
+        if(account.pass !== oldP){ errEl.textContent='Ancien mot de passe incorrect'; errEl.style.display='block'; return; }
+        account.pass = newP;
+        okEl.textContent = '✅ Modifié (session uniquement en mode local)';
+        okEl.style.display = 'block';
+        logAction('Changement mot de passe', currentUser.name);
+        setTimeout(()=>{ document.getElementById('pwdModal').classList.remove('active'); }, 1500);
+    }
+}
+
+// ============================================
 // JOURNAL DES MODIFICATIONS
 // ============================================
 function getJournal(){
@@ -2685,44 +2886,64 @@ function getJournal(){
 }
 function saveJournal(j){
     try{
-        // Keep max 200 entries
         if(j.length > 200) j = j.slice(j.length - 200);
         localStorage.setItem('pac_journal', JSON.stringify(j));
     }catch(e){}
 }
 function logAction(action, detail){
-    const j = getJournal();
-    j.push({
+    const entry = {
         date: new Date().toISOString(),
         user: currentUser ? currentUser.name : '?',
         role: currentUser ? currentUser.role : '?',
         action: action,
         detail: detail || ''
-    });
+    };
+    // Local journal
+    const j = getJournal();
+    j.push(entry);
     saveJournal(j);
+    // API journal (fire and forget)
+    if(useAPI && API_URL){
+        apiCall({action:'log', user:entry.user, logAction:action, detail:detail||''}, function(){}, function(){});
+    }
 }
 function openHistory(){
-    const j = getJournal().reverse().slice(0, 100);
-    const body = document.getElementById('historyBody');
-    if(j.length === 0){
-        body.innerHTML = '<div class="hist-empty">Aucune entrée dans le journal</div>';
-    } else {
-        let html = '';
-        j.forEach(e => {
-            const d = new Date(e.date);
-            const dateStr = d.toLocaleDateString('fr-FR') + ' ' + d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
-            html += '<div class="hist-entry">';
-            html += '<div class="hist-meta"><span class="hist-user">' + (e.user||'?') + '</span><span class="hist-date">' + dateStr + '</span></div>';
-            html += '<div class="hist-action">' + (e.action||'') + '</div>';
-            if(e.detail) html += '<div class="hist-detail">' + e.detail + '</div>';
-            html += '</div>';
+    if(useAPI && API_URL){
+        // Fetch from server
+        const body = document.getElementById('historyBody');
+        body.innerHTML = '<div class="hist-empty">Chargement...</div>';
+        document.getElementById('historyModal').classList.add('active');
+        apiCall({action:'getJournal', limit:'100'}, function(d){
+            renderJournal(d.journal || []);
+        }, function(err){
+            // Fallback to local
+            renderJournal(getJournal().reverse().slice(0, 100));
         });
-        if(currentUser && currentUser.role === 'admin'){
-            html += '<div class="hist-clear"><button onclick="clearJournal()">🗑️ Vider le journal</button></div>';
-        }
-        body.innerHTML = html;
+    } else {
+        renderJournal(getJournal().reverse().slice(0, 100));
+        document.getElementById('historyModal').classList.add('active');
     }
-    document.getElementById('historyModal').classList.add('active');
+}
+function renderJournal(entries){
+    const body = document.getElementById('historyBody');
+    if(!entries || entries.length === 0){
+        body.innerHTML = '<div class="hist-empty">Aucune entrée dans le journal</div>';
+        return;
+    }
+    let html = '';
+    entries.forEach(e => {
+        const d = new Date(e.date);
+        const dateStr = d.toLocaleDateString('fr-FR') + ' ' + d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+        html += '<div class="hist-entry">';
+        html += '<div class="hist-meta"><span class="hist-user">' + (e.user||'?') + '</span><span class="hist-date">' + dateStr + '</span></div>';
+        html += '<div class="hist-action">' + (e.action||'') + '</div>';
+        if(e.detail) html += '<div class="hist-detail">' + e.detail + '</div>';
+        html += '</div>';
+    });
+    if(currentUser && currentUser.role === 'admin'){
+        html += '<div class="hist-clear"><button onclick="clearJournal()">🗑️ Vider le journal</button></div>';
+    }
+    body.innerHTML = html;
 }
 function clearJournal(){
     if(confirm('Vider tout le journal ?')){
