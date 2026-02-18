@@ -2366,7 +2366,8 @@ function calcRAC(rb,ch,ta,taForMarge,tt){
     const po=parseFloat(document.getElementById('racPourcent').value)||0;
     const mo=parseFloat(document.getElementById('racOffert').value)||0;
     const rc=rb-mo;
-    document.getElementById('resteCharge').textContent=fmt(rc);
+    // RAC négatif → afficher 1€ en vue client, vrai montant en vue fournisseur
+    document.getElementById('resteCharge').textContent = (rc < 0 && !mode) ? '1 €' : fmt(rc);
     
     const rbForMarge = tt - taForMarge;
     const rcForMarge = rbForMarge - mo;
@@ -2655,7 +2656,7 @@ function exportPDF(){
 // ============================================
 // AUTHENTIFICATION PAR COMMERCIAL (API)
 // ============================================
-const API_URL = ''; // ← COLLER L'URL APPS SCRIPT ICI
+const API_URL = 'https://script.google.com/macros/s/AKfycbwP1Nu60KfLu6iKNk7SMfkJoaq5_UbzcEtwnlBm5r1XbDYz8T16zayfPWynm0Zd_4Th/exec';
 const FALLBACK_USERS = {
     'ishay':   { pass:'lav',       name:'Ishay',       role:'admin' },
     'admin':   { pass:'gamberge',  name:'Admin',       role:'admin' },
