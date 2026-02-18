@@ -938,6 +938,7 @@
                     </div>
                     <h1 style="margin: 0; font-size: 22px;">Simulateur Aides PAC <span style="font-size: 14px; background: #16a34a; color: white; padding: 2px 8px; border-radius: 6px; vertical-align: middle; margin-left: 6px;">2026</span></h1>
                 </div>
+                <button class="btn-reset" onclick="reset()" style="padding: 8px 16px; font-size: 12px; width: auto;">↻ Reset</button>
                 <button class="lock-btn" id="lockBtn">
                     <span id="lockIcon">🔒</span>
                 </button>
@@ -972,27 +973,94 @@
     <div class="main-content" id="mainContent">
         <div class="parameters-section">
             <div class="card">
-                <h2 class="card-title">Informations Client</h2>
-                
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
-                    <div>
+                <h2 class="card-title">Paramètres</h2>
+
+                <!-- Info client -->
+                <div style="font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">👤 Informations client</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                    <div class="form-group" style="margin-bottom: 0;">
                         <label>Nom</label>
                         <input type="text" id="nom" placeholder="Nom du client" oninput="checkExport()">
                     </div>
-                    <div>
+                    <div class="form-group" style="margin-bottom: 0;">
                         <label>Prénom</label>
                         <input type="text" id="prenom" placeholder="Prénom du client" oninput="checkExport()">
                     </div>
                 </div>
-            </div>
-
-            <div class="card">
-                <h2 class="card-title">Paramètres</h2>
-
-                <!-- Paramètres principaux -->
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
                     <div class="form-group" style="margin-bottom: 0;">
-                        <label for="scenario">Scénario</label>
+                        <label for="departement">Département</label>
+                        <input type="text" id="departement" placeholder="Ex: 33, 75…" maxlength="3" style="text-align: center; font-weight: 600;" oninput="detectDept()">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="rfr">Revenu fiscal de réf. (€)</label>
+                        <input type="number" id="rfr" placeholder="Ex: 35 000" oninput="detectProfil()" style="font-weight: 600;">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="nbPersonnes">Foyer</label>
+                        <select id="nbPersonnes" onchange="detectProfil()">
+                            <option value="1">1 personne</option>
+                            <option value="2">2 personnes</option>
+                            <option value="3">3 personnes</option>
+                            <option value="4" selected>4 personnes</option>
+                            <option value="5">5 personnes</option>
+                            <option value="6">6 personnes</option>
+                            <option value="7">7 personnes</option>
+                            <option value="8">8 personnes</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Hidden: auto-gérés -->
+                <select id="zone" onchange="calc()" style="display:none;">
+                    <option value="H1">H1</option><option value="H2">H2</option><option value="H3">H3</option>
+                </select>
+                <span id="deptZoneResult" style="display:none;"></span>
+                <select id="region" onchange="detectProfil()" style="display:none;">
+                    <option value="PROVINCE">Province</option><option value="IDF">IDF</option>
+                </select>
+                <input type="hidden" id="typeLogement" value="maison">
+                <select id="surface" style="display:none;">
+                    <option value="S<70">S &lt; 70 m²</option>
+                    <option value="70<=S<90">70 ≤ S &lt; 90 m²</option>
+                    <option value="S>=90" selected>S ≥ 90 m²</option>
+                </select>
+                <select id="categorie" style="display:none;">
+                    <option value="BLEU">BLEU</option><option value="JAUNE">JAUNE</option>
+                    <option value="VIOLET">VIOLET</option><option value="ROSE">ROSE</option>
+                </select>
+
+                <!-- ===== BLOC RÉSULTAT MPR + CEE ===== -->
+                <div id="mprCeeWrapper" style="margin-top: 14px; border-radius: 14px; padding: 20px; background: linear-gradient(160deg, #0f172a 0%, #1e3a5f 40%, #134e4a 100%); color: white;">
+
+                <!-- Bloc résultat MPR -->
+                <div id="mprResultBloc" style="display: none; border-radius: 12px; padding: 20px; text-align: center; transition: all 0.2s; margin-bottom: 16px;">
+                    <div id="mprProfilIcon" style="font-size: 32px; margin-bottom: 6px;">🔵</div>
+                    <div id="mprProfilLabel" style="font-size: 18px; font-weight: 800; margin-bottom: 4px;">Profil Bleu</div>
+                    <div id="mprProfilDesc" style="font-size: 13px; font-weight: 500; opacity: 0.85; margin-bottom: 10px;">Revenus très modestes</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
+                        <div style="background: rgba(255,255,255,0.25); border-radius: 8px; padding: 8px;">
+                            <div style="font-size: 10px; text-transform: uppercase; opacity: 0.7; letter-spacing: 0.5px;">Région / Zone</div>
+                            <div id="mprInfoRegion" style="font-size: 14px; font-weight: 700;">Province</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.25); border-radius: 8px; padding: 8px;">
+                            <div style="font-size: 10px; text-transform: uppercase; opacity: 0.7; letter-spacing: 0.5px;">Foyer</div>
+                            <div id="mprInfoFoyer" style="font-size: 14px; font-weight: 700;">4 pers.</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.25); border-radius: 8px; padding: 8px;">
+                            <div style="font-size: 10px; text-transform: uppercase; opacity: 0.7; letter-spacing: 0.5px;">Seuil</div>
+                            <div id="mprInfoSeuil" style="font-size: 14px; font-weight: 700;">—</div>
+                        </div>
+                    </div>
+                    <div id="mprInfoRFR" style="font-size: 12px; margin-top: 10px; opacity: 0.75;"></div>
+                    <div id="mprInfoAide" style="font-size: 15px; font-weight: 700; margin-top: 8px; background: rgba(255,255,255,0.3); border-radius: 8px; padding: 8px;"></div>
+                </div>
+
+                <!-- Paramètres techniques + CEE -->
+                <div style="font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">⚡ Scénario & Aides CEE</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="scenario" style="color: rgba(255,255,255,0.7);">Scénario</label>
                         <select id="scenario" onchange="onScenarioChange()">
                             <option value="PAC">PAC</option>
                             <option value="PAC + BALLON ÉLECTRIQUE">PAC + BALLON ÉLECTRIQUE</option>
@@ -1000,198 +1068,102 @@
                             <option value="PAC + SSC">PAC + SSC</option>
                         </select>
                     </div>
-
                     <div class="form-group" style="margin-bottom: 0;">
-                        <label for="categorie">Catégorie MPR</label>
-                        <select id="categorie" onchange="calc()">
-                            <option value="BLEU">MPR Bleu</option>
-                            <option value="JAUNE">MPR Jaune</option>
-                            <option value="VIOLET">MPR Violet</option>
-                            <option value="ROSE">MPR Rose</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label for="zone">Zone climatique</label>
-                        <div style="display: flex; gap: 6px; align-items: center;">
-                            <input type="text" id="departement" placeholder="Dept" maxlength="3" style="width: 58px; text-align: center; font-weight: 600;" oninput="detectDept()">
-                            <select id="zone" onchange="calc()" style="flex: 1;">
-                                <option value="H1">H1</option>
-                                <option value="H2">H2</option>
-                                <option value="H3">H3</option>
-                            </select>
-                            <span id="deptZoneResult" style="font-weight: 600; color: #16a34a; font-size: 12px; display: none; white-space: nowrap;"></span>
-                        </div>
-                    </div>
-
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label for="etas">Plage d'ETAS</label>
-                        <select id="etas" onchange="calc()">
+                        <label for="etas" style="color: rgba(255,255,255,0.7);">Plage d'ETAS</label>
+                        <select id="etas" onchange="syncEtas(); calc()">
                             <option value="111-140">111 &lt; ETAS &lt; 140</option>
                             <option value="140-170" selected>140 &lt; ETAS &lt; 170</option>
                         </select>
                     </div>
-
                     <div class="form-group" style="margin-bottom: 0;">
-                        <label for="typeLogement">Type de logement</label>
-                        <select id="typeLogement" onchange="onTypeLogementChange()">
-                            <option value="maison" selected>Maison individuelle</option>
-                            <option value="appartement">Appartement</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label for="surface">Surface chauffée</label>
-                        <select id="surface" onchange="calc()">
-                            <option value="S<70">S &lt; 70 m²</option>
-                            <option value="70<=S<90">70 ≤ S &lt; 90 m²</option>
-                            <option value="S>=90" selected>S ≥ 90 m²</option>
-                        </select>
+                        <label style="color: rgba(255,255,255,0.7);">Surface chauffée (m²)</label>
+                        <input type="number" id="ceeSurface" min="1" step="1" value="95" oninput="syncSurfaces('cee')">
                     </div>
                 </div>
 
-                <!-- Auto-détection revenus -->
-                <div class="revenus-section" style="margin-top: 16px;">
-                    <h3 style="font-size: 13px; font-weight: 600; color: #1d1d1f; margin-bottom: 10px;">🎯 Détection automatique du profil MPR 2026</h3>
-                    <div class="revenus-body open" id="revenusBody">
-                        <div class="revenus-grid">
-                            <div>
-                                <label>Région</label>
-                                <select id="region" onchange="detectProfil()">
-                                    <option value="PROVINCE">Hors Île-de-France</option>
-                                    <option value="IDF">Île-de-France</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label>Personnes dans le foyer</label>
-                                <select id="nbPersonnes" onchange="detectProfil()">
-                                    <option value="1">1 personne</option>
-                                    <option value="2">2 personnes</option>
-                                    <option value="3">3 personnes</option>
-                                    <option value="4" selected>4 personnes</option>
-                                    <option value="5">5 personnes</option>
-                                    <option value="6">6 personnes</option>
-                                    <option value="7">7 personnes</option>
-                                    <option value="8">8 personnes</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label>Revenu fiscal de réf. (€)</label>
-                                <input type="number" id="rfr" placeholder="Ex: 35 000" oninput="detectProfil()">
-                            </div>
-                        </div>
-                        <div class="profil-result" id="profilResult"></div>
-                    </div>
+                <!-- Fiches info -->
+                <div style="font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 10px;">
+                    Fiches : <strong id="ceeFichesLabel" style="color: rgba(255,255,255,0.8);">BAR-TH-171</strong>
+                    <span id="ceeNonCumulNote" style="display:none; font-weight: 600; margin-left: 8px;"></span>
                 </div>
 
-                <!-- ===================== CEE DÉTAIL (BAR-TH-171 / 143 / 148) ===================== -->
-                <div class="cee-section">
-                    <h3 style="font-size: 13px; font-weight: 600; color: #1d1d1f; margin-bottom: 10px;">⚡ Calcul CEE détaillé (BAR-TH-171 / 143 / 148)</h3>
-                    <div class="cee-body open" id="ceeBody">
-                        <div style="font-size: 12px; color: #64748b; margin-bottom: 10px;">
-                            Scénario : <strong id="ceeScenarioLabel">PAC</strong> → Fiches : <strong id="ceeFichesLabel">BAR-TH-171</strong>
-                            <span id="ceeNonCumulNote" style="display:none; color: #dc2626; font-weight: 600; margin-left: 8px;"></span>
-                        </div>
+                <!-- Hidden fields for JS -->
+                <span id="ceeScenarioLabel" style="display:none;">PAC</span>
+                <select id="ficheCEE" style="display:none;" onchange="toggleCEEBlocs(); calcCEEDetail();">
+                    <option value="171">BAR-TH-171</option>
+                    <option value="143">BAR-TH-143</option>
+                    <option value="148">BAR-TH-148</option>
+                </select>
+                <select id="ceeEtas" style="display:none;">
+                    <option value="lt140">lt140</option>
+                    <option value="ge140" selected>ge140</option>
+                </select>
+                <div style="display:none;">
+                    <select id="menageCEE" onchange="calcCEEDetail()">
+                        <option value="tm">Très modestes (12,5 €/MWhc)</option>
+                        <option value="autres">Autres ménages (7,5 €/MWhc)</option>
+                    </select>
+                    <input type="text" id="ceeCoefSurface" disabled value="—">
+                    <div id="ceeSurfaceInfo"></div>
+                </div>
+
+                <!-- KPI CEE -->
+                <div class="cee-kpi-row" style="grid-template-columns: 1fr 1fr; margin-top: 4px;">
+                    <div class="cee-kpi" style="background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.1);">
+                        <div class="kpi-label" style="color: rgba(255,255,255,0.6);">Volume CEE</div>
+                        <div class="kpi-value" id="ceeOutKwhc" style="color: #fbbf24;">—</div>
+                    </div>
+                    <div class="cee-kpi" style="background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.1);">
+                        <div class="kpi-label" style="color: rgba(255,255,255,0.6);">Prime CEE</div>
+                        <div class="kpi-value" id="ceeOutPrime" style="color: #34d399;">—</div>
+                    </div>
+                </div>
+                <!-- Détail fournisseur -->
+                <div class="fournisseur-only" style="margin-top: 4px; font-size: 11px; color: rgba(255,255,255,0.4); font-family: ui-monospace, monospace;">
+                    <span id="ceeOutDetail">—</span> · <span id="ceeOutPrix">—</span>
+                </div>
+
+                </div><!-- /mprCeeWrapper -->
+
+                <!-- Blocs fournisseur détail -->
+                <div class="fournisseur-only">
+                    <div class="cee-bloc-171" id="ceeBloc171" style="display:none;"></div>
+                    <div class="cee-bloc-148 cee-hidden" id="ceeBloc148" style="margin-top: 8px;">
                         <div class="cee-grid">
                             <div>
-                                <label>Fiche CEE</label>
-                                <select id="ficheCEE" onchange="toggleCEEBlocs(); calcCEEDetail();">
-                                    <option value="171">BAR-TH-171 – PAC air/eau</option>
-                                    <option value="143">BAR-TH-143 – SSC (solaire combiné)</option>
-                                    <option value="148">BAR-TH-148 – CET (chauffe-eau thermo)</option>
-                                </select>
+                                <label>Forfait BAR-TH-148 (kWhc)</label>
+                                <input type="number" id="ceeKwhc148" min="0" step="100" value="9000" oninput="calcCEEDetail()">
                             </div>
                             <div>
-                                <label>Catégorie ménage CEE</label>
-                                <select id="menageCEE" onchange="calcCEEDetail()">
-                                    <option value="tm">Très modestes (12,5 €/MWhc)</option>
-                                    <option value="autres">Autres ménages (7,5 €/MWhc)</option>
-                                </select>
+                                <label>Forfait calculé</label>
+                                <input type="text" id="cee148Forfait" disabled value="—" style="background: #f1f5f9; font-weight: 600;">
+                            </div>
+                            <div>
+                                <label>Note interne</label>
+                                <input type="text" id="ceeNote148" placeholder="COP, volume ballon, marque..." oninput="calcCEEDetail()">
                             </div>
                         </div>
-
-                        <!-- Bloc 171 spécifique -->
-                        <div class="cee-bloc-171" id="ceeBloc171" style="margin-top: 12px;">
-                            <div style="font-size: 12px; font-weight: 600; color: #2563eb; margin-bottom: 8px;">📘 BAR-TH-171 — PAC air/eau · <span style="color: #059669;">Coup de pouce ×5</span></div>
-                            <div class="cee-grid">
-                                <div>
-                                    <label>Classe ETAS (chauffage)</label>
-                                    <select id="ceeEtas" onchange="calcCEEDetail()">
-                                        <option value="lt140">111% ≤ ETAS &lt; 140%</option>
-                                        <option value="ge140" selected>ETAS ≥ 140%</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label>Surface chauffée PAC (m²)</label>
-                                    <input type="number" id="ceeSurface" min="1" step="1" value="95" oninput="calcCEEDetail()">
-                                    <div class="cee-hint">Pièces avec émetteurs alimentés par la PAC</div>
-                                </div>
-                                <div>
-                                    <label>Coef surface (auto)</label>
-                                    <input type="text" id="ceeCoefSurface" disabled value="—" style="background: #f1f5f9; font-weight: 600;">
-                                    <div class="cee-hint">Maison: 70/90 · Appart: 35/60</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Bloc 148 spécifique -->
-                        <div class="cee-bloc-148 cee-hidden" id="ceeBloc148" style="margin-top: 12px;">
-                            <div class="cee-grid">
-                                <div>
-                                    <label>Forfait BAR-TH-148 (kWhc)</label>
-                                    <input type="number" id="ceeKwhc148" min="0" step="100" value="9000" oninput="calcCEEDetail()">
-                                    <div class="cee-hint">Barème officiel 148 (par défaut : 9 000 kWhc)</div>
-                                </div>
-                                <div>
-                                    <label>Forfait calculé</label>
-                                    <input type="text" id="cee148Forfait" disabled value="—" style="background: #f1f5f9; font-weight: 600;">
-                                </div>
-                                <div>
-                                    <label>Note interne (optionnel)</label>
-                                    <input type="text" id="ceeNote148" placeholder="COP, volume ballon, marque..." oninput="calcCEEDetail()">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Bloc BAR-TH-143 -->
-                        <div id="ceeBloc143" class="cee-hidden" style="margin-top: 12px;">
-                            <div style="font-size: 12px; font-weight: 600; color: #2563eb; margin-bottom: 8px;">📙 BAR-TH-143 — SSC (solaire combiné) · <span style="color: #059669;">Coup de pouce ×2</span></div>
-                            <div class="cee-grid">
-                                <div>
-                                    <label>Forfait par zone</label>
-                                    <input type="text" id="cee143Forfait" disabled value="—" style="background: #f1f5f9; font-weight: 600;">
-                                    <div class="cee-hint">H1: 134 800 · H2: 121 000 · H3: 100 500 kWhc</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- KPI CEE -->
-                        <div class="cee-kpi-row" style="grid-template-columns: 1fr 1fr 1fr;">
-                            <div class="cee-kpi">
-                                <div class="kpi-label">Volume CEE</div>
-                                <div class="kpi-value" id="ceeOutKwhc">—</div>
-                                <div class="kpi-detail" id="ceeOutDetail">—</div>
-                            </div>
-                            <div class="cee-kpi">
-                                <div class="kpi-label">Prime CEE</div>
-                                <div class="kpi-value green" id="ceeOutPrime">—</div>
-                                <div class="kpi-detail" id="ceeOutPrix">—</div>
-                            </div>
-                            <div class="cee-kpi" id="ceeKpi148" style="display:none;">
-                                <div class="kpi-label">Dont BAR-TH-148</div>
-                                <div class="kpi-value" id="ceeOut148" style="color: #059669;">—</div>
-                                <div class="kpi-detail" id="ceeOut148Detail">—</div>
-                            </div>
-                        </div>
-
-                        <div class="cee-result" id="ceeResult"></div>
-
                     </div>
+                    <div id="ceeBloc143" class="cee-hidden" style="margin-top: 8px;">
+                        <div style="font-size: 12px; font-weight: 600; color: #2563eb; margin-bottom: 8px;">📙 BAR-TH-143 — SSC · <span style="color: #059669;">Coup de pouce ×2</span></div>
+                        <div class="cee-grid">
+                            <div>
+                                <label>Forfait par zone</label>
+                                <input type="text" id="cee143Forfait" disabled value="—" style="background: #f1f5f9; font-weight: 600;">
+                                <div class="cee-hint">H1: 134 800 · H2: 121 000 · H3: 100 500 kWhc</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cee-kpi-row" style="grid-template-columns: 1fr; margin-top: 8px;">
+                        <div class="cee-kpi" id="ceeKpi148" style="display:none;">
+                            <div class="kpi-label">Dont BAR-TH-148</div>
+                            <div class="kpi-value" id="ceeOut148" style="color: #059669;">—</div>
+                            <div class="kpi-detail" id="ceeOut148Detail">—</div>
+                        </div>
+                    </div>
+                    <div class="cee-result" id="ceeResult"></div>
                 </div>
 
-                <div style="margin-top: 12px;">
-                    <button class="btn-reset" onclick="reset()" style="width: 100%;">Réinitialiser</button>
-                </div>
                 <div id="calcErrorDebug" style="color: red; font-size: 12px; font-weight: 600; margin-top: 8px; padding: 6px; background: #fef2f2; border-radius: 6px;"></div>
             </div>
 
@@ -1657,22 +1629,30 @@ const DEPT_ZONE = {
 function detectDept() {
     const deptInput = document.getElementById('departement').value.trim();
     if (!deptInput) return;
-    const zone = DEPT_ZONE[deptInput] || DEPT_ZONE[deptInput.padStart(2,'0')];
+    const deptKey = deptInput.padStart(2,'0');
+
+    // Auto IDF
+    const IDF_DEPTS = ['75','77','78','91','92','93','94','95'];
+    const isIDF = IDF_DEPTS.includes(deptKey);
+    document.getElementById('region').value = isIDF ? 'IDF' : 'PROVINCE';
+    detectProfil();
+
+    const zone = DEPT_ZONE[deptInput] || DEPT_ZONE[deptKey];
     if (zone) {
         document.getElementById('zone').value = zone;
-        document.getElementById('deptZoneResult').textContent = `→ Zone ${zone}`;
-        document.getElementById('deptZoneResult').style.display = 'inline';
+        document.getElementById('deptZoneResult').textContent = `→ Zone ${zone}${isIDF ? ' · IDF' : ''}`;
+        
         // Auto Tbase dimensionnement
-        const deptKey = deptInput.padStart(2,'0');
         const tbase = DEPT_TBASE[deptKey] || DEPT_TBASE[deptInput];
         if (tbase !== undefined) {
             document.getElementById('dimTbase').value = tbase;
             calcDim();
         }
         calc();
+        calcCEEDetail();
     } else {
         document.getElementById('deptZoneResult').textContent = '❌ Département inconnu';
-        document.getElementById('deptZoneResult').style.display = 'inline';
+        
     }
 }
 
@@ -1712,45 +1692,63 @@ function detectProfil() {
     const region = document.getElementById('region').value;
     const nb = parseInt(document.getElementById('nbPersonnes').value);
     const rfr = parseFloat(document.getElementById('rfr').value);
-    const resultEl = document.getElementById('profilResult');
+    const bloc = document.getElementById('mprResultBloc');
 
     if (!rfr || rfr <= 0) {
-        resultEl.className = 'profil-result';
-        resultEl.textContent = '';
+        bloc.style.display = 'none';
         return;
     }
 
     const seuils = getSeuilsForPersonnes(region, nb);
-    let profil, label, className;
+    let profil, icon, label, desc, bg, color;
 
     if (rfr <= seuils[0]) {
-        profil = 'BLEU'; label = '🔵 Profil Bleu — Revenus très modestes'; className = 'profil-bleu';
+        profil = 'BLEU'; icon = '🔵'; label = 'Profil Bleu'; desc = 'Revenus très modestes';
+        bg = 'linear-gradient(135deg, #1e40af, #3b82f6)'; color = '#ffffff';
     } else if (rfr <= seuils[1]) {
-        profil = 'JAUNE'; label = '🟡 Profil Jaune — Revenus modestes'; className = 'profil-jaune';
+        profil = 'JAUNE'; icon = '🟡'; label = 'Profil Jaune'; desc = 'Revenus modestes';
+        bg = 'linear-gradient(135deg, #ca8a04, #eab308)'; color = '#ffffff';
     } else if (rfr <= seuils[2]) {
-        profil = 'VIOLET'; label = '🟣 Profil Violet — Revenus intermédiaires'; className = 'profil-violet';
+        profil = 'VIOLET'; icon = '🟣'; label = 'Profil Violet'; desc = 'Revenus intermédiaires';
+        bg = 'linear-gradient(135deg, #6b21a8, #a855f7)'; color = '#ffffff';
     } else {
-        profil = 'ROSE'; label = '🩷 Profil Rose — Revenus supérieurs'; className = 'profil-rose';
+        profil = 'ROSE'; icon = '<span style="display:inline-block;width:28px;height:28px;border-radius:50%;background:#f472b6;"></span>'; label = 'Profil Rose'; desc = 'Revenus supérieurs';
+        bg = 'linear-gradient(135deg, #9d174d, #f472b6)'; color = '#ffffff';
     }
 
     const regionLabel = region === 'IDF' ? 'Île-de-France' : 'Province';
-    const seuilInfo = profil === 'ROSE' 
-        ? `RFR ${rfr.toLocaleString('fr-FR')} € > ${seuils[2].toLocaleString('fr-FR')} €`
-        : `RFR ${rfr.toLocaleString('fr-FR')} € ≤ ${seuils[profil === 'BLEU' ? 0 : (profil === 'JAUNE' ? 1 : 2)].toLocaleString('fr-FR')} €`;
+    const seuilIdx = profil === 'BLEU' ? 0 : (profil === 'JAUNE' ? 1 : 2);
+    const seuilVal = seuils[seuilIdx];
 
-    resultEl.className = `profil-result show ${className}`;
-    resultEl.innerHTML = `${label}<br><span style="font-weight:400;font-size:12px;">${regionLabel} • ${nb} pers. • ${seuilInfo}</span>`;
+    // Update bloc
+    bloc.style.display = 'block';
+    bloc.style.background = bg;
+    bloc.style.color = color;
+    document.getElementById('mprProfilIcon').innerHTML = icon;
+    document.getElementById('mprProfilLabel').textContent = label;
+    document.getElementById('mprProfilDesc').textContent = desc;
+    const zn = document.getElementById('zone').value;
+    document.getElementById('mprInfoRegion').textContent = regionLabel + ' · ' + zn;
+    document.getElementById('mprInfoFoyer').textContent = nb + ' pers.';
+    document.getElementById('mprInfoSeuil').textContent = profil === 'ROSE'
+        ? '> ' + seuilVal.toLocaleString('fr-FR') + ' €'
+        : '≤ ' + seuilVal.toLocaleString('fr-FR') + ' €';
+    document.getElementById('mprInfoRFR').textContent = 'RFR déclaré : ' + rfr.toLocaleString('fr-FR') + ' €';
+
+    // Aide MPR pour le scénario en cours
+    const sc = document.getElementById('scenario').value;
+    const mpr = D.MPR[sc] ? D.MPR[sc][profil] : 0;
+    document.getElementById('mprInfoAide').textContent = mpr > 0
+        ? 'Aide MaPrimeRénov\' : ' + mpr.toLocaleString('fr-FR') + ' €'
+        : 'Pas d\'aide MaPrimeRénov\' pour ce profil';
 
     document.getElementById('categorie').value = profil;
 
     // Sync catégorie ménage CEE
-    if (profil === 'BLEU' || profil === 'JAUNE') {
-        document.getElementById('menageCEE').value = 'tm';
-    } else {
-        document.getElementById('menageCEE').value = 'autres';
-    }
+    document.getElementById('menageCEE').value = (profil === 'BLEU') ? 'tm' : 'autres';
 
     calc();
+    calcCEEDetail();
 }
 
 function toggleRevenus() {
@@ -1835,7 +1833,14 @@ function onTypeLogementChange() {
     calc();
 }
 
+function syncEtas() {
+    const val = document.getElementById('etas').value;
+    document.getElementById('ceeEtas').value = (val === '111-140') ? 'lt140' : 'ge140';
+    calcCEEDetail();
+}
+
 function onScenarioChange() {
+    detectProfil();
     calc();
 }
 
@@ -1872,6 +1877,17 @@ function calcCEEDetail() {
     const tl = document.getElementById('typeLogement').value;
     const surfaceVal = document.getElementById('surface').value;
     const coefS = getSurfaceCoef(surfaceVal);
+
+    // Update surface info label
+    const ceeSurfInfo = document.getElementById('ceeSurfaceInfo');
+    if (ceeSurfInfo) {
+        const s = parseInt(document.getElementById('ceeSurface').value) || 0;
+        if (tl === 'maison') {
+            ceeSurfInfo.textContent = s < 70 ? '→ S < 70 m² (coef 0,5)' : (s < 90 ? '→ 70 ≤ S < 90 m² (coef 0,7)' : '→ S ≥ 90 m² (coef 1)');
+        } else {
+            ceeSurfInfo.textContent = s < 35 ? '→ S < 35 m² (coef 0,5)' : (s < 60 ? '→ 35 ≤ S < 60 m² (coef 0,7)' : '→ S ≥ 60 m² (coef 1)');
+        }
+    }
 
     const fiches = getCEEFiches(sc);
 
@@ -2330,6 +2346,9 @@ function reset(){
     document.getElementById('etas').value='140-170';
     document.getElementById('surface').value='S>=90';
     document.getElementById('typeLogement').value='maison';
+    document.getElementById('rfr').value='';
+    document.getElementById('nbPersonnes').value='4';
+    document.getElementById('mprResultBloc').style.display='none';
     updateSurfaceOptions();
     document.getElementById('racPourcent').value=0;
     document.getElementById('racOffert').value=0;
@@ -2585,14 +2604,41 @@ function calcBareme() {
     });
 }
 
+function syncMenageCEE() {
+    const cat = document.getElementById('categorie').value;
+    document.getElementById('menageCEE').value = (cat === 'BLEU') ? 'tm' : 'autres';
+    calcCEEDetail();
+}
+
 function syncSurfaces(from) {
     const val = (from === 'bareme')
         ? document.getElementById('baremeSurface').value
+        : (from === 'cee')
+        ? document.getElementById('ceeSurface').value
         : document.getElementById('dimSurface').value;
-    document.getElementById('baremeSurface').value = val;
-    document.getElementById('dimSurface').value = val;
+    const s = parseInt(val) || 100;
+    document.getElementById('baremeSurface').value = s;
+    document.getElementById('dimSurface').value = s;
+    const ceeSurf = document.getElementById('ceeSurface');
+    if (ceeSurf) ceeSurf.value = s;
+
+    // Auto-set surface dropdown (maison)
+    const tl = document.getElementById('typeLogement').value;
+    const sel = document.getElementById('surface');
+    if (tl === 'maison') {
+        if (s < 70) sel.value = 'S<70';
+        else if (s < 90) sel.value = '70<=S<90';
+        else sel.value = 'S>=90';
+    } else {
+        if (s < 35) sel.value = 'S<35';
+        else if (s < 60) sel.value = '35<=S<60';
+        else sel.value = 'S>=60';
+    }
+
     calcBareme();
     calcDim();
+    calcCEEDetail();
+    calc();
 }
 
 function buildBaremeTable() {
@@ -2658,6 +2704,7 @@ updateSurfaceOptions();
 calc();
 buildBaremeTable();
 calcBareme();
+syncEtas();
 calcDim();
 </script>
 </body>
