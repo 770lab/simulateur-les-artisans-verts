@@ -776,14 +776,16 @@
 
         .btn-reset {
             background: #f5f5f7;
-            border: none;
-            padding: 12px 24px;
+            border: 1px solid #e5e7eb;
+            padding: 8px;
             border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
+            font-size: 0;
             cursor: pointer;
             transition: all 0.2s;
-            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
         }
 
         .btn-reset:hover {
@@ -851,6 +853,33 @@
             40% { content: '..'; }
             60%, 100% { content: '...'; }
         }
+        /* ============ MOBILE ============ */
+        @media (max-width: 600px) {
+            html, body { overflow-x: hidden; }
+            .header { padding: 8px 0; }
+            .container { padding: 0 8px; }
+            .header .container > div:first-child { margin-bottom: 4px; }
+            .user-bar { flex-wrap: wrap; gap: 5px; justify-content: center; }
+            .user-bar .user-name { font-size: 11px; }
+            .user-bar .user-role { font-size: 9px; padding: 1px 5px; }
+            .user-bar .btn-hist, .user-bar .btn-logout { padding: 3px 7px; font-size: 10px; }
+            .view-toggle { padding: 2px; }
+            .view-toggle .toggle-opt { padding: 4px 8px; font-size: 10px; }
+            .guest-bar { justify-content: center; }
+            .guest-bar .btn-login-small { padding: 5px 10px; font-size: 11px; }
+            .card { padding: 10px; margin-bottom: 10px; }
+            .card-title { font-size: 13px; margin-bottom: 10px; }
+            .parameters-section { padding: 6px; }
+            .results-sidebar { padding: 6px; }
+            .grid-3col { grid-template-columns: 1fr 1fr 1fr !important; gap: 6px !important; }
+            .form-group label { font-size: 11px; }
+            .form-group input, .form-group select { padding: 7px 8px; font-size: 12px; }
+        }
+        @media (max-width: 380px) {
+            .grid-3col { grid-template-columns: 1fr 1fr !important; }
+            .view-toggle .toggle-opt { padding: 3px 6px; font-size: 9px; }
+        }
+
         /* LOGIN SCREEN */
         .login-container { display:flex; align-items:center; justify-content:center; min-height:100vh; background:linear-gradient(135deg, #0f172a 0%, #1e3a5f 40%, #134e4a 100%); }
         .login-box { background:white; padding:40px; border-radius:16px; width:360px; box-shadow:0 20px 60px rgba(0,0,0,0.3); }
@@ -966,30 +995,30 @@
 <div id="appScreen" style="display:none;">
     <div class="header">
         <div class="container">
-            <div class="header-content">
-                <div style="display: flex; align-items: center; gap: 20px;">
-                    <div style="background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); color: white; padding: 12px 20px; border-radius: 10px; font-weight: 700; font-size: 15px; letter-spacing: 0.5px; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);">
-                        🏠 LES ARTISANS VERTS
-                    </div>
-                    <h1 style="margin: 0; font-size: 22px;">Simulateur Aides PAC <span style="font-size: 14px; background: #16a34a; color: white; padding: 2px 8px; border-radius: 6px; vertical-align: middle; margin-left: 6px;">2026</span></h1>
+            <!-- Row 1: Logo + Title + Refresh -->
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <div style="background:linear-gradient(135deg,#16a34a,#15803d); color:white; padding:8px 12px; border-radius:8px; font-weight:700; font-size:13px; letter-spacing:0.3px; box-shadow:0 2px 8px rgba(22,163,74,0.3);">🏠 LAV</div>
+                    <div style="font-size:16px; font-weight:700; color:#1d1d1f; line-height:1.2;">Simulateur PAC <span style="font-size:11px; background:#16a34a; color:white; padding:1px 6px; border-radius:4px; vertical-align:middle;">2026</span></div>
                 </div>
-                <button class="btn-reset" onclick="reset()" style="padding: 8px 16px; font-size: 12px; width: auto;" title="Rafraîchir"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> Rafraîchir</button>
-                <!-- GUEST BAR (vue client sans compte) -->
-                <div class="guest-bar" id="guestBar" style="display:none;">
-                    <button class="btn-login-small" onclick="goToLogin()">🔑 Se connecter</button>
+                <button class="btn-reset" onclick="reset()" title="Rafraîchir"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></button>
+            </div>
+            <!-- Row 2: User controls -->
+            <!-- GUEST BAR -->
+            <div class="guest-bar" id="guestBar" style="display:none;">
+                <button class="btn-login-small" onclick="goToLogin()">🔑 Se connecter</button>
+            </div>
+            <!-- USER BAR -->
+            <div class="user-bar" id="userBar" style="display:none;">
+                <span class="user-name" id="userNameDisplay">—</span>
+                <span class="user-role" id="userRoleDisplay">—</span>
+                <div class="view-toggle" id="viewToggle">
+                    <button class="toggle-opt active" id="togClient" onclick="switchView('client')">👤 Client</button>
+                    <button class="toggle-opt" id="togFournisseur" onclick="switchView('fournisseur')">📊 Pro</button>
                 </div>
-                <!-- USER BAR (commercial/admin connecté) -->
-                <div class="user-bar" id="userBar" style="display:none;">
-                    <span class="user-name" id="userNameDisplay">—</span>
-                    <span class="user-role" id="userRoleDisplay">—</span>
-                    <div class="view-toggle" id="viewToggle">
-                        <button class="toggle-opt active" id="togClient" onclick="switchView('client')">👤 Client</button>
-                        <button class="toggle-opt" id="togFournisseur" onclick="switchView('fournisseur')">📊 Fournisseur</button>
-                    </div>
-                    <button class="btn-hist" onclick="openHistory()">📋</button>
-                    <button class="btn-hist" onclick="openPwdModal()" title="Changer mot de passe">🔑</button>
-                    <button class="btn-logout" onclick="doLogout()">↪</button>
-                </div>
+                <button class="btn-hist" onclick="openHistory()">📋</button>
+                <button class="btn-hist" onclick="openPwdModal()">🔑</button>
+                <button class="btn-logout" onclick="doLogout()">↪</button>
             </div>
         </div>
     </div>
@@ -1011,7 +1040,7 @@
                         <input type="text" id="prenom" placeholder="Prénom du client" oninput="checkExport()" onchange="logClientChange()">
                     </div>
                 </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+                <div class="grid-3col" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
                     <div class="form-group" style="margin-bottom: 0;">
                         <label for="departement">Département</label>
                         <input type="text" id="departement" placeholder="Ex: 33, 75…" maxlength="3" style="text-align: center; font-weight: 600;" oninput="detectDept()">
@@ -1062,7 +1091,7 @@
                     <div id="mprProfilIcon" style="font-size: 32px; margin-bottom: 6px;">🔵</div>
                     <div id="mprProfilLabel" style="font-size: 18px; font-weight: 800; margin-bottom: 4px;">Profil Bleu</div>
                     <div id="mprProfilDesc" style="font-size: 13px; font-weight: 500; opacity: 0.85; margin-bottom: 10px;">Revenus très modestes</div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
+                    <div class="grid-3col" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
                         <div style="background: rgba(255,255,255,0.25); border-radius: 8px; padding: 8px;">
                             <div style="font-size: 10px; text-transform: uppercase; opacity: 0.7; letter-spacing: 0.5px;">Région / Zone</div>
                             <div id="mprInfoRegion" style="font-size: 14px; font-weight: 700;">Province</div>
@@ -1082,7 +1111,7 @@
 
                 <!-- Paramètres techniques + CEE -->
                 <div style="font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">⚡ Scénario & Aides CEE</div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                <div class="grid-3col" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px;">
                     <div class="form-group" style="margin-bottom: 0;">
                         <label for="scenario" style="color: rgba(255,255,255,0.7);">Scénario</label>
                         <select id="scenario" onchange="onScenarioChange()">
