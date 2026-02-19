@@ -1023,8 +1023,8 @@
                     <button class="toggle-opt active" id="togClient" onclick="switchView('client')">👤 Client</button>
                     <button class="toggle-opt" id="togFournisseur" onclick="switchView('fournisseur')">📊 Pro</button>
                 </div>
-                <button class="btn-hist" onclick="openHistory()">📋</button>
-                <button class="btn-hist" onclick="openPwdModal()">🔑</button>
+                <button class="btn-hist" id="btnHistory" onclick="openHistory()" style="display:none;">📋</button>
+                <button class="btn-hist" id="btnPwd" onclick="openPwdModal()" style="display:none;">🔑</button>
                 <button class="btn-logout" onclick="doLogout()">↪</button>
             </div>
         </div>
@@ -2913,6 +2913,10 @@ function showApp(){
         document.getElementById('userBar').style.display = 'flex';
         document.getElementById('userNameDisplay').textContent = currentUser.name;
         document.getElementById('userRoleDisplay').textContent = currentUser.role === 'admin' ? '👑 Admin' : '📊 Commercial';
+        // Admin-only buttons
+        const isAdmin = currentUser.role === 'admin';
+        document.getElementById('btnHistory').style.display = isAdmin ? '' : 'none';
+        document.getElementById('btnPwd').style.display = isAdmin ? '' : 'none';
         // Toggle default to fournisseur
         document.getElementById('togFournisseur').classList.add('active');
         document.getElementById('togClient').classList.remove('active');
