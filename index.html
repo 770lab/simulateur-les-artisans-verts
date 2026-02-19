@@ -801,7 +801,7 @@
         }
 
         @media print {
-            .header, .user-bar, .btn-reset, .footer, .parameters-section, .main-content {
+            #loginScreen, .header, .user-bar, .guest-bar, .btn-reset, .footer, .parameters-section, .main-content, .hist-overlay, #pwdModal {
                 display: none !important;
             }
             
@@ -809,12 +809,19 @@
                 display: block !important;
             }
 
+            #appScreen {
+                display: block !important;
+            }
+
             body {
                 background: white;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
             }
 
             @page {
-                margin: 15mm;
+                margin: 10mm;
+                size: A4;
             }
         }
 
@@ -1640,59 +1647,105 @@
 </div><!-- /appScreen -->
 
     <div id="printArea" style="display: none;">
-        <div style="padding: 40px; font-family: -apple-system, sans-serif;">
-            <h1 style="font-size: 28px; margin-bottom: 10px;" id="printTitle">Dossier —</h1>
-            <p style="color: #6b7280; margin-bottom: 30px;" id="printDate"></p>
+        <div style="padding: 30px 40px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1f2937; max-width: 800px; margin: 0 auto;">
             
-            <div style="background: #f9fafb; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
-                <h2 style="font-size: 14px; color: #6b7280; text-transform: uppercase; margin-bottom: 15px;">Résumé</h2>
-                <p style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #e5e7eb;" id="printScenario"></p>
-                
-                <div style="margin-bottom: 15px;">
-                    <div style="font-size: 12px; color: #6b7280;">TOTAL TTC</div>
-                    <div style="font-size: 28px; font-weight: 700;" id="printTTC"></div>
+            <!-- EN-TÊTE -->
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 3px solid #16a34a;">
+                <div>
+                    <div style="display: inline-block; background: linear-gradient(135deg, #16a34a, #15803d); color: white; padding: 10px 18px; border-radius: 10px; font-weight: 700; font-size: 16px; margin-bottom: 8px;">🏠 LES ARTISANS VERTS</div>
+                    <div style="font-size: 12px; color: #6b7280; margin-top: 6px;">Simulateur Aides PAC 2026</div>
                 </div>
-                
-                <div style="margin-bottom: 15px;">
-                    <div style="font-size: 12px; color: #6b7280;">AIDES MPR</div>
-                    <div style="font-size: 28px; font-weight: 700;" id="printMPR"></div>
-                </div>
-                
-                <div style="margin-bottom: 15px;">
-                    <div style="font-size: 12px; color: #6b7280;">AIDES CEE</div>
-                    <div style="font-size: 28px; font-weight: 700;" id="printCEE"></div>
-                </div>
-                
-                <div style="margin-bottom: 15px;">
-                    <div style="font-size: 12px; color: #6b7280;">TOTAL DES AIDES</div>
-                    <div style="font-size: 28px; font-weight: 700; color: #34c759;" id="printTotalAides"></div>
+                <div style="text-align: right;">
+                    <div id="printDate" style="font-size: 13px; color: #6b7280;"></div>
+                    <div id="printCommercial" style="font-size: 12px; color: #16a34a; font-weight: 600; margin-top: 4px;"></div>
                 </div>
             </div>
-            
-            <div style="background: #f9fafb; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
-                <h2 style="font-size: 14px; color: #6b7280; text-transform: uppercase; margin-bottom: 15px;">Prise en charge du RAC</h2>
-                
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
-                    <div>
-                        <div style="font-size: 12px; color: #6b7280;">Pourcentage (%)</div>
-                        <div style="font-size: 24px; font-weight: 700;" id="printPct"></div>
-                    </div>
-                    <div>
-                        <div style="font-size: 12px; color: #6b7280;">RAC offert (€)</div>
-                        <div style="font-size: 24px; font-weight: 700;" id="printOffert"></div>
-                    </div>
+
+            <!-- TITRE CLIENT -->
+            <h1 id="printTitle" style="font-size: 26px; font-weight: 800; margin: 0 0 24px; color: #0f172a;"></h1>
+
+            <!-- INFOS CLIENT + PROFIL -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+                <!-- Client -->
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px;">
+                    <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">👤 Client</div>
+                    <table style="width: 100%; font-size: 13px; border-collapse: collapse;">
+                        <tr><td style="padding: 3px 0; color: #6b7280; width: 40%;">Nom</td><td style="padding: 3px 0; font-weight: 600;" id="printNom"></td></tr>
+                        <tr><td style="padding: 3px 0; color: #6b7280;">Département</td><td style="padding: 3px 0; font-weight: 600;" id="printDept"></td></tr>
+                        <tr><td style="padding: 3px 0; color: #6b7280;">Zone climatique</td><td style="padding: 3px 0; font-weight: 600;" id="printZone"></td></tr>
+                        <tr><td style="padding: 3px 0; color: #6b7280;">Foyer</td><td style="padding: 3px 0; font-weight: 600;" id="printFoyer"></td></tr>
+                        <tr><td style="padding: 3px 0; color: #6b7280;">RFR</td><td style="padding: 3px 0; font-weight: 600;" id="printRFR"></td></tr>
+                    </table>
                 </div>
-                
-                <div style="padding-top: 20px; border-top: 2px solid #e5e7eb; text-align: right;">
-                    <div style="font-size: 12px; color: #6b7280; margin-bottom: 8px;">RESTE À CHARGE</div>
-                    <div style="font-size: 36px; font-weight: 700;" id="printRAC"></div>
+                <!-- Profil MPR -->
+                <div id="printProfilCard" style="border-radius: 10px; padding: 16px; color: white;">
+                    <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; opacity: 0.8;">🏛️ Profil MaPrimeRénov'</div>
+                    <div id="printProfilIcon" style="font-size: 36px; margin-bottom: 4px;">🔵</div>
+                    <div id="printProfilLabel" style="font-size: 20px; font-weight: 800;"></div>
+                    <div id="printProfilDesc" style="font-size: 13px; opacity: 0.85; margin-top: 2px;"></div>
+                    <div id="printProfilSeuil" style="font-size: 12px; opacity: 0.7; margin-top: 8px;"></div>
                 </div>
-                
-                <div style="margin-top: 20px; padding: 16px; border-radius: 12px; text-align: center; font-weight: 700; font-size: 18px;" id="printStatus"></div>
             </div>
-            
-            <div style="text-align: center; margin-top: 40px; color: #6b7280; font-size: 12px;">
-                Propulsé par 770 Lab
+
+            <!-- CONFIGURATION TECHNIQUE -->
+            <div style="background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 10px; padding: 16px; margin-bottom: 24px;">
+                <div style="font-size: 11px; font-weight: 700; color: #0369a1; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">⚙️ Configuration technique</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+                    <div><div style="font-size: 11px; color: #64748b;">Scénario</div><div style="font-size: 15px; font-weight: 700; color: #0f172a;" id="printScenario"></div></div>
+                    <div><div style="font-size: 11px; color: #64748b;">Surface chauffée</div><div style="font-size: 15px; font-weight: 700; color: #0f172a;" id="printSurface"></div></div>
+                    <div><div style="font-size: 11px; color: #64748b;">Plage ETAS</div><div style="font-size: 15px; font-weight: 700; color: #0f172a;" id="printETAS"></div></div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 10px;">
+                    <div><div style="font-size: 11px; color: #64748b;">PAC recommandée</div><div style="font-size: 15px; font-weight: 700; color: #16a34a;" id="printPACReco"></div></div>
+                    <div><div style="font-size: 11px; color: #64748b;">Isolation</div><div style="font-size: 15px; font-weight: 700; color: #0f172a;" id="printIsolation"></div></div>
+                    <div><div style="font-size: 11px; color: #64748b;">Année construction</div><div style="font-size: 15px; font-weight: 700; color: #0f172a;" id="printAnnee"></div></div>
+                </div>
+            </div>
+
+            <!-- ESTIMATION FINANCIÈRE -->
+            <div style="margin-bottom: 24px;">
+                <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">💰 Estimation financière</div>
+                <div style="border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                        <tr style="background: #f8fafc;">
+                            <td style="padding: 12px 16px; font-weight: 600;">Total TTC installation</td>
+                            <td style="padding: 12px 16px; text-align: right; font-weight: 800; font-size: 18px;" id="printTTC"></td>
+                        </tr>
+                        <tr style="border-top: 1px solid #f1f5f9;">
+                            <td style="padding: 12px 16px; color: #6b7280;">↳ MaPrimeRénov'</td>
+                            <td style="padding: 12px 16px; text-align: right; font-weight: 700; color: #2563eb; font-size: 16px;" id="printMPR"></td>
+                        </tr>
+                        <tr style="border-top: 1px solid #f1f5f9;">
+                            <td style="padding: 12px 16px; color: #6b7280;">↳ Prime CEE</td>
+                            <td style="padding: 12px 16px; text-align: right; font-weight: 700; color: #2563eb; font-size: 16px;" id="printCEE"></td>
+                        </tr>
+                        <tr style="border-top: 2px solid #16a34a; background: #f0fdf4;">
+                            <td style="padding: 14px 16px; font-weight: 700; color: #16a34a; font-size: 15px;">Total des aides</td>
+                            <td style="padding: 14px 16px; text-align: right; font-weight: 800; color: #16a34a; font-size: 20px;" id="printTotalAides"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- DÉTAIL CEE (petit) -->
+            <div style="background: #fefce8; border: 1px solid #fde68a; border-radius: 10px; padding: 12px 16px; margin-bottom: 24px; font-size: 12px; color: #92400e;">
+                <strong>Détail CEE :</strong> <span id="printCEEDetail"></span>
+            </div>
+
+            <!-- RESTE À CHARGE -->
+            <div style="border: 2px solid #0f172a; border-radius: 12px; padding: 20px; margin-bottom: 24px; text-align: center;">
+                <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">Reste à charge client</div>
+                <div id="printRAC" style="font-size: 42px; font-weight: 800; color: #0f172a;"></div>
+                <div id="printRACDetail" style="font-size: 13px; color: #6b7280; margin-top: 4px;"></div>
+            </div>
+
+            <!-- STATUT -->
+            <div id="printStatus" style="padding: 16px; border-radius: 10px; text-align: center; font-weight: 700; font-size: 18px; margin-bottom: 30px;"></div>
+
+            <!-- PIED DE PAGE -->
+            <div style="text-align: center; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+                <div style="font-size: 11px; color: #9ca3af;">Document généré automatiquement — Les Artisans Verts · Propulsé par 770 Lab</div>
+                <div style="font-size: 10px; color: #d1d5db; margin-top: 4px;">Ce document est une estimation et ne constitue pas un devis contractuel</div>
             </div>
         </div>
     </div>
@@ -2631,21 +2684,90 @@ function exportPDF(){
     if(typeof logExport==='function') logExport('PDF');
     const nom=document.getElementById('nom').value.trim() || 'Client';
     const prenom=document.getElementById('prenom').value.trim() || '';
-    document.getElementById('printTitle').textContent=`Dossier — ${prenom} ${nom}`.trim();
-    document.getElementById('printDate').textContent=`Date: ${new Date().toLocaleDateString('fr-FR')}`;
-    document.getElementById('printScenario').textContent=document.getElementById('scenarioSummary').textContent;
-    document.getElementById('printTTC').textContent=document.getElementById('totalTTC').textContent;
-    document.getElementById('printMPR').textContent=document.getElementById('aidesMPR').textContent;
-    document.getElementById('printCEE').textContent=document.getElementById('aidesCEE').textContent;
-    document.getElementById('printTotalAides').textContent=document.getElementById('totalAides').textContent;
-    document.getElementById('printPct').textContent=document.getElementById('racPourcent').value;
-    document.getElementById('printOffert').textContent=document.getElementById('racOffert').value+' €';
-    document.getElementById('printRAC').textContent=document.getElementById('resteCharge').textContent;
-    const badge=document.getElementById('statusBadge');
-    const printStatus=document.getElementById('printStatus');
-    printStatus.textContent=document.getElementById('statusText').textContent;
-    if(badge.classList.contains('ok')){ printStatus.style.background='#d1f4e0'; printStatus.style.color='#0d7f3f'; }
-    else{ printStatus.style.background='#f8d7da'; printStatus.style.color='#721c24'; }
+    const fullName = (prenom + ' ' + nom).trim();
+
+    // En-tête
+    document.getElementById('printTitle').textContent = 'Dossier — ' + fullName;
+    document.getElementById('printDate').textContent = new Date().toLocaleDateString('fr-FR', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+    document.getElementById('printCommercial').textContent = currentUser ? ('Commercial : ' + currentUser.name) : '';
+
+    // Client info
+    document.getElementById('printNom').textContent = fullName;
+    document.getElementById('printDept').textContent = document.getElementById('departement').value || '—';
+    const zoneEl = document.getElementById('zone');
+    document.getElementById('printZone').textContent = zoneEl ? zoneEl.value : '—';
+    const foyerEl = document.getElementById('foyer');
+    document.getElementById('printFoyer').textContent = foyerEl ? foyerEl.options[foyerEl.selectedIndex].text : '—';
+    const rfr = document.getElementById('rfr').value;
+    document.getElementById('printRFR').textContent = rfr ? parseInt(rfr).toLocaleString('fr-FR') + ' €' : '—';
+
+    // Profil MPR
+    const profilLabel = document.getElementById('mprProfilLabel');
+    const profilDesc = document.getElementById('mprProfilDesc');
+    const profilCard = document.getElementById('printProfilCard');
+    const cat = document.getElementById('categorie').value;
+    const profilColors = { BLEU:'#2563eb', JAUNE:'#d97706', VIOLET:'#7c3aed', ROSE:'#db2777' };
+    const profilIcons = { BLEU:'🔵', JAUNE:'🟡', VIOLET:'🟣', ROSE:'🔴' };
+    profilCard.style.background = profilColors[cat] || '#64748b';
+    document.getElementById('printProfilIcon').textContent = profilIcons[cat] || '⚪';
+    document.getElementById('printProfilLabel').textContent = profilLabel ? profilLabel.textContent : cat;
+    document.getElementById('printProfilDesc').textContent = profilDesc ? profilDesc.textContent : '';
+    const seuilEl = document.getElementById('mprInfoSeuil');
+    document.getElementById('printProfilSeuil').textContent = seuilEl ? ('Seuil : ' + seuilEl.textContent) : '';
+
+    // Configuration technique
+    const sc = document.getElementById('scenario');
+    document.getElementById('printScenario').textContent = sc.options[sc.selectedIndex].text;
+    const ceeSurf = document.getElementById('ceeSurface');
+    document.getElementById('printSurface').textContent = (ceeSurf ? ceeSurf.value : '95') + ' m²';
+    const etas = document.getElementById('etas');
+    document.getElementById('printETAS').textContent = etas ? etas.options[etas.selectedIndex].text : '—';
+    const baremeReco = document.getElementById('baremeReco');
+    document.getElementById('printPACReco').textContent = baremeReco ? baremeReco.textContent : '—';
+    const isoState = document.getElementById('isoStateName');
+    document.getElementById('printIsolation').textContent = isoState ? isoState.textContent : '—';
+    document.getElementById('printAnnee').textContent = document.getElementById('dimAnnee').value || '—';
+
+    // Montants
+    document.getElementById('printTTC').textContent = document.getElementById('totalTTC').textContent;
+    document.getElementById('printMPR').textContent = document.getElementById('aidesMPR').textContent;
+    document.getElementById('printCEE').textContent = document.getElementById('aidesCEE').textContent;
+    document.getElementById('printTotalAides').textContent = document.getElementById('totalAides').textContent;
+
+    // Détail CEE
+    const ceeFiches = document.getElementById('ceeFichesLabel');
+    const ceeDetailEl = document.getElementById('ceeOutDetail');
+    const ceePrixEl = document.getElementById('ceeOutPrix');
+    let ceeDetail = '';
+    if(ceeFiches) ceeDetail += 'Fiches : ' + ceeFiches.textContent;
+    if(ceeDetailEl && ceeDetailEl.textContent !== '—') ceeDetail += ' · ' + ceeDetailEl.textContent;
+    if(ceePrixEl && ceePrixEl.textContent !== '—') ceeDetail += ' · ' + ceePrixEl.textContent;
+    document.getElementById('printCEEDetail').textContent = ceeDetail || '—';
+
+    // RAC
+    document.getElementById('printRAC').textContent = document.getElementById('resteCharge').textContent;
+    const pct = document.getElementById('racPourcent').value;
+    const offert = document.getElementById('racOffert').value;
+    if(parseInt(pct) > 0 || parseInt(offert) > 0){
+        document.getElementById('printRACDetail').textContent = 'Prise en charge fournisseur : ' + pct + '% soit ' + offert + ' €';
+    } else {
+        document.getElementById('printRACDetail').textContent = '';
+    }
+
+    // Statut
+    const badge = document.getElementById('statusBadge');
+    const printStatus = document.getElementById('printStatus');
+    printStatus.textContent = document.getElementById('statusText').textContent;
+    if(badge.classList.contains('ok')){
+        printStatus.style.background = '#dcfce7';
+        printStatus.style.color = '#166534';
+        printStatus.style.border = '2px solid #86efac';
+    } else {
+        printStatus.style.background = '#fef2f2';
+        printStatus.style.color = '#991b1b';
+        printStatus.style.border = '2px solid #fca5a5';
+    }
+
     window.print();
 }
 
