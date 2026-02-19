@@ -1126,25 +1126,26 @@
                             <option value="PAC + BALLON ÉLECTRIQUE">PAC + BALLON ÉLECTRIQUE</option>
                             <option value="PAC + BALLON THERMO">PAC + BALLON THERMO</option>
                             <option value="PAC + SSC">PAC + SSC</option>
+                            <option value="SSC">SSC</option>
                         </select>
                     </div>
-                    <div class="form-group" style="margin-bottom: 0;">
+                    <div class="form-group" style="margin-bottom: 0;" id="etasGroup">
                         <label for="etas" style="color: rgba(255,255,255,0.7);">Plage d'ETAS</label>
                         <select id="etas" onchange="syncEtas(); calc()">
                             <option value="111-140">111 &lt; ETAS &lt; 140</option>
                             <option value="140-170" selected>140 &lt; ETAS &lt; 170</option>
                         </select>
                     </div>
-                    <div class="form-group" style="margin-bottom: 0;">
+                    <div class="form-group" style="margin-bottom: 0;" id="ceeSurfaceGroup">
                         <label style="color: rgba(255,255,255,0.7);">Surface chauffée (m²)</label>
                         <input type="number" id="ceeSurface" min="1" step="1" value="95" oninput="syncSurfaces('cee')">
                     </div>
                 </div>
 
-                <!-- Fiches info -->
-                <div style="font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 10px;">
-                    Fiches : <strong id="ceeFichesLabel" style="color: rgba(255,255,255,0.8);">BAR-TH-171</strong>
-                    <span id="ceeNonCumulNote" style="display:none; font-weight: 600; margin-left: 8px;"></span>
+                <!-- Fiches info (hidden) -->
+                <div style="display:none;">
+                    Fiches : <strong id="ceeFichesLabel">BAR-TH-171</strong>
+                    <span id="ceeNonCumulNote"></span>
                 </div>
 
                 <!-- Hidden fields for JS -->
@@ -1998,6 +1999,17 @@ function syncEtas() {
 }
 
 function onScenarioChange() {
+    const sc = document.getElementById('scenario').value;
+    const isSSC = (sc === 'SSC');
+    // SSC seul: hide ETAS, surface, barème PAC (143 = forfait zone only)
+    document.getElementById('etasGroup').style.display = isSSC ? 'none' : '';
+    document.getElementById('ceeSurfaceGroup').style.display = isSSC ? 'none' : '';
+    document.getElementById('baremeCard').style.display = isSSC ? 'none' : '';
+    const dimCard = document.getElementById('dimensionnementCard');
+    if (dimCard) dimCard.style.display = isSSC ? 'none' : '';
+    // Demande mairie for SSC scenarios
+    const mairieRow = document.getElementById('mairieRow');
+    if (mairieRow) mairieRow.style.display = (sc === 'PAC + SSC' || sc === 'SSC') ? '' : 'none';
     detectProfil();
     calc();
     if(typeof logScenarioChange==='function') logScenarioChange();
@@ -2023,6 +2035,7 @@ function getCEEFiches(scenario) {
         case 'PAC + BALLON ÉLECTRIQUE': return ['171'];
         case 'PAC + BALLON THERMO':     return ['171']; // 148 non cumulable depuis 01/2026
         case 'PAC + SSC':              return ['171', '143']; // cumul 171+143, CdP sur 171 uniquement
+        case 'SSC':                    return ['143']; // SSC seul = BAR-TH-143 uniquement
         default:                        return ['171'];
     }
 }
@@ -2054,18 +2067,7 @@ function calcCEEDetail() {
     document.getElementById('ceeScenarioLabel').textContent = SCENARIO_NAMES[sc] || sc;
     document.getElementById('ceeFichesLabel').textContent = fiches.map(f => 'BAR-TH-' + f).join(' + ');
     const noteEl = document.getElementById('ceeNonCumulNote');
-    if (noteEl) {
-        if (sc === 'PAC + BALLON THERMO') {
-            noteEl.style.display = 'inline';
-            noteEl.textContent = '⚠ BAR-TH-148 non cumulable avec 171 depuis 01/2026';
-        } else if (sc === 'PAC + SSC') {
-            noteEl.style.display = 'inline';
-            noteEl.innerHTML = '💡 CdP ×5 sur 171 (prioritaire vs ×2 sur 143)';
-            noteEl.style.color = '#059669';
-        } else {
-            noteEl.style.display = 'none';
-        }
-    }
+    if (noteEl) { noteEl.style.display = 'none'; }
 
     // Show/hide blocs
     document.getElementById('ceeBloc171').classList.toggle('cee-hidden', !fiches.includes('171'));
@@ -2160,10 +2162,10 @@ function fmtEurCEE(n) {
 // ============================================
 // DONNÉES PRINCIPALES
 // ============================================
-const D={TTC:{"PAC":10890,"PAC + BALLON ÉLECTRIQUE":13750,"PAC + BALLON THERMO":13750,"PAC + SSC":25850},MPR:{"PAC":{BLEU:5000,JAUNE:4000,VIOLET:3000,ROSE:0},"PAC + BALLON ÉLECTRIQUE":{BLEU:5000,JAUNE:4000,VIOLET:3000,ROSE:0},"PAC + BALLON THERMO":{BLEU:6200,JAUNE:4800,VIOLET:3400,ROSE:0},"PAC + SSC":{BLEU:15000,JAUNE:12000,VIOLET:7000,ROSE:0}},COUT:{"PAC":6600,"PAC + BALLON ÉLECTRIQUE":6800,"PAC + BALLON THERMO":7200,"PAC + SSC":11650},COUT_DETAIL:{"PAC":{pac_materiel:2900,pac_pose:2500,ballon_materiel:0,ballon_pose:0,accessoires:800,admin:400,mairie:0},"PAC + BALLON ÉLECTRIQUE":{pac_materiel:2900,pac_pose:2500,ballon_materiel:200,ballon_pose:0,accessoires:800,admin:400,mairie:0},"PAC + BALLON THERMO":{pac_materiel:2900,pac_pose:2500,ballon_materiel:1100,ballon_pose:500,accessoires:800,admin:400,mairie:0},"PAC + SSC":{pac_materiel:5700,pac_pose:4500,ballon_materiel:0,ballon_pose:0,accessoires:800,admin:400,mairie:250}},CEE:{"140-170":{H1:{PAC:{"S<70":274800,"70<S<90":384720,"90<S<110":549600,"110<S<130":604560,"S>130":879360},"BALLON ELECTRIQUE":{"S<70":274800,"70<S<90":384720,"90<S<110":549600,"110<S<130":604560,"S>130":879360},"BALLON THERMO":{"S<70":289500,"70<S<90":399420,"90<S<110":564300,"110<S<130":619260,"S>130":894060},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H2:{PAC:{"S<70":229000,"70<S<90":320600,"90<S<110":458000,"110<S<130":503800,"S>130":732800},"BALLON ELECTRIQUE":{"S<70":229000,"70<S<90":320600,"90<S<110":458000,"110<S<130":503800,"S>130":732800},"BALLON THERMO":{"S<70":243700,"70<S<90":335300,"90<S<110":472700,"110<S<130":518500,"S>130":747500},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H3:{PAC:{"S<70":160300,"70<S<90":224420,"90<S<110":320600,"110<S<130":352660,"S>130":512960},"BALLON ELECTRIQUE":{"S<70":160300,"70<S<90":224420,"90<S<110":320600,"110<S<130":352660,"S>130":512960},"BALLON THERMO":{"S<70":175000,"70<S<90":239120,"90<S<110":335300,"110<S<130":367360,"S>130":527660},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}}},"111-140":{H1:{PAC:{"S<70":238500,"70<S<90":333900,"90<S<110":477000,"110<S<130":524700,"S>130":763200},"BALLON ELECTRIQUE":{"S<70":238500,"70<S<90":333900,"90<S<110":477000,"110<S<130":524700,"S>130":763200},"BALLON THERMO":{"S<70":253200,"70<S<90":348600,"90<S<110":491700,"110<S<130":539400,"S>130":777900},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H2:{PAC:{"S<70":198750,"70<S<90":278250,"90<S<110":397500,"110<S<130":437250,"S>130":636000},"BALLON ELECTRIQUE":{"S<70":198750,"70<S<90":278250,"90<S<110":397500,"110<S<130":437250,"S>130":636000},"BALLON THERMO":{"S<70":213450,"70<S<90":292950,"90<S<110":412200,"110<S<130":451950,"S>130":650700},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H3:{PAC:{"S<70":139125,"70<S<90":194775,"90<S<110":278250,"110<S<130":306075,"S>130":445200},"BALLON ELECTRIQUE":{"S<70":139125,"70<S<90":194775,"90<S<110":278250,"110<S<130":306075,"S>130":445200},"BALLON THERMO":{"S<70":153825,"70<S<90":209475,"90<S<110":292950,"110<S<130":320775,"S>130":459900},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}}}}};
-const M={"PAC":"PAC","PAC + BALLON ÉLECTRIQUE":"BALLON ELECTRIQUE","PAC + BALLON THERMO":"BALLON THERMO","PAC + SSC":"BALLON SSC"};
+const D={TTC:{"PAC":10890,"PAC + BALLON ÉLECTRIQUE":13750,"PAC + BALLON THERMO":13750,"PAC + SSC":25850,"SSC":15000},MPR:{"PAC":{BLEU:5000,JAUNE:4000,VIOLET:3000,ROSE:0},"PAC + BALLON ÉLECTRIQUE":{BLEU:5000,JAUNE:4000,VIOLET:3000,ROSE:0},"PAC + BALLON THERMO":{BLEU:6200,JAUNE:4800,VIOLET:3400,ROSE:0},"PAC + SSC":{BLEU:15000,JAUNE:12000,VIOLET:7000,ROSE:0},"SSC":{BLEU:10000,JAUNE:8000,VIOLET:4000,ROSE:0}},COUT:{"PAC":6600,"PAC + BALLON ÉLECTRIQUE":6800,"PAC + BALLON THERMO":7200,"PAC + SSC":11650,"SSC":8500},COUT_DETAIL:{"PAC":{pac_materiel:2900,pac_pose:2500,ballon_materiel:0,ballon_pose:0,accessoires:800,admin:400,mairie:0},"PAC + BALLON ÉLECTRIQUE":{pac_materiel:2900,pac_pose:2500,ballon_materiel:200,ballon_pose:0,accessoires:800,admin:400,mairie:0},"PAC + BALLON THERMO":{pac_materiel:2900,pac_pose:2500,ballon_materiel:1100,ballon_pose:500,accessoires:800,admin:400,mairie:0},"PAC + SSC":{pac_materiel:5700,pac_pose:4500,ballon_materiel:0,ballon_pose:0,accessoires:800,admin:400,mairie:250},"SSC":{pac_materiel:4200,pac_pose:3500,ballon_materiel:0,ballon_pose:0,accessoires:500,admin:300,mairie:250}},CEE:{"140-170":{H1:{PAC:{"S<70":274800,"70<S<90":384720,"90<S<110":549600,"110<S<130":604560,"S>130":879360},"BALLON ELECTRIQUE":{"S<70":274800,"70<S<90":384720,"90<S<110":549600,"110<S<130":604560,"S>130":879360},"BALLON THERMO":{"S<70":289500,"70<S<90":399420,"90<S<110":564300,"110<S<130":619260,"S>130":894060},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H2:{PAC:{"S<70":229000,"70<S<90":320600,"90<S<110":458000,"110<S<130":503800,"S>130":732800},"BALLON ELECTRIQUE":{"S<70":229000,"70<S<90":320600,"90<S<110":458000,"110<S<130":503800,"S>130":732800},"BALLON THERMO":{"S<70":243700,"70<S<90":335300,"90<S<110":472700,"110<S<130":518500,"S>130":747500},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H3:{PAC:{"S<70":160300,"70<S<90":224420,"90<S<110":320600,"110<S<130":352660,"S>130":512960},"BALLON ELECTRIQUE":{"S<70":160300,"70<S<90":224420,"90<S<110":320600,"110<S<130":352660,"S>130":512960},"BALLON THERMO":{"S<70":175000,"70<S<90":239120,"90<S<110":335300,"110<S<130":367360,"S>130":527660},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}}},"111-140":{H1:{PAC:{"S<70":238500,"70<S<90":333900,"90<S<110":477000,"110<S<130":524700,"S>130":763200},"BALLON ELECTRIQUE":{"S<70":238500,"70<S<90":333900,"90<S<110":477000,"110<S<130":524700,"S>130":763200},"BALLON THERMO":{"S<70":253200,"70<S<90":348600,"90<S<110":491700,"110<S<130":539400,"S>130":777900},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H2:{PAC:{"S<70":198750,"70<S<90":278250,"90<S<110":397500,"110<S<130":437250,"S>130":636000},"BALLON ELECTRIQUE":{"S<70":198750,"70<S<90":278250,"90<S<110":397500,"110<S<130":437250,"S>130":636000},"BALLON THERMO":{"S<70":213450,"70<S<90":292950,"90<S<110":412200,"110<S<130":451950,"S>130":650700},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H3:{PAC:{"S<70":139125,"70<S<90":194775,"90<S<110":278250,"110<S<130":306075,"S>130":445200},"BALLON ELECTRIQUE":{"S<70":139125,"70<S<90":194775,"90<S<110":278250,"110<S<130":306075,"S>130":445200},"BALLON THERMO":{"S<70":153825,"70<S<90":209475,"90<S<110":292950,"110<S<130":320775,"S>130":459900},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}}}}};
+const M={"PAC":"PAC","PAC + BALLON ÉLECTRIQUE":"BALLON ELECTRIQUE","PAC + BALLON THERMO":"BALLON THERMO","PAC + SSC":"BALLON SSC","SSC":"BALLON SSC"};
 
-const SCENARIO_NAMES = {"PAC":"PAC","PAC + BALLON ÉLECTRIQUE":"PAC + Ballon Électrique","PAC + BALLON THERMO":"PAC + Ballon Thermo","PAC + SSC":"PAC + SSC"};
+const SCENARIO_NAMES = {"PAC":"PAC","PAC + BALLON ÉLECTRIQUE":"PAC + Ballon Électrique","PAC + BALLON THERMO":"PAC + Ballon Thermo","PAC + SSC":"PAC + SSC","SSC":"SSC"};
 
 function getCEE(et, zn, cs, sf){
     if(!D.CEE[et]) return 0;
@@ -2394,7 +2396,13 @@ function calc(){
     const colorClass=ct==='BLEU'?'color-bleu':(ct==='JAUNE'?'color-jaune':(ct==='VIOLET'?'color-violet':'color-rose'));
     const borderColor=ct==='BLEU'?'#0071e3':(ct==='JAUNE'?'#fbbf24':(ct==='VIOLET'?'#8b5cf6':'#ec4899'));
     
-    document.getElementById('scenarioSummary').innerHTML=`<strong class="${colorClass}">${st}</strong><span class="separator">•</span>${ct2}<span class="separator">•</span>Zone ${zn2}<span class="separator">•</span>${sf2}<span class="separator">•</span>${et2}`;
+    let summaryHTML;
+    if (sc === 'SSC') {
+        summaryHTML = `<strong class="${colorClass}">${st}</strong><span class="separator">•</span>${ct2}<span class="separator">•</span>Zone ${zn2}`;
+    } else {
+        summaryHTML = `<strong class="${colorClass}">${st}</strong><span class="separator">•</span>${ct2}<span class="separator">•</span>Zone ${zn2}<span class="separator">•</span>${sf2}<span class="separator">•</span>${et2}`;
+    }
+    document.getElementById('scenarioSummary').innerHTML = summaryHTML;
     document.getElementById('scenarioSummary').style.borderLeftColor=borderColor;
     
     calcRAC(rb,chForMarge,ta,taForMarge,tt);
@@ -2429,7 +2437,7 @@ function calcRAC(rb,ch,ta,taForMarge,tt){
     }
     
     const currentScenario = document.getElementById('scenario').value;
-    const seuilOK = (currentScenario === 'PAC + SSC') ? 6000 : 4000;
+    const seuilOK = (currentScenario === 'PAC + SSC' || currentScenario === 'SSC') ? 6000 : 4000;
     
     // Calculate max % offerable (fournisseur)
     if(mode){
