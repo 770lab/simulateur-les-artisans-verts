@@ -1647,105 +1647,103 @@
 </div><!-- /appScreen -->
 
     <div id="printArea" style="display: none;">
-        <div style="padding: 30px 40px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1f2937; max-width: 800px; margin: 0 auto;">
+        <div style="padding: 20px 30px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1f2937; max-width: 800px; margin: 0 auto;">
             
             <!-- EN-TÊTE -->
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 3px solid #16a34a;">
-                <div>
-                    <div style="display: inline-block; background: linear-gradient(135deg, #16a34a, #15803d); color: white; padding: 10px 18px; border-radius: 10px; font-weight: 700; font-size: 16px; margin-bottom: 8px;">🏠 LES ARTISANS VERTS</div>
-                    <div style="font-size: 12px; color: #6b7280; margin-top: 6px;">Simulateur Aides PAC 2026</div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 3px solid #16a34a;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="background: linear-gradient(135deg, #16a34a, #15803d); color: white; padding: 8px 14px; border-radius: 8px; font-weight: 700; font-size: 14px;">🏠 LES ARTISANS VERTS</div>
+                    <div style="font-size: 12px; color: #6b7280;">Simulateur Aides PAC 2026</div>
                 </div>
                 <div style="text-align: right;">
-                    <div id="printDate" style="font-size: 13px; color: #6b7280;"></div>
-                    <div id="printCommercial" style="font-size: 12px; color: #16a34a; font-weight: 600; margin-top: 4px;"></div>
+                    <div id="printDate" style="font-size: 12px; color: #6b7280;"></div>
+                    <div id="printCommercial" style="font-size: 11px; color: #16a34a; font-weight: 600; margin-top: 2px;"></div>
                 </div>
             </div>
 
-            <!-- TITRE CLIENT -->
-            <h1 id="printTitle" style="font-size: 26px; font-weight: 800; margin: 0 0 24px; color: #0f172a;"></h1>
+            <!-- TITRE -->
+            <h1 id="printTitle" style="font-size: 22px; font-weight: 800; margin: 0 0 14px; color: #0f172a;"></h1>
 
-            <!-- INFOS CLIENT + PROFIL -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
-                <!-- Client -->
-                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px;">
-                    <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">👤 Client</div>
-                    <table style="width: 100%; font-size: 13px; border-collapse: collapse;">
-                        <tr><td style="padding: 3px 0; color: #6b7280; width: 40%;">Nom</td><td style="padding: 3px 0; font-weight: 600;" id="printNom"></td></tr>
-                        <tr><td style="padding: 3px 0; color: #6b7280;">Département</td><td style="padding: 3px 0; font-weight: 600;" id="printDept"></td></tr>
-                        <tr><td style="padding: 3px 0; color: #6b7280;">Zone climatique</td><td style="padding: 3px 0; font-weight: 600;" id="printZone"></td></tr>
-                        <tr><td style="padding: 3px 0; color: #6b7280;">Foyer</td><td style="padding: 3px 0; font-weight: 600;" id="printFoyer"></td></tr>
-                        <tr><td style="padding: 3px 0; color: #6b7280;">RFR</td><td style="padding: 3px 0; font-weight: 600;" id="printRFR"></td></tr>
+            <!-- CLIENT + PROFIL -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; page-break-inside: avoid;">
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px;">
+                    <div style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">👤 Client</div>
+                    <table style="width: 100%; font-size: 12px; border-collapse: collapse;">
+                        <tr><td style="padding: 2px 0; color: #6b7280; width: 45%;">Nom</td><td style="padding: 2px 0; font-weight: 600;" id="printNom"></td></tr>
+                        <tr><td style="padding: 2px 0; color: #6b7280;">Département</td><td style="padding: 2px 0; font-weight: 600;" id="printDept"></td></tr>
+                        <tr><td style="padding: 2px 0; color: #6b7280;">Zone</td><td style="padding: 2px 0; font-weight: 600;" id="printZone"></td></tr>
+                        <tr><td style="padding: 2px 0; color: #6b7280;">Foyer</td><td style="padding: 2px 0; font-weight: 600;" id="printFoyer"></td></tr>
+                        <tr><td style="padding: 2px 0; color: #6b7280;">RFR</td><td style="padding: 2px 0; font-weight: 600;" id="printRFR"></td></tr>
                     </table>
                 </div>
-                <!-- Profil MPR -->
-                <div id="printProfilCard" style="border-radius: 10px; padding: 16px; color: white;">
-                    <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; opacity: 0.8;">🏛️ Profil MaPrimeRénov'</div>
-                    <div id="printProfilIcon" style="font-size: 36px; margin-bottom: 4px;">🔵</div>
-                    <div id="printProfilLabel" style="font-size: 20px; font-weight: 800;"></div>
-                    <div id="printProfilDesc" style="font-size: 13px; opacity: 0.85; margin-top: 2px;"></div>
-                    <div id="printProfilSeuil" style="font-size: 12px; opacity: 0.7; margin-top: 8px;"></div>
+                <div id="printProfilCard" style="border-radius: 8px; padding: 12px; color: white;">
+                    <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; opacity: 0.8;">🏛️ Profil MaPrimeRénov'</div>
+                    <div id="printProfilIcon" style="font-size: 28px; margin-bottom: 2px;">🔵</div>
+                    <div id="printProfilLabel" style="font-size: 18px; font-weight: 800;"></div>
+                    <div id="printProfilDesc" style="font-size: 12px; opacity: 0.85; margin-top: 2px;"></div>
+                    <div id="printProfilSeuil" style="font-size: 11px; opacity: 0.7; margin-top: 4px;"></div>
                 </div>
             </div>
 
             <!-- CONFIGURATION TECHNIQUE -->
-            <div style="background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 10px; padding: 16px; margin-bottom: 24px;">
-                <div style="font-size: 11px; font-weight: 700; color: #0369a1; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;">⚙️ Configuration technique</div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
-                    <div><div style="font-size: 11px; color: #64748b;">Scénario</div><div style="font-size: 15px; font-weight: 700; color: #0f172a;" id="printScenario"></div></div>
-                    <div><div style="font-size: 11px; color: #64748b;">Surface chauffée</div><div style="font-size: 15px; font-weight: 700; color: #0f172a;" id="printSurface"></div></div>
-                    <div><div style="font-size: 11px; color: #64748b;">Plage ETAS</div><div style="font-size: 15px; font-weight: 700; color: #0f172a;" id="printETAS"></div></div>
+            <div style="background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 12px; margin-bottom: 14px; page-break-inside: avoid;">
+                <div style="font-size: 10px; font-weight: 700; color: #0369a1; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">⚙️ Configuration technique</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                    <div><div style="font-size: 10px; color: #64748b;">Scénario</div><div style="font-size: 13px; font-weight: 700; color: #0f172a;" id="printScenario"></div></div>
+                    <div><div style="font-size: 10px; color: #64748b;">Surface</div><div style="font-size: 13px; font-weight: 700; color: #0f172a;" id="printSurface"></div></div>
+                    <div><div style="font-size: 10px; color: #64748b;">ETAS</div><div style="font-size: 13px; font-weight: 700; color: #0f172a;" id="printETAS"></div></div>
                 </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 10px;">
-                    <div><div style="font-size: 11px; color: #64748b;">PAC recommandée</div><div style="font-size: 15px; font-weight: 700; color: #16a34a;" id="printPACReco"></div></div>
-                    <div><div style="font-size: 11px; color: #64748b;">Isolation</div><div style="font-size: 15px; font-weight: 700; color: #0f172a;" id="printIsolation"></div></div>
-                    <div><div style="font-size: 11px; color: #64748b;">Année construction</div><div style="font-size: 15px; font-weight: 700; color: #0f172a;" id="printAnnee"></div></div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 6px;">
+                    <div><div style="font-size: 10px; color: #64748b;">PAC recommandée</div><div style="font-size: 13px; font-weight: 700; color: #16a34a;" id="printPACReco"></div></div>
+                    <div><div style="font-size: 10px; color: #64748b;">Isolation</div><div style="font-size: 13px; font-weight: 700; color: #0f172a;" id="printIsolation"></div></div>
+                    <div><div style="font-size: 10px; color: #64748b;">Construction</div><div style="font-size: 13px; font-weight: 700; color: #0f172a;" id="printAnnee"></div></div>
                 </div>
             </div>
 
             <!-- ESTIMATION FINANCIÈRE -->
-            <div style="margin-bottom: 24px;">
-                <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">💰 Estimation financière</div>
-                <div style="border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden;">
-                    <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+            <div style="margin-bottom: 14px; page-break-inside: avoid;">
+                <div style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">💰 Estimation financière</div>
+                <div style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
                         <tr style="background: #f8fafc;">
-                            <td style="padding: 12px 16px; font-weight: 600;">Total TTC installation</td>
-                            <td style="padding: 12px 16px; text-align: right; font-weight: 800; font-size: 18px;" id="printTTC"></td>
+                            <td style="padding: 10px 14px; font-weight: 600;">Total TTC installation</td>
+                            <td style="padding: 10px 14px; text-align: right; font-weight: 800; font-size: 16px;" id="printTTC"></td>
                         </tr>
                         <tr style="border-top: 1px solid #f1f5f9;">
-                            <td style="padding: 12px 16px; color: #6b7280;">↳ MaPrimeRénov'</td>
-                            <td style="padding: 12px 16px; text-align: right; font-weight: 700; color: #2563eb; font-size: 16px;" id="printMPR"></td>
+                            <td style="padding: 8px 14px; color: #6b7280;">↳ MaPrimeRénov'</td>
+                            <td style="padding: 8px 14px; text-align: right; font-weight: 700; color: #2563eb; font-size: 14px;" id="printMPR"></td>
                         </tr>
                         <tr style="border-top: 1px solid #f1f5f9;">
-                            <td style="padding: 12px 16px; color: #6b7280;">↳ Prime CEE</td>
-                            <td style="padding: 12px 16px; text-align: right; font-weight: 700; color: #2563eb; font-size: 16px;" id="printCEE"></td>
+                            <td style="padding: 8px 14px; color: #6b7280;">↳ Prime CEE</td>
+                            <td style="padding: 8px 14px; text-align: right; font-weight: 700; color: #2563eb; font-size: 14px;" id="printCEE"></td>
                         </tr>
                         <tr style="border-top: 2px solid #16a34a; background: #f0fdf4;">
-                            <td style="padding: 14px 16px; font-weight: 700; color: #16a34a; font-size: 15px;">Total des aides</td>
-                            <td style="padding: 14px 16px; text-align: right; font-weight: 800; color: #16a34a; font-size: 20px;" id="printTotalAides"></td>
+                            <td style="padding: 10px 14px; font-weight: 700; color: #16a34a; font-size: 14px;">Total des aides</td>
+                            <td style="padding: 10px 14px; text-align: right; font-weight: 800; color: #16a34a; font-size: 18px;" id="printTotalAides"></td>
                         </tr>
                     </table>
                 </div>
             </div>
 
-            <!-- DÉTAIL CEE (petit) -->
-            <div style="background: #fefce8; border: 1px solid #fde68a; border-radius: 10px; padding: 12px 16px; margin-bottom: 24px; font-size: 12px; color: #92400e;">
+            <!-- DÉTAIL CEE -->
+            <div style="background: #fefce8; border: 1px solid #fde68a; border-radius: 8px; padding: 8px 12px; margin-bottom: 14px; font-size: 11px; color: #92400e; page-break-inside: avoid;">
                 <strong>Détail CEE :</strong> <span id="printCEEDetail"></span>
             </div>
 
             <!-- RESTE À CHARGE -->
-            <div style="border: 2px solid #0f172a; border-radius: 12px; padding: 20px; margin-bottom: 24px; text-align: center;">
-                <div style="font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">Reste à charge client</div>
-                <div id="printRAC" style="font-size: 42px; font-weight: 800; color: #0f172a;"></div>
-                <div id="printRACDetail" style="font-size: 13px; color: #6b7280; margin-top: 4px;"></div>
+            <div style="border: 2px solid #0f172a; border-radius: 10px; padding: 16px; margin-bottom: 14px; text-align: center; page-break-inside: avoid;">
+                <div style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Reste à charge client</div>
+                <div id="printRAC" style="font-size: 36px; font-weight: 800; color: #0f172a;"></div>
+                <div id="printRACDetail" style="font-size: 12px; color: #6b7280; margin-top: 2px;"></div>
             </div>
 
             <!-- STATUT -->
-            <div id="printStatus" style="padding: 16px; border-radius: 10px; text-align: center; font-weight: 700; font-size: 18px; margin-bottom: 30px;"></div>
+            <div id="printStatus" style="padding: 12px; border-radius: 8px; text-align: center; font-weight: 700; font-size: 16px; margin-bottom: 16px; page-break-inside: avoid;"></div>
 
             <!-- PIED DE PAGE -->
-            <div style="text-align: center; padding-top: 20px; border-top: 1px solid #e5e7eb;">
-                <div style="font-size: 11px; color: #9ca3af;">Document généré automatiquement — Les Artisans Verts · Propulsé par 770 Lab</div>
-                <div style="font-size: 10px; color: #d1d5db; margin-top: 4px;">Ce document est une estimation et ne constitue pas un devis contractuel</div>
+            <div style="text-align: center; padding-top: 12px; border-top: 1px solid #e5e7eb;">
+                <div style="font-size: 10px; color: #9ca3af;">Document généré automatiquement — Les Artisans Verts · Propulsé par 770 Lab</div>
+                <div style="font-size: 9px; color: #d1d5db; margin-top: 2px;">Ce document est une estimation et ne constitue pas un devis contractuel</div>
             </div>
         </div>
     </div>
@@ -2377,7 +2375,10 @@ function calc(){
     const ta=ad+ceDisplay;
     const rb=tt-ta;
     
-    document.getElementById('totalTTC').textContent=fmt(tt);
+    // En vue client, si aides > TTC, ajuster l'affichage pour cohérence (TTC = aides + 1)
+    const displayTTC = (!mode && rb < 0) ? (ta + 1) : tt;
+    
+    document.getElementById('totalTTC').textContent=fmt(displayTTC);
     document.getElementById('aidesMPR').textContent=fmt(ad);
     document.getElementById('aidesCEE').textContent=fmt(ceDisplay);
     document.getElementById('totalAides').textContent=fmt(ta);
