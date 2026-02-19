@@ -1638,26 +1638,6 @@
         <p style="margin: 0;">Propulsé par 770 Lab</p>
     </div>
 </div><!-- /appScreen -->
-    <div id="debugPanel" style="position:fixed;bottom:0;left:0;right:0;max-height:40vh;overflow-y:auto;background:#1a1a2e;color:#0f0;font-family:monospace;font-size:11px;padding:10px;z-index:99999;display:none;border-top:3px solid #f00;">
-        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
-            <strong style="color:#ff0;">🔧 DEBUG</strong>
-            <span onclick="document.getElementById('debugPanel').style.display='none'" style="cursor:pointer;color:#f00;">✕ Fermer</span>
-        </div>
-        <div id="debugLog"></div>
-    </div>
-    <script>
-    // Show debug on triple tap
-    let _tapCount=0, _tapTimer;
-    document.addEventListener('click', function(){
-        _tapCount++;
-        clearTimeout(_tapTimer);
-        _tapTimer=setTimeout(()=>{_tapCount=0},500);
-        if(_tapCount>=3){
-            document.getElementById('debugPanel').style.display='block';
-            _tapCount=0;
-        }
-    });
-    </script>
 
     <div id="printArea" style="display: none;">
         <div style="padding: 40px; font-family: -apple-system, sans-serif;">
@@ -1729,8 +1709,7 @@ function dbg(msg){
     console.log('[DBG]', msg);
 }
 window.onerror=function(msg,url,line,col,err){
-    dbg('❌ JS ERROR: '+msg+' (line '+line+')');
-    try{document.getElementById('debugPanel').style.display='block';}catch(e){}
+    console.warn('JS ERROR:', msg, 'line', line);
     return false;
 };
 
