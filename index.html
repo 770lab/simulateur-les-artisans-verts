@@ -2510,10 +2510,11 @@ function calcRAC(rb,ch,ta,taForMarge,tt){
             } else {
                 // Normal case: solve for max offert
                 const maxOffert = rbForMarge - (seuilOK + ch - taForMarge) * 1.055;
-                const maxPct = Math.max(0, Math.floor((maxOffert / rb) * 100));
+                const maxPct = Math.min(100, Math.max(0, Math.floor((maxOffert / rb) * 100)));
+                const maxOffertDisplay = maxPct === 100 ? rb : Math.floor(maxOffert);
                 if(typeof dbg==='function') dbg('maxOff: maxOff='+Math.round(maxOffert)+' pct='+maxPct);
                 if(maxOffert > 0){
-                    maxPctEl.textContent = maxPct + '% (' + fmt(Math.floor(maxOffert)) + ')';
+                    maxPctEl.textContent = maxPct + '% (' + fmt(maxOffertDisplay) + ')';
                     maxPctBox.style.background = 'rgba(5,150,105,0.12)';
                     maxPctBox.style.borderColor = 'rgba(5,150,105,0.25)';
                     maxPctBox.style.color = '#34d399';
@@ -2734,9 +2735,19 @@ function sendWhatsApp(){
     const aidesMPR=document.getElementById('aidesMPR').textContent;
     const aidesCEE=document.getElementById('aidesCEE').textContent;
     const totalAides=document.getElementById('totalAides').textContent;
-    const rac=document.getElementById('resteCharge').textContent;
-    const message=`🏠 *Demande de devis - Les Artisans Verts*%0A%0A👤 *Client :* ${prenom} ${nom}%0A%0A📋 *Configuration :*%0A• Scénario : ${scenario}%0A• ${categorie}%0A• ${zone}%0A• ${surface}%0A• ${etas}%0A%0A💰 *Montants :*%0A• Total TTC : ${ttc}%0A• Aides MPR : ${aidesMPR}%0A• Aides CEE : ${aidesCEE}%0A• Total aides : ${totalAides}%0A• Reste à charge : ${rac}%0A%0AJe souhaite obtenir un devis détaillé.`;
-    window.open(`https://api.whatsapp.com/send?text=${message}`, '_blank');
+    const racBrut=document.getElementById('resteCharge').textContent;
+    const racPct=parseInt(document.getElementById('racPourcent').value)||0;
+    const racOffert=parseInt(document.getElementById('racOffert').value)||0;
+
+    let racLines = `• Reste à charge brut : ${racBrut}`;
+    if(racPct > 0 || racOffert > 0){
+        racLines += `\n• Prise en charge : ${racPct}% soit ${racOffert.toLocaleString('fr-FR')} €`;
+        const racFinal = Math.max(0, parseInt(document.getElementById('resteCharge').textContent.replace(/[^\d]/g,'')) - racOffert);
+        racLines += `\n• *Reste à charge final : ${racFinal.toLocaleString('fr-FR')} €*`;
+    }
+
+    const text = `🏠 *Demande de devis - Les Artisans Verts*\n\n👤 *Client :* ${prenom} ${nom}\n\n📋 *Configuration :*\n• Scénario : ${scenario}\n• ${categorie}\n• ${zone}\n• ${surface}\n• ${etas}\n\n💰 *Montants :*\n• Total TTC : ${ttc}\n• Aides MPR : ${aidesMPR}\n• Aides CEE : ${aidesCEE}\n• Total aides : ${totalAides}\n${racLines}\n\nJe souhaite obtenir un devis détaillé.`;
+    window.open('https://api.whatsapp.com/send?text='+encodeURIComponent(text), '_blank');
 }
 
 function exportPDF(mode){
