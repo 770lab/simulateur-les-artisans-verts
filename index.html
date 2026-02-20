@@ -2753,6 +2753,7 @@ function updateAmt(){
 }
 
 function reset(){
+    logAction('Réinitialisation', '');
     document.getElementById('scenario').value='PAC';
     document.getElementById('categorie').value='BLEU';
     document.getElementById('zone').value='H1';
@@ -3057,6 +3058,7 @@ function switchView(v){
         document.getElementById('mainContent').classList.remove('fournisseur-mode');
         document.getElementById('togClient').classList.add('active');
         document.getElementById('togFournisseur').classList.remove('active');
+        logAction('Vue client', '');
     }
     try{ calc(); }catch(e){}
 }
@@ -3206,8 +3208,9 @@ function logAction(action, detail){
     saveJournal(j);
     // API journal (fire and forget)
     if(useAPI && API_URL){
-        apiCall({action:'log', user:entry.user, logAction:action, detail:detail||''}, function(){}, function(){});
+        apiCall({action:'log', user:entry.user, role:entry.role, logAction:action, detail:detail||''}, function(){}, function(){});
     }
+    if(typeof dbg==='function') dbg('📝 ' + action + (detail ? ': '+detail : ''));
 }
 function openHistory(){
     if(useAPI && API_URL){
@@ -3235,9 +3238,10 @@ function renderJournal(entries){
     let html = '';
     entries.forEach(e => {
         const d = new Date(e.date);
-        const dateStr = d.toLocaleDateString('fr-FR') + ' ' + d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+        const dateStr = d.toLocaleDateString('fr-FR') + ' ' + d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+        const roleIcon = e.role === 'admin' ? '👑' : (e.role === 'telepro' ? '📞' : '📊');
         html += '<div class="hist-entry">';
-        html += '<div class="hist-meta"><span class="hist-user">' + (e.user||'?') + '</span><span class="hist-date">' + dateStr + '</span></div>';
+        html += '<div class="hist-meta"><span class="hist-user">' + roleIcon + ' ' + (e.user||'?') + '</span><span class="hist-date">' + dateStr + '</span></div>';
         html += '<div class="hist-action">' + (e.action||'') + '</div>';
         if(e.detail) html += '<div class="hist-detail">' + e.detail + '</div>';
         html += '</div>';
@@ -3256,7 +3260,7 @@ function clearJournal(){
 
 // Log key actions
 function logScenarioChange(){
-    const sc = document.getElementById('scenario').value;
+    const sc = document.getElementById('scenario').options[document.getElementById('scenario').selectedIndex].text;
     logAction('Changement scénario', sc);
 }
 function logClientChange(){
@@ -3266,13 +3270,162 @@ function logClientChange(){
 }
 function logExport(type){
     const nom = document.getElementById('nom').value.trim() || 'Client';
-    logAction('Export ' + type, nom);
+    const prenom = document.getElementById('prenom').value.trim() || '';
+    const sc = document.getElementById('scenario').options[document.getElementById('scenario').selectedIndex].text;
+    const cat = document.getElementById('categorie').value;
+    const zn = document.getElementById('zone').value;
+    const ttc = document.getElementById('totalTTC').textContent;
+    const mpr = document.getElementById('aidesMPR').textContent;
+    const cee = document.getElementById('aidesCEE').textContent;
+    const rac = document.getElementById('resteCharge').textContent;
+    const pct = document.getElementById('racPourcent').value;
+    const detail = (prenom + ' ' + nom).trim() + ' · ' + sc + ' · ' + cat + ' · ' + zn + ' · TTC:' + ttc + ' MPR:' + mpr + ' CEE:' + cee + ' RAC:' + rac + (parseInt(pct)>0 ? ' ('+pct+'%)' : '');
+    logAction('Export ' + type, detail);
 }
 function logRACChange(){
     const pct = document.getElementById('racPourcent').value;
     const offert = document.getElementById('racOffert').value;
-    logAction('RAC modifié', pct + '% / ' + offert + ' €');
+    const rac = document.getElementById('resteCharge').textContent;
+    logAction('RAC modifié', pct + '% / ' + offert + ' € → RAC: ' + rac);
 }
+
+// ============================================
+// TRACKING DÉTAILLÉ — TOUTES LES INTERACTIONS
+// ============================================
+(function(){
+    let _lastDept = '', _lastRFR = '', _lastNbPers = '', _lastEtas = '';
+    let _lastSurface = '', _lastMenage = '', _lastAnnee = '';
+    let _lastTTC = '', _lastLockTTC = true, _lastLockCout = true;
+
+    // Département
+    const deptEl = document.getElementById('departement');
+    if(deptEl) deptEl.addEventListener('change', function(){
+        const v = this.value.trim();
+        if(v && v !== _lastDept){ _lastDept = v;
+            const zn = document.getElementById('zone') ? document.getElementById('zone').value : '';
+            logAction('Département saisi', v + (zn ? ' → Zone ' + zn : ''));
+        }
+    });
+
+    // RFR
+    const rfrEl = document.getElementById('rfr');
+    if(rfrEl) rfrEl.addEventListener('change', function(){
+        const v = this.value.trim();
+        if(v && v !== _lastRFR){ _lastRFR = v;
+            const cat = document.getElementById('categorie') ? document.getElementById('categorie').value : '';
+            logAction('RFR saisi', parseInt(v).toLocaleString('fr-FR') + ' € → ' + cat);
+        }
+    });
+
+    // Nb personnes foyer
+    const foyerEl = document.getElementById('nbPersonnes');
+    if(foyerEl) foyerEl.addEventListener('change', function(){
+        const v = this.value;
+        if(v !== _lastNbPers){ _lastNbPers = v;
+            logAction('Foyer modifié', v + ' personne(s)');
+        }
+    });
+
+    // ETAS
+    const etasEl = document.getElementById('etas');
+    if(etasEl) etasEl.addEventListener('change', function(){
+        const v = this.options[this.selectedIndex].text;
+        if(v !== _lastEtas){ _lastEtas = v;
+            logAction('ETAS modifié', v);
+        }
+    });
+
+    // Surface CEE
+    const surfEl = document.getElementById('ceeSurface');
+    if(surfEl) surfEl.addEventListener('change', function(){
+        const v = this.value;
+        if(v !== _lastSurface){ _lastSurface = v;
+            logAction('Surface modifiée', v + ' m²');
+        }
+    });
+
+    // Ménage CEE
+    const menageEl = document.getElementById('menageCEE');
+    if(menageEl) menageEl.addEventListener('change', function(){
+        const v = this.options[this.selectedIndex].text;
+        if(v !== _lastMenage){ _lastMenage = v;
+            logAction('Ménage CEE modifié', v);
+        }
+    });
+
+    // Année construction
+    const anneeEl = document.getElementById('dimAnnee');
+    if(anneeEl) anneeEl.addEventListener('change', function(){
+        const v = this.value;
+        if(v !== _lastAnnee){ _lastAnnee = v;
+            logAction('Année construction', v);
+        }
+    });
+
+    // Isolation checkboxes
+    document.querySelectorAll('.iso-check input[type="checkbox"]').forEach(function(cb){
+        cb.addEventListener('change', function(){
+            const label = this.closest('.iso-check') ? this.closest('.iso-check').textContent.trim().split('\n')[0].trim() : '?';
+            logAction('Isolation modifiée', label + ' → ' + (this.checked ? 'Oui' : 'Non'));
+        });
+    });
+
+    // TTC modifié manuellement
+    const ttcEl = document.getElementById('totalTTCInput');
+    if(ttcEl) ttcEl.addEventListener('change', function(){
+        const v = this.value;
+        if(v !== _lastTTC){ _lastTTC = v;
+            logAction('TTC modifié', parseInt(v).toLocaleString('fr-FR') + ' €');
+        }
+    });
+
+    // Lock TTC
+    const lockTTCEl = document.getElementById('lockTTC');
+    if(lockTTCEl) lockTTCEl.addEventListener('change', function(){
+        logAction('Verrouillage TTC', this.checked ? 'Activé' : 'Désactivé');
+    });
+
+    // Lock Coût HT
+    const lockCoutEl = document.getElementById('lockCoutHT');
+    if(lockCoutEl) lockCoutEl.addEventListener('change', function(){
+        logAction('Verrouillage Coûts HT', this.checked ? 'Activé' : 'Désactivé');
+    });
+
+    // Coûts détaillés (matériel, pose, etc.)
+    ['coutPACMateriel','coutPACPose','coutBallonMateriel','coutBallonPose','coutAccessoires','coutAdmin','coutMandat','coutMairie'].forEach(function(id){
+        const el = document.getElementById(id);
+        if(el) el.addEventListener('change', function(){
+            const label = id.replace('cout','').replace(/([A-Z])/g,' $1').trim();
+            logAction('Coût modifié', label + ' : ' + parseInt(this.value).toLocaleString('fr-FR') + ' €');
+        });
+    });
+
+    // Quantités
+    ['qtePACMateriel','qtePACPose','qteBallonMateriel','qteBallonPose','qteAccessoires','qteAdmin','qteMandat','qteMairie'].forEach(function(id){
+        const el = document.getElementById(id);
+        if(el) el.addEventListener('change', function(){
+            const label = id.replace('qte','').replace(/([A-Z])/g,' $1').trim();
+            logAction('Quantité modifiée', label + ' : ×' + this.value);
+        });
+    });
+
+    // Dimensionnement
+    const dimSurfEl = document.getElementById('dimSurface');
+    if(dimSurfEl) dimSurfEl.addEventListener('change', function(){
+        logAction('Dim. surface modifiée', this.value + ' m²');
+    });
+    const dimHautEl = document.getElementById('dimHauteur');
+    if(dimHautEl) dimHautEl.addEventListener('change', function(){
+        logAction('Dim. hauteur modifiée', this.value + ' m');
+    });
+
+    // Prévisite
+    const prevEl = document.getElementById('checkPrevisite');
+    if(prevEl) prevEl.addEventListener('change', function(){
+        logAction('Prévisite', this.checked ? 'Activée' : 'Désactivée');
+    });
+
+})();
 
 
 // ============================================
