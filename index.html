@@ -488,11 +488,11 @@
         }
 
         .fournisseur-only {
-            display: none;
+            display: none !important;
         }
 
         .fournisseur-mode .fournisseur-only {
-            display: block;
+            display: block !important;
         }
         
         .fournisseur-mode .ttc-readonly {
@@ -500,11 +500,11 @@
         }
 
         .client-only {
-            display: block;
+            display: block !important;
         }
 
         .fournisseur-mode .client-only {
-            display: none;
+            display: none !important;
         }
 
         /* Telepro mode: hide specific admin sections */
@@ -1691,20 +1691,27 @@
                 </div>
 
                 <div id="actionButtons">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                        <button class="btn-dark-export pdf" onclick="exportPDF('client')">
-                            📄 PDF Client
-                        </button>
-                        <button class="btn-dark-export pdf" onclick="exportPDF('admin')">
-                            🔒 PDF Admin
-                        </button>
+                    <!-- Client view: only PDF Client -->
+                    <button class="btn-dark-export pdf client-only" onclick="exportPDF('client')">
+                        📄 Télécharger le PDF
+                    </button>
+                    <!-- Fournisseur view: PDF Client + PDF Admin -->
+                    <div class="fournisseur-only" id="adminPdfGrid" style="margin-bottom: 8px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                            <button class="btn-dark-export pdf" onclick="exportPDF('client')">
+                                📄 PDF Client
+                            </button>
+                            <button class="btn-dark-export pdf" onclick="exportPDF('admin')">
+                                🔒 PDF Admin
+                            </button>
+                        </div>
                     </div>
                     
-                    <button id="whatsappBtn" class="btn-dark-export whatsapp" onclick="sendWhatsApp()">
-                        💬 Demander un devis
-                    </button>
                     <button class="btn-dark-export" onclick="sendMail()" style="background: rgba(59,130,246,0.12); border-color: rgba(59,130,246,0.25); color: rgba(147,197,253,0.9);">
                         📋 Demander les pièces justificatives
+                    </button>
+                    <button id="whatsappBtn" class="btn-dark-export whatsapp" onclick="sendWhatsApp()">
+                        💬 Demander un devis
                     </button>
                 </div>
             </div>
