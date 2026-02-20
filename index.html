@@ -495,6 +495,11 @@
             display: none;
         }
 
+        /* Telepro mode: hide specific admin sections */
+        .telepro-mode .telepro-hide {
+            display: none !important;
+        }
+
         .results-sidebar {
             position: sticky;
             top: 100px;
@@ -794,18 +799,12 @@
         .status-badge.ok {
             background: linear-gradient(135deg, #065f46, #059669);
             color: white;
-            cursor: pointer;
             box-shadow: 0 4px 20px rgba(5, 150, 105, 0.35);
         }
-        .status-badge.ok:hover {
-            box-shadow: 0 6px 28px rgba(5, 150, 105, 0.5);
-            transform: translateY(-1px);
-        }
-        .status-badge.ok:active { transform: translateY(0); }
         .status-badge.danger {
-            background: linear-gradient(135deg, #7f1d1d, #dc2626);
+            background: linear-gradient(135deg, #78350f, #d97706);
             color: white;
-            box-shadow: 0 4px 16px rgba(220, 38, 38, 0.25);
+            box-shadow: 0 4px 16px rgba(217, 119, 6, 0.25);
         }
 
 
@@ -1372,7 +1371,7 @@
             </div>
 
             <!-- ===================== NOTE DE DIMENSIONNEMENT (fournisseur) ===================== -->
-            <div class="card fournisseur-only" id="dimensionnementCard">
+            <div class="card fournisseur-only telepro-hide" id="dimensionnementCard">
                 <h2 class="card-title">📐 Dimensionnement PAC</h2>
                 <div style="font-size: 12px; color: #64748b; margin-bottom: 18px;">Estimation de la puissance recommandée · Formule : P = G × V × ΔT</div>
 
@@ -1571,13 +1570,17 @@
 
                 <!-- TOTAL TTC (editable fournisseur) -->
                 <div class="fournisseur-only" style="margin-bottom: 12px;">
-                    <div class="dark-section-title">Coût installation</div>
-                    <input type="number" class="ttc-input-dark" id="totalTTCInput" value="10890" step="1" oninput="updateFromTTC()">
-                    <small style="font-size: 11px; color: rgba(255,255,255,0.35); margin-top: 4px; display: block;">
-                        <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
-                            <input type="checkbox" id="lockTTC" checked onchange="calc()"> Verrouiller (auto selon scénario)
-                        </label>
-                    </small>
+                    <div class="result-row-card" style="background: rgba(96,165,250,0.08); border-color: rgba(96,165,250,0.15);">
+                        <div>
+                            <div class="rrc-label">💰 Coût installation TTC</div>
+                            <small style="font-size: 11px; color: rgba(255,255,255,0.35); margin-top: 4px; display: block;">
+                                <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
+                                    <input type="checkbox" id="lockTTC" checked onchange="calc()"> Verrouiller (auto selon scénario)
+                                </label>
+                            </small>
+                        </div>
+                        <input type="number" id="totalTTCInput" value="10890" step="1" oninput="updateFromTTC()" style="font-size: 22px; font-weight: 800; text-align: right; width: 140px; padding: 6px 10px; border: 1px solid rgba(96,165,250,0.3); border-radius: 8px; background: rgba(255,255,255,0.06); color: #60a5fa; -moz-appearance: textfield;">
+                    </div>
                 </div>
 
                 <!-- COÛT HT fournisseur -->
@@ -1617,14 +1620,14 @@
                     <div class="rhc-value" id="totalAides">—</div>
                 </div>
 
-                <!-- RESTE À CHARGE -->
-                <div class="result-row-card" style="background: rgba(251,191,36,0.08); border-color: rgba(251,191,36,0.15);">
-                    <div class="rrc-label">🏠 Reste à charge estimé</div>
-                    <div class="rrc-value yellow" id="resteCharge">—</div>
+                <!-- RESTE À CHARGE — HERO -->
+                <div id="racHeroCard" style="background: linear-gradient(135deg, rgba(251,191,36,0.15) 0%, rgba(245,158,11,0.08) 100%); border: 2px solid rgba(251,191,36,0.3); border-radius: 16px; padding: 22px 24px; margin-bottom: 12px; text-align: center; position: relative; box-shadow: 0 4px 24px rgba(251,191,36,0.1);">
+                    <div style="font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 6px;">🏠 Reste à charge estimé</div>
+                    <div id="resteCharge" style="font-size: 40px; font-weight: 900; color: #fbbf24; text-shadow: 0 0 30px rgba(251,191,36,0.3);">—</div>
                 </div>
 
                 <!-- MARGE fournisseur -->
-                <div class="fournisseur-only" style="margin-top: 4px;">
+                <div class="fournisseur-only telepro-hide" id="margeCard" style="margin-top: 4px;">
                     <div class="result-row-card" style="background: rgba(248,113,113,0.06); border-color: rgba(248,113,113,0.12);">
                         <div class="rrc-label">📊 Marge finale (HT)</div>
                         <div class="rrc-value" id="margeFinal" style="font-size: 18px;">—</div>
@@ -1653,23 +1656,28 @@
                 </div>
 
                 <!-- Status + Actions -->
-                <div id="statusBadge" class="status-badge ok" style="margin-bottom: 14px;" onclick="shareDevis()">
+                <div id="statusBadge" class="status-badge ok" style="margin-bottom: 14px; cursor: default;">
                     <span id="statusIcon">✅</span>
                     <span id="statusText">Voulez-vous un devis ?</span>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                    <button class="btn-dark-export pdf" onclick="exportPDF('client')">
-                        📄 PDF Client
+                <div id="actionButtons">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                        <button class="btn-dark-export pdf" onclick="exportPDF('client')">
+                            📄 PDF Client
+                        </button>
+                        <button class="btn-dark-export pdf" onclick="exportPDF('admin')">
+                            🔒 PDF Admin
+                        </button>
+                    </div>
+                    
+                    <button id="whatsappBtn" class="btn-dark-export whatsapp" onclick="sendWhatsApp()">
+                        💬 Demander un devis
                     </button>
-                    <button class="btn-dark-export pdf" onclick="exportPDF('admin')">
-                        🔒 PDF Admin
+                    <button class="btn-dark-export" onclick="sendMail()" style="background: rgba(59,130,246,0.12); border-color: rgba(59,130,246,0.25); color: rgba(147,197,253,0.9);">
+                        📋 Demander les pièces justificatives
                     </button>
                 </div>
-                
-                <button id="whatsappBtn" class="btn-dark-export whatsapp" onclick="sendWhatsApp()">
-                    💬 Envoyer par WhatsApp
-                </button>
             </div>
         </div>
     </div>
@@ -2084,7 +2092,7 @@ function getCEEFiches(scenario) {
         case 'PAC':                    return ['171'];
         case 'PAC + BALLON ÉLECTRIQUE': return ['171'];
         case 'PAC + BALLON THERMO':     return ['171']; // 148 non cumulable depuis 01/2026
-        case 'PAC + SSC':              return ['171', '143']; // cumul 171+143, CdP sur 171 uniquement
+        case 'PAC + SSC':              return ['171']; // CEE PAC uniquement (143 SSC non applicable en cumul)
         case 'SSC':                    return ['143']; // SSC seul = BAR-TH-143 uniquement
         default:                        return ['171'];
     }
@@ -2534,14 +2542,14 @@ function calcRAC(rb,ch,ta,taForMarge,tt){
     if(typeof dbg==='function') dbg('RAC: mg='+Math.round(mgForMarge)+' seuil='+seuilOK+' rbFM='+Math.round(rbForMarge)+' ch='+Math.round(ch));
     if(mgForMarge>=seuilOK){
         bd.className='status-badge ok';
-        bd.onclick=shareDevis;
         icon.textContent='✅';
         txt.textContent='Voulez-vous un devis ?';
+        document.getElementById('actionButtons').style.display='';
     }else{
         bd.className='status-badge danger';
-        bd.onclick=null;
-        icon.textContent='❌';
-        txt.textContent='Dossier refusé';
+        icon.textContent='⚠️';
+        txt.textContent='Aides insuffisantes — ajustez les paramètres';
+        document.getElementById('actionButtons').style.display='none';
     }
 }
 
@@ -2750,6 +2758,20 @@ function sendWhatsApp(){
     window.open('https://api.whatsapp.com/send?text='+encodeURIComponent(text), '_blank');
 }
 
+function sendMail(){
+    if(typeof logExport==='function') logExport('MAIL');
+    const nom = document.getElementById('nom').value.trim() || 'Client';
+    const prenom = document.getElementById('prenom').value.trim() || '';
+    const fullName = (prenom + ' ' + nom).trim();
+    const scenario = document.getElementById('scenario').options[document.getElementById('scenario').selectedIndex].text;
+
+    const subject = `Votre projet ${scenario} - Les Artisans Verts`;
+
+    const body = `Bonjour ${fullName},\n\nNous avons bien reçu votre intérêt pour le ${scenario}.\n\nAfin de déclencher la visite de l'auditeur, nous avons besoin des éléments suivants :\n- Dernier avis d'imposition des personnes figurant sur la taxe foncière,\n- Dernière taxe foncière ou acte notarié pour les maisons achetées il y a moins d'un an,\n- Pièces d'identité recto verso des personnes figurant sur la taxe foncière,\n- Livret de famille ou à défaut les noms, prénoms et dates de naissance des personnes constituant votre foyer\n\nDès réception de ces éléments, nous pourrons transmettre votre dossier à LP AUDIT afin que vous soyez contacté(e) pour la prise de rendez-vous.\n\nDans l'attente, je reste à votre disposition pour tout renseignement complémentaire.\n\nBonne journée,`;
+
+    window.location.href = 'mailto:?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+}
+
 function exportPDF(mode){
     if(typeof logExport==='function') logExport('PDF_' + (mode||'admin').toUpperCase());
     const isClient = (mode === 'client');
@@ -2871,6 +2893,7 @@ const FALLBACK_USERS = {
     'marc':    { pass:'marc26',    name:'Marc',        role:'commercial' },
     'julie':   { pass:'julie26',   name:'Julie',       role:'commercial' },
     'thomas':  { pass:'thomas26',  name:'Thomas',      role:'commercial' },
+    'telepro': { pass:'telepro26', name:'Téléprospecteur', role:'telepro' },
 };
 let currentUser = null;
 let useAPI = false;
@@ -2990,16 +3013,27 @@ function showApp(){
         // Vue client uniquement
         mode = 0;
         document.getElementById('mainContent').classList.remove('fournisseur-mode');
+        document.getElementById('mainContent').classList.remove('telepro-mode');
         document.getElementById('guestBar').style.display = 'flex';
         document.getElementById('userBar').style.display = 'none';
     } else {
-        // Commercial/admin : vue fournisseur par défaut
+        // Commercial/admin/telepro : vue fournisseur par défaut
         mode = 1;
         document.getElementById('mainContent').classList.add('fournisseur-mode');
         document.getElementById('guestBar').style.display = 'none';
         document.getElementById('userBar').style.display = 'flex';
         document.getElementById('userNameDisplay').textContent = currentUser.name;
-        document.getElementById('userRoleDisplay').textContent = currentUser.role === 'admin' ? '👑 Admin' : '📊 Commercial';
+
+        // Telepro mode
+        const isTelepro = currentUser.role === 'telepro';
+        if(isTelepro){
+            document.getElementById('mainContent').classList.add('telepro-mode');
+            document.getElementById('userRoleDisplay').textContent = '📞 Téléprospecteur';
+        } else {
+            document.getElementById('mainContent').classList.remove('telepro-mode');
+            document.getElementById('userRoleDisplay').textContent = currentUser.role === 'admin' ? '👑 Admin' : '📊 Commercial';
+        }
+
         // Admin-only buttons
         const isAdmin = currentUser.role === 'admin';
         document.getElementById('btnHistory').style.display = isAdmin ? '' : 'none';
