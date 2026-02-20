@@ -1868,13 +1868,10 @@ function showUpdatePopup(){
     overlay.innerHTML = `
         <div style="background:#1e293b;border:2px solid #34d399;border-radius:20px;padding:32px 28px;max-width:380px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.5);">
             <div style="font-size:48px;margin-bottom:12px;">🔄</div>
-            <div style="font-size:18px;font-weight:800;color:#f1f5f9;margin-bottom:8px;">Mise à jour disponible</div>
-            <div style="font-size:14px;color:#94a3b8;margin-bottom:24px;line-height:1.5;">Les barèmes d'aides ont été mis à jour.<br>Veuillez rafraîchir la page pour utiliser les derniers montants.</div>
+            <div style="font-size:18px;font-weight:800;color:#f1f5f9;margin-bottom:8px;">Mise à jour des données</div>
+            <div style="font-size:14px;color:#94a3b8;margin-bottom:24px;line-height:1.5;">Les données du simulateur ont été mises à jour.<br>Veuillez rafraîchir la page pour continuer.</div>
             <button onclick="location.reload(true)" style="background:linear-gradient(135deg,#059669,#34d399);color:white;border:none;padding:14px 32px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;width:100%;box-shadow:0 4px 16px rgba(52,211,153,0.3);transition:transform 0.2s;">
                 ✅ Rafraîchir maintenant
-            </button>
-            <button onclick="document.getElementById('updatePopup').remove()" style="background:none;border:none;color:#64748b;font-size:12px;cursor:pointer;margin-top:12px;padding:8px;">
-                Plus tard
             </button>
         </div>
     `;
