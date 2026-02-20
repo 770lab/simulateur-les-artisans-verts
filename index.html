@@ -1627,15 +1627,32 @@
                 <div class="glow-separator"></div>
 
                 <!-- TOTAL AIDES -->
-                <div class="result-highlight-card">
-                    <div class="rhc-label">Total des aides</div>
-                    <div class="rhc-value" id="totalAides">—</div>
+                <div class="result-row-card" style="background: rgba(52,211,153,0.08); border-color: rgba(52,211,153,0.15);">
+                    <div class="rrc-label">Total des aides</div>
+                    <div class="rrc-value green" id="totalAides" style="font-size: 18px;">—</div>
                 </div>
 
                 <!-- RESTE À CHARGE — HERO -->
                 <div id="racHeroCard" style="background: linear-gradient(135deg, rgba(251,191,36,0.15) 0%, rgba(245,158,11,0.08) 100%); border: 2px solid rgba(251,191,36,0.3); border-radius: 16px; padding: 22px 24px; margin-bottom: 12px; text-align: center; position: relative; box-shadow: 0 4px 24px rgba(251,191,36,0.1);">
                     <div style="font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 6px;">🏠 Reste à charge estimé</div>
                     <div id="resteCharge" style="font-size: 40px; font-weight: 900; color: #fbbf24; text-shadow: 0 0 30px rgba(251,191,36,0.3);">—</div>
+                    <div id="racFinalLine" style="display: none; font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 6px;"></div>
+                </div>
+
+                <!-- GESTE CO (client view only) -->
+                <div id="gesteCoSection" class="rac-dark-section client-only" style="margin-bottom: 14px; background: rgba(139,92,246,0.08); border: 1px solid rgba(139,92,246,0.2); border-radius: 14px; padding: 14px 18px;">
+                    <div class="dark-section-title" style="margin-bottom: 10px; color: rgba(139,92,246,0.8);">🎁 Geste commercial</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                        <div>
+                            <div class="amount-label" style="color: rgba(255,255,255,0.45); margin-bottom: 4px;">Pourcentage (%)</div>
+                            <input type="number" id="gesteCoClient" value="0" min="0" max="100" step="1" oninput="syncGesteCo()" style="border-color: rgba(139,92,246,0.3);">
+                        </div>
+                        <div>
+                            <div class="amount-label" style="color: rgba(255,255,255,0.45); margin-bottom: 4px;">Montant offert (€)</div>
+                            <input type="number" id="gesteCoMontantInput" value="0" readonly style="border-color: rgba(139,92,246,0.3); opacity: 0.7;">
+                        </div>
+                    </div>
+                    <div id="gesteCoMontant" style="display: none;">—</div>
                 </div>
 
                 <!-- MARGE fournisseur -->
@@ -2522,6 +2539,7 @@ function calc(){
     document.getElementById('scenarioSummary').style.borderLeftColor=borderColor;
     
     calcRAC(rb,chForMarge,ta,taForMarge,tt);
+    syncGesteCoFromAdmin();
     if(typeof dbg==='function') dbg('calc: sc='+sc+' ct='+ct+' ad='+ad+' ce='+ce+' ch='+ch+' chFM='+chForMarge+' tt='+tt+' rb='+rb+' taFM='+taForMarge);
     
     _calcRunning = false;
@@ -2603,11 +2621,13 @@ function calcRAC(rb,ch,ta,taForMarge,tt){
         icon.textContent='✅';
         txt.textContent='Voulez-vous un devis ?';
         document.getElementById('actionButtons').style.display='';
+        document.getElementById('gesteCoSection').style.display='';
     }else{
         bd.className='status-badge danger';
         icon.textContent='⚠️';
         txt.textContent='Aides insuffisantes — ajustez les paramètres';
         document.getElementById('actionButtons').style.display='none';
+        document.getElementById('gesteCoSection').style.display='none';
     }
 }
 
@@ -2694,6 +2714,7 @@ function updatePct(){
     document.getElementById('racOffert').value=mo;
     
     calcRAC(rb,chForMarge,ta,taForMarge,tt);
+    syncGesteCoFromAdmin();
 }
 
 function updateAmt(){
@@ -2750,6 +2771,7 @@ function updateAmt(){
     document.getElementById('racPourcent').value=po;
     
     calcRAC(rb,chForMarge,ta,taForMarge,tt);
+    syncGesteCoFromAdmin();
 }
 
 function reset(){
@@ -3287,6 +3309,42 @@ function logRACChange(){
     const offert = document.getElementById('racOffert').value;
     const rac = document.getElementById('resteCharge').textContent;
     logAction('RAC modifié', pct + '% / ' + offert + ' € → RAC: ' + rac);
+    // Sync to client geste co
+    syncGesteCoFromAdmin();
+}
+
+function syncGesteCo(){
+    const pct = parseInt(document.getElementById('gesteCoClient').value) || 0;
+    document.getElementById('racPourcent').value = Math.min(100, Math.max(0, pct));
+    updatePct();
+    updateGesteCoDisplay();
+    logRACChange();
+}
+
+function syncGesteCoFromAdmin(){
+    const pct = parseInt(document.getElementById('racPourcent').value) || 0;
+    document.getElementById('gesteCoClient').value = pct;
+    updateGesteCoDisplay();
+}
+
+function updateGesteCoDisplay(){
+    const pct = parseInt(document.getElementById('racPourcent').value) || 0;
+    const offert = parseInt(document.getElementById('racOffert').value) || 0;
+    const montantEl = document.getElementById('gesteCoMontant');
+    const montantInput = document.getElementById('gesteCoMontantInput');
+    const finalLine = document.getElementById('racFinalLine');
+    if(montantInput) montantInput.value = offert > 0 ? offert : 0;
+    if(pct > 0 && offert > 0){
+        montantEl.textContent = '−' + offert.toLocaleString('fr-FR') + ' €';
+        const racText = document.getElementById('resteCharge').textContent;
+        const racVal = parseInt(racText.replace(/[^\d-]/g,'')) || 0;
+        const racFinal = Math.max(0, racVal - offert);
+        finalLine.style.display = 'block';
+        finalLine.innerHTML = 'Après geste : <strong style="color:#fbbf24;">' + racFinal.toLocaleString('fr-FR') + ' €</strong>';
+    } else {
+        montantEl.textContent = '—';
+        finalLine.style.display = 'none';
+    }
 }
 
 // ============================================
