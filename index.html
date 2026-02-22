@@ -522,6 +522,122 @@
             display: none !important;
         }
 
+        /* Script telepro panel */
+        .script-panel { display: none; }
+        .telepro-mode .script-panel { display: block !important; }
+        
+        /* Telepro: reorganize layout - script left, sim right */
+        .telepro-mode {
+            grid-template-columns: 0.85fr 1.15fr !important;
+        }
+        .telepro-mode .script-panel { 
+            grid-row: 1 / 20;
+        }
+        @media (max-width: 900px) {
+            .telepro-mode { grid-template-columns: 1fr !important; }
+            .telepro-mode .script-panel { grid-row: auto; }
+        }
+        
+        /* Telepro: hide cards they don't need */
+        .telepro-mode #baremeCard,
+        .telepro-mode #coutHTCard,
+        .telepro-mode .cee-kpi-row,
+        .telepro-mode #ceeResult,
+        .telepro-mode #calcErrorDebug { display: none !important; }
+        /* Telepro: show readonly TTC, not editable */
+        .telepro-mode .ttc-readonly { display: block !important; }
+        .telepro-mode #ttcEditableCard { display: none !important; }
+        .script-panel .script-card {
+            background: linear-gradient(160deg, #0f172a 0%, #1a1a3e 50%, #1e3a5f 100%);
+            border-radius: 16px;
+            padding: 16px;
+            color: white;
+            position: sticky;
+            top: 70px;
+            max-height: calc(100vh - 90px);
+            overflow-y: auto;
+        }
+        .script-panel .script-card::-webkit-scrollbar { width: 4px; }
+        .script-panel .script-card::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
+        .script-panel .script-title {
+            font-size: 14px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .script-steps-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .script-step {
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            margin-bottom: 6px;
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+        .script-step.active { border-color: rgba(52,211,153,0.3); background: rgba(52,211,153,0.04); }
+        .script-step-header {
+            padding: 12px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 13px;
+            color: rgba(255,255,255,0.8);
+            transition: all 0.2s;
+        }
+        .script-step-header:hover { background: rgba(255,255,255,0.04); }
+        .script-step.active .script-step-header { color: #34d399; }
+        .script-step-num {
+            width: 26px; height: 26px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; font-weight: 800; flex-shrink: 0;
+        }
+        .script-step.active .script-step-num { background: rgba(52,211,153,0.2); color: #34d399; }
+        .script-step.done .script-step-num { background: rgba(52,211,153,0.15); color: #34d399; font-size: 0; }
+        .script-step.done .script-step-num::after { content: '✓'; font-size: 12px; }
+        .script-step-body {
+            display: none;
+            padding: 0 16px 14px 52px;
+            font-size: 13px;
+            line-height: 1.7;
+            color: rgba(255,255,255,0.6);
+        }
+        .script-step.active .script-step-body { display: block; }
+        .script-say {
+            background: rgba(255,255,255,0.04);
+            border-left: 3px solid rgba(52,211,153,0.4);
+            padding: 10px 14px;
+            border-radius: 0 8px 8px 0;
+            margin: 8px 0;
+            font-style: italic;
+            color: rgba(255,255,255,0.75);
+        }
+        .script-action {
+            background: rgba(59,130,246,0.1);
+            border: 1px solid rgba(59,130,246,0.2);
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin: 8px 0;
+            font-size: 12px;
+            font-weight: 600;
+            color: #93c5fd;
+        }
+        .script-action::before { content: '🖥️ '; }
+        .script-tip {
+            font-size: 11px;
+            color: rgba(251,191,36,0.7);
+            margin-top: 4px;
+        }
+        .script-tip::before { content: '💡 '; }
+
         .results-sidebar {
             position: sticky;
             top: 100px;
@@ -1079,6 +1195,152 @@
     </div>
 
     <div class="main-content" id="mainContent">
+
+        <!-- ===================== SCRIPT TELEPRO ===================== -->
+        <div class="script-panel" id="scriptPanel">
+            <div class="script-card">
+                <div class="script-title">📞 Script d'appel <span style="font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.4); margin-left: auto;">Cliquer sur chaque étape</span></div>
+
+                <div class="script-steps-grid">
+
+                <div class="script-step active" id="ss1" onclick="toggleStep(1)">
+                    <div class="script-step-header">
+                        <div class="script-step-num">1</div>
+                        Accroche — Autorité calme
+                    </div>
+                    <div class="script-step-body">
+                        <div class="script-say">Bonjour Monsieur / Madame <strong>[Nom]</strong>,<br>Lucas à l'appareil, service étude énergétique du programme Habiter Mieux.<br>Je vous appelle concernant votre maison située à <strong>[Ville]</strong>, je dois simplement vérifier quelques informations avec vous, ça va prendre deux minutes.<br><br>Vous êtes toujours bien propriétaire du logement ?</div>
+                        <div class="script-action">Remplir <strong>Nom</strong> + <strong>Prénom</strong> + <strong>Département</strong></div>
+                        <div class="script-tip">90 % disent oui → premier engagement</div>
+                    </div>
+                </div>
+
+                <div class="script-step" id="ss2" onclick="toggleStep(2)">
+                    <div class="script-step-header">
+                        <div class="script-step-num">2</div>
+                        Qualification cachée
+                    </div>
+                    <div class="script-step-body">
+                        <div class="script-say">Très bien merci.<br>C'est une maison individuelle ou mitoyenne ?<br>Elle date d'avant ou après 2010 environ ?<br>Et aujourd'hui vous chauffez plutôt au gaz ou au fioul ?<br><br>Et votre maison fait environ combien de m² au sol ?</div>
+                        <div class="script-action">Remplir <strong>Année construction</strong> + <strong>Surface chauffée</strong> (m²)<br>Le scénario est en <strong>PAC + SSC</strong> par défaut</div>
+                        <div class="script-tip">Tu qualifies sans qu'il sente un questionnaire. Si &lt; 90 m², le CEE change.</div>
+                    </div>
+                </div>
+
+                <div class="script-step" id="ss3" onclick="toggleStep(3)">
+                    <div class="script-step-header">
+                        <div class="script-step-num">3</div>
+                        Diagnostic — Le client valide
+                    </div>
+                    <div class="script-step-body">
+                        <div class="script-say">D'accord. Alors je vous explique rapidement pourquoi vous êtes contacté.<br>Aujourd'hui l'État identifie les logements encore équipés de systèmes énergivores.<br>Et sauf erreur de ma part, vous n'êtes pas encore équipé :<br>— d'une pompe à chaleur dernière génération,<br>— ni d'un système solaire combiné pour produire chauffage et eau chaude.<br><br>C'est bien ça ?</div>
+                        <div class="script-tip">Le client confirme → il verbalise son besoin</div>
+                    </div>
+                </div>
+
+                <div class="script-step" id="ss4" onclick="toggleStep(4)">
+                    <div class="script-step-header">
+                        <div class="script-step-num">4</div>
+                        Programme État
+                    </div>
+                    <div class="script-step-body">
+                        <div class="script-say">Je vous rassure tout de suite : je ne vous appelle pas pour vendre un équipement.<br>Le rôle du programme est simplement d'identifier les propriétaires qui pourraient bénéficier d'un remplacement complet du chauffage grâce aux aides nationales.<br><br>Aujourd'hui le gaz et le fioul deviennent très coûteux :<br>— augmentation constante,<br>— entretien obligatoire,<br>— dépendance aux fournisseurs.</div>
+                    </div>
+                </div>
+
+                <div class="script-step" id="ss5" onclick="toggleStep(5)">
+                    <div class="script-step-header">
+                        <div class="script-step-num">5</div>
+                        Projection — Frappe fort
+                    </div>
+                    <div class="script-step-body">
+                        <div class="script-say">Le système proposé combine deux technologies :<br>une pompe à chaleur nouvelle génération et un système solaire combiné.<br><br>Le solaire capte gratuitement l'énergie du soleil pour chauffer la maison et produire l'eau chaude sanitaire. La pompe à chaleur intervient uniquement en complément.<br><br>Donc concrètement : plus vous avez de soleil, moins vous consommez.</div>
+                    </div>
+                </div>
+
+                <div class="script-step" id="ss6" onclick="toggleStep(6)">
+                    <div class="script-step-header">
+                        <div class="script-step-num">6</div>
+                        Gain client — Émotion
+                    </div>
+                    <div class="script-step-body">
+                        <div class="script-say">La majorité des foyers passent d'une facture gaz ou fioul importante… à une économie située entre 60 et 80 % selon la maison.<br><br>Certains ne payent quasiment plus que l'électricité de fonctionnement.</div>
+                    </div>
+                </div>
+
+                <div class="script-step" id="ss7" onclick="toggleStep(7)">
+                    <div class="script-step-header">
+                        <div class="script-step-num">7</div>
+                        💰 Argent — Éligibilité
+                    </div>
+                    <div class="script-step-body">
+                        <div class="script-say">Maintenant la question que tout le monde me pose : comment c'est financé ?<br>Grâce à MaPrimeRénov' et aux certificats d'économie d'énergie.<br><br>Pour vérifier votre éligibilité, j'ai juste besoin de :<br><br><strong>Combien de personnes composent votre foyer fiscal ?</strong><br><strong>Et votre revenu fiscal de référence approximatif ?</strong><br><em>(C'est sur la première page de votre avis d'imposition)</em></div>
+                        <div class="script-action">Remplir <strong>Foyer</strong> (nb personnes) + <strong>Revenu fiscal de réf.</strong><br>Le profil, les aides et le RAC se calculent automatiquement</div>
+                        <div class="script-tip">Si ✅ badge vert → annoncer le RAC. Si ⚠️ orange → ne pas poursuivre.</div>
+                        <div class="script-say" style="margin-top: 10px; border-left-color: rgba(251,191,36,0.5);">
+                            <em>(Si éligible)</em><br>Très bonne nouvelle, d'après les données, votre foyer est éligible aux aides.<br>Le reste à charge estimé serait de <strong>[lire le RAC]</strong>.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="script-step" id="ss8" onclick="toggleStep(8)">
+                    <div class="script-step-header">
+                        <div class="script-step-num">8</div>
+                        Anti-vente (MASTER MOVE)
+                    </div>
+                    <div class="script-step-body">
+                        <div class="script-say">Et je préfère être transparent.<br>Tous les dossiers ne passent pas.<br>En commission, environ un logement sur trois seulement est accepté.<br>Si les aides ne couvrent pas suffisamment, ou si la maison n'est pas compatible techniquement, le dossier est refusé.</div>
+                        <div class="script-tip">Énorme crédibilité → chute des objections</div>
+                    </div>
+                </div>
+
+                <div class="script-step" id="ss9" onclick="toggleStep(9)">
+                    <div class="script-step-header">
+                        <div class="script-step-num">9</div>
+                        Technicien — RDV
+                    </div>
+                    <div class="script-step-body">
+                        <div class="script-say">C'est justement le rôle du technicien agréé RGE. Il vient :<br>— vérifier la faisabilité,<br>— dimensionner correctement PAC + solaire,<br>— et constituer votre dossier officiel.<br><br>Vous ne signez rien ce jour-là. C'est uniquement une étude.</div>
+                    </div>
+                </div>
+
+                <div class="script-step" id="ss10" onclick="toggleStep(10)">
+                    <div class="script-step-header">
+                        <div class="script-step-num">10</div>
+                        Fermeture RDV
+                    </div>
+                    <div class="script-step-body">
+                        <div class="script-say">Pour organiser son passage : vous êtes plutôt disponible le matin, l'après-midi, ou en soirée ?</div>
+                        <div class="script-tip">NE PAS demander « vous voulez un RDV ? »</div>
+                    </div>
+                </div>
+
+                <div class="script-step" id="ss11" onclick="toggleStep(11)">
+                    <div class="script-step-header">
+                        <div class="script-step-num">11</div>
+                        Documents + Pièces
+                    </div>
+                    <div class="script-step-body">
+                        <div class="script-say">Simplement pour constituer le dossier :<br>— justificatif de domicile de moins de 3 mois,<br>— taxe foncière ou acte notarié,<br>— dernière fiche de revenus ou paie.</div>
+                        <div class="script-action">Cliquer sur <strong>📋 Demander les pièces justificatives</strong></div>
+                    </div>
+                </div>
+
+                <div class="script-step" id="ss12" onclick="toggleStep(12)">
+                    <div class="script-step-header">
+                        <div class="script-step-num">12</div>
+                        Conclusion
+                    </div>
+                    <div class="script-step-body">
+                        <div class="script-say">L'objectif est simple :<br>sortir définitivement des énergies coûteuses,<br>utiliser une énergie gratuite grâce au solaire,<br>et sécuriser un système performant financé par les aides de l'État.</div>
+                        <div class="script-action">Cliquer sur <strong>📄 Télécharger le PDF</strong> et/ou <strong>💬 Demander un devis</strong></div>
+                    </div>
+                </div>
+
+                </div><!-- /script-steps-grid -->
+            </div>
+        </div>
+
         <div class="parameters-section">
             <div class="card">
                 <h2 class="card-title">Paramètres</h2>
@@ -1470,7 +1732,7 @@
                 </div>
             </div>
 
-            <div class="card fournisseur-only">
+            <div class="card fournisseur-only telepro-hide">
                 <h2 class="card-title">Coûts (Vue Fournisseur)</h2>
                 
                 <div style="background: #f5f5f7; padding: 16px; border-radius: 8px; margin-bottom: 8px;">
@@ -1591,7 +1853,7 @@
                 </div>
 
                 <!-- TOTAL TTC (editable fournisseur) -->
-                <div class="fournisseur-only" style="margin-bottom: 12px;">
+                <div class="fournisseur-only" id="ttcEditableCard" style="margin-bottom: 12px;">
                     <div class="result-row-card" style="background: rgba(96,165,250,0.08); border-color: rgba(96,165,250,0.15);">
                         <div>
                             <div class="rrc-label">💰 Coût installation TTC</div>
@@ -1606,7 +1868,7 @@
                 </div>
 
                 <!-- COÛT HT fournisseur -->
-                <div class="fournisseur-only" style="margin-bottom: 4px;">
+                <div class="fournisseur-only" id="coutHTCard" style="margin-bottom: 4px;">
                     <div class="result-row-card">
                         <div>
                             <div class="rrc-label">Coût HT</div>
@@ -3028,16 +3290,19 @@ function doLogin(){
             if(d.success){
                 useAPI = true;
                 const usr = d.user || {};
+                var _r = (usr.role || 'commercial').toLowerCase();
+                if(_r === 'user') _r = 'commercial';
                 currentUser = {
                     id: usr.username || u,
                     name: usr.name || u,
-                    role: usr.role || 'commercial'
+                    role: _r
                 };
                 try{ localStorage.setItem('pac_user', JSON.stringify(currentUser)); localStorage.setItem('pac_api','1'); }catch(e){}
                 showApp();
             } else {
-                errEl.textContent = d.error || 'Identifiants incorrects';
-                errEl.style.display = 'block';
+                // API rejected → try local fallback
+                errEl.style.color = '#dc2626';
+                doLoginLocal(u, p, errEl);
             }
         }, function(err){
             // Fallback local
@@ -3797,6 +4062,23 @@ function calcDim() {
     document.getElementById('dimPuissanceAppointDetail').textContent = `(P × ${T2}% − PAC)`;
 
     document.getElementById('dimPuissanceTotale').textContent = (puissanceTotale / 1000).toFixed(1).replace('.', ',') + ' kW';
+}
+
+// ============================================
+// SCRIPT TELEPRO — TOGGLE STEPS
+// ============================================
+function toggleStep(n){
+    for(let i = 1; i <= 12; i++){
+        const el = document.getElementById('ss' + i);
+        if(!el) continue;
+        if(i === n){
+            el.classList.toggle('active');
+        } else {
+            el.classList.remove('active');
+        }
+        // Mark previous steps as done
+        if(i < n) el.classList.add('done');
+    }
 }
 
 // ============================================
