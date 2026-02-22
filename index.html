@@ -1,6 +1,16 @@
 <!DOCTYPE html>
+<!-- ⚠️ PROPRIÉTÉ INTELLECTUELLE — Les Artisans Verts © 2026 — Reproduction interdite — ID:LAV-770-2026 -->
 <html lang="fr">
 <head>
+    <!-- 
+    ╔═══════════════════════════════════════════════════════════════╗
+    ║  SIMULATEUR PAC 2026 — LES ARTISANS VERTS                   ║
+    ║  Propriété exclusive. Toute copie, reproduction ou           ║
+    ║  utilisation non autorisée est passible de poursuites.       ║
+    ║  Identifiant de traçabilité : LAV-770-SIM-2026              ║
+    ║  Contact : contact@lesartisansverts.fr                       ║
+    ╚═══════════════════════════════════════════════════════════════╝
+    -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulateur Aides PAC 2026</title>
@@ -2973,15 +2983,15 @@ function exportPDF(mode){
 // ============================================
 const API_URL = 'https://script.google.com/macros/s/AKfycbwP1Nu60KfLu6iKNk7SMfkJoaq5_UbzcEtwnlBm5r1XbDYz8T16zayfPWynm0Zd_4Th/exec';
 const FALLBACK_USERS = {
-    'ishay':   { pass:'lav',       name:'Ishay',       role:'admin' },
-    'admin':   { pass:'gamberge',  name:'Admin',       role:'admin' },
-    'mendy':   { pass:'mendy5786', name:'Mendy',       role:'commercial' },
-    'david':   { pass:'david26',   name:'David',       role:'commercial' },
-    'sarah':   { pass:'sarah26',   name:'Sarah',       role:'commercial' },
-    'marc':    { pass:'marc26',    name:'Marc',        role:'commercial' },
-    'julie':   { pass:'julie26',   name:'Julie',       role:'commercial' },
-    'thomas':  { pass:'thomas26',  name:'Thomas',      role:'commercial' },
-    'telepro': { pass:'telepro26', name:'Téléprospecteur', role:'telepro' },
+    'ishay':   { pass:'e9138f38d979c81ca528a9a73cbd90892f7413496b076bc655ecc937325369a4', name:'Ishay', role:'admin' },
+    'admin':   { pass:'6d67409383d73d798ae012bb90def775f1e6a5d878fd3857f1b3cee24793fa1f', name:'Admin', role:'admin' },
+    'mendy':   { pass:'9b5ba8665f66adea835f535ed91caa80e73f169bcfe0fca54f23e44d0ae874cd', name:'Mendy', role:'commercial' },
+    'david':   { pass:'b19a7bb33c9d8023f64d00e475416f8feeccca95ab79875095c5db7733b750b0', name:'David', role:'commercial' },
+    'sarah':   { pass:'f089f023579c7bd9f176065938e9858f03767564c3f0992cdaeedbc42bd5f38a', name:'Sarah', role:'commercial' },
+    'marc':    { pass:'34fb0e105bf277a0e0350e881e42b1b355f1b4cf893e767b0fab57a6545420ea', name:'Marc', role:'commercial' },
+    'julie':   { pass:'5f082d797344b7abb2b8e90f68bbe567dc30aa5ed6da82e4cb1165225310c7bb', name:'Julie', role:'commercial' },
+    'thomas':  { pass:'b02a6e639618ea0121c6da3eff69796e4ed2e115451e087758438d547bcb4efc', name:'Thomas', role:'commercial' },
+    'telepro': { pass:'3ce4eded52851e63bdc4467d0e8eadbfb839a1ca6013207033017ab90c4ec6af', name:'Téléprospecteur', role:'telepro' },
 };
 let currentUser = null;
 let useAPI = false;
@@ -3040,17 +3050,30 @@ function doLogin(){
 }
 function doLoginLocal(u, p, errEl){
     const account = FALLBACK_USERS[u];
-    if(!account || account.pass !== p){
+    if(!account){
         errEl.textContent = 'Identifiant ou mot de passe incorrect';
         errEl.style.display = 'block';
         errEl.style.color = '#dc2626';
         return;
     }
-    useAPI = false;
-    currentUser = { id:u, name:account.name, role:account.role };
-    try{ localStorage.setItem('pac_user', JSON.stringify(currentUser)); localStorage.removeItem('pac_api'); }catch(e){}
-    showApp();
-    logAction('Connexion (local)', account.name);
+    // Hash password with SHA-256 and compare
+    sha256(p).then(function(hash){
+        if(hash !== account.pass){
+            errEl.textContent = 'Identifiant ou mot de passe incorrect';
+            errEl.style.display = 'block';
+            errEl.style.color = '#dc2626';
+            return;
+        }
+        useAPI = false;
+        currentUser = { id:u, name:account.name, role:account.role };
+        try{ localStorage.setItem('pac_user', JSON.stringify(currentUser)); localStorage.removeItem('pac_api'); }catch(e){}
+        showApp();
+        logAction('Connexion (local)', account.name);
+    });
+}
+async function sha256(str){
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
 }
 document.getElementById('loginPass').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
 document.getElementById('loginUser').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
@@ -3824,6 +3847,27 @@ function calcDim() {
     // Console warning
     console.log('%c⛔ STOP', 'color:red;font-size:48px;font-weight:bold;');
     console.log('%cCe simulateur est la propriété de Les Artisans Verts. Toute copie ou reproduction est interdite.', 'color:#fbbf24;font-size:14px;');
+    
+    // Invisible watermark — fingerprint dans le DOM
+    var _wm = document.createElement('div');
+    _wm.style.cssText = 'position:fixed;opacity:0;pointer-events:none;z-index:-1;font-size:0;';
+    _wm.setAttribute('data-owner','Les Artisans Verts - LAV-770-SIM-2026');
+    _wm.setAttribute('data-license','Propriétaire - Reproduction interdite');
+    _wm.setAttribute('data-trace', btoa('LAV|' + Date.now() + '|' + navigator.userAgent));
+    document.body.appendChild(_wm);
+    
+    // Hidden watermark in all print outputs
+    var _wmStyle = document.createElement('style');
+    _wmStyle.textContent = '@media print { body::after { content: "Les Artisans Verts © 2026 — LAV-770-SIM"; position: fixed; bottom: 5px; right: 5px; font-size: 7px; color: rgba(0,0,0,0.08); z-index: 99999; } }';
+    document.head.appendChild(_wmStyle);
+    
+    // Domain lock — only works on authorized domains
+    var _h = location.hostname;
+    var _allowed = ['localhost','127.0.0.1','','file','lesartisansverts.fr','www.lesartisansverts.fr'];
+    // Also allow github.io subdomains
+    if(_h && !_allowed.includes(_h) && !_h.endsWith('.github.io') && !_h.endsWith('.netlify.app') && !_h.endsWith('.vercel.app') && location.protocol !== 'file:'){
+        document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0f172a;color:#ef4444;font-size:20px;font-weight:700;font-family:sans-serif;text-align:center;padding:20px;">⛔ Domaine non autorisé<br><small style="font-size:14px;color:#94a3b8;margin-top:10px;display:block;">Ce simulateur ne peut fonctionner que sur un domaine autorisé.</small></div>';
+    }
 })();
 
 // ============================================
