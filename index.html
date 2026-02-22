@@ -610,6 +610,9 @@
             line-height: 1.7;
             color: rgba(255,255,255,0.6);
         }
+        .script-step-body input,
+        .script-step-body select,
+        .script-step-body button { pointer-events: auto; }
         .script-step.active .script-step-body { display: block; }
         .script-say {
             background: rgba(255,255,255,0.04);
@@ -637,6 +640,45 @@
             margin-top: 4px;
         }
         .script-tip::before { content: '💡 '; }
+        .script-inputs {
+            display: grid;
+            gap: 8px;
+            margin: 10px 0 4px;
+        }
+        .script-inputs.grid-2 { grid-template-columns: 1fr 1fr; }
+        .script-inputs.grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+        .script-input-group label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: rgba(255,255,255,0.45);
+            margin-bottom: 3px;
+            display: block;
+        }
+        .script-input-group input,
+        .script-input-group select {
+            width: 100%;
+            padding: 8px 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.07);
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            box-sizing: border-box;
+            transition: all 0.2s;
+        }
+        .script-input-group input::placeholder { color: rgba(255,255,255,0.25); }
+        .script-input-group input:focus,
+        .script-input-group select:focus {
+            outline: none;
+            border-color: rgba(52,211,153,0.5);
+            background: rgba(52,211,153,0.08);
+        }
+        .script-input-group select option { background: #1a1a3e; color: white; }
+        .script-input-group input,
+        .script-input-group select { -webkit-user-select: text; user-select: text; }
 
         .results-sidebar {
             position: sticky;
@@ -1203,32 +1245,63 @@
 
                 <div class="script-steps-grid">
 
-                <div class="script-step active" id="ss1" onclick="toggleStep(1)">
-                    <div class="script-step-header">
+                <div class="script-step active" id="ss1">
+                    <div class="script-step-header" onclick="toggleStep(1)">
                         <div class="script-step-num">1</div>
                         Accroche — Autorité calme
                     </div>
                     <div class="script-step-body">
                         <div class="script-say">Bonjour Monsieur / Madame <strong>[Nom]</strong>,<br>Lucas à l'appareil, service étude énergétique du programme Habiter Mieux.<br>Je vous appelle concernant votre maison située à <strong>[Ville]</strong>, je dois simplement vérifier quelques informations avec vous, ça va prendre deux minutes.<br><br>Vous êtes toujours bien propriétaire du logement ?</div>
-                        <div class="script-action">Remplir <strong>Nom</strong> + <strong>Prénom</strong> + <strong>Département</strong></div>
+                        <div class="script-inputs grid-3">
+                            <div class="script-input-group">
+                                <label>Nom</label>
+                                <input type="text" id="sNom" placeholder="Nom" oninput="syncScript('nom', this.value)">
+                            </div>
+                            <div class="script-input-group">
+                                <label>Prénom</label>
+                                <input type="text" id="sPrenom" placeholder="Prénom" oninput="syncScript('prenom', this.value)">
+                            </div>
+                            <div class="script-input-group">
+                                <label>Département</label>
+                                <input type="text" id="sDept" placeholder="Ex: 93" maxlength="3" oninput="syncScript('departement', this.value)">
+                            </div>
+                        </div>
                         <div class="script-tip">90 % disent oui → premier engagement</div>
                     </div>
                 </div>
 
-                <div class="script-step" id="ss2" onclick="toggleStep(2)">
-                    <div class="script-step-header">
+                <div class="script-step" id="ss2">
+                    <div class="script-step-header" onclick="toggleStep(2)">
                         <div class="script-step-num">2</div>
                         Qualification cachée
                     </div>
                     <div class="script-step-body">
                         <div class="script-say">Très bien merci.<br>C'est une maison individuelle ou mitoyenne ?<br>Elle date d'avant ou après 2010 environ ?<br>Et aujourd'hui vous chauffez plutôt au gaz ou au fioul ?<br><br>Et votre maison fait environ combien de m² au sol ?</div>
-                        <div class="script-action">Remplir <strong>Année construction</strong> + <strong>Surface chauffée</strong> (m²)<br>Le scénario est en <strong>PAC + SSC</strong> par défaut</div>
+                        <div class="script-inputs grid-3">
+                            <div class="script-input-group">
+                                <label>Année construction</label>
+                                <input type="number" id="sAnnee" placeholder="Ex: 2000" min="1900" max="2026" oninput="syncScript('dimAnnee', this.value)">
+                            </div>
+                            <div class="script-input-group">
+                                <label>Surface (m²)</label>
+                                <input type="number" id="sSurface" placeholder="Ex: 95" min="1" oninput="syncScript('ceeSurface', this.value)">
+                            </div>
+                            <div class="script-input-group">
+                                <label>Scénario</label>
+                                <select id="sScenario" onchange="syncScript('scenario', this.value)">
+                                    <option value="PAC + SSC" selected>PAC + SSC</option>
+                                    <option value="PAC">PAC seule</option>
+                                    <option value="PAC + BALLON THERMO">PAC + Ballon</option>
+                                    <option value="SSC">SSC seul</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="script-tip">Tu qualifies sans qu'il sente un questionnaire. Si &lt; 90 m², le CEE change.</div>
                     </div>
                 </div>
 
-                <div class="script-step" id="ss3" onclick="toggleStep(3)">
-                    <div class="script-step-header">
+                <div class="script-step" id="ss3">
+                    <div class="script-step-header" onclick="toggleStep(3)">
                         <div class="script-step-num">3</div>
                         Diagnostic — Le client valide
                     </div>
@@ -1238,8 +1311,8 @@
                     </div>
                 </div>
 
-                <div class="script-step" id="ss4" onclick="toggleStep(4)">
-                    <div class="script-step-header">
+                <div class="script-step" id="ss4">
+                    <div class="script-step-header" onclick="toggleStep(4)">
                         <div class="script-step-num">4</div>
                         Programme État
                     </div>
@@ -1248,8 +1321,8 @@
                     </div>
                 </div>
 
-                <div class="script-step" id="ss5" onclick="toggleStep(5)">
-                    <div class="script-step-header">
+                <div class="script-step" id="ss5">
+                    <div class="script-step-header" onclick="toggleStep(5)">
                         <div class="script-step-num">5</div>
                         Projection — Frappe fort
                     </div>
@@ -1258,8 +1331,8 @@
                     </div>
                 </div>
 
-                <div class="script-step" id="ss6" onclick="toggleStep(6)">
-                    <div class="script-step-header">
+                <div class="script-step" id="ss6">
+                    <div class="script-step-header" onclick="toggleStep(6)">
                         <div class="script-step-num">6</div>
                         Gain client — Émotion
                     </div>
@@ -1268,23 +1341,42 @@
                     </div>
                 </div>
 
-                <div class="script-step" id="ss7" onclick="toggleStep(7)">
-                    <div class="script-step-header">
+                <div class="script-step" id="ss7">
+                    <div class="script-step-header" onclick="toggleStep(7)">
                         <div class="script-step-num">7</div>
                         💰 Argent — Éligibilité
                     </div>
                     <div class="script-step-body">
                         <div class="script-say">Maintenant la question que tout le monde me pose : comment c'est financé ?<br>Grâce à MaPrimeRénov' et aux certificats d'économie d'énergie.<br><br>Pour vérifier votre éligibilité, j'ai juste besoin de :<br><br><strong>Combien de personnes composent votre foyer fiscal ?</strong><br><strong>Et votre revenu fiscal de référence approximatif ?</strong><br><em>(C'est sur la première page de votre avis d'imposition)</em></div>
-                        <div class="script-action">Remplir <strong>Foyer</strong> (nb personnes) + <strong>Revenu fiscal de réf.</strong><br>Le profil, les aides et le RAC se calculent automatiquement</div>
+                        <div class="script-inputs grid-2">
+                            <div class="script-input-group">
+                                <label>Foyer</label>
+                                <select id="sFoyer" onchange="syncScript('nbPersonnes', this.value)">
+                                    <option value="1">1 personne</option>
+                                    <option value="2">2 personnes</option>
+                                    <option value="3">3 personnes</option>
+                                    <option value="4" selected>4 personnes</option>
+                                    <option value="5">5 personnes</option>
+                                    <option value="6">6 personnes</option>
+                                    <option value="7">7 personnes</option>
+                                    <option value="8">8 personnes</option>
+                                </select>
+                            </div>
+                            <div class="script-input-group">
+                                <label>Revenu fiscal (€)</label>
+                                <input type="number" id="sRFR" placeholder="Ex: 25000" oninput="syncScript('rfr', this.value)">
+                            </div>
+                        </div>
+                        <div id="sResultBadge" style="margin-top: 10px; padding: 10px; border-radius: 8px; text-align: center; font-weight: 700; font-size: 13px; display: none;"></div>
                         <div class="script-tip">Si ✅ badge vert → annoncer le RAC. Si ⚠️ orange → ne pas poursuivre.</div>
                         <div class="script-say" style="margin-top: 10px; border-left-color: rgba(251,191,36,0.5);">
-                            <em>(Si éligible)</em><br>Très bonne nouvelle, d'après les données, votre foyer est éligible aux aides.<br>Le reste à charge estimé serait de <strong>[lire le RAC]</strong>.
+                            <em>(Si éligible)</em><br>Très bonne nouvelle, d'après les données, votre foyer est éligible aux aides.<br>Le reste à charge estimé serait de <strong id="sRACDisplay">[lire le RAC]</strong>.
                         </div>
                     </div>
                 </div>
 
-                <div class="script-step" id="ss8" onclick="toggleStep(8)">
-                    <div class="script-step-header">
+                <div class="script-step" id="ss8">
+                    <div class="script-step-header" onclick="toggleStep(8)">
                         <div class="script-step-num">8</div>
                         Anti-vente (MASTER MOVE)
                     </div>
@@ -1294,8 +1386,8 @@
                     </div>
                 </div>
 
-                <div class="script-step" id="ss9" onclick="toggleStep(9)">
-                    <div class="script-step-header">
+                <div class="script-step" id="ss9">
+                    <div class="script-step-header" onclick="toggleStep(9)">
                         <div class="script-step-num">9</div>
                         Technicien — RDV
                     </div>
@@ -1304,8 +1396,8 @@
                     </div>
                 </div>
 
-                <div class="script-step" id="ss10" onclick="toggleStep(10)">
-                    <div class="script-step-header">
+                <div class="script-step" id="ss10">
+                    <div class="script-step-header" onclick="toggleStep(10)">
                         <div class="script-step-num">10</div>
                         Fermeture RDV
                     </div>
@@ -1315,25 +1407,28 @@
                     </div>
                 </div>
 
-                <div class="script-step" id="ss11" onclick="toggleStep(11)">
-                    <div class="script-step-header">
+                <div class="script-step" id="ss11">
+                    <div class="script-step-header" onclick="toggleStep(11)">
                         <div class="script-step-num">11</div>
                         Documents + Pièces
                     </div>
                     <div class="script-step-body">
                         <div class="script-say">Simplement pour constituer le dossier :<br>— justificatif de domicile de moins de 3 mois,<br>— taxe foncière ou acte notarié,<br>— dernière fiche de revenus ou paie.</div>
-                        <div class="script-action">Cliquer sur <strong>📋 Demander les pièces justificatives</strong></div>
+                        <button onclick="sendMail(); event.stopPropagation();" style="width:100%; margin-top:10px; padding:10px; border-radius:8px; border:1px solid rgba(59,130,246,0.3); background:rgba(59,130,246,0.15); color:#93c5fd; font-weight:700; font-size:13px; cursor:pointer;">📋 Envoyer demande de pièces</button>
                     </div>
                 </div>
 
-                <div class="script-step" id="ss12" onclick="toggleStep(12)">
-                    <div class="script-step-header">
+                <div class="script-step" id="ss12">
+                    <div class="script-step-header" onclick="toggleStep(12)">
                         <div class="script-step-num">12</div>
                         Conclusion
                     </div>
                     <div class="script-step-body">
                         <div class="script-say">L'objectif est simple :<br>sortir définitivement des énergies coûteuses,<br>utiliser une énergie gratuite grâce au solaire,<br>et sécuriser un système performant financé par les aides de l'État.</div>
-                        <div class="script-action">Cliquer sur <strong>📄 Télécharger le PDF</strong> et/ou <strong>💬 Demander un devis</strong></div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px;">
+                            <button onclick="exportPDF('client'); event.stopPropagation();" style="padding:10px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.07); color:rgba(255,255,255,0.7); font-weight:700; font-size:12px; cursor:pointer;">📄 PDF Client</button>
+                            <button onclick="sendWhatsApp(); event.stopPropagation();" style="padding:10px; border-radius:8px; border:1px solid rgba(52,211,153,0.3); background:rgba(52,211,153,0.12); color:#34d399; font-weight:700; font-size:12px; cursor:pointer;">💬 Devis WhatsApp</button>
+                        </div>
                     </div>
                 </div>
 
@@ -4076,9 +4171,60 @@ function toggleStep(n){
         } else {
             el.classList.remove('active');
         }
-        // Mark previous steps as done
         if(i < n) el.classList.add('done');
     }
+}
+
+// Sync script inputs → simulator fields
+function syncScript(targetId, value){
+    const target = document.getElementById(targetId);
+    if(!target) return;
+    
+    if(target.tagName === 'SELECT'){
+        target.value = value;
+        target.dispatchEvent(new Event('change'));
+    } else {
+        target.value = value;
+        target.dispatchEvent(new Event('input'));
+    }
+    
+    // Trigger appropriate recalculation
+    if(targetId === 'departement') { detectDept(); }
+    if(targetId === 'rfr' || targetId === 'nbPersonnes') { detectProfil(); updateScriptBadge(); }
+    if(targetId === 'dimAnnee') { try { evalIsolation(); calcBareme(); calcDim(); } catch(e){} }
+    if(targetId === 'ceeSurface') { syncSurfaces('cee'); }
+    if(targetId === 'scenario') { onScenarioChange(); }
+    if(targetId === 'nom' || targetId === 'prenom') { checkExport(); }
+}
+
+// Update result badge in script step 7
+function updateScriptBadge(){
+    setTimeout(function(){
+        var badge = document.getElementById('sResultBadge');
+        var racDisplay = document.getElementById('sRACDisplay');
+        if(!badge) return;
+        
+        var statusEl = document.getElementById('dossierStatus');
+        if(!statusEl) { badge.style.display = 'none'; return; }
+        
+        var cat = document.getElementById('categorie') ? document.getElementById('categorie').value : '';
+        var racEl = document.getElementById('racDisplay');
+        var rac = racEl ? racEl.textContent : '—';
+        
+        if(statusEl.classList.contains('danger')){
+            badge.style.display = 'block';
+            badge.style.background = 'rgba(239,68,68,0.15)';
+            badge.style.color = '#f87171';
+            badge.innerHTML = '⚠️ Aides insuffisantes — ne pas poursuivre';
+        } else {
+            badge.style.display = 'block';
+            badge.style.background = 'rgba(52,211,153,0.12)';
+            badge.style.color = '#34d399';
+            badge.innerHTML = '✅ Éligible — Profil ' + cat + ' — RAC : ' + rac;
+        }
+        
+        if(racDisplay) racDisplay.textContent = rac;
+    }, 300);
 }
 
 // ============================================
