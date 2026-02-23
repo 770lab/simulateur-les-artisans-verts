@@ -3,7 +3,7 @@
 // Les Artisans Verts © 2026
 // ============================================
 
-const CACHE_NAME = 'pac-sim-v2';
+const CACHE_NAME = 'pac-sim-v3';
 const ASSETS = [
   './',
   './index.html',

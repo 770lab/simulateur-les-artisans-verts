@@ -419,12 +419,55 @@
         }
 
         .main-content {
-            display: grid;
-            grid-template-columns: 1.4fr 1fr;
-            gap: 28px;
-            padding: 30px 20px;
-            max-width: 1400px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1600px;
             margin: 0 auto;
+        }
+
+        /* Parameters: cards side by side horizontally */
+        .parameters-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 16px;
+            align-items: start;
+        }
+
+        /* Results: horizontal strip of groups */
+        .results-strip {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+        .results-group {
+            min-width: 0;
+        }
+        .results-group-hero {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Bottom strip: status + actions + docs horizontal */
+        .results-bottom-strip {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+        .results-bottom-col {
+            min-width: 0;
+        }
+
+        /* Upload zones in a row */
+        .upload-zones-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 8px;
         }
 
         .card {
@@ -509,13 +552,18 @@
         
         /* Telepro: reorganize layout - script left, sim right */
         .telepro-mode {
+            display: grid !important;
             grid-template-columns: 0.85fr 1.15fr !important;
+            flex-direction: unset !important;
         }
         .telepro-mode .script-panel { 
             grid-row: 1 / 20;
         }
+        .telepro-mode .parameters-section {
+            grid-template-columns: 1fr;
+        }
         @media (max-width: 900px) {
-            .telepro-mode { grid-template-columns: 1fr !important; }
+            .telepro-mode { display: flex !important; flex-direction: column !important; }
             .telepro-mode .script-panel { grid-row: auto; }
         }
         /* Landscape mobile: side-by-side if wide enough */
@@ -757,9 +805,7 @@
         .upload-zone.uploaded .upload-status { display: block; }
 
         .results-sidebar {
-            position: sticky;
-            top: 100px;
-            height: fit-content;
+            position: static;
         }
 
         .summary-card {
@@ -771,6 +817,7 @@
             position: relative;
             overflow: hidden;
         }
+
 
         .summary-card::before {
             content: '';
@@ -1108,15 +1155,15 @@
         }
 
         @media (max-width: 1024px) {
-            .main-content {
+            .parameters-section {
                 grid-template-columns: 1fr;
             }
-
-            .results-sidebar {
-                position: static;
+            .results-strip {
+                grid-template-columns: 1fr 1fr;
             }
-
-
+            .results-bottom-strip {
+                grid-template-columns: 1fr;
+            }
         }
 
         .note-small {
@@ -1173,11 +1220,17 @@
             
             .guest-bar { justify-content: center; }
             .guest-bar .btn-login-small { padding: 5px 10px; font-size: 12px; }
+            .main-content { padding: 10px 8px; gap: 12px; }
+            .parameters-section { grid-template-columns: 1fr; gap: 10px; }
+            .results-strip { grid-template-columns: 1fr; gap: 10px; }
+            .results-bottom-strip { grid-template-columns: 1fr; gap: 10px; }
+            .upload-zones-row { grid-template-columns: 1fr; }
             .container { padding: 0 8px; }
-            .card { padding: 10px; margin-bottom: 10px; }
+            .card { padding: 10px; margin-bottom: 0; }
             .card-title { font-size: 13px; margin-bottom: 10px; }
-            .parameters-section { padding: 6px; }
-            .results-sidebar { padding: 6px; }
+            .parameters-section .card { padding: 10px; }
+            .results-sidebar { padding: 0; }
+            .summary-card { padding: 14px; }
             .grid-3col { grid-template-columns: 1fr 1fr 1fr !important; gap: 6px !important; }
             .form-group label { font-size: 11px; }
             .form-group input, .form-group select { padding: 7px 8px; font-size: 12px; }
