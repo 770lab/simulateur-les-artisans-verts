@@ -452,6 +452,12 @@
             margin-bottom: 18px;
             border-bottom: 1px solid rgba(255,255,255,0.06);
         }
+        /* Stack Client + Scénario/CEE in one column */
+        .param-col-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
 
         /* Dark-themed cards inside sim-panel */
         .sim-panel .card {
