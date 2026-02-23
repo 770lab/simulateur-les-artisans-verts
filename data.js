@@ -7,6 +7,9 @@
 // → À remplacer par l'URL de déploiement (voir google-apps-script-upload.js)
 var UPLOAD_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxbLJHP9SBEkDnPa17K-xGTC-vw2ULnGg2ZueMmkmUI2n6VPnrqZcyRcijLdHH80cjAjA/exec';
 
+// Clé publique VAPID pour les notifications push
+var VAPID_PUBLIC_KEY = 'BIJgFL-8yu1kfz92UA5Y6GxkKK6rTd4bnZDfAXjaH-Bbhqm7XgJwZuGA2RkU9drjhr9K_Alg4-pvgrg8FtjY8y8';
+
 const DEPT_ZONE = {
     "01":"H1","02":"H1","03":"H1","04":"H2","05":"H1","06":"H3","07":"H2","08":"H1","09":"H2","10":"H1",
     "11":"H3","12":"H2","13":"H3","14":"H1","15":"H1","16":"H2","17":"H2","18":"H2","19":"H1","20":"H3",

@@ -175,6 +175,8 @@ function showApp(){
         const isAdmin = currentUser.role === 'admin';
         document.getElementById('btnHistory').style.display = isAdmin ? '' : 'none';
         document.getElementById('btnPwd').style.display = isAdmin ? '' : 'none';
+        var notifBtn = document.getElementById('btnNotif');
+        if (notifBtn) notifBtn.style.display = '';
         // Toggle default to fournisseur
         document.getElementById('togFournisseur').classList.add('active');
         document.getElementById('togClient').classList.remove('active');

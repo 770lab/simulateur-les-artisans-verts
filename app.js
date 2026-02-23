@@ -834,6 +834,7 @@ function sendMail(){
     const body = `Bonjour ${fullName},\n\nSuite à notre échange téléphonique, votre projet d'installation de ${scenario} peut être éligible aux aides MaPrimeRénov'.\n\n👉 Afin de réserver votre éligibilité et lancer la constitution de votre dossier, il nous manque simplement quelques documents.\nMerci de nous les transmettre par retour de mail (photos ou scans suffisent) :\n\n• Dernier avis d'imposition de toutes les personnes figurant sur la taxe foncière\n• Dernière taxe foncière (ou acte notarié si achat de moins d'un an)\n• Pièces d'identité recto-verso des titulaires\n\n⏱️ Dès réception, nous analysons votre dossier en priorité et vous confirmons votre niveau d'aides.\n\nPlus tôt nous recevons les documents, plus vite nous pouvons sécuriser votre montant d'aides et planifier la suite de votre projet.\n\nSi vous le souhaitez, je peux également vous guider par téléphone pour l'envoi.\n\nJe reste à votre entière disposition.\n\nBien cordialement,`;
 
     window.location.href = 'mailto:?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+    showLocalNotif('✉️ Mail envoyé', 'Demande de pièces envoyée à ' + fullName);
 }
 
 function exportPDF(mode){
@@ -1700,6 +1701,7 @@ function sendAllDocs() {
             bar.style.width = '100%';
             bar.style.background = 'linear-gradient(90deg, #34d399, #34d399)';
             text.innerHTML = '✅ ' + allFiles.length + ' document(s) envoyé(s) dans <strong>' + folder + '/</strong>';
+            showLocalNotif('📎 Documents envoyés', allFiles.length + ' fichier(s) uploadé(s) pour ' + folder);
             if (typeof logAction === 'function') {
                 logAction('DOCS_SENT', folder + ' (' + allFiles.length + ' fichiers)');
             }
@@ -1714,10 +1716,123 @@ function sendAllDocs() {
 }
 
 // ============================================
+// PWA — Service Worker + Push + Install
+// ============================================
+var swRegistration = null;
+var deferredInstallPrompt = null;
+
+function initPWA() {
+    if (!('serviceWorker' in navigator)) { dbg('SW not supported'); return; }
+
+    navigator.serviceWorker.register('./sw.js')
+    .then(function(reg) {
+        swRegistration = reg;
+        dbg('✅ Service Worker registered');
+        initPush(reg);
+    })
+    .catch(function(err) { dbg('SW error: ' + err); });
+
+    // Capture install prompt
+    window.addEventListener('beforeinstallprompt', function(e) {
+        e.preventDefault();
+        deferredInstallPrompt = e;
+        showInstallBanner();
+    });
+}
+
+function initPush(reg) {
+    if (!('PushManager' in window) || !VAPID_PUBLIC_KEY) return;
+
+    reg.pushManager.getSubscription().then(function(sub) {
+        if (sub) {
+            dbg('Push already subscribed');
+            sendSubscriptionToServer(sub);
+        }
+    });
+}
+
+function subscribePush() {
+    if (!swRegistration || !VAPID_PUBLIC_KEY) return;
+
+    Notification.requestPermission().then(function(permission) {
+        if (permission !== 'granted') {
+            dbg('Notification permission denied');
+            return;
+        }
+
+        var applicationServerKey = urlBase64ToUint8Array(VAPID_PUBLIC_KEY);
+        swRegistration.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: applicationServerKey
+        })
+        .then(function(sub) {
+            dbg('✅ Push subscribed');
+            sendSubscriptionToServer(sub);
+            var bell = document.getElementById('notifBell');
+            if (bell) bell.innerHTML = '🔔';
+        })
+        .catch(function(err) { dbg('Push subscribe error: ' + err); });
+    });
+}
+
+function sendSubscriptionToServer(subscription) {
+    if (!UPLOAD_SCRIPT_URL) return;
+    var data = JSON.stringify(subscription);
+    fetch(UPLOAD_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'subscribe_push', subscription: data })
+    }).catch(function(err) { dbg('Push sync error: ' + err); });
+}
+
+function urlBase64ToUint8Array(base64String) {
+    var padding = '='.repeat((4 - base64String.length % 4) % 4);
+    var base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+    var rawData = window.atob(base64);
+    var outputArray = new Uint8Array(rawData.length);
+    for (var i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+}
+
+function showInstallBanner() {
+    var banner = document.getElementById('installBanner');
+    if (banner) banner.style.display = 'flex';
+}
+
+function installApp() {
+    if (!deferredInstallPrompt) return;
+    deferredInstallPrompt.prompt();
+    deferredInstallPrompt.userChoice.then(function(choice) {
+        if (choice.outcome === 'accepted') {
+            dbg('✅ App installed');
+            var banner = document.getElementById('installBanner');
+            if (banner) banner.style.display = 'none';
+        }
+        deferredInstallPrompt = null;
+    });
+}
+
+// Notification locale (utilisable depuis le simulateur)
+function showLocalNotif(title, body) {
+    if (Notification.permission === 'granted' && swRegistration) {
+        swRegistration.showNotification(title, {
+            body: body,
+            icon: './icon-192.png',
+            badge: './icon-192.png',
+            vibrate: [200, 100, 200]
+        });
+    }
+}
+
+// ============================================
 // INIT
 // ============================================
 dbg('🚀 Init start');
 checkAutoLogin();
 initUploadZones();
+initPWA();
 dbg('🏁 Init complete');
 // Triple-tap to show debug panel
