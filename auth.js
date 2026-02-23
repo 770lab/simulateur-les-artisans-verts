@@ -1,229 +1,267 @@
 // ============================================
-// AUTH — Connexion, utilisateurs, sessions
-// Les Artisans Verts © 2026
+// SIMULATEUR PAC 2026 — Backend Apps Script
+// ============================================
+// 
+// INSTALLATION :
+// 1. Créer un Google Sheet avec 2 onglets :
+//    - "Users" : colonnes A=username, B=password, C=name, D=role
+//    - "Journal" : colonnes A=date, B=user, C=action, D=detail
+//
+// 2. Extensions → Apps Script → coller ce code
+// 3. Déployer → Nouvelle déploiement → Application Web
+//    - Exécuter en tant que : Moi
+//    - Accès : Tout le monde
+// 4. Copier l'URL et la mettre dans le HTML (variable API_URL)
+//
+// SUPER ADMIN : seul "ishay" peut créer/supprimer des utilisateurs
 // ============================================
 
-const API_URL = 'https://script.google.com/macros/s/AKfycbwP1Nu60KfLu6iKNk7SMfkJoaq5_UbzcEtwnlBm5r1XbDYz8T16zayfPWynm0Zd_4Th/exec';
-const FALLBACK_USERS = {
-    'ishay':   { pass:'e9138f38d979c81ca528a9a73cbd90892f7413496b076bc655ecc937325369a4', name:'Ishay', role:'admin' },
-    'admin':   { pass:'6d67409383d73d798ae012bb90def775f1e6a5d878fd3857f1b3cee24793fa1f', name:'Admin', role:'admin' },
-    'yoann':   { pass:'1cf674b0d4b3038b008530bdd26fae2f205dd912ee86c0ae31981d218d1336db', name:'Yoann', role:'admin' },
-    'ben':     { pass:'82ce7ffdbfb6da41dab321cee9286e88ea8e973b6d698c3621891908613640da', name:'Ben', role:'admin' },
-    'john':    { pass:'c81539a4672d1ab486b3cbb9a7a93bbaf8f125eb437b2bf7b7d54c60f0e752b1', name:'John', role:'admin' },
-    'mendy':   { pass:'9b5ba8665f66adea835f535ed91caa80e73f169bcfe0fca54f23e44d0ae874cd', name:'Mendy', role:'commercial' },
-    'jean':    { pass:'51779e67e9af1ddcb546b19a7192b65525fbe5b8166bb60f0165b17d804f8bc1', name:'Jean Christophe', role:'commercial' },
-    'david':   { pass:'b19a7bb33c9d8023f64d00e475416f8feeccca95ab79875095c5db7733b750b0', name:'David', role:'commercial' },
-    'sarah':   { pass:'f089f023579c7bd9f176065938e9858f03767564c3f0992cdaeedbc42bd5f38a', name:'Sarah', role:'commercial' },
-    'marc':    { pass:'34fb0e105bf277a0e0350e881e42b1b355f1b4cf893e767b0fab57a6545420ea', name:'Marc', role:'commercial' },
-    'julie':   { pass:'5f082d797344b7abb2b8e90f68bbe567dc30aa5ed6da82e4cb1165225310c7bb', name:'Julie', role:'commercial' },
-    'thomas':  { pass:'b02a6e639618ea0121c6da3eff69796e4ed2e115451e087758438d547bcb4efc', name:'Thomas', role:'commercial' },
-    'telepro': { pass:'3ce4eded52851e63bdc4467d0e8eadbfb839a1ca6013207033017ab90c4ec6af', name:'Téléprospecteur', role:'telepro' },
-};
-var currentUser = null;
-var useAPI = false;
+const SUPER_ADMIN = 'ishay';
 
-function apiCall(params, callback, errorCallback) {
-    if (!API_URL) { if(errorCallback) errorCallback('Pas de serveur'); return; }
-    const qs = Object.entries(params).map(([k,v])=>k+'='+encodeURIComponent(v)).join('&');
-    fetch(API_URL + '?' + qs, {redirect:'follow'})
-        .then(r => r.text())
-        .then(txt => {
-            let d;
-            try { d = JSON.parse(txt); } catch(e) {
-                const m = txt.match(/\{[\s\S]*\}/);
-                if(m) try { d = JSON.parse(m[0]); } catch(e2){}
-            }
-            if(d) callback(d);
-            else if(errorCallback) errorCallback('Réponse invalide');
-        })
-        .catch(e => { if(errorCallback) errorCallback(e.message); });
+function doGet(e) { return handleRequest(e); }
+function doPost(e) { return handleRequest(e); }
+
+function handleRequest(e) {
+  const p = e.parameter;
+  const action = p.action || '';
+  
+  let result;
+  try {
+    switch(action) {
+      case 'login':
+        result = doLogin(p.user, p.pass);
+        break;
+      case 'changePassword':
+        result = doChangePassword(p.user, p.oldPass, p.newPass);
+        break;
+      case 'getJournal':
+        result = doGetJournal(p.limit || 100);
+        break;
+      case 'log':
+        result = doLog(p.user, p.logAction, p.detail);
+        break;
+      case 'listUsers':
+        result = doListUsers(p.adminUser);
+        break;
+      case 'createUser':
+        result = doCreateUser(p.adminUser, p.username, p.name, p.pass, p.role);
+        break;
+      case 'deleteUser':
+        result = doDeleteUser(p.adminUser, p.username);
+        break;
+      case 'ping':
+        result = { success: true, message: 'PAC 2026 Backend OK' };
+        break;
+      default:
+        result = { success: false, error: 'Action inconnue: ' + action };
+    }
+  } catch(err) {
+    result = { success: false, error: err.message };
+  }
+  
+  return ContentService
+    .createTextOutput(JSON.stringify(result))
+    .setMimeType(ContentService.MimeType.JSON);
 }
 
-function doLogin(){
-    const u = document.getElementById('loginUser').value.trim().toLowerCase();
-    const p = document.getElementById('loginPass').value;
-    const errEl = document.getElementById('loginError');
-    errEl.style.display = 'none';
-    if(!u){ errEl.textContent='Veuillez saisir un identifiant'; errEl.style.display='block'; return; }
-
-    if(API_URL) {
-        // API mode
-        errEl.textContent = 'Connexion...'; errEl.style.display='block'; errEl.style.color='#6b7280';
-        apiCall({action:'login', user:u, pass:p}, function(d){
-            errEl.style.color = '#dc2626';
-            if(d.success){
-                useAPI = true;
-                const usr = d.user || {};
-                var _r = (usr.role || 'commercial').toLowerCase();
-                if(_r === 'user') _r = 'commercial';
-                currentUser = {
-                    id: usr.username || u,
-                    name: usr.name || u,
-                    role: _r
-                };
-                try{ localStorage.setItem('pac_user', JSON.stringify(currentUser)); localStorage.setItem('pac_api','1'); }catch(e){}
-                showApp();
-            } else {
-                // API rejected → try local fallback
-                errEl.style.color = '#dc2626';
-                doLoginLocal(u, p, errEl);
-            }
-        }, function(err){
-            // Fallback local
-            errEl.style.color = '#dc2626';
-            doLoginLocal(u, p, errEl);
-        });
-    } else {
-        doLoginLocal(u, p, errEl);
-    }
+// ============================================
+// HELPER: vérifier super admin
+// ============================================
+function isSuperAdmin(username) {
+  return username && username.toString().toLowerCase() === SUPER_ADMIN;
 }
-function doLoginLocal(u, p, errEl){
-    const account = FALLBACK_USERS[u];
-    if(!account){
-        errEl.textContent = 'Identifiant ou mot de passe incorrect';
-        errEl.style.display = 'block';
-        errEl.style.color = '#dc2626';
-        return;
+
+// ============================================
+// LOGIN
+// ============================================
+function doLogin(username, password) {
+  if (!username) return { success: false, error: 'Identifiant requis' };
+  
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName('Users');
+  if (!sheet) return { success: false, error: 'Onglet Users introuvable' };
+  
+  const data = sheet.getDataRange().getValues();
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    if (row[0].toString().toLowerCase() === username.toLowerCase()) {
+      if (row[1].toString() === password) {
+        addJournalEntry(row[2] || username, 'Connexion', '');
+        return {
+          success: true,
+          user: {
+            name: row[2] || username,
+            role: row[3] || 'commercial',
+            username: row[0]
+          }
+        };
+      } else {
+        return { success: false, error: 'Mot de passe incorrect' };
+      }
     }
-    // Hash password with SHA-256 and compare
-    sha256(p).then(function(hash){
-        if(hash !== account.pass){
-            errEl.textContent = 'Identifiant ou mot de passe incorrect';
-            errEl.style.display = 'block';
-            errEl.style.color = '#dc2626';
-            return;
-        }
-        useAPI = false;
-        currentUser = { id:u, name:account.name, role:account.role };
-        try{ localStorage.setItem('pac_user', JSON.stringify(currentUser)); localStorage.removeItem('pac_api'); }catch(e){}
-        showApp();
-        logAction('Connexion (local)', account.name);
+  }
+  
+  return { success: false, error: 'Utilisateur inconnu' };
+}
+
+// ============================================
+// CHANGEMENT DE MOT DE PASSE
+// ============================================
+function doChangePassword(username, oldPass, newPass) {
+  if (!username || !oldPass || !newPass) {
+    return { success: false, error: 'Tous les champs sont requis' };
+  }
+  if (newPass.length < 4) {
+    return { success: false, error: 'Le nouveau mot de passe doit faire au moins 4 caractères' };
+  }
+  
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName('Users');
+  if (!sheet) return { success: false, error: 'Onglet Users introuvable' };
+  
+  const data = sheet.getDataRange().getValues();
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0].toString().toLowerCase() === username.toLowerCase()) {
+      if (data[i][1].toString() !== oldPass) {
+        return { success: false, error: 'Ancien mot de passe incorrect' };
+      }
+      sheet.getRange(i + 1, 2).setValue(newPass);
+      addJournalEntry(data[i][2] || username, 'Changement mot de passe', '');
+      return { success: true, message: 'Mot de passe modifié' };
+    }
+  }
+  
+  return { success: false, error: 'Utilisateur introuvable' };
+}
+
+// ============================================
+// LISTER LES UTILISATEURS (super admin)
+// ============================================
+function doListUsers(adminUser) {
+  if (!isSuperAdmin(adminUser)) {
+    return { success: false, error: 'Accès refusé' };
+  }
+  
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName('Users');
+  if (!sheet) return { success: false, error: 'Onglet Users introuvable' };
+  
+  const data = sheet.getDataRange().getValues();
+  const users = [];
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0].toString().trim() === '') continue;
+    users.push({
+      username: data[i][0].toString(),
+      name: data[i][2] ? data[i][2].toString() : data[i][0].toString(),
+      role: data[i][3] ? data[i][3].toString() : 'commercial'
     });
-}
-async function sha256(str){
-    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-    return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
-}
-document.getElementById('loginPass').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
-document.getElementById('loginUser').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
-
-function doLogout(){
-    logAction('Déconnexion', currentUser ? currentUser.name : '');
-    currentUser = null;
-    try{ localStorage.removeItem('pac_user'); localStorage.removeItem('pac_api'); }catch(e){}
-    location.reload();
-}
-
-function goToLogin(){
-    currentUser = null;
-    try{ localStorage.removeItem('pac_user'); }catch(e){}
-    document.getElementById('appScreen').style.display = 'none';
-    document.getElementById('loginScreen').style.display = 'flex';
-}
-
-function doGuestLogin(){
-    currentUser = { id:'guest', name:'Client', role:'guest' };
-    try{ localStorage.setItem('pac_user', JSON.stringify(currentUser)); }catch(e){}
-    showApp();
-}
-
-function switchView(v){
-    var mc = document.getElementById('mainContent');
-    mc.classList.remove('fournisseur-mode');
-    mc.classList.remove('telepro-mode');
-    document.getElementById('togClient').classList.remove('active');
-    document.getElementById('togFournisseur').classList.remove('active');
-    document.getElementById('togTelepro').classList.remove('active');
-
-    if(v === 'telepro'){
-        mode = 1;
-        mc.classList.add('fournisseur-mode');
-        mc.classList.add('telepro-mode');
-        document.getElementById('togTelepro').classList.add('active');
-        logAction('Vue telepro', '');
-    } else if(v === 'fournisseur'){
-        mode = 1;
-        mc.classList.add('fournisseur-mode');
-        document.getElementById('togFournisseur').classList.add('active');
-        logAction('Vue fournisseur', '');
-    } else {
-        mode = 0;
-        document.getElementById('togClient').classList.add('active');
-        logAction('Vue client', '');
-    }
-    try{ calc(); }catch(e){}
-}
-
-function showApp(){
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('appScreen').style.display = 'block';
-
-    const isGuest = !currentUser || currentUser.role === 'guest';
-    const isAdmin = currentUser && currentUser.role === 'admin';
-    const isTelepro = currentUser && currentUser.role === 'telepro';
-    const isCommercial = currentUser && currentUser.role === 'commercial';
-
-    if(isGuest){
-        // Vue client uniquement, pas de toggle
-        mode = 0;
-        document.getElementById('mainContent').classList.remove('fournisseur-mode');
-        document.getElementById('mainContent').classList.remove('telepro-mode');
-        document.getElementById('guestBar').style.display = 'flex';
-        document.getElementById('userBar').style.display = 'none';
-    } else {
-        document.getElementById('guestBar').style.display = 'none';
-        document.getElementById('userBar').style.display = 'flex';
-        document.getElementById('userNameDisplay').textContent = currentUser.name;
-
-        if(isAdmin){
-            // Admin : toggle visible avec 3 vues, défaut = fournisseur
-            document.getElementById('viewToggle').style.display = '';
-            document.getElementById('togTelepro').style.display = '';
-            document.getElementById('userRoleDisplay').textContent = '👑 Admin';
-            switchView('fournisseur');
-        } else if(isTelepro){
-            // Telepro : verrouillé en mode telepro, pas de toggle
-            document.getElementById('viewToggle').style.display = 'none';
-            document.getElementById('userRoleDisplay').textContent = '📞 Téléprospecteur';
-            switchView('telepro');
-        } else {
-            // Commercial : verrouillé en mode fournisseur, pas de toggle
-            document.getElementById('viewToggle').style.display = 'none';
-            document.getElementById('userRoleDisplay').textContent = '📊 Commercial';
-            switchView('fournisseur');
-        }
-
-        // Admin-only buttons
-        document.getElementById('btnHistory').style.display = isAdmin ? '' : 'none';
-        document.getElementById('btnPwd').style.display = isAdmin ? '' : 'none';
-        var notifBtn = document.getElementById('btnNotif');
-        if (notifBtn) notifBtn.style.display = isAdmin ? '' : 'none';
-    }
-
-    try { updateSurfaceOptions(); } catch(e){}
-    try { calc(); } catch(e){}
-    try { buildBaremeTable(); } catch(e){}
-    try { calcBareme(); } catch(e){}
-    try { syncEtas(); } catch(e){}
-    try { calcDim(); } catch(e){}
-    // Retry install banner now that user is logged in
-    try { showInstallBanner(); } catch(e){}
-}
-
-function checkAutoLogin(){
-    try{
-        const stored = localStorage.getItem('pac_user');
-        if(stored){
-            const data = JSON.parse(stored);
-            if(data && data.id){
-                if(localStorage.getItem('pac_api')) useAPI = true;
-                currentUser = data;
-                showApp();
-                return true;
-            }
-        }
-    }catch(e){}
-    return false;
+  }
+  
+  return { success: true, users: users };
 }
 
 // ============================================
+// CRÉER UN UTILISATEUR (super admin)
+// ============================================
+function doCreateUser(adminUser, username, name, password, role) {
+  if (!isSuperAdmin(adminUser)) {
+    return { success: false, error: 'Accès refusé' };
+  }
+  if (!username || !name || !password) {
+    return { success: false, error: 'Tous les champs sont requis' };
+  }
+  if (password.length < 4) {
+    return { success: false, error: 'Mot de passe trop court (min 4)' };
+  }
+  
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName('Users');
+  if (!sheet) return { success: false, error: 'Onglet Users introuvable' };
+  
+  // Vérifier que l'utilisateur n'existe pas déjà
+  const data = sheet.getDataRange().getValues();
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0].toString().toLowerCase() === username.toLowerCase()) {
+      return { success: false, error: 'Cet identifiant existe déjà' };
+    }
+  }
+  
+  // Ajouter la ligne
+  const validRoles = ['admin', 'commercial', 'telepro'];
+  const finalRole = validRoles.indexOf(role) >= 0 ? role : 'commercial';
+  sheet.appendRow([username.toUpperCase(), password, name, finalRole]);
+  
+  addJournalEntry(adminUser, 'Création utilisateur', username + ' (' + finalRole + ')');
+  
+  return { success: true, message: 'Utilisateur créé' };
+}
+
+// ============================================
+// SUPPRIMER UN UTILISATEUR (super admin)
+// ============================================
+function doDeleteUser(adminUser, username) {
+  if (!isSuperAdmin(adminUser)) {
+    return { success: false, error: 'Accès refusé' };
+  }
+  if (!username) {
+    return { success: false, error: 'Identifiant requis' };
+  }
+  // Protection : ne pas supprimer le super admin
+  if (username.toLowerCase() === SUPER_ADMIN) {
+    return { success: false, error: 'Impossible de supprimer le super admin' };
+  }
+  
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName('Users');
+  if (!sheet) return { success: false, error: 'Onglet Users introuvable' };
+  
+  const data = sheet.getDataRange().getValues();
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0].toString().toLowerCase() === username.toLowerCase()) {
+      sheet.deleteRow(i + 1);
+      addJournalEntry(adminUser, 'Suppression utilisateur', username);
+      return { success: true, message: 'Utilisateur supprimé' };
+    }
+  }
+  
+  return { success: false, error: 'Utilisateur introuvable' };
+}
+
+// ============================================
+// JOURNAL
+// ============================================
+function addJournalEntry(user, action, detail) {
+  try {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    let sheet = ss.getSheetByName('Journal');
+    if (!sheet) {
+      sheet = ss.insertSheet('Journal');
+      sheet.getRange(1, 1, 1, 4).setValues([['Date', 'Utilisateur', 'Action', 'Détail']]);
+      sheet.getRange(1, 1, 1, 4).setFontWeight('bold');
+    }
+    sheet.appendRow([new Date(), user || '?', action || '', detail || '']);
+    const lastRow = sheet.getLastRow();
+    if (lastRow > 501) sheet.deleteRows(2, lastRow - 501);
+  } catch(e) {}
+}
+
+function doLog(user, action, detail) {
+  addJournalEntry(user, action, detail);
+  return { success: true };
+}
+
+function doGetJournal(limit) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName('Journal');
+  if (!sheet) return { success: true, journal: [] };
+  const lastRow = sheet.getLastRow();
+  if (lastRow <= 1) return { success: true, journal: [] };
+  const lim = Math.min(parseInt(limit) || 100, 500);
+  const startRow = Math.max(2, lastRow - lim + 1);
+  const data = sheet.getRange(startRow, 1, lastRow - startRow + 1, 4).getValues();
+  const journal = data.map(row => ({
+    date: row[0] instanceof Date ? row[0].toISOString() : row[0].toString(),
+    user: row[1], action: row[2], detail: row[3]
+  })).reverse();
+  return { success: true, journal: journal };
+}
