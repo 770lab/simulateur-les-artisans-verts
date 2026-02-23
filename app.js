@@ -44,6 +44,7 @@ function detectProfil() {
 
     if (!rfr || rfr <= 0) {
         bloc.style.display = 'none';
+        var ph = document.getElementById('mprPlaceholder'); if(ph) ph.style.display = 'block';
         return;
     }
 
@@ -69,7 +70,8 @@ function detectProfil() {
     const seuilVal = seuils[seuilIdx];
 
     // Update bloc
-    bloc.style.display = 'block';
+    bloc.style.display = 'flex';
+    var ph = document.getElementById('mprPlaceholder'); if(ph) ph.style.display = 'none';
     bloc.style.background = bg;
     bloc.style.color = color;
     document.getElementById('mprProfilIcon').innerHTML = icon;
@@ -308,6 +310,8 @@ function updateFromDetail(){
     const fields = [
         ['coutPACMateriel','qtePACMateriel','totalPACMateriel'],
         ['coutPACPose','qtePACPose','totalPACPose'],
+        ['coutSSCMateriel','qteSSCMateriel','totalSSCMateriel'],
+        ['coutSSCPose','qteSSCPose','totalSSCPose'],
         ['coutBallonMateriel','qteBallonMateriel','totalBallonMateriel'],
         ['coutBallonPose','qteBallonPose','totalBallonPose'],
         ['coutAccessoires','qteAccessoires','totalAccessoires'],
@@ -336,8 +340,8 @@ function updateFromDetail(){
 }
 
 function getCoutFromFields() {
-    const f = ['coutPACMateriel','coutPACPose','coutBallonMateriel','coutBallonPose','coutAccessoires','coutAdmin','coutMandat','coutMairie'];
-    const q = ['qtePACMateriel','qtePACPose','qteBallonMateriel','qteBallonPose','qteAccessoires','qteAdmin','qteMandat','qteMairie'];
+    const f = ['coutPACMateriel','coutPACPose','coutSSCMateriel','coutSSCPose','coutBallonMateriel','coutBallonPose','coutAccessoires','coutAdmin','coutMandat','coutMairie'];
+    const q = ['qtePACMateriel','qtePACPose','qteSSCMateriel','qteSSCPose','qteBallonMateriel','qteBallonPose','qteAccessoires','qteAdmin','qteMandat','qteMairie'];
     let t = 0;
     for (let i = 0; i < f.length; i++) {
         t += (parseFloat(document.getElementById(f[i]).value)||0) * (parseFloat(document.getElementById(q[i]).value)||0);
@@ -349,7 +353,7 @@ function getCoutFromFields() {
 function getCoutFromDetail(sc, ad) {
     if (!D.COUT_DETAIL[sc]) return D.COUT[sc] || 0;
     const d = D.COUT_DETAIL[sc];
-    let t = d.pac_materiel + d.pac_pose + d.ballon_materiel + d.ballon_pose + d.accessoires + d.admin + (d.mairie || 0);
+    let t = d.pac_materiel + d.pac_pose + (d.ssc_materiel||0) + (d.ssc_pose||0) + d.ballon_materiel + d.ballon_pose + d.accessoires + d.admin + (d.mairie || 0);
     if (ad > 0) t += Math.round(ad * 0.12);
     if (document.getElementById('checkPrevisite').checked) t += parseFloat(document.getElementById('coutPrevisite').value)||200;
     return t;
@@ -420,6 +424,12 @@ function calc(){
                 document.getElementById('coutPACPose').value = detail.pac_pose;
                 document.getElementById('qtePACPose').value = 1;
                 document.getElementById('totalPACPose').textContent = fmt(detail.pac_pose);
+                document.getElementById('coutSSCMateriel').value = detail.ssc_materiel || 0;
+                document.getElementById('qteSSCMateriel').value = (detail.ssc_materiel || 0) > 0 ? 1 : 0;
+                document.getElementById('totalSSCMateriel').textContent = fmt(detail.ssc_materiel || 0);
+                document.getElementById('coutSSCPose').value = detail.ssc_pose || 0;
+                document.getElementById('qteSSCPose').value = (detail.ssc_pose || 0) > 0 ? 1 : 0;
+                document.getElementById('totalSSCPose').textContent = fmt(detail.ssc_pose || 0);
                 document.getElementById('coutBallonMateriel').value = detail.ballon_materiel;
                 document.getElementById('qteBallonMateriel').value = detail.ballon_materiel > 0 ? 1 : 0;
                 document.getElementById('totalBallonMateriel').textContent = fmt(detail.ballon_materiel);
@@ -446,18 +456,20 @@ function calc(){
                 const prevOn = document.getElementById('checkPrevisite').checked;
                 const prevCost = prevOn ? (parseFloat(document.getElementById('coutPrevisite').value) || 200) : 0;
                 document.getElementById('totalPrevisite').textContent = prevOn ? fmt(prevCost) : '0 €';
-                ch = detail.pac_materiel + detail.pac_pose + detail.ballon_materiel + detail.ballon_pose + detail.accessoires + detail.admin + (ad > 0 ? mandatVal : 0) + mairieVal + prevCost;
+                ch = detail.pac_materiel + detail.pac_pose + (detail.ssc_materiel||0) + (detail.ssc_pose||0) + detail.ballon_materiel + detail.ballon_pose + detail.accessoires + detail.admin + (ad > 0 ? mandatVal : 0) + mairieVal + prevCost;
             }else{
                 ch = D.COUT[sc] || 0;
             }
         }else{
             const totalPACMateriel = (parseFloat(document.getElementById('coutPACMateriel').value) || 0) * (parseFloat(document.getElementById('qtePACMateriel').value) || 0);
             const totalPACPose = (parseFloat(document.getElementById('coutPACPose').value) || 0) * (parseFloat(document.getElementById('qtePACPose').value) || 0);
+            const totalSSCMateriel = (parseFloat(document.getElementById('coutSSCMateriel').value) || 0) * (parseFloat(document.getElementById('qteSSCMateriel').value) || 0);
+            const totalSSCPose = (parseFloat(document.getElementById('coutSSCPose').value) || 0) * (parseFloat(document.getElementById('qteSSCPose').value) || 0);
             const totalBallonMateriel = (parseFloat(document.getElementById('coutBallonMateriel').value) || 0) * (parseFloat(document.getElementById('qteBallonMateriel').value) || 0);
             const totalBallonPose = (parseFloat(document.getElementById('coutBallonPose').value) || 0) * (parseFloat(document.getElementById('qteBallonPose').value) || 0);
             const totalAccessoires = (parseFloat(document.getElementById('coutAccessoires').value) || 0) * (parseFloat(document.getElementById('qteAccessoires').value) || 0);
             const totalAdmin = (parseFloat(document.getElementById('coutAdmin').value) || 0) * (parseFloat(document.getElementById('qteAdmin').value) || 0);
-            ch = totalPACMateriel + totalPACPose + totalBallonMateriel + totalBallonPose + totalAccessoires + totalAdmin;
+            ch = totalPACMateriel + totalPACPose + totalSSCMateriel + totalSSCPose + totalBallonMateriel + totalBallonPose + totalAccessoires + totalAdmin;
             ch += (parseFloat(document.getElementById('coutMandat').value)||0) * (parseFloat(document.getElementById('qteMandat').value)||0);
             ch += (parseFloat(document.getElementById('coutMairie').value)||0) * (parseFloat(document.getElementById('qteMairie').value)||0);
             if(document.getElementById('checkPrevisite').checked) ch += parseFloat(document.getElementById('coutPrevisite').value)||0;
@@ -666,16 +678,18 @@ function updatePct(){
         if(lockCoutHT){
             if(D.COUT_DETAIL[sc]){
                 const detail=D.COUT_DETAIL[sc];
-                ch = detail.pac_materiel + detail.pac_pose + detail.ballon_materiel + detail.ballon_pose + detail.accessoires + detail.admin + (ad > 0 ? Math.round(ad * 0.12) : 0) + (detail.mairie || 0) + (document.getElementById("checkPrevisite").checked ? (parseFloat(document.getElementById("coutPrevisite").value) || 200) : 0);
+                ch = detail.pac_materiel + detail.pac_pose + (detail.ssc_materiel||0) + (detail.ssc_pose||0) + detail.ballon_materiel + detail.ballon_pose + detail.accessoires + detail.admin + (ad > 0 ? Math.round(ad * 0.12) : 0) + (detail.mairie || 0) + (document.getElementById("checkPrevisite").checked ? (parseFloat(document.getElementById("coutPrevisite").value) || 200) : 0);
             }else{ ch = D.COUT[sc] || 0; }
         }else{
             const totalPACMateriel = (parseFloat(document.getElementById('coutPACMateriel').value) || 0) * (parseFloat(document.getElementById('qtePACMateriel').value) || 0);
             const totalPACPose = (parseFloat(document.getElementById('coutPACPose').value) || 0) * (parseFloat(document.getElementById('qtePACPose').value) || 0);
+            const totalSSCMateriel = (parseFloat(document.getElementById('coutSSCMateriel').value) || 0) * (parseFloat(document.getElementById('qteSSCMateriel').value) || 0);
+            const totalSSCPose = (parseFloat(document.getElementById('coutSSCPose').value) || 0) * (parseFloat(document.getElementById('qteSSCPose').value) || 0);
             const totalBallonMateriel = (parseFloat(document.getElementById('coutBallonMateriel').value) || 0) * (parseFloat(document.getElementById('qteBallonMateriel').value) || 0);
             const totalBallonPose = (parseFloat(document.getElementById('coutBallonPose').value) || 0) * (parseFloat(document.getElementById('qteBallonPose').value) || 0);
             const totalAccessoires = (parseFloat(document.getElementById('coutAccessoires').value) || 0) * (parseFloat(document.getElementById('qteAccessoires').value) || 0);
             const totalAdmin = (parseFloat(document.getElementById('coutAdmin').value) || 0) * (parseFloat(document.getElementById('qteAdmin').value) || 0);
-            ch = totalPACMateriel + totalPACPose + totalBallonMateriel + totalBallonPose + totalAccessoires + totalAdmin;
+            ch = totalPACMateriel + totalPACPose + totalSSCMateriel + totalSSCPose + totalBallonMateriel + totalBallonPose + totalAccessoires + totalAdmin;
             ch += (parseFloat(document.getElementById('coutMandat').value)||0) * (parseFloat(document.getElementById('qteMandat').value)||0);
             ch += (parseFloat(document.getElementById('coutMairie').value)||0) * (parseFloat(document.getElementById('qteMairie').value)||0);
             if(document.getElementById('checkPrevisite').checked) ch += parseFloat(document.getElementById('coutPrevisite').value)||0;
@@ -727,11 +741,13 @@ function updateAmt(){
         }else{
             const totalPACMateriel = (parseFloat(document.getElementById('coutPACMateriel').value) || 0) * (parseFloat(document.getElementById('qtePACMateriel').value) || 0);
             const totalPACPose = (parseFloat(document.getElementById('coutPACPose').value) || 0) * (parseFloat(document.getElementById('qtePACPose').value) || 0);
+            const totalSSCMateriel = (parseFloat(document.getElementById('coutSSCMateriel').value) || 0) * (parseFloat(document.getElementById('qteSSCMateriel').value) || 0);
+            const totalSSCPose = (parseFloat(document.getElementById('coutSSCPose').value) || 0) * (parseFloat(document.getElementById('qteSSCPose').value) || 0);
             const totalBallonMateriel = (parseFloat(document.getElementById('coutBallonMateriel').value) || 0) * (parseFloat(document.getElementById('qteBallonMateriel').value) || 0);
             const totalBallonPose = (parseFloat(document.getElementById('coutBallonPose').value) || 0) * (parseFloat(document.getElementById('qteBallonPose').value) || 0);
             const totalAccessoires = (parseFloat(document.getElementById('coutAccessoires').value) || 0) * (parseFloat(document.getElementById('qteAccessoires').value) || 0);
             const totalAdmin = (parseFloat(document.getElementById('coutAdmin').value) || 0) * (parseFloat(document.getElementById('qteAdmin').value) || 0);
-            ch = totalPACMateriel + totalPACPose + totalBallonMateriel + totalBallonPose + totalAccessoires + totalAdmin;
+            ch = totalPACMateriel + totalPACPose + totalSSCMateriel + totalSSCPose + totalBallonMateriel + totalBallonPose + totalAccessoires + totalAdmin;
             ch += (parseFloat(document.getElementById('coutMandat').value)||0) * (parseFloat(document.getElementById('qteMandat').value)||0);
             ch += (parseFloat(document.getElementById('coutMairie').value)||0) * (parseFloat(document.getElementById('qteMairie').value)||0);
             if(document.getElementById('checkPrevisite').checked) ch += parseFloat(document.getElementById('coutPrevisite').value)||0;
@@ -768,6 +784,7 @@ function reset(){
     document.getElementById('rfr').value='';
     document.getElementById('nbPersonnes').value='4';
     document.getElementById('mprResultBloc').style.display='none';
+    var ph=document.getElementById('mprPlaceholder'); if(ph) ph.style.display='block';
     updateSurfaceOptions();
     document.getElementById('racPourcent').value=0;
     document.getElementById('racOffert').value=0;
