@@ -124,17 +124,27 @@ function doGuestLogin(){
 }
 
 function switchView(v){
-    if(v === 'fournisseur'){
+    var mc = document.getElementById('mainContent');
+    mc.classList.remove('fournisseur-mode');
+    mc.classList.remove('telepro-mode');
+    document.getElementById('togClient').classList.remove('active');
+    document.getElementById('togFournisseur').classList.remove('active');
+    document.getElementById('togTelepro').classList.remove('active');
+
+    if(v === 'telepro'){
         mode = 1;
-        document.getElementById('mainContent').classList.add('fournisseur-mode');
+        mc.classList.add('fournisseur-mode');
+        mc.classList.add('telepro-mode');
+        document.getElementById('togTelepro').classList.add('active');
+        logAction('Vue telepro', '');
+    } else if(v === 'fournisseur'){
+        mode = 1;
+        mc.classList.add('fournisseur-mode');
         document.getElementById('togFournisseur').classList.add('active');
-        document.getElementById('togClient').classList.remove('active');
         logAction('Vue fournisseur', '');
     } else {
         mode = 0;
-        document.getElementById('mainContent').classList.remove('fournisseur-mode');
         document.getElementById('togClient').classList.add('active');
-        document.getElementById('togFournisseur').classList.remove('active');
         logAction('Vue client', '');
     }
     try{ calc(); }catch(e){}
@@ -145,41 +155,45 @@ function showApp(){
     document.getElementById('appScreen').style.display = 'block';
 
     const isGuest = !currentUser || currentUser.role === 'guest';
+    const isAdmin = currentUser && currentUser.role === 'admin';
+    const isTelepro = currentUser && currentUser.role === 'telepro';
+    const isCommercial = currentUser && currentUser.role === 'commercial';
 
     if(isGuest){
-        // Vue client uniquement
+        // Vue client uniquement, pas de toggle
         mode = 0;
         document.getElementById('mainContent').classList.remove('fournisseur-mode');
         document.getElementById('mainContent').classList.remove('telepro-mode');
         document.getElementById('guestBar').style.display = 'flex';
         document.getElementById('userBar').style.display = 'none';
     } else {
-        // Commercial/admin/telepro : vue fournisseur par défaut
-        mode = 1;
-        document.getElementById('mainContent').classList.add('fournisseur-mode');
         document.getElementById('guestBar').style.display = 'none';
         document.getElementById('userBar').style.display = 'flex';
         document.getElementById('userNameDisplay').textContent = currentUser.name;
 
-        // Telepro mode
-        const isTelepro = currentUser.role === 'telepro';
-        if(isTelepro){
-            document.getElementById('mainContent').classList.add('telepro-mode');
+        if(isAdmin){
+            // Admin : toggle visible avec 3 vues, défaut = fournisseur
+            document.getElementById('viewToggle').style.display = '';
+            document.getElementById('togTelepro').style.display = '';
+            document.getElementById('userRoleDisplay').textContent = '👑 Admin';
+            switchView('fournisseur');
+        } else if(isTelepro){
+            // Telepro : verrouillé en mode telepro, pas de toggle
+            document.getElementById('viewToggle').style.display = 'none';
             document.getElementById('userRoleDisplay').textContent = '📞 Téléprospecteur';
+            switchView('telepro');
         } else {
-            document.getElementById('mainContent').classList.remove('telepro-mode');
-            document.getElementById('userRoleDisplay').textContent = currentUser.role === 'admin' ? '👑 Admin' : '📊 Commercial';
+            // Commercial : verrouillé en mode fournisseur, pas de toggle
+            document.getElementById('viewToggle').style.display = 'none';
+            document.getElementById('userRoleDisplay').textContent = '📊 Commercial';
+            switchView('fournisseur');
         }
 
         // Admin-only buttons
-        const isAdmin = currentUser.role === 'admin';
         document.getElementById('btnHistory').style.display = isAdmin ? '' : 'none';
         document.getElementById('btnPwd').style.display = isAdmin ? '' : 'none';
         var notifBtn = document.getElementById('btnNotif');
         if (notifBtn) notifBtn.style.display = '';
-        // Toggle default to fournisseur
-        document.getElementById('togFournisseur').classList.add('active');
-        document.getElementById('togClient').classList.remove('active');
     }
 
     try { updateSurfaceOptions(); } catch(e){}
