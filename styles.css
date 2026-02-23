@@ -1,4 +1,4 @@
-* {
+        * {
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
@@ -517,6 +517,14 @@
         @media (max-width: 900px) {
             .telepro-mode { grid-template-columns: 1fr !important; }
             .telepro-mode .script-panel { grid-row: auto; }
+        }
+        /* Landscape mobile: side-by-side if wide enough */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .telepro-mode { grid-template-columns: 1fr 1fr !important; }
+            .telepro-mode .script-panel { max-height: calc(100vh - 90px); overflow-y: auto; }
+            .header { padding: 4px 0; }
+            .header-logo-img { height: 26px; }
+            .header-title { font-size: 14px; }
         }
         
         /* Telepro: hide cards they don't need */
@@ -1134,21 +1142,35 @@
             40% { content: '..'; }
             60%, 100% { content: '...'; }
         }
+        /* ============ TABLET / LANDSCAPE ============ */
+        @media (max-width: 900px) {
+            .header-title { font-size: 17px; }
+            .header-right { flex: 1; min-width: 0; }
+            .user-bar { gap: 6px; }
+            .view-toggle .toggle-opt { padding: 5px 10px; font-size: 12px; }
+            .user-bar .btn-hist { padding: 6px 10px; font-size: 13px; }
+            .user-bar .btn-logout { padding: 6px 10px; font-size: 13px; }
+        }
+
         /* ============ MOBILE ============ */
         @media (max-width: 600px) {
             html, body { overflow-x: hidden; }
-            .header { padding: 8px 0; }
-            .header-row { padding: 0 8px; gap: 8px; flex-wrap: wrap; }
-            .header-left { gap: 8px; }
-            .header-logo-img { height: 32px; }
-            .header-title { font-size: 15px; }
-            .header-right { width: 100%; }
-            .user-bar { flex-wrap: wrap; gap: 5px; justify-content: center; width: 100%; }
+            .header { padding: 6px 0; }
+            .header-row { padding: 0 8px; gap: 6px; }
+            .header-left { gap: 6px; flex-shrink: 0; }
+            .header-logo-img { height: 28px; }
+            .header-title { display: none; }
+            .header-right { flex: 1; min-width: 0; }
+            
+            .user-bar { gap: 4px; }
+            .user-bar-top { gap: 6px; }
             .user-bar .user-name { font-size: 12px; }
             .user-bar .user-role { font-size: 9px; padding: 2px 6px; }
-            .user-bar .btn-hist, .user-bar .btn-logout { padding: 5px 8px; font-size: 12px; }
-            .view-toggle { padding: 2px; }
-            .view-toggle .toggle-opt { padding: 4px 8px; font-size: 11px; }
+            .user-bar-actions { gap: 3px; }
+            .user-bar .btn-hist { padding: 5px 7px; font-size: 12px; }
+            .user-bar .btn-logout { padding: 5px 8px; font-size: 12px; }
+            .view-toggle .toggle-opt { padding: 5px 10px; font-size: 11px; }
+            
             .guest-bar { justify-content: center; }
             .guest-bar .btn-login-small { padding: 5px 10px; font-size: 12px; }
             .container { padding: 0 8px; }
@@ -1182,19 +1204,21 @@
         .login-logo img { height:80px; width:auto; }
 
         /* USER BAR */
-        .user-bar { display:flex; align-items:center; gap:10px; flex-wrap: nowrap; }
+        .user-bar { display:flex; flex-direction:column; align-items:stretch; gap:6px; }
+        .user-bar-top { display:flex; align-items:center; gap:10px; }
+        .user-bar-actions { display:flex; align-items:center; gap:4px; margin-left:auto; }
         .user-bar .user-name { font-size:14px; color:#1f2937; font-weight:700; white-space:nowrap; }
         .user-bar .user-role { font-size:11px; color:white; background:#16a34a; padding:3px 10px; border-radius:5px; font-weight:700; white-space:nowrap; }
         .user-bar .btn-hist { padding:8px 12px; font-size:14px; background:#f3f4f6; border:1px solid #d1d5db; border-radius:8px; cursor:pointer; font-weight:600; color:#374151; transition:all 0.2s; display:flex; align-items:center; justify-content:center; }
         .user-bar .btn-hist:hover { background:#e5e7eb; }
-        .user-bar .btn-logout { padding:8px 14px; font-size:15px; background:#fef2f2; border:1px solid #fecaca; border-radius:8px; cursor:pointer; font-weight:700; color:#dc2626; transition:all 0.2s; white-space:nowrap; margin-left:auto; }
+        .user-bar .btn-logout { padding:8px 14px; font-size:15px; background:#fef2f2; border:1px solid #fecaca; border-radius:8px; cursor:pointer; font-weight:700; color:#dc2626; transition:all 0.2s; white-space:nowrap; }
         .user-bar .btn-logout:hover { background:#fee2e2; }
         .guest-bar { display:flex; align-items:center; gap:8px; }
         .guest-bar .btn-login-small { padding:8px 16px; font-size:14px; background:linear-gradient(135deg,#16a34a,#15803d); color:white; border:none; border-radius:8px; cursor:pointer; font-weight:700; }
 
         /* VIEW TOGGLE SWITCH */
-        .view-toggle { display:flex; align-items:center; gap:0; background:#f3f4f6; border-radius:8px; padding:3px; }
-        .view-toggle .toggle-opt { padding:7px 14px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; color:#6b7280; transition:all 0.2s; border:none; background:none; white-space:nowrap; }
+        .view-toggle { display:flex; align-items:center; gap:0; background:#f3f4f6; border-radius:8px; padding:3px; width:100%; justify-content:center; }
+        .view-toggle .toggle-opt { padding:7px 14px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; color:#6b7280; transition:all 0.2s; border:none; background:none; white-space:nowrap; flex:1; text-align:center; }
         .view-toggle .toggle-opt.active { background:white; color:#1f2937; box-shadow:0 1px 3px rgba(0,0,0,0.1); }
         .view-toggle .toggle-opt:hover:not(.active) { color:#374151; }
 
@@ -1216,3 +1240,4 @@
         .hist-empty { text-align:center; color:#9ca3af; padding:30px 0; }
         .hist-clear { margin-top:12px; text-align:center; }
         .hist-clear button { font-size:12px; color:#dc2626; background:none; border:1px solid #fecaca; padding:4px 12px; border-radius:6px; cursor:pointer; }
+
