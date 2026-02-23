@@ -575,36 +575,32 @@
 
         /* Bottom section: vertical stack */
         .results-bottom {
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid rgba(255,255,255,0.06);
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.08);
         }
 
-        /* Action buttons: grid 2 cols */
+        /* Action buttons: vertical stack with pair option */
         .action-buttons-row {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 14px;
+        }
+        .action-buttons-row .btn-pair {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 8px;
-            margin-top: 12px;
-        }
-        .action-buttons-row .btn-pair {
-            display: contents;
-        }
-        .action-buttons-row .mail-btn,
-        .action-buttons-row .whatsapp {
-            grid-column: span 2;
-        }
-        .action-buttons-row .client-only {
-            grid-column: span 2;
         }
 
-        /* Upload zones: horizontal row */
+        /* Upload panel */
+        .upload-panel { margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.06); }
+        /* Upload zones: vertical stack */
         .upload-zones-row {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            display: flex;
+            flex-direction: column;
             gap: 8px;
         }
-        .upload-panel { margin-top: 16px; }
 
         .card {
             background: white;
@@ -906,17 +902,17 @@
         .upload-zone {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 12px 14px;
-            margin-bottom: 8px;
+            gap: 10px;
+            padding: 10px 14px;
             border-radius: 10px;
             border: 2px dashed rgba(255,255,255,0.12);
             background: rgba(255,255,255,0.02);
             cursor: pointer;
             transition: all 0.25s;
             position: relative;
+            overflow: hidden;
         }
-        .upload-zone:last-of-type { margin-bottom: 0; }
+        .upload-zone:last-of-type { }
         .upload-zone:hover {
             border-color: rgba(52,211,153,0.3);
             background: rgba(52,211,153,0.04);
@@ -931,18 +927,20 @@
             border-color: rgba(52,211,153,0.3);
             background: rgba(52,211,153,0.06);
         }
-        .upload-icon { font-size: 24px; flex-shrink: 0; }
+        .upload-icon { font-size: 20px; flex-shrink: 0; }
         .upload-label {
             font-size: 13px;
             font-weight: 700;
             color: rgba(255,255,255,0.7);
             line-height: 1.2;
+            white-space: nowrap;
         }
         .upload-hint {
             font-size: 11px;
             color: rgba(255,255,255,0.3);
             margin-left: auto;
             white-space: nowrap;
+            flex-shrink: 0;
         }
         .upload-zone.uploaded .upload-hint { display: none; }
         .upload-status {
@@ -1374,11 +1372,7 @@
             .parameters-section { padding: 14px; border-radius: 12px; gap: 10px; }
             .results-sidebar { margin-left: 0; margin-top: 12px; padding: 14px; border-radius: 12px; }
             .results-strip { grid-template-columns: 1fr; gap: 10px; }
-            .action-buttons-row { grid-template-columns: 1fr; }
-            .action-buttons-row .mail-btn,
-            .action-buttons-row .whatsapp,
-            .action-buttons-row .client-only { grid-column: span 1; }
-            .upload-zones-row { grid-template-columns: 1fr; }
+            .action-buttons-row .btn-pair { grid-template-columns: 1fr; }
             .upload-zones-row { grid-template-columns: 1fr; }
             .sim-panel .card { padding: 10px; }
             .card-title { font-size: 12px; margin-bottom: 8px; }
