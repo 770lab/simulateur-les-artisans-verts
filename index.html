@@ -972,6 +972,42 @@
                         💬 Demander un devis
                     </button>
                 </div>
+
+                <!-- ===== UPLOAD DOCUMENTS ===== -->
+                <div class="upload-panel" id="uploadPanel">
+                    <div style="font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">📎 Documents client</div>
+                    
+                    <div class="upload-zone" id="dropAvis" data-doc="avis">
+                        <input type="file" id="fileAvis" accept="image/*,.pdf" multiple style="display:none" onchange="handleUpload(this, 'avis')">
+                        <div class="upload-icon">📄</div>
+                        <div class="upload-label">Avis d'imposition</div>
+                        <div class="upload-hint">Glisser ou cliquer</div>
+                        <div class="upload-status" id="statusAvis"></div>
+                    </div>
+
+                    <div class="upload-zone" id="dropTaxe" data-doc="taxe">
+                        <input type="file" id="fileTaxe" accept="image/*,.pdf" multiple style="display:none" onchange="handleUpload(this, 'taxe')">
+                        <div class="upload-icon">🏠</div>
+                        <div class="upload-label">Taxe foncière</div>
+                        <div class="upload-hint">ou acte notarié</div>
+                        <div class="upload-status" id="statusTaxe"></div>
+                    </div>
+
+                    <div class="upload-zone" id="dropID" data-doc="id">
+                        <input type="file" id="fileID" accept="image/*,.pdf" multiple style="display:none" onchange="handleUpload(this, 'id')">
+                        <div class="upload-icon">🪪</div>
+                        <div class="upload-label">Pièces d'identité</div>
+                        <div class="upload-hint">Recto-verso</div>
+                        <div class="upload-status" id="statusID"></div>
+                    </div>
+
+                    <div id="uploadProgress" style="display:none; margin-top: 10px;">
+                        <div style="height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden;">
+                            <div id="uploadBar" style="height: 100%; width: 0%; background: linear-gradient(90deg, #34d399, #3b82f6); border-radius: 2px; transition: width 0.3s;"></div>
+                        </div>
+                        <div id="uploadText" style="font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 4px; text-align: center;"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

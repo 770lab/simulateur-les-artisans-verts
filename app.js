@@ -1551,12 +1551,173 @@ function calcDim() {
 
 
 // ============================================
-// INIT
+// UPLOAD DOCUMENTS
 // ============================================
+var uploadedFiles = { avis: [], taxe: [], id: [] };
+
+function initUploadZones() {
+    ['Avis', 'Taxe', 'ID'].forEach(function(key) {
+        var zone = document.getElementById('drop' + key);
+        var input = document.getElementById('file' + key);
+        if (!zone || !input) return;
+
+        zone.addEventListener('click', function(e) {
+            if (e.target.tagName !== 'INPUT') input.click();
+        });
+
+        zone.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            zone.classList.add('dragover');
+        });
+
+        zone.addEventListener('dragleave', function() {
+            zone.classList.remove('dragover');
+        });
+
+        zone.addEventListener('drop', function(e) {
+            e.preventDefault();
+            zone.classList.remove('dragover');
+            var docType = key.toLowerCase();
+            if (e.dataTransfer.files.length) {
+                processFiles(e.dataTransfer.files, docType);
+            }
+        });
+    });
+}
+
+function handleUpload(input, docType) {
+    if (input.files.length) {
+        processFiles(input.files, docType);
+    }
+}
+
+function processFiles(files, docType) {
+    var zone = document.getElementById('drop' + docType.charAt(0).toUpperCase() + docType.slice(1));
+    var statusEl = document.getElementById('status' + docType.charAt(0).toUpperCase() + docType.slice(1));
+    if (docType === 'id') {
+        zone = document.getElementById('dropID');
+        statusEl = document.getElementById('statusID');
+    }
+
+    var names = [];
+    for (var i = 0; i < files.length; i++) {
+        uploadedFiles[docType].push(files[i]);
+        names.push(files[i].name);
+    }
+
+    zone.classList.add('uploaded');
+    var count = uploadedFiles[docType].length;
+    statusEl.innerHTML = '✅ ' + count + ' fichier' + (count > 1 ? 's' : '');
+    statusEl.title = names.join(', ');
+
+    if (typeof logAction === 'function') {
+        logAction('UPLOAD', docType + ': ' + names.join(', '));
+    }
+    checkAllUploaded();
+}
+
+function checkAllUploaded() {
+    var total = uploadedFiles.avis.length + uploadedFiles.taxe.length + uploadedFiles.id.length;
+    var allThree = uploadedFiles.avis.length > 0 && uploadedFiles.taxe.length > 0 && uploadedFiles.id.length > 0;
+    
+    if (total > 0) {
+        var prog = document.getElementById('uploadProgress');
+        var text = document.getElementById('uploadText');
+        if (prog) {
+            prog.style.display = 'block';
+            var pct = (allThree ? 100 : Math.round((total / 3) * 80));
+            document.getElementById('uploadBar').style.width = pct + '%';
+            
+            if (allThree) {
+                text.innerHTML = '✅ Tous les documents sont prêts — <a href="#" onclick="sendAllDocs(); return false;" style="color:#34d399; text-decoration:underline; font-weight:700;">Envoyer</a>';
+            } else {
+                text.innerHTML = total + ' fichier(s) prêt(s) — <a href="#" onclick="sendAllDocs(); return false;" style="color:#fbbf24; text-decoration:underline;">Envoyer ce qui est prêt</a>';
+            }
+        }
+    }
+}
+
+function sendAllDocs() {
+    if (!UPLOAD_SCRIPT_URL) {
+        alert('⚠️ L\'URL du script d\'upload n\'est pas configurée.\nVoir data.js → UPLOAD_SCRIPT_URL');
+        return;
+    }
+    var nom = (document.getElementById('prenom').value.trim() + '_' + document.getElementById('nom').value.trim()).replace(/\s+/g, '_') || 'Client';
+    var dept = document.getElementById('departement').value.trim() || '00';
+    var folder = nom + '_' + dept;
+
+    var text = document.getElementById('uploadText');
+    var bar = document.getElementById('uploadBar');
+    text.innerHTML = '⏳ Préparation des fichiers...';
+    bar.style.width = '10%';
+
+    // Convertir tous les fichiers en base64
+    var allFiles = [];
+    var types = ['avis', 'taxe', 'id'];
+    var pending = 0;
+
+    types.forEach(function(docType) {
+        uploadedFiles[docType].forEach(function(file) {
+            pending++;
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var base64 = e.target.result.split(',')[1]; // enlever le préfixe data:...
+                allFiles.push({
+                    name: file.name,
+                    type: docType,
+                    mimeType: file.type || 'application/octet-stream',
+                    data: base64
+                });
+                pending--;
+                bar.style.width = Math.round((1 - pending / totalFiles) * 40 + 10) + '%';
+                if (pending === 0) doSend();
+            };
+            reader.readAsDataURL(file);
+        });
+    });
+
+    var totalFiles = pending;
+    if (totalFiles === 0) {
+        text.innerHTML = '⚠️ Aucun fichier à envoyer';
+        return;
+    }
+
+    function doSend() {
+        text.innerHTML = '⏳ Envoi vers Google Drive — <strong>' + folder + '</strong>...';
+        bar.style.width = '50%';
+
+        fetch(UPLOAD_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                folder: folder,
+                files: allFiles
+            })
+        })
+        .then(function() {
+            // mode no-cors = opaque response, on assume succès
+            bar.style.width = '100%';
+            bar.style.background = 'linear-gradient(90deg, #34d399, #34d399)';
+            text.innerHTML = '✅ ' + allFiles.length + ' document(s) envoyé(s) dans <strong>' + folder + '/</strong>';
+            if (typeof logAction === 'function') {
+                logAction('DOCS_SENT', folder + ' (' + allFiles.length + ' fichiers)');
+            }
+        })
+        .catch(function(err) {
+            bar.style.width = '100%';
+            bar.style.background = 'linear-gradient(90deg, #ef4444, #ef4444)';
+            text.innerHTML = '❌ Erreur d\'envoi — réessayez ou envoyez par mail';
+            dbg('Upload error: ' + err);
+        });
+    }
+}
+
 // ============================================
 // INIT
 // ============================================
 dbg('🚀 Init start');
 checkAutoLogin();
+initUploadZones();
 dbg('🏁 Init complete');
 // Triple-tap to show debug panel
