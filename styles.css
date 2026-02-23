@@ -277,16 +277,16 @@
 
         /* Isolation checklist */
         .iso-check {
-            display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+            display: flex; align-items: center; gap: 6px; padding: 6px 10px;
             border: 1.5px solid #e2e8f0; border-radius: 8px; cursor: pointer;
             transition: all 0.15s ease; background: white;
         }
         .iso-check:hover { border-color: #a3cfbb; background: #f8fdfb; }
         .iso-check:has(input:checked) { border-color: #16a34a; background: #f0fdf4; }
-        .iso-check input[type="checkbox"] { accent-color: #16a34a; width: 18px; height: 18px; flex-shrink: 0; cursor: pointer; }
+        .iso-check input[type="checkbox"] { accent-color: #16a34a; width: 15px; height: 15px; flex-shrink: 0; cursor: pointer; }
         .iso-info { flex: 1; }
-        .iso-title { font-weight: 600; color: #1d1d1f; font-size: 13px; display: block; }
-        .iso-sub { font-size: 11px; color: #94a3b8; }
+        .iso-title { font-weight: 600; color: #1d1d1f; font-size: 11px; display: block; }
+        .iso-sub { font-size: 10px; color: #94a3b8; display: none; }
         .iso-quand {
             padding: 4px 8px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 11px;
             color: #64748b; background: #f8fafc; display: none; cursor: pointer;
@@ -430,7 +430,7 @@
         /* Parameters: cards side by side horizontally */
         .parameters-section {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            grid-template-columns: repeat(4, 1fr);
             gap: 16px;
             align-items: start;
         }
@@ -1156,7 +1156,7 @@
 
         @media (max-width: 1024px) {
             .parameters-section {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr 1fr;
             }
             .results-strip {
                 grid-template-columns: 1fr 1fr;

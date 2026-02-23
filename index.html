@@ -353,61 +353,57 @@
         </div>
 
         <div class="parameters-section">
+            <!-- CARD 1: Info client (compact) -->
             <div class="card">
-                <h2 class="card-title">Paramètres</h2>
-
-                <!-- Info client -->
-                <div style="font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">👤 Informations client</div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                <h2 class="card-title">👤 Client</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
                     <div class="form-group" style="margin-bottom: 0;">
                         <label>Nom</label>
-                        <input type="text" id="nom" placeholder="Nom du client" oninput="checkExport()" onchange="logClientChange()">
+                        <input type="text" id="nom" placeholder="Nom" oninput="checkExport()" onchange="logClientChange()">
                     </div>
                     <div class="form-group" style="margin-bottom: 0;">
                         <label>Prénom</label>
-                        <input type="text" id="prenom" placeholder="Prénom du client" oninput="checkExport()" onchange="logClientChange()">
+                        <input type="text" id="prenom" placeholder="Prénom" oninput="checkExport()" onchange="logClientChange()">
                     </div>
                 </div>
-                <div class="grid-3col" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px;">
                     <div class="form-group" style="margin-bottom: 0;">
-                        <label for="departement">Département</label>
-                        <input type="text" id="departement" placeholder="Ex: 33, 75…" maxlength="3" style="text-align: center; font-weight: 600;" oninput="detectDept()">
+                        <label for="departement">Dépt.</label>
+                        <input type="text" id="departement" placeholder="Ex: 33" maxlength="3" style="text-align: center; font-weight: 600;" oninput="detectDept()">
                     </div>
                     <div class="form-group" style="margin-bottom: 0;">
-                        <label for="rfr">Revenu fiscal de réf. (€)</label>
-                        <input type="number" id="rfr" placeholder="Ex: 35 000" oninput="detectProfil()" style="font-weight: 600;">
+                        <label for="rfr">RFR (€)</label>
+                        <input type="number" id="rfr" placeholder="35 000" oninput="detectProfil()" style="font-weight: 600;">
                     </div>
                     <div class="form-group" style="margin-bottom: 0;">
                         <label for="nbPersonnes">Foyer</label>
                         <select id="nbPersonnes" onchange="detectProfil()">
-                            <option value="1">1 personne</option>
-                            <option value="2">2 personnes</option>
-                            <option value="3">3 personnes</option>
-                            <option value="4" selected>4 personnes</option>
-                            <option value="5">5 personnes</option>
-                            <option value="6">6 personnes</option>
-                            <option value="7">7 personnes</option>
-                            <option value="8">8 personnes</option>
+                            <option value="1">1 pers.</option>
+                            <option value="2">2 pers.</option>
+                            <option value="3">3 pers.</option>
+                            <option value="4" selected>4 pers.</option>
+                            <option value="5">5 pers.</option>
+                            <option value="6">6 pers.</option>
+                            <option value="7">7 pers.</option>
+                            <option value="8">8 pers.</option>
                         </select>
                     </div>
                 </div>
-                <!-- Installation électrique -->
-                <div class="form-group" style="margin-top: 10px;">
-                    <label for="phase">⚡ Installation électrique</label>
-                    <div style="display: flex; gap: 8px; align-items: center;">
-                        <select id="phase" style="flex: 1;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label for="phase">⚡ Élec.</label>
+                        <select id="phase">
                             <option value="" selected disabled>— Choisir —</option>
                             <option value="mono">Monophasé</option>
                             <option value="tri">Triphasé</option>
                         </select>
-                        <span id="phaseIcon" style="font-size: 20px;"></span>
                     </div>
-                    <div style="font-size: 11px; color: #94a3b8; margin-top: 4px; line-height: 1.4;">
-                        <strong>Monophasé</strong> (230V) : installation standard, 1 phase + 1 neutre — la majorité des maisons.<br>
-                        <strong>Triphasé</strong> (400V) : 3 phases + 1 neutre — maisons grandes ou avec équipements puissants.
-                        <br><em>Vérifiez sur votre compteur ou votre facture EDF le nombre de fils d'arrivée (2 = mono, 4 = tri).</em>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label>Construction</label>
+                        <input type="number" id="dimAnnee" value="2000" min="1900" max="2026" oninput="evalIsolation(); calcBareme(); calcDim()">
                     </div>
                 </div>
+                <div style="font-size: 10px; color: #94a3b8; margin-top: 6px;">Mono = 2 fils (230V) · Tri = 4 fils (400V)</div>
 
                 <!-- Hidden: auto-gérés -->
                 <select id="zone" onchange="calc()" style="display:none;">
@@ -427,66 +423,68 @@
                     <option value="BLEU">BLEU</option><option value="JAUNE">JAUNE</option>
                     <option value="VIOLET">VIOLET</option><option value="ROSE">ROSE</option>
                 </select>
+            </div>
 
-                <!-- ===== BLOC RÉSULTAT MPR + CEE ===== -->
-                <div id="mprCeeWrapper" style="margin-top: 14px; border-radius: 14px; padding: 20px; background: linear-gradient(160deg, #0f172a 0%, #1e3a5f 40%, #134e4a 100%); color: white;">
+            <!-- CARD 2: Scénario & CEE -->
+            <div class="card" style="padding: 0; overflow: hidden;">
+                <div id="mprCeeWrapper" style="border-radius: 12px; padding: 16px; background: linear-gradient(160deg, #0f172a 0%, #1e3a5f 40%, #134e4a 100%); color: white; height: 100%;">
 
                 <!-- Bloc résultat MPR -->
-                <div id="mprResultBloc" style="display: none; border-radius: 12px; padding: 20px; text-align: center; transition: all 0.2s; margin-bottom: 16px;">
-                    <div id="mprProfilIcon" style="font-size: 32px; margin-bottom: 6px;">🔵</div>
-                    <div id="mprProfilLabel" style="font-size: 18px; font-weight: 800; margin-bottom: 4px;">Profil Bleu</div>
-                    <div id="mprProfilDesc" style="font-size: 13px; font-weight: 500; opacity: 0.85; margin-bottom: 10px;">Revenus très modestes</div>
-                    <div class="grid-3col" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
-                        <div style="background: rgba(255,255,255,0.25); border-radius: 8px; padding: 8px;">
-                            <div style="font-size: 10px; text-transform: uppercase; opacity: 0.7; letter-spacing: 0.5px;">Région / Zone</div>
-                            <div id="mprInfoRegion" style="font-size: 14px; font-weight: 700;">Province</div>
+                <div id="mprResultBloc" style="display: none; border-radius: 10px; padding: 14px; text-align: center; transition: all 0.2s; margin-bottom: 12px;">
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 6px;">
+                        <div id="mprProfilIcon" style="font-size: 24px;">🔵</div>
+                        <div id="mprProfilLabel" style="font-size: 16px; font-weight: 800;">Profil Bleu</div>
+                    </div>
+                    <div id="mprProfilDesc" style="font-size: 12px; font-weight: 500; opacity: 0.85; margin-bottom: 8px;">Revenus très modestes</div>
+                    <div class="grid-3col" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;">
+                        <div style="background: rgba(255,255,255,0.25); border-radius: 6px; padding: 6px;">
+                            <div style="font-size: 9px; text-transform: uppercase; opacity: 0.7;">Région</div>
+                            <div id="mprInfoRegion" style="font-size: 13px; font-weight: 700;">Province</div>
                         </div>
-                        <div style="background: rgba(255,255,255,0.25); border-radius: 8px; padding: 8px;">
-                            <div style="font-size: 10px; text-transform: uppercase; opacity: 0.7; letter-spacing: 0.5px;">Foyer</div>
-                            <div id="mprInfoFoyer" style="font-size: 14px; font-weight: 700;">4 pers.</div>
+                        <div style="background: rgba(255,255,255,0.25); border-radius: 6px; padding: 6px;">
+                            <div style="font-size: 9px; text-transform: uppercase; opacity: 0.7;">Foyer</div>
+                            <div id="mprInfoFoyer" style="font-size: 13px; font-weight: 700;">4 pers.</div>
                         </div>
-                        <div style="background: rgba(255,255,255,0.25); border-radius: 8px; padding: 8px;">
-                            <div style="font-size: 10px; text-transform: uppercase; opacity: 0.7; letter-spacing: 0.5px;">Seuil</div>
-                            <div id="mprInfoSeuil" style="font-size: 14px; font-weight: 700;">—</div>
+                        <div style="background: rgba(255,255,255,0.25); border-radius: 6px; padding: 6px;">
+                            <div style="font-size: 9px; text-transform: uppercase; opacity: 0.7;">Seuil</div>
+                            <div id="mprInfoSeuil" style="font-size: 13px; font-weight: 700;">—</div>
                         </div>
                     </div>
-                    <div id="mprInfoRFR" style="font-size: 12px; margin-top: 10px; opacity: 0.75;"></div>
-                    <div id="mprInfoAide" style="font-size: 15px; font-weight: 700; margin-top: 8px; background: rgba(255,255,255,0.3); border-radius: 8px; padding: 8px;"></div>
+                    <div id="mprInfoRFR" style="font-size: 11px; margin-top: 6px; opacity: 0.75;"></div>
+                    <div id="mprInfoAide" style="font-size: 14px; font-weight: 700; margin-top: 6px; background: rgba(255,255,255,0.3); border-radius: 6px; padding: 6px;"></div>
                 </div>
 
                 <!-- Paramètres techniques + CEE -->
-                <div style="font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">⚡ Scénario & Aides CEE</div>
-                <div class="grid-3col" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                <div style="font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">⚡ Scénario & CEE</div>
+                <div class="grid-3col" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 8px;">
                     <div class="form-group" style="margin-bottom: 0;">
-                        <label for="scenario" style="color: rgba(255,255,255,0.7);">Scénario</label>
+                        <label for="scenario" style="color: rgba(255,255,255,0.7); font-size: 11px;">Scénario</label>
                         <select id="scenario" onchange="onScenarioChange()">
                             <option value="PAC">PAC</option>
-                            <option value="PAC + BALLON ÉLECTRIQUE">PAC + BALLON ÉLECTRIQUE</option>
-                            <option value="PAC + BALLON THERMO">PAC + BALLON THERMO</option>
+                            <option value="PAC + BALLON ÉLECTRIQUE">PAC + B.Élec</option>
+                            <option value="PAC + BALLON THERMO">PAC + B.Thermo</option>
                             <option value="PAC + SSC">PAC + SSC</option>
                             <option value="SSC">SSC</option>
                         </select>
                     </div>
                     <div class="form-group" style="margin-bottom: 0;" id="etasGroup">
-                        <label for="etas" style="color: rgba(255,255,255,0.7);">Plage d'ETAS</label>
+                        <label for="etas" style="color: rgba(255,255,255,0.7); font-size: 11px;">ETAS</label>
                         <select id="etas" onchange="syncEtas(); calc()">
-                            <option value="111-140">111 &lt; ETAS &lt; 140</option>
-                            <option value="140-170" selected>140 &lt; ETAS &lt; 170</option>
+                            <option value="111-140">111-140</option>
+                            <option value="140-170" selected>140-170</option>
                         </select>
                     </div>
                     <div class="form-group" style="margin-bottom: 0;" id="ceeSurfaceGroup">
-                        <label style="color: rgba(255,255,255,0.7);">Surface chauffée (m²)</label>
+                        <label style="color: rgba(255,255,255,0.7); font-size: 11px;">Surface (m²)</label>
                         <input type="number" id="ceeSurface" min="1" step="1" value="95" oninput="syncSurfaces('cee')">
                     </div>
                 </div>
 
-                <!-- Fiches info (hidden) -->
+                <!-- Hidden fields -->
                 <div style="display:none;">
                     Fiches : <strong id="ceeFichesLabel">BAR-TH-171</strong>
                     <span id="ceeNonCumulNote"></span>
                 </div>
-
-                <!-- Hidden fields for JS -->
                 <span id="ceeScenarioLabel" style="display:none;">PAC</span>
                 <select id="ficheCEE" style="display:none;" onchange="toggleCEEBlocs(); calcCEEDetail();">
                     <option value="171">BAR-TH-171</option>
@@ -517,7 +515,6 @@
                         <div class="kpi-value" id="ceeOutPrime" style="color: #34d399;">—</div>
                     </div>
                 </div>
-                <!-- Détail fournisseur -->
                 <div class="fournisseur-only" style="margin-top: 4px; font-size: 11px; color: rgba(255,255,255,0.4); font-family: ui-monospace, monospace;">
                     <span id="ceeOutDetail">—</span> · <span id="ceeOutPrix">—</span>
                 </div>
@@ -566,19 +563,13 @@
                 <div id="calcErrorDebug" style="color: red; font-size: 12px; font-weight: 600; margin-top: 8px; padding: 6px; background: #fef2f2; border-radius: 6px;"></div>
             </div>
 
-            <!-- ===================== BARÈME PAC (client) ===================== -->
+            <!-- CARD 3: Puissance PAC recommandée -->
             <div class="card" id="baremeCard">
-                <h2 class="card-title">📐 Puissance PAC recommandée</h2>
-                <div style="font-size: 12px; color: #64748b; margin-bottom: 14px;">Estimation selon la surface, l'année de construction et l'isolation</div>
+                <h2 class="card-title">📐 Puissance PAC</h2>
+                <div style="font-size: 11px; color: #64748b; margin-bottom: 10px;">Selon surface, construction et isolation</div>
 
                 <!-- Hidden input for sync -->
                 <input type="hidden" id="baremeSurface" value="100">
-
-                <!-- Année de construction -->
-                <div class="form-group" style="margin-bottom: 14px;">
-                    <label>Année de construction</label>
-                    <input type="number" id="dimAnnee" value="2000" min="1900" max="2026" oninput="evalIsolation(); calcBareme(); calcDim()">
-                </div>
 
                 <!-- Questionnaire isolation -->
                 <div style="margin-bottom: 14px;">
@@ -649,33 +640,28 @@
                 </div>
 
                 <!-- Résultat barème visuel -->
-                <div id="baremeResult" style="padding: 20px; background: linear-gradient(135deg, #f0fdf4, #ecfdf5); border-radius: 12px; border: 1.5px solid #bbf7d0;">
-                    <div style="font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; text-align: center;">PAC recommandée</div>
+                <div id="baremeResult" style="padding: 14px; background: linear-gradient(135deg, #f0fdf4, #ecfdf5); border-radius: 12px; border: 1.5px solid #bbf7d0;">
+                    <div style="font-size: 10px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; text-align: center;">PAC recommandée</div>
                     
                     <!-- Gauge visuelle -->
-                    <div id="baremeGauge" style="position: relative; margin: 0 auto; max-width: 340px;">
-                        <!-- Labels puissance -->
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-                            <span id="baremeLow" style="font-size: 20px; font-weight: 800; color: #16a34a;">10 kW</span>
-                            <span id="baremeHigh" style="font-size: 20px; font-weight: 800; color: #dc2626;">12 kW</span>
+                    <div id="baremeGauge" style="position: relative; margin: 0 auto; max-width: 280px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                            <span id="baremeLow" style="font-size: 16px; font-weight: 800; color: #16a34a;">10 kW</span>
+                            <span id="baremeHigh" style="font-size: 16px; font-weight: 800; color: #dc2626;">12 kW</span>
                         </div>
-                        <!-- Barre -->
-                        <div style="position: relative; height: 12px; border-radius: 6px; background: linear-gradient(90deg, #22c55e 0%, #eab308 50%, #ef4444 100%); margin-bottom: 4px;">
-                            <!-- Curseur -->
-                            <div id="baremeCursor" style="position: absolute; top: -6px; width: 24px; height: 24px; border-radius: 50%; background: white; border: 3px solid #0f172a; box-shadow: 0 2px 8px rgba(0,0,0,0.25); transition: left 0.4s ease; left: 50%;" ></div>
+                        <div style="position: relative; height: 10px; border-radius: 5px; background: linear-gradient(90deg, #22c55e 0%, #eab308 50%, #ef4444 100%); margin-bottom: 4px;">
+                            <div id="baremeCursor" style="position: absolute; top: -5px; width: 20px; height: 20px; border-radius: 50%; background: white; border: 3px solid #0f172a; box-shadow: 0 2px 8px rgba(0,0,0,0.25); transition: left 0.4s ease; left: 50%;"></div>
                         </div>
-                        <!-- Labels bas -->
-                        <div style="display: flex; justify-content: space-between; font-size: 10px; color: #94a3b8;">
+                        <div style="display: flex; justify-content: space-between; font-size: 9px; color: #94a3b8;">
                             <span>Bien isolé</span>
                             <span>Mal isolé</span>
                         </div>
                     </div>
 
-                    <!-- Résultat texte -->
-                    <div style="text-align: center; margin-top: 14px;">
-                        <div id="baremeReco" style="font-size: 32px; font-weight: 800; color: #16a34a;">10 kW</div>
-                        <div id="baremeAlt" style="font-size: 13px; color: #64748b; margin-top: 2px;"></div>
-                        <div id="baremeIsoHint" style="font-size: 11px; color: #64748b; margin-top: 4px;"></div>
+                    <div style="text-align: center; margin-top: 10px;">
+                        <div id="baremeReco" style="font-size: 26px; font-weight: 800; color: #16a34a;">10 kW</div>
+                        <div id="baremeAlt" style="font-size: 11px; color: #64748b; margin-top: 2px;"></div>
+                        <div id="baremeIsoHint" style="font-size: 10px; color: #64748b; margin-top: 2px;"></div>
                     </div>
                 </div>
 
@@ -687,75 +673,75 @@
                 
                 <div style="background: #f5f5f7; padding: 16px; border-radius: 8px; margin-bottom: 8px;">
                     <!-- PAC Matériel -->
-                    <div style="display: grid; grid-template-columns: 120px 1fr 80px 100px; gap: 8px; align-items: center; margin-bottom: 10px;">
-                        <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">PAC Matériel</label>
-                        <input type="number" id="coutPACMateriel" value="2900" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
-                        <input type="number" id="qtePACMateriel" value="1" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
+                    <div style="display: grid; grid-template-columns: 80px 1fr 50px 70px; gap: 4px; align-items: center; margin-bottom: 10px;">
+                        <label style="color: #1d1d1f; font-weight: 600; font-size: 11px;">PAC Matériel</label>
+                        <input type="number" id="coutPACMateriel" value="2900" step="1" oninput="updateFromDetail()" style="padding: 6px 8px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right; font-size: 12px;">
+                        <input type="number" id="qtePACMateriel" value="1" min="0" step="1" oninput="updateFromDetail()" style="padding: 6px 8px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center; font-size: 12px;">
                         <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalPACMateriel">2 900 €</div>
                     </div>
                     
                     <!-- PAC Pose -->
-                    <div style="display: grid; grid-template-columns: 120px 1fr 80px 100px; gap: 8px; align-items: center; margin-bottom: 10px;">
-                        <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">PAC Pose</label>
-                        <input type="number" id="coutPACPose" value="2500" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
-                        <input type="number" id="qtePACPose" value="1" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
+                    <div style="display: grid; grid-template-columns: 80px 1fr 50px 70px; gap: 4px; align-items: center; margin-bottom: 10px;">
+                        <label style="color: #1d1d1f; font-weight: 600; font-size: 11px;">PAC Pose</label>
+                        <input type="number" id="coutPACPose" value="2500" step="1" oninput="updateFromDetail()" style="padding: 6px 8px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right; font-size: 12px;">
+                        <input type="number" id="qtePACPose" value="1" min="0" step="1" oninput="updateFromDetail()" style="padding: 6px 8px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center; font-size: 12px;">
                         <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalPACPose">2 500 €</div>
                     </div>
                     
                     <!-- Ballon Matériel -->
-                    <div style="display: grid; grid-template-columns: 120px 1fr 80px 100px; gap: 8px; align-items: center; margin-bottom: 10px;">
-                        <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">Ballon Matériel</label>
-                        <input type="number" id="coutBallonMateriel" value="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
-                        <input type="number" id="qteBallonMateriel" value="0" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
+                    <div style="display: grid; grid-template-columns: 80px 1fr 50px 70px; gap: 4px; align-items: center; margin-bottom: 10px;">
+                        <label style="color: #1d1d1f; font-weight: 600; font-size: 11px;">Ballon Matériel</label>
+                        <input type="number" id="coutBallonMateriel" value="0" step="1" oninput="updateFromDetail()" style="padding: 6px 8px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right; font-size: 12px;">
+                        <input type="number" id="qteBallonMateriel" value="0" min="0" step="1" oninput="updateFromDetail()" style="padding: 6px 8px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center; font-size: 12px;">
                         <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalBallonMateriel">0 €</div>
                     </div>
                     
                     <!-- Ballon Pose -->
-                    <div style="display: grid; grid-template-columns: 120px 1fr 80px 100px; gap: 8px; align-items: center; margin-bottom: 10px;">
-                        <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">Ballon Pose</label>
-                        <input type="number" id="coutBallonPose" value="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
-                        <input type="number" id="qteBallonPose" value="0" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
+                    <div style="display: grid; grid-template-columns: 80px 1fr 50px 70px; gap: 4px; align-items: center; margin-bottom: 10px;">
+                        <label style="color: #1d1d1f; font-weight: 600; font-size: 11px;">Ballon Pose</label>
+                        <input type="number" id="coutBallonPose" value="0" step="1" oninput="updateFromDetail()" style="padding: 6px 8px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right; font-size: 12px;">
+                        <input type="number" id="qteBallonPose" value="0" min="0" step="1" oninput="updateFromDetail()" style="padding: 6px 8px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center; font-size: 12px;">
                         <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalBallonPose">0 €</div>
                     </div>
                     
                     <!-- Accessoires -->
-                    <div style="display: grid; grid-template-columns: 120px 1fr 80px 100px; gap: 8px; align-items: center; margin-bottom: 10px;">
-                        <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">Access.</label>
-                        <input type="number" id="coutAccessoires" value="500" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
-                        <input type="number" id="qteAccessoires" value="1" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
+                    <div style="display: grid; grid-template-columns: 80px 1fr 50px 70px; gap: 4px; align-items: center; margin-bottom: 10px;">
+                        <label style="color: #1d1d1f; font-weight: 600; font-size: 11px;">Access.</label>
+                        <input type="number" id="coutAccessoires" value="500" step="1" oninput="updateFromDetail()" style="padding: 6px 8px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right; font-size: 12px;">
+                        <input type="number" id="qteAccessoires" value="1" min="0" step="1" oninput="updateFromDetail()" style="padding: 6px 8px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center; font-size: 12px;">
                         <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalAccessoires">500 €</div>
                     </div>
                     
                     <!-- Admin -->
-                    <div style="display: grid; grid-template-columns: 120px 1fr 80px 100px; gap: 8px; align-items: center; margin-bottom: 10px;">
-                        <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">Admin</label>
-                        <input type="number" id="coutAdmin" value="400" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
-                        <input type="number" id="qteAdmin" value="1" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
+                    <div style="display: grid; grid-template-columns: 80px 1fr 50px 70px; gap: 4px; align-items: center; margin-bottom: 10px;">
+                        <label style="color: #1d1d1f; font-weight: 600; font-size: 11px;">Admin</label>
+                        <input type="number" id="coutAdmin" value="400" step="1" oninput="updateFromDetail()" style="padding: 6px 8px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right; font-size: 12px;">
+                        <input type="number" id="qteAdmin" value="1" min="0" step="1" oninput="updateFromDetail()" style="padding: 6px 8px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center; font-size: 12px;">
                         <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalAdmin">400 €</div>
                     </div>
                     
                     <!-- Mandat MPR -->
-                    <div style="display: grid; grid-template-columns: 120px 1fr 80px 100px; gap: 8px; align-items: center; margin-bottom: 10px;">
-                        <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">Mandat MPR</label>
-                        <input type="number" id="coutMandat" value="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
-                        <input type="number" id="qteMandat" value="1" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
+                    <div style="display: grid; grid-template-columns: 80px 1fr 50px 70px; gap: 4px; align-items: center; margin-bottom: 10px;">
+                        <label style="color: #1d1d1f; font-weight: 600; font-size: 11px;">Mandat MPR</label>
+                        <input type="number" id="coutMandat" value="0" step="1" oninput="updateFromDetail()" style="padding: 6px 8px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right; font-size: 12px;">
+                        <input type="number" id="qteMandat" value="1" min="0" step="1" oninput="updateFromDetail()" style="padding: 6px 8px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center; font-size: 12px;">
                         <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalMandat">0 €</div>
                     </div>
                     
                     <!-- Demande mairie -->
-                    <div style="display: grid; grid-template-columns: 120px 1fr 80px 100px; gap: 8px; align-items: center; margin-bottom: 10px;">
-                        <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">Mairie</label>
-                        <input type="number" id="coutMairie" value="250" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
-                        <input type="number" id="qteMairie" value="0" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
+                    <div style="display: grid; grid-template-columns: 80px 1fr 50px 70px; gap: 4px; align-items: center; margin-bottom: 10px;">
+                        <label style="color: #1d1d1f; font-weight: 600; font-size: 11px;">Mairie</label>
+                        <input type="number" id="coutMairie" value="250" step="1" oninput="updateFromDetail()" style="padding: 6px 8px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right; font-size: 12px;">
+                        <input type="number" id="qteMairie" value="0" min="0" step="1" oninput="updateFromDetail()" style="padding: 6px 8px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center; font-size: 12px;">
                         <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalMairie">0 €</div>
                     </div>
                     
                     <!-- Prévisite -->
-                    <div style="display: grid; grid-template-columns: 120px 1fr 80px 100px; gap: 8px; align-items: center;">
-                        <label style="color: #1d1d1f; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 6px;">
+                    <div style="display: grid; grid-template-columns: 80px 1fr 50px 70px; gap: 4px; align-items: center;">
+                        <label style="color: #1d1d1f; font-weight: 600; font-size: 11px; display: flex; align-items: center; gap: 6px;">
                             <input type="checkbox" id="checkPrevisite" onchange="updateFromDetail()" style="width: 16px; height: 16px;"> Prévisite
                         </label>
-                        <input type="number" id="coutPrevisite" value="200" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
+                        <input type="number" id="coutPrevisite" value="200" step="1" oninput="updateFromDetail()" style="padding: 6px 8px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right; font-size: 12px;">
                         <div style="text-align: center; font-weight: 600; color: #64748b;">—</div>
                         <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalPrevisite">0 €</div>
                     </div>
