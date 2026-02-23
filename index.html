@@ -413,11 +413,8 @@
 
         <div class="parameters-section">
 
-            <!-- ====== COL 1: CLIENT + SCÉNARIO/CEE (stacked) ====== -->
-            <div class="param-col-stack">
-
             <!-- ====== 1. CLIENT ====== -->
-            <div class="card">
+            <div class="card" id="clientCard">
                 <h2 class="card-title">👤 Client</h2>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
                     <div class="form-group" style="margin-bottom: 0;">
@@ -477,7 +474,7 @@
             </div>
 
             <!-- ====== 2. SCÉNARIO / CEE ====== -->
-            <div class="card" style="padding: 0; overflow: hidden;">
+            <div class="card" id="ceeCard" style="padding: 0; overflow: hidden;">
                 <div id="mprCeeWrapper" style="border-radius: 12px; padding: 14px; background: #f9fafb; border: 1px solid #e5e7eb; color: #1d1d1f;">
 
                 <div style="font-size: 11px; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">⚡ Scénario & CEE</div>
@@ -617,11 +614,8 @@
                 <div id="mprPlaceholder" style="text-align: center; padding: 12px; opacity: 0.3; font-size: 13px;">Remplissez les infos client pour voir le profil MPR</div>
             </div>
 
-            </div><!-- /param-col-stack -->
-
             <!-- ====== 4. COÛTS (fournisseur) ====== -->
-            <!-- Coûts fournisseur (separate grid item) -->
-            <div class="card fournisseur-only telepro-hide">
+            <div class="card fournisseur-only telepro-hide" id="costsCard">
                 <h2 class="card-title">💰 Coûts</h2>
                 <div class="costs-items-grid" style="background: #f9fafb; padding: 10px; border-radius: 8px; margin-bottom: 8px;">
                     <div style="display: grid; grid-template-columns: 80px 1fr 50px 70px; gap: 4px; align-items: center; margin-bottom: 8px;">

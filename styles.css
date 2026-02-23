@@ -452,16 +452,19 @@
             margin-bottom: 18px;
             border-bottom: 1px solid #e5e7eb;
         }
-        /* Fournisseur: explicit 3 columns */
+        /* Fournisseur desktop: explicit 4-col grid with areas */
         .fournisseur-mode .parameters-section {
-            grid-template-columns: 1.2fr 1.8fr 1fr;
+            grid-template-columns: 1fr 1fr 1.6fr 1fr;
+            grid-template-rows: auto auto;
+            grid-template-areas:
+                "client  cee   costs  pac"
+                "mpr     cee   costs  pac";
         }
-        /* Stack Client + CEE + MPR in one column */
-        .param-col-stack {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
+        .fournisseur-mode #clientCard  { grid-area: client; }
+        .fournisseur-mode #ceeCard     { grid-area: cee; }
+        .fournisseur-mode #mprCard     { grid-area: mpr; }
+        .fournisseur-mode #costsCard   { grid-area: costs; }
+        .fournisseur-mode #baremeCard  { grid-area: pac; }
         /* Costs: 2 columns on wide screens */
         .costs-items-grid {
             display: grid;
@@ -686,6 +689,7 @@
         }
         .telepro-mode .parameters-section {
             grid-template-columns: 1fr;
+            grid-template-areas: none;
         }
         .telepro-mode .results-strip {
             grid-template-columns: 1fr;
@@ -1323,7 +1327,13 @@
             .view-toggle .toggle-opt { padding: 5px 10px; font-size: 12px; }
             .user-bar .btn-hist { padding: 6px 10px; font-size: 13px; }
             .user-bar .btn-logout { padding: 6px 10px; font-size: 13px; }
-            .fournisseur-mode .parameters-section { grid-template-columns: 1fr; }
+            .fournisseur-mode .parameters-section {
+                grid-template-columns: 1fr 1fr;
+                grid-template-areas:
+                    "client  cee"
+                    "mpr     cee"
+                    "costs   pac";
+            }
             .costs-items-grid { grid-template-columns: 1fr; }
         }
 
@@ -1353,7 +1363,11 @@
             .main-content { padding: 10px 8px; }
             .sim-panel { padding: 12px; border-radius: 12px; }
             .parameters-section { grid-template-columns: 1fr; gap: 10px; padding-bottom: 12px; margin-bottom: 12px; }
-            .fournisseur-mode .parameters-section { grid-template-columns: 1fr; }
+            .fournisseur-mode .parameters-section {
+                grid-template-columns: 1fr;
+                grid-template-areas:
+                    "client" "cee" "mpr" "costs" "pac";
+            }
             .costs-items-grid { grid-template-columns: 1fr; }
             .results-sidebar { padding: 14px; border-radius: 10px; }
             .results-strip { grid-template-columns: 1fr; gap: 10px; }
