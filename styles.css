@@ -426,15 +426,33 @@
 
         /* Single dark panel wrapping everything */
         .sim-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            background: transparent;
+            border-radius: 0;
+            padding: 0;
+            box-shadow: none;
+            position: relative;
+            overflow: visible;
+            color: #1d1d1f;
+        }
+        .sim-panel::before { display: none; }
+
+        /* LEFT: white parameters panel */
+        .parameters-section {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
             background: white;
             border-radius: 16px;
             padding: 24px;
             box-shadow: 0 2px 16px rgba(0,0,0,0.08);
             position: relative;
             overflow: hidden;
-            color: #1d1d1f;
+            align-self: start;
         }
-        .sim-panel::before {
+        .parameters-section::before {
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0;
@@ -442,17 +460,7 @@
             background: linear-gradient(90deg, #34d399, #22d3ee, #818cf8);
         }
 
-        /* Parameters: 2 columns on desktop, 1 on mobile */
-        .parameters-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-            padding-bottom: 18px;
-            margin-bottom: 18px;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        /* Cards inside sim-panel */
+        /* Cards inside parameters */
         .sim-panel .card {
             background: #f9fafb;
             border: 1px solid #e5e7eb;
@@ -468,22 +476,11 @@
             font-size: 12px;
             margin-bottom: 10px;
         }
-
-        /* Cards inside sim-panel are borderless sections */
-        .sim-panel .card {
-            background: transparent;
-            border: none;
-            border-radius: 0;
-            padding: 14px 0;
-            box-shadow: none;
-            color: #1d1d1f;
-            display: flex;
-            flex-direction: column;
-        }
-        .sim-panel .card-title {
-            color: #6b7280;
-            font-size: 12px;
-            margin-bottom: 10px;
+        /* Costs: 2 columns on desktop */
+        .costs-items-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2px 14px;
         }
         /* MPR card stretches content */
         #mprCard { justify-content: center; }
@@ -543,14 +540,16 @@
         .sim-panel #isoStateName { color: #1d1d1f !important; }
         .sim-panel #dimGDisplay { color: #16a34a !important; }
 
-        /* Results in dark panel */
+        /* RIGHT: dark results panel */
         .results-sidebar {
-            position: static;
+            position: sticky;
+            top: 80px;
             background: linear-gradient(165deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
-            border-radius: 12px;
-            padding: 20px;
+            border-radius: 16px;
+            padding: 24px;
             color: white;
-            margin-top: 4px;
+            align-self: start;
+            margin-left: 16px;
         }
         .summary-card {
             background: transparent;
@@ -682,15 +681,15 @@
             grid-row: 1 / 20;
         }
         .telepro-mode .sim-panel {
+            grid-template-columns: 1fr;
             border-radius: 0;
         }
-        .telepro-mode .parameters-section {
-            grid-template-columns: 1fr;
+        .telepro-mode .results-sidebar {
+            margin-left: 0;
+            margin-top: 12px;
         }
-        .telepro-mode .parameters-section .card {
-            border-left: none !important;
-            border-top: none !important;
-            padding-left: 0 !important;
+        .telepro-mode .parameters-section {
+            gap: 10px;
         }
         .telepro-mode .results-strip {
             grid-template-columns: 1fr;
@@ -940,15 +939,15 @@
         }
         .upload-zone.uploaded .upload-status { display: block; }
 
-        .results-sidebar {
-            position: static;
-        }
-
         .summary-card {
-            background: linear-gradient(165deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.25), 0 0 0 1px rgba(255,255,255,0.05);
+            background: transparent;
+            border-radius: 0;
+            padding: 0;
+            box-shadow: none;
+            margin-bottom: 0;
+            position: relative;
+            overflow: visible;
+        }
             margin-bottom: 16px;
             position: relative;
             overflow: hidden;
@@ -1329,6 +1328,8 @@
             .user-bar .btn-hist { padding: 6px 10px; font-size: 13px; }
             .user-bar .btn-logout { padding: 6px 10px; font-size: 13px; }
             .costs-items-grid { grid-template-columns: 1fr; }
+            .sim-panel { grid-template-columns: 1fr; }
+            .results-sidebar { margin-left: 0; margin-top: 12px; }
         }
 
         /* ============ MOBILE ============ */
@@ -1355,9 +1356,9 @@
             .guest-bar { justify-content: center; }
             .guest-bar .btn-login-small { padding: 5px 10px; font-size: 12px; }
             .main-content { padding: 10px 8px; }
-            .sim-panel { padding: 12px; border-radius: 12px; }
-            .parameters-section { grid-template-columns: 1fr; gap: 10px; padding-bottom: 12px; margin-bottom: 12px; }
-            .results-sidebar { padding: 14px; border-radius: 10px; }
+            .sim-panel { grid-template-columns: 1fr; padding: 0; border-radius: 0; }
+            .parameters-section { padding: 14px; border-radius: 12px; gap: 10px; }
+            .results-sidebar { margin-left: 0; margin-top: 12px; padding: 14px; border-radius: 12px; }
             .results-strip { grid-template-columns: 1fr; gap: 10px; }
             .results-bottom-strip { grid-template-columns: 1fr; gap: 10px; }
             .upload-zones-row { grid-template-columns: 1fr; }
