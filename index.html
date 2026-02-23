@@ -679,6 +679,32 @@
         .script-input-group select option { background: #1a1a3e; color: white; }
         .script-input-group input,
         .script-input-group select { -webkit-user-select: text; user-select: text; }
+        .script-iso-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 6px;
+            margin: 8px 0;
+        }
+        .script-iso-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.04);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+        }
+        .script-iso-btn:has(input:checked) {
+            border-color: rgba(52,211,153,0.4);
+            background: rgba(52,211,153,0.1);
+            color: #34d399;
+        }
+        .script-iso-btn input { width: 14px; height: 14px; accent-color: #34d399; cursor: pointer; }
+        .script-iso-btn span { font-weight: 600; white-space: nowrap; }
 
         .results-sidebar {
             position: sticky;
@@ -1295,6 +1321,29 @@
                                     <option value="SSC">SSC seul</option>
                                 </select>
                             </div>
+                        </div>
+                        <div class="script-say" style="margin-top: 10px;">Est-ce que des travaux d'isolation ont déjà été réalisés dans la maison ?<br><em>Combles, murs, fenêtres, plancher ?</em></div>
+                        <div class="script-iso-grid">
+                            <label class="script-iso-btn" onclick="event.stopPropagation()">
+                                <input type="checkbox" onchange="syncIso('combles', this.checked)">
+                                <span>🏠 Combles</span>
+                            </label>
+                            <label class="script-iso-btn" onclick="event.stopPropagation()">
+                                <input type="checkbox" onchange="syncIso('murs', this.checked)">
+                                <span>🧱 Murs</span>
+                            </label>
+                            <label class="script-iso-btn" onclick="event.stopPropagation()">
+                                <input type="checkbox" onchange="syncIso('fenetres', this.checked)">
+                                <span>🪟 Fenêtres</span>
+                            </label>
+                            <label class="script-iso-btn" onclick="event.stopPropagation()">
+                                <input type="checkbox" onchange="syncIso('plancher', this.checked)">
+                                <span>⬇️ Plancher</span>
+                            </label>
+                            <label class="script-iso-btn" onclick="event.stopPropagation()">
+                                <input type="checkbox" onchange="syncIso('vmc', this.checked)">
+                                <span>💨 VMC</span>
+                            </label>
                         </div>
                         <div class="script-tip">Tu qualifies sans qu'il sente un questionnaire. Si &lt; 90 m², le CEE change.</div>
                     </div>
@@ -4195,6 +4244,17 @@ function syncScript(targetId, value){
     if(targetId === 'ceeSurface') { syncSurfaces('cee'); }
     if(targetId === 'scenario') { onScenarioChange(); }
     if(targetId === 'nom' || targetId === 'prenom') { checkExport(); }
+}
+
+// Sync isolation checkboxes from script → simulator
+function syncIso(value, checked){
+    var boxes = document.querySelectorAll('#isoChecklist input[name="isoWork"]');
+    boxes.forEach(function(box){
+        if(box.value === value){
+            box.checked = checked;
+        }
+    });
+    setTimeout(function(){ evalIsolation(); calcBareme(); }, 10);
 }
 
 // Update result badge in script step 7
