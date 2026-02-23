@@ -442,21 +442,31 @@
             background: linear-gradient(90deg, #34d399, #22d3ee, #818cf8);
         }
 
-        /* Parameters: auto-fit grid — 3 cols client, 4 cols fournisseur */
+        /* Parameters grid */
         .parameters-section {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 14px;
-            align-items: stretch;
+            align-items: start;
             padding-bottom: 18px;
             margin-bottom: 18px;
             border-bottom: 1px solid #e5e7eb;
         }
-        /* Stack Client + Scénario/CEE in one column */
+        /* Fournisseur: explicit 3 columns */
+        .fournisseur-mode .parameters-section {
+            grid-template-columns: 1.2fr 1.8fr 1fr;
+        }
+        /* Stack Client + CEE + MPR in one column */
         .param-col-stack {
             display: flex;
             flex-direction: column;
             gap: 14px;
+        }
+        /* Costs: 2 columns on wide screens */
+        .costs-items-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2px 14px;
         }
 
         /* Light-themed cards inside sim-panel */
@@ -1313,6 +1323,8 @@
             .view-toggle .toggle-opt { padding: 5px 10px; font-size: 12px; }
             .user-bar .btn-hist { padding: 6px 10px; font-size: 13px; }
             .user-bar .btn-logout { padding: 6px 10px; font-size: 13px; }
+            .fournisseur-mode .parameters-section { grid-template-columns: 1fr; }
+            .costs-items-grid { grid-template-columns: 1fr; }
         }
 
         /* ============ MOBILE ============ */
@@ -1341,6 +1353,8 @@
             .main-content { padding: 10px 8px; }
             .sim-panel { padding: 12px; border-radius: 12px; }
             .parameters-section { grid-template-columns: 1fr; gap: 10px; padding-bottom: 12px; margin-bottom: 12px; }
+            .fournisseur-mode .parameters-section { grid-template-columns: 1fr; }
+            .costs-items-grid { grid-template-columns: 1fr; }
             .results-sidebar { padding: 14px; border-radius: 10px; }
             .results-strip { grid-template-columns: 1fr; gap: 10px; }
             .results-bottom-strip { grid-template-columns: 1fr; gap: 10px; }

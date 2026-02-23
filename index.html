@@ -588,9 +588,7 @@
                 <div id="calcErrorDebug" style="color: red; font-size: 12px; font-weight: 600; margin-top: 8px; padding: 6px; background: #fef2f2; border-radius: 6px;"></div>
             </div><!-- /CEE card -->
 
-            </div><!-- /param-col-stack -->
-
-            <!-- ====== 2. MPR RÉSULTAT ====== -->
+            <!-- ====== 3. MPR RÉSULTAT ====== -->
             <div class="card" id="mprCard" style="display: flex; flex-direction: column; justify-content: center;">
                 <h2 class="card-title">🏛️ MaPrimeRénov'</h2>
                 <div id="mprResultBloc" style="display: none; border-radius: 10px; padding: 14px; text-align: center; transition: all 0.2s; background: #f9fafb; border: 1px solid #e5e7eb;">
@@ -616,14 +614,16 @@
                     <div id="mprInfoRFR" style="font-size: 11px; margin-top: 8px; opacity: 0.75;"></div>
                     <div id="mprInfoAide" style="font-size: 16px; font-weight: 700; margin-top: 8px; background: #ecfdf5; border-radius: 8px; padding: 8px; color: #16a34a;"></div>
                 </div>
-                <div id="mprPlaceholder" style="text-align: center; padding: 20px; opacity: 0.3; font-size: 13px;">Remplissez les infos client pour voir le profil MPR</div>
+                <div id="mprPlaceholder" style="text-align: center; padding: 12px; opacity: 0.3; font-size: 13px;">Remplissez les infos client pour voir le profil MPR</div>
             </div>
+
+            </div><!-- /param-col-stack -->
 
             <!-- ====== 4. COÛTS (fournisseur) ====== -->
             <!-- Coûts fournisseur (separate grid item) -->
             <div class="card fournisseur-only telepro-hide">
                 <h2 class="card-title">💰 Coûts</h2>
-                <div style="background: #f9fafb; padding: 10px; border-radius: 8px; margin-bottom: 8px;">
+                <div class="costs-items-grid" style="background: #f9fafb; padding: 10px; border-radius: 8px; margin-bottom: 8px;">
                     <div style="display: grid; grid-template-columns: 80px 1fr 50px 70px; gap: 4px; align-items: center; margin-bottom: 8px;">
                         <label style="color: #6b7280; font-weight: 600; font-size: 11px;">PAC Mat.</label>
                         <input type="number" id="coutPACMateriel" value="2900" step="1" oninput="updateFromDetail()" style="padding: 5px 6px; border: 1px solid #d1d5db; border-radius: 6px; font-weight: 600; text-align: right; font-size: 12px;">
