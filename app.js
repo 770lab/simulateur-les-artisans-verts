@@ -829,9 +829,9 @@ function sendMail(){
     const fullName = (prenom + ' ' + nom).trim();
     const scenario = document.getElementById('scenario').options[document.getElementById('scenario').selectedIndex].text;
 
-    const subject = `Votre projet ${scenario} - Les Artisans Verts`;
+    const subject = `Votre projet ${scenario} - Documents à transmettre - Les Artisans Verts`;
 
-    const body = `Bonjour ${fullName},\n\nNous avons bien reçu votre intérêt pour le ${scenario}.\n\nAfin de déclencher la visite de l'auditeur, nous avons besoin des éléments suivants :\n- Dernier avis d'imposition des personnes figurant sur la taxe foncière,\n- Dernière taxe foncière ou acte notarié pour les maisons achetées il y a moins d'un an,\n- Pièces d'identité recto verso des personnes figurant sur la taxe foncière,\n- Livret de famille ou à défaut les noms, prénoms et dates de naissance des personnes constituant votre foyer\n\nDès réception de ces éléments, nous pourrons transmettre votre dossier à LP AUDIT afin que vous soyez contacté(e) pour la prise de rendez-vous.\n\nDans l'attente, je reste à votre disposition pour tout renseignement complémentaire.\n\nBonne journée,`;
+    const body = `Bonjour ${fullName},\n\nSuite à notre échange téléphonique, votre projet d'installation de ${scenario} peut être éligible aux aides MaPrimeRénov'.\n\n👉 Afin de réserver votre éligibilité et lancer la constitution de votre dossier, il nous manque simplement quelques documents.\nMerci de nous les transmettre par retour de mail (photos ou scans suffisent) :\n\n• Dernier avis d'imposition de toutes les personnes figurant sur la taxe foncière\n• Dernière taxe foncière (ou acte notarié si achat de moins d'un an)\n• Pièces d'identité recto-verso des titulaires\n\n⏱️ Dès réception, nous analysons votre dossier en priorité et vous confirmons votre niveau d'aides.\n\nPlus tôt nous recevons les documents, plus vite nous pouvons sécuriser votre montant d'aides et planifier la suite de votre projet.\n\nSi vous le souhaitez, je peux également vous guider par téléphone pour l'envoi.\n\nJe reste à votre entière disposition.\n\nBien cordialement,`;
 
     window.location.href = 'mailto:?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
 }
