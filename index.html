@@ -474,8 +474,8 @@
             </div>
 
             <!-- ====== 2. SCÉNARIO / CEE ====== -->
-            <div class="card" id="ceeCard" style="padding: 0; overflow: hidden;">
-                <div id="mprCeeWrapper" style="border-radius: 12px; padding: 14px; background: #f9fafb; border: 1px solid #e5e7eb; color: #1d1d1f;">
+            <div class="card" id="ceeCard">
+                <div id="mprCeeWrapper" style="padding: 2px;">
 
                 <div style="font-size: 11px; font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">⚡ Scénario & CEE</div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 8px;">
@@ -588,7 +588,7 @@
             <!-- ====== 3. MPR RÉSULTAT ====== -->
             <div class="card" id="mprCard" style="display: flex; flex-direction: column; justify-content: center;">
                 <h2 class="card-title">🏛️ MaPrimeRénov'</h2>
-                <div id="mprResultBloc" style="display: none; border-radius: 10px; padding: 14px; text-align: center; transition: all 0.2s; background: #f9fafb; border: 1px solid #e5e7eb;">
+                <div id="mprResultBloc" style="display: none; border-radius: 10px; padding: 14px; text-align: center; transition: all 0.2s;">
                     <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 6px;">
                         <div id="mprProfilIcon" style="font-size: 28px;">🔵</div>
                         <div id="mprProfilLabel" style="font-size: 18px; font-weight: 800;">—</div>
@@ -617,7 +617,7 @@
             <!-- ====== 4. COÛTS (fournisseur) ====== -->
             <div class="card fournisseur-only telepro-hide" id="costsCard">
                 <h2 class="card-title">💰 Coûts</h2>
-                <div class="costs-items-grid" style="background: #f9fafb; padding: 10px; border-radius: 8px; margin-bottom: 8px;">
+                <div class="costs-items-grid">
                     <div style="display: grid; grid-template-columns: 80px 1fr 50px 70px; gap: 4px; align-items: center; margin-bottom: 8px;">
                         <label style="color: #6b7280; font-weight: 600; font-size: 11px;">PAC Mat.</label>
                         <input type="number" id="coutPACMateriel" value="2900" step="1" oninput="updateFromDetail()" style="padding: 5px 6px; border: 1px solid #d1d5db; border-radius: 6px; font-weight: 600; text-align: right; font-size: 12px;">
@@ -692,7 +692,7 @@
                         <input type="checkbox" id="lockCoutHT" checked onchange="calc()"> Verrouiller (auto selon scénario)
                     </label>
                 </small>
-                <div style="background: #eff6ff; border: 1px solid #bfdbfe; color: #2563eb; padding: 10px; border-radius: 8px; margin-bottom: 10px;">
+                <div style="background: #eff6ff; border: 1px solid #bfdbfe; color: #2563eb; padding: 10px; border-radius: 8px; margin-bottom: 10px; margin-top: 8px;">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <span style="font-weight: 600; font-size: 13px;">TOTAL HT</span>
                         <span style="font-size: 18px; font-weight: 700;" id="coutTotalHTDisplay">6 200 €</span>
