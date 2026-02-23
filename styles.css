@@ -442,10 +442,10 @@
             background: linear-gradient(90deg, #34d399, #22d3ee, #818cf8);
         }
 
-        /* Parameters: horizontal grid inside dark panel */
+        /* Parameters: auto-fit grid — 3 cols client, 4 cols fournisseur */
         .parameters-section {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 14px;
             align-items: start;
             padding-bottom: 18px;
@@ -543,21 +543,21 @@
         }
         .summary-card::before { display: none; }
 
-        /* Results: horizontal strip of groups */
+        /* Results: same auto-fit grid as parameters — columns align */
         .results-strip {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 16px;
-            margin-top: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 14px;
+            margin-top: 0;
         }
         .results-group { min-width: 0; }
         .results-group-hero { display: flex; flex-direction: column; }
 
-        /* Bottom strip: status + actions + docs horizontal */
+        /* Bottom strip: same grid */
         .results-bottom-strip {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 14px;
             margin-top: 16px;
             padding-top: 16px;
             border-top: 1px solid rgba(255,255,255,0.06);
@@ -664,6 +664,12 @@
             border-radius: 0;
         }
         .telepro-mode .parameters-section {
+            grid-template-columns: 1fr;
+        }
+        .telepro-mode .results-strip {
+            grid-template-columns: 1fr;
+        }
+        .telepro-mode .results-bottom-strip {
             grid-template-columns: 1fr;
         }
         @media (max-width: 900px) {
@@ -1259,14 +1265,9 @@
         }
 
         @media (max-width: 1024px) {
-            .parameters-section {
-                grid-template-columns: 1fr 1fr;
-            }
-            .results-strip {
-                grid-template-columns: 1fr 1fr;
-            }
+            /* auto-fit handles the reflow naturally at this width */
             .results-bottom-strip {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr 1fr;
             }
         }
 
