@@ -1785,6 +1785,19 @@ function subscribePush() {
         return;
     }
 
+    // iOS check: Push only works when installed as PWA
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    var isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+    if (isIOS && !isStandalone) {
+        alert('Sur iPhone, les notifications ne fonctionnent que si l\'app est installée sur l\'écran d\'accueil.\n\nAppuyez sur le bouton Partager ⬆️ puis "Sur l\'écran d\'accueil".');
+        return;
+    }
+
+    if (!('PushManager' in window)) {
+        alert('Les notifications push ne sont pas supportées par ce navigateur.');
+        return;
+    }
+
     // Wait for SW to be ready
     navigator.serviceWorker.ready.then(function(reg) {
         // Check if already subscribed
@@ -1814,10 +1827,11 @@ function subscribePush() {
                     dbg('✅ Push subscribed');
                     sendSubscriptionToServer(sub);
                     updateBellIcon(true);
+                    alert('🔔 Notifications activées !');
                 })
                 .catch(function(err) {
                     dbg('Push subscribe error: ' + err);
-                    alert('Erreur d\'activation des notifications : ' + err.message);
+                    alert('Erreur d\'activation : ' + err.message + '\n\nVérifiez que l\'app est bien installée.');
                 });
             });
         });
