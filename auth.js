@@ -202,6 +202,8 @@ function showApp(){
     try { calcBareme(); } catch(e){}
     try { syncEtas(); } catch(e){}
     try { calcDim(); } catch(e){}
+    // Retry install banner now that user is logged in
+    try { showInstallBanner(); } catch(e){}
 }
 
 function checkAutoLogin(){

@@ -1734,46 +1734,75 @@ function initPWA() {
     })
     .catch(function(err) { dbg('SW error: ' + err); });
 
-    // Capture install prompt
+    // Capture install prompt (may fire before login)
     window.addEventListener('beforeinstallprompt', function(e) {
         e.preventDefault();
         deferredInstallPrompt = e;
-        showInstallBanner();
+        showInstallBanner(); // try now, will retry after login via showApp()
     });
 }
 
 function initPush(reg) {
     if (!('PushManager' in window) || !VAPID_PUBLIC_KEY) return;
 
+    // Check if already subscribed → update bell icon
     reg.pushManager.getSubscription().then(function(sub) {
         if (sub) {
             dbg('Push already subscribed');
             sendSubscriptionToServer(sub);
+            updateBellIcon(true);
         }
     });
 }
 
-function subscribePush() {
-    if (!swRegistration || !VAPID_PUBLIC_KEY) return;
+function updateBellIcon(subscribed) {
+    var bell = document.getElementById('notifBell');
+    if (bell) bell.innerHTML = subscribed ? '🔔' : '🔕';
+}
 
-    Notification.requestPermission().then(function(permission) {
-        if (permission !== 'granted') {
-            dbg('Notification permission denied');
+function subscribePush() {
+    if (!swRegistration) {
+        alert('Service Worker non disponible. Vérifiez que vous êtes en HTTPS.');
+        return;
+    }
+    if (!VAPID_PUBLIC_KEY) {
+        alert('Clé VAPID non configurée.');
+        return;
+    }
+
+    // Check if already subscribed
+    swRegistration.pushManager.getSubscription().then(function(existingSub) {
+        if (existingSub) {
+            // Already subscribed → toggle off (unsubscribe)
+            existingSub.unsubscribe().then(function() {
+                dbg('🔕 Push unsubscribed');
+                updateBellIcon(false);
+            });
             return;
         }
 
-        var applicationServerKey = urlBase64ToUint8Array(VAPID_PUBLIC_KEY);
-        swRegistration.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: applicationServerKey
-        })
-        .then(function(sub) {
-            dbg('✅ Push subscribed');
-            sendSubscriptionToServer(sub);
-            var bell = document.getElementById('notifBell');
-            if (bell) bell.innerHTML = '🔔';
-        })
-        .catch(function(err) { dbg('Push subscribe error: ' + err); });
+        // Not subscribed → request permission and subscribe
+        Notification.requestPermission().then(function(permission) {
+            if (permission !== 'granted') {
+                alert('Notifications refusées. Activez-les dans les paramètres du navigateur.');
+                return;
+            }
+
+            var applicationServerKey = urlBase64ToUint8Array(VAPID_PUBLIC_KEY);
+            swRegistration.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: applicationServerKey
+            })
+            .then(function(sub) {
+                dbg('✅ Push subscribed');
+                sendSubscriptionToServer(sub);
+                updateBellIcon(true);
+            })
+            .catch(function(err) {
+                dbg('Push subscribe error: ' + err);
+                alert('Erreur d\'activation des notifications : ' + err.message);
+            });
+        });
     });
 }
 
@@ -1802,6 +1831,9 @@ function urlBase64ToUint8Array(base64String) {
 function showInstallBanner() {
     // Only show install banner to admin users
     if (!currentUser || currentUser.role !== 'admin') return;
+    // Already running as installed PWA? Skip.
+    if (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone) return;
+    if (!deferredInstallPrompt) return;
     var banner = document.getElementById('installBanner');
     if (banner) banner.style.display = 'flex';
 }
