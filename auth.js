@@ -7,7 +7,11 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbwP1Nu60KfLu6iKNk7SMfkJ
 const FALLBACK_USERS = {
     'ishay':   { pass:'e9138f38d979c81ca528a9a73cbd90892f7413496b076bc655ecc937325369a4', name:'Ishay', role:'admin' },
     'admin':   { pass:'6d67409383d73d798ae012bb90def775f1e6a5d878fd3857f1b3cee24793fa1f', name:'Admin', role:'admin' },
+    'yoann':   { pass:'1cf674b0d4b3038b008530bdd26fae2f205dd912ee86c0ae31981d218d1336db', name:'Yoann', role:'admin' },
+    'ben':     { pass:'82ce7ffdbfb6da41dab321cee9286e88ea8e973b6d698c3621891908613640da', name:'Ben', role:'admin' },
+    'john':    { pass:'c81539a4672d1ab486b3cbb9a7a93bbaf8f125eb437b2bf7b7d54c60f0e752b1', name:'John', role:'admin' },
     'mendy':   { pass:'9b5ba8665f66adea835f535ed91caa80e73f169bcfe0fca54f23e44d0ae874cd', name:'Mendy', role:'commercial' },
+    'jean':    { pass:'51779e67e9af1ddcb546b19a7192b65525fbe5b8166bb60f0165b17d804f8bc1', name:'Jean Christophe', role:'commercial' },
     'david':   { pass:'b19a7bb33c9d8023f64d00e475416f8feeccca95ab79875095c5db7733b750b0', name:'David', role:'commercial' },
     'sarah':   { pass:'f089f023579c7bd9f176065938e9858f03767564c3f0992cdaeedbc42bd5f38a', name:'Sarah', role:'commercial' },
     'marc':    { pass:'34fb0e105bf277a0e0350e881e42b1b355f1b4cf893e767b0fab57a6545420ea', name:'Marc', role:'commercial' },
