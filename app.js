@@ -859,6 +859,8 @@ function exportPDF(mode){
     // Client info
     document.getElementById('printNom').textContent = fullName;
     document.getElementById('printDept').textContent = document.getElementById('departement').value || '—';
+    var phaseVal = document.getElementById('phase').value;
+    document.getElementById('printPhase').textContent = phaseVal === 'mono' ? 'Monophasé' : phaseVal === 'tri' ? 'Triphasé' : '—';
     const zoneEl = document.getElementById('zone');
     document.getElementById('printZone').textContent = zoneEl ? zoneEl.value : '—';
     const foyerEl = document.getElementById('foyer');
@@ -1798,6 +1800,8 @@ function urlBase64ToUint8Array(base64String) {
 }
 
 function showInstallBanner() {
+    // Only show install banner to admin users
+    if (!currentUser || currentUser.role !== 'admin') return;
     var banner = document.getElementById('installBanner');
     if (banner) banner.style.display = 'flex';
 }

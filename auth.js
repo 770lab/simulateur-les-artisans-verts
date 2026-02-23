@@ -193,7 +193,7 @@ function showApp(){
         document.getElementById('btnHistory').style.display = isAdmin ? '' : 'none';
         document.getElementById('btnPwd').style.display = isAdmin ? '' : 'none';
         var notifBtn = document.getElementById('btnNotif');
-        if (notifBtn) notifBtn.style.display = '';
+        if (notifBtn) notifBtn.style.display = isAdmin ? '' : 'none';
     }
 
     try { updateSurfaceOptions(); } catch(e){}
