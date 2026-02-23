@@ -1,4 +1,4 @@
-        * {
+* {
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
@@ -520,7 +520,6 @@
         }
         
         /* Telepro: hide cards they don't need */
-        .telepro-mode #baremeCard,
         .telepro-mode #coutHTCard,
         .telepro-mode .cee-kpi-row,
         .telepro-mode #ceeResult,
@@ -1217,4 +1216,3 @@
         .hist-empty { text-align:center; color:#9ca3af; padding:30px 0; }
         .hist-clear { margin-top:12px; text-align:center; }
         .hist-clear button { font-size:12px; color:#dc2626; background:none; border:1px solid #fecaca; padding:4px 12px; border-radius:6px; cursor:pointer; }
-
