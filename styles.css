@@ -1,4 +1,4 @@
-        * {
+* {
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
@@ -1160,15 +1160,15 @@
             .header-left { gap: 6px; flex-shrink: 0; }
             .header-logo-img { height: 28px; }
             .header-title { display: none; }
-            .header-right { flex: 1; min-width: 0; }
+            .header-right { flex: 1; min-width: 0; overflow: hidden; }
             
             .user-bar { gap: 4px; }
-            .user-bar-top { gap: 6px; }
-            .user-bar .user-name { font-size: 12px; }
-            .user-bar .user-role { font-size: 9px; padding: 2px 6px; }
-            .user-bar-actions { gap: 3px; }
-            .user-bar .btn-hist { padding: 5px 7px; font-size: 12px; }
-            .user-bar .btn-logout { padding: 5px 8px; font-size: 12px; }
+            .user-bar-top { gap: 4px; flex-wrap: nowrap; overflow: hidden; }
+            .user-bar .user-name { font-size: 11px; overflow: hidden; text-overflow: ellipsis; }
+            .user-bar .user-role { font-size: 8px; padding: 2px 5px; }
+            .user-bar-actions { gap: 2px; flex-shrink: 0; }
+            .user-bar .btn-hist { padding: 4px 6px; font-size: 11px; border-radius: 6px; min-width: 0; }
+            .user-bar .btn-logout { padding: 4px 6px; font-size: 11px; border-radius: 6px; }
             .view-toggle .toggle-opt { padding: 5px 10px; font-size: 11px; }
             
             .guest-bar { justify-content: center; }
@@ -1240,4 +1240,3 @@
         .hist-empty { text-align:center; color:#9ca3af; padding:30px 0; }
         .hist-clear { margin-top:12px; text-align:center; }
         .hist-clear button { font-size:12px; color:#dc2626; background:none; border:1px solid #fecaca; padding:4px 12px; border-radius:6px; cursor:pointer; }
-
