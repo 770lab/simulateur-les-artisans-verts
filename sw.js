@@ -3,7 +3,7 @@
 // Les Artisans Verts © 2026
 // ============================================
 
-const CACHE_NAME = 'pac-sim-v1';
+const CACHE_NAME = 'pac-sim-v2';
 const ASSETS = [
   './',
   './index.html',
@@ -19,12 +19,12 @@ const ASSETS = [
 
 // Install — cache les fichiers
 self.addEventListener('install', function(event) {
+  self.skipWaiting(); // Force activation immédiate
   event.waitUntil(
     caches.open(CACHE_NAME).then(function(cache) {
       return cache.addAll(ASSETS);
     })
   );
-  self.skipWaiting();
 });
 
 // Activate — nettoie les anciens caches
@@ -35,9 +35,10 @@ self.addEventListener('activate', function(event) {
         names.filter(function(n) { return n !== CACHE_NAME; })
              .map(function(n) { return caches.delete(n); })
       );
+    }).then(function() {
+      return self.clients.claim(); // Prend le contrôle immédiatement
     })
   );
-  self.clients.claim();
 });
 
 // Fetch — network first, fallback to cache
