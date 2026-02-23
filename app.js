@@ -1745,13 +1745,15 @@ function initPWA() {
 function initPush(reg) {
     if (!('PushManager' in window) || !VAPID_PUBLIC_KEY) return;
 
-    // Check if already subscribed → update bell icon
-    reg.pushManager.getSubscription().then(function(sub) {
-        if (sub) {
-            dbg('Push already subscribed');
-            sendSubscriptionToServer(sub);
-            updateBellIcon(true);
-        }
+    // Wait for active SW before checking subscription
+    navigator.serviceWorker.ready.then(function(activeReg) {
+        activeReg.pushManager.getSubscription().then(function(sub) {
+            if (sub) {
+                dbg('Push already subscribed');
+                sendSubscriptionToServer(sub);
+                updateBellIcon(true);
+            }
+        });
     });
 }
 
@@ -1761,48 +1763,49 @@ function updateBellIcon(subscribed) {
 }
 
 function subscribePush() {
-    if (!swRegistration) {
-        alert('Service Worker non disponible. Vérifiez que vous êtes en HTTPS.');
-        return;
-    }
     if (!VAPID_PUBLIC_KEY) {
         alert('Clé VAPID non configurée.');
         return;
     }
 
-    // Check if already subscribed
-    swRegistration.pushManager.getSubscription().then(function(existingSub) {
-        if (existingSub) {
-            // Already subscribed → toggle off (unsubscribe)
-            existingSub.unsubscribe().then(function() {
-                dbg('🔕 Push unsubscribed');
-                updateBellIcon(false);
-            });
-            return;
-        }
-
-        // Not subscribed → request permission and subscribe
-        Notification.requestPermission().then(function(permission) {
-            if (permission !== 'granted') {
-                alert('Notifications refusées. Activez-les dans les paramètres du navigateur.');
+    // Wait for SW to be ready
+    navigator.serviceWorker.ready.then(function(reg) {
+        // Check if already subscribed
+        reg.pushManager.getSubscription().then(function(existingSub) {
+            if (existingSub) {
+                // Already subscribed → toggle off (unsubscribe)
+                existingSub.unsubscribe().then(function() {
+                    dbg('🔕 Push unsubscribed');
+                    updateBellIcon(false);
+                });
                 return;
             }
 
-            var applicationServerKey = urlBase64ToUint8Array(VAPID_PUBLIC_KEY);
-            swRegistration.pushManager.subscribe({
-                userVisibleOnly: true,
-                applicationServerKey: applicationServerKey
-            })
-            .then(function(sub) {
-                dbg('✅ Push subscribed');
-                sendSubscriptionToServer(sub);
-                updateBellIcon(true);
-            })
-            .catch(function(err) {
-                dbg('Push subscribe error: ' + err);
-                alert('Erreur d\'activation des notifications : ' + err.message);
+            // Not subscribed → request permission and subscribe
+            Notification.requestPermission().then(function(permission) {
+                if (permission !== 'granted') {
+                    alert('Notifications refusées. Activez-les dans les paramètres du navigateur.');
+                    return;
+                }
+
+                var applicationServerKey = urlBase64ToUint8Array(VAPID_PUBLIC_KEY);
+                reg.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: applicationServerKey
+                })
+                .then(function(sub) {
+                    dbg('✅ Push subscribed');
+                    sendSubscriptionToServer(sub);
+                    updateBellIcon(true);
+                })
+                .catch(function(err) {
+                    dbg('Push subscribe error: ' + err);
+                    alert('Erreur d\'activation des notifications : ' + err.message);
+                });
             });
         });
+    }).catch(function(err) {
+        alert('Service Worker non disponible. Rechargez la page et réessayez.');
     });
 }
 
