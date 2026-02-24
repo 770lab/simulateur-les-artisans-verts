@@ -327,11 +327,12 @@
 
         .header {
             background: white;
-            padding: 10px 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 0;
+            box-shadow: 0 1px 8px rgba(0,0,0,0.06);
             position: sticky;
             top: 0;
             z-index: 100;
+            border-bottom: 1px solid #e5e7eb;
         }
         .header-row {
             display: flex;
@@ -339,37 +340,48 @@
             justify-content: space-between;
             max-width: 1400px;
             margin: 0 auto;
-            padding: 0 20px;
-            gap: 16px;
+            padding: 10px 24px;
+            gap: 20px;
         }
         .header-left {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             flex-shrink: 0;
         }
         .header-logo-img {
-            height: 40px;
+            height: 48px;
             width: auto;
             flex-shrink: 0;
         }
         .header-title {
-            font-size: 20px;
-            font-weight: 700;
+            font-size: 22px;
+            font-weight: 800;
             color: #1d1d1f;
             line-height: 1.2;
             white-space: nowrap;
+            letter-spacing: -0.3px;
         }
         .header-title-green {
             color: #16a34a;
-            font-weight: 700;
+            font-weight: 800;
+        }
+        .header-center {
+            flex: 1;
+            display: flex;
+            justify-content: center;
         }
         .header-right {
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            flex: 1;
-            min-width: 0;
+            flex-shrink: 0;
+        }
+        .header-divider {
+            width: 1px;
+            height: 24px;
+            background: #e5e7eb;
+            margin: 0 4px;
         }
 
         .container {
@@ -1364,11 +1376,13 @@
         /* ============ TABLET / LANDSCAPE ============ */
         @media (max-width: 900px) {
             .header-title { font-size: 17px; }
-            .header-right { flex: 1; min-width: 0; }
+            .header-logo-img { height: 36px; }
+            .header-row { gap: 10px; padding: 8px 16px; }
             .user-bar { gap: 6px; }
-            .view-toggle .toggle-opt { padding: 5px 10px; font-size: 12px; }
-            .user-bar .btn-hist { padding: 6px 10px; font-size: 13px; }
-            .user-bar .btn-logout { padding: 6px 10px; font-size: 13px; }
+            .user-bar .user-name { font-size: 13px; }
+            .btn-icon { width: 32px; height: 32px; font-size: 14px; }
+            .header-divider { display: none; }
+            .view-toggle .toggle-opt { padding: 5px 10px; font-size: 11px; }
             .costs-items-grid { grid-template-columns: 1fr; }
             .sim-panel { grid-template-columns: 1fr; }
             .results-sidebar { margin-left: 0; margin-top: 12px; }
@@ -1377,22 +1391,22 @@
         /* ============ MOBILE ============ */
         @media (max-width: 600px) {
             html, body { overflow-x: hidden; }
-            /* Header: 3 lines on mobile */
-            .header { padding: 6px 0; }
-            .header-row { flex-direction: column; padding: 0 10px; gap: 4px; align-items: stretch; }
-            .header-left { justify-content: center; gap: 8px; padding-bottom: 4px; border-bottom: 1px solid #f0f0f0; }
-            .header-logo-img { height: 28px; }
+            /* Header: stacked on mobile */
+            .header { padding: 0; }
+            .header-row { flex-wrap: wrap; padding: 8px 12px; gap: 6px; }
+            .header-left { gap: 8px; }
+            .header-logo-img { height: 32px; }
             .header-title { font-size: 15px; }
-            .header-right { width: 100%; }
+            .header-center { flex: 0 0 100%; order: 3; justify-content: stretch; }
+            .header-center .view-toggle { width: 100%; }
+            .header-right { order: 2; }
             
-            .user-bar { gap: 4px; width: 100%; }
-            .user-bar-top { gap: 6px; flex-wrap: wrap; justify-content: center; }
+            .user-bar { gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
             .user-bar .user-name { font-size: 12px; }
             .user-bar .user-role { font-size: 9px; padding: 2px 6px; }
             .user-bar-actions { gap: 3px; }
-            .user-bar .btn-hist { padding: 5px 8px; font-size: 12px; border-radius: 6px; min-width: 0; }
-            .user-bar .btn-logout { padding: 5px 8px; font-size: 12px; border-radius: 6px; }
-            .view-toggle { width: 100%; }
+            .btn-icon { width: 30px; height: 30px; font-size: 13px; border-radius: 6px; }
+            .header-divider { display: none; }
             .view-toggle .toggle-opt { padding: 6px 12px; font-size: 12px; flex: 1; }
             
             .guest-bar { justify-content: center; }
@@ -1433,15 +1447,14 @@
         .login-logo img { height:80px; width:auto; }
 
         /* USER BAR */
-        .user-bar { display:flex; flex-direction:column; align-items:stretch; gap:6px; }
-        .user-bar-top { display:flex; align-items:center; gap:10px; }
-        .user-bar-actions { display:flex; align-items:center; gap:4px; margin-left:auto; }
+        .user-bar { display:flex; align-items:center; gap:10px; }
+        .user-bar-actions { display:flex; align-items:center; gap:4px; }
         .user-bar .user-name { font-size:14px; color:#1f2937; font-weight:700; white-space:nowrap; }
-        .user-bar .user-role { font-size:11px; color:white; background:#16a34a; padding:3px 10px; border-radius:5px; font-weight:700; white-space:nowrap; }
-        .user-bar .btn-hist { padding:8px 12px; font-size:14px; background:#f3f4f6; border:1px solid #d1d5db; border-radius:8px; cursor:pointer; font-weight:600; color:#374151; transition:all 0.2s; display:flex; align-items:center; justify-content:center; }
-        .user-bar .btn-hist:hover { background:#e5e7eb; }
-        .user-bar .btn-logout { padding:6px 8px; font-size:14px; background:#fef2f2; border:1px solid #fecaca; border-radius:8px; cursor:pointer; color:#dc2626; transition:all 0.2s; white-space:nowrap; display:flex; align-items:center; justify-content:center; }
-        .user-bar .btn-logout:hover { background:#fee2e2; }
+        .user-bar .user-role { font-size:10px; color:white; background:#16a34a; padding:3px 10px; border-radius:20px; font-weight:700; white-space:nowrap; text-transform:uppercase; letter-spacing:0.5px; }
+        .btn-icon { width:36px; height:36px; display:flex; align-items:center; justify-content:center; font-size:16px; background:#f3f4f6; border:1px solid #e5e7eb; border-radius:8px; cursor:pointer; color:#374151; transition:all 0.2s; padding:0; }
+        .btn-icon:hover { background:#e5e7eb; transform:translateY(-1px); }
+        .btn-icon-danger { background:#fef2f2; border-color:#fecaca; color:#dc2626; }
+        .btn-icon-danger:hover { background:#fee2e2; }
         .guest-bar { display:flex; align-items:center; gap:8px; }
         .guest-bar .btn-login-small { padding:8px 16px; font-size:14px; background:linear-gradient(135deg,#16a34a,#15803d); color:white; border:none; border-radius:8px; cursor:pointer; font-weight:700; }
 
