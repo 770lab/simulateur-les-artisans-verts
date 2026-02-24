@@ -1173,18 +1173,11 @@ function updateGesteCoDisplay(){
     const offert = parseInt(document.getElementById('racOffert').value) || 0;
     const montantEl = document.getElementById('gesteCoMontant');
     const montantInput = document.getElementById('gesteCoMontantInput');
-    const finalLine = document.getElementById('racFinalLine');
     if(montantInput) montantInput.value = offert > 0 ? offert : 0;
     if(pct > 0 && offert > 0){
         montantEl.textContent = '−' + offert.toLocaleString('fr-FR') + ' €';
-        const racText = document.getElementById('resteCharge').textContent;
-        const racVal = parseInt(racText.replace(/[^\d-]/g,'')) || 0;
-        const racFinal = Math.max(0, racVal - offert);
-        finalLine.style.display = 'block';
-        finalLine.innerHTML = 'Après geste : <strong style="color:#fbbf24;">' + racFinal.toLocaleString('fr-FR') + ' €</strong>';
     } else {
         montantEl.textContent = '—';
-        finalLine.style.display = 'none';
     }
 }
 
