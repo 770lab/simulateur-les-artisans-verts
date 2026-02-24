@@ -1947,8 +1947,9 @@ function saveSimulation() {
     // Show saving state
     var btn = document.getElementById('btnSave');
     var originalText = btn.innerHTML;
-    btn.innerHTML = '⏳ Enregistrement...';
+    btn.innerHTML = '⏳ Enregistrement en cours...';
     btn.disabled = true;
+    showToast('⏳ Enregistrement en cours...', 'loading');
     
     // Hide previous folder link
     document.getElementById('saveResult').style.display = 'none';
@@ -1956,18 +1957,22 @@ function saveSimulation() {
     // Send to Apps Script
     fetch(UPLOAD_SCRIPT_URL, {
         method: 'POST',
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
+        redirect: 'follow'
     })
     .then(function(r) { return r.json(); })
     .then(function(result) {
         if (result.success) {
-            btn.innerHTML = '✅ Enregistré — ' + clientName;
+            btn.innerHTML = '✅ Enregistré !';
             btn.style.borderColor = 'rgba(52,211,153,0.8)';
             
             // Show folder link
             if (result.folderUrl) {
                 document.getElementById('saveFolderLink').href = result.folderUrl;
                 document.getElementById('saveResult').style.display = 'block';
+                showToast('✅ Dossier "' + clientName + '" enregistré !', 'success', result.folderUrl);
+            } else {
+                showToast('✅ Simulation "' + clientName + '" enregistrée !', 'success');
             }
             
             setTimeout(function() {
@@ -1976,17 +1981,74 @@ function saveSimulation() {
                 btn.style.borderColor = '';
             }, 5000);
         } else {
-            throw new Error(result.error || 'Erreur');
+            throw new Error(result.error || 'Erreur inconnue');
         }
     })
     .catch(function(err) {
         btn.innerHTML = '❌ Erreur';
-        alert('Erreur d\'enregistrement : ' + err.message);
+        showToast('❌ Erreur : ' + err.message, 'error');
         setTimeout(function() {
             btn.innerHTML = originalText;
             btn.disabled = false;
-        }, 2000);
+        }, 3000);
     });
+}
+
+// Toast notification system
+function showToast(message, type, folderUrl) {
+    // Remove existing toast
+    var existing = document.getElementById('simToast');
+    if (existing) existing.remove();
+    
+    var toast = document.createElement('div');
+    toast.id = 'simToast';
+    toast.style.cssText = 'position:fixed; top:20px; left:50%; transform:translateX(-50%); z-index:99999; padding:16px 24px; border-radius:14px; font-size:15px; font-weight:700; box-shadow:0 8px 32px rgba(0,0,0,0.3); display:flex; flex-direction:column; align-items:center; gap:8px; max-width:90vw; text-align:center; animation:toastSlide 0.3s ease;';
+    
+    if (type === 'success') {
+        toast.style.background = 'linear-gradient(135deg, #065f46, #047857)';
+        toast.style.color = '#d1fae5';
+        toast.style.border = '1px solid rgba(52,211,153,0.4)';
+    } else if (type === 'error') {
+        toast.style.background = 'linear-gradient(135deg, #7f1d1d, #991b1b)';
+        toast.style.color = '#fecaca';
+        toast.style.border = '1px solid rgba(239,68,68,0.4)';
+    } else {
+        toast.style.background = 'linear-gradient(135deg, #1e3a5f, #1e40af)';
+        toast.style.color = '#bfdbfe';
+        toast.style.border = '1px solid rgba(59,130,246,0.4)';
+    }
+    
+    var text = document.createElement('span');
+    text.textContent = message;
+    toast.appendChild(text);
+    
+    if (folderUrl) {
+        var link = document.createElement('a');
+        link.href = folderUrl;
+        link.target = '_blank';
+        link.textContent = '📁 Ouvrir le dossier Drive';
+        link.style.cssText = 'color:#6ee7b7; font-size:13px; text-decoration:underline; cursor:pointer;';
+        toast.appendChild(link);
+    }
+    
+    document.body.appendChild(toast);
+    
+    // Add animation style
+    if (!document.getElementById('toastStyle')) {
+        var style = document.createElement('style');
+        style.id = 'toastStyle';
+        style.textContent = '@keyframes toastSlide { from { opacity:0; transform:translateX(-50%) translateY(-20px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }';
+        document.head.appendChild(style);
+    }
+    
+    // Auto dismiss (not for loading)
+    if (type !== 'loading') {
+        setTimeout(function() {
+            toast.style.transition = 'opacity 0.5s';
+            toast.style.opacity = '0';
+            setTimeout(function() { toast.remove(); }, 500);
+        }, type === 'error' ? 5000 : 6000);
+    }
 }
 
 // ============================================
