@@ -3,7 +3,7 @@
 // Les Artisans Verts © 2026
 // ============================================
 
-const CACHE_NAME = 'pac-sim-v24';
+const CACHE_NAME = 'pac-sim-v25';
 const ASSETS = [
   './',
   './index.html',
@@ -17,12 +17,18 @@ const ASSETS = [
   './icon-512.png'
 ];
 
-// Install — cache les fichiers
+// Install — cache les fichiers (tolère les fichiers manquants)
 self.addEventListener('install', function(event) {
-  self.skipWaiting(); // Force activation immédiate
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then(function(cache) {
-      return cache.addAll(ASSETS);
+      return Promise.all(
+        ASSETS.map(function(url) {
+          return cache.add(url).catch(function(err) {
+            console.warn('SW: skip cache for ' + url + ' — ' + err.message);
+          });
+        })
+      );
     })
   );
 });
@@ -41,12 +47,14 @@ self.addEventListener('activate', function(event) {
   );
 });
 
-// Fetch — network first, fallback to cache
+// Fetch — network first, fallback to cache (GET only)
 self.addEventListener('fetch', function(event) {
+  // Skip non-GET requests (POST, etc.) — can't cache those
+  if (event.request.method !== 'GET') return;
+  
   event.respondWith(
     fetch(event.request)
       .then(function(response) {
-        // Met à jour le cache
         var clone = response.clone();
         caches.open(CACHE_NAME).then(function(cache) {
           cache.put(event.request, clone);

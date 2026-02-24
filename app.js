@@ -801,12 +801,12 @@ function checkExport(){
     const wBtn=document.getElementById('whatsappBtn');
     const hint=document.getElementById('exportHint');
     if(nom&&prenom){
-        btn.disabled=false; btn.style.cursor='pointer'; btn.style.opacity='1';
-        wBtn.disabled=false; wBtn.style.cursor='pointer'; wBtn.style.opacity='1';
+        if(btn){btn.disabled=false; btn.style.cursor='pointer'; btn.style.opacity='1';}
+        if(wBtn){wBtn.disabled=false; wBtn.style.cursor='pointer'; wBtn.style.opacity='1';}
         if(hint) hint.style.display='none';
     }else{
-        btn.disabled=true; btn.style.cursor='not-allowed'; btn.style.opacity='0.5';
-        wBtn.disabled=true; wBtn.style.cursor='not-allowed'; wBtn.style.opacity='0.5';
+        if(btn){btn.disabled=true; btn.style.cursor='not-allowed'; btn.style.opacity='0.5';}
+        if(wBtn){wBtn.disabled=true; wBtn.style.cursor='not-allowed'; wBtn.style.opacity='0.5';}
         if(hint) hint.style.display='block';
     }
 }
@@ -1922,25 +1922,25 @@ function saveSimulation() {
         client: {
             nom: nom,
             prenom: prenom,
-            departement: document.getElementById('departement').value || '',
-            rfr: document.getElementById('rfr').value || '',
-            foyer: document.getElementById('foyer').value || '',
-            elec: document.getElementById('typeElec')?.value || '',
-            construction: document.getElementById('construction')?.value || ''
+            departement: (document.getElementById('departement') || {}).value || '',
+            rfr: (document.getElementById('rfr') || {}).value || '',
+            foyer: (document.getElementById('nbPersonnes') || {}).value || '',
+            elec: (document.getElementById('typeElec') || {}).value || '',
+            construction: (document.getElementById('construction') || {}).value || ''
         },
         scenario: {
-            type: document.getElementById('scenario').value || '',
-            etas: document.getElementById('etas').value || '',
-            surface: document.getElementById('surface').value || ''
+            type: (document.getElementById('scenario') || {}).value || '',
+            etas: (document.getElementById('etas') || {}).value || '',
+            surface: (document.getElementById('surface') || {}).value || ''
         },
         resultats: {
-            totalTTC: document.getElementById('totalTTC')?.textContent || document.getElementById('totalTTCInput')?.value || '',
-            totalHT: document.getElementById('displayCoutHT')?.textContent || document.getElementById('totalHT')?.textContent || '',
-            mpr: document.getElementById('aidesMPR')?.textContent || '',
-            cee: document.getElementById('aidesCEE')?.textContent || '',
-            totalAides: document.getElementById('totalAides')?.textContent || '',
-            rac: document.getElementById('racAmount')?.textContent || '',
-            marge: document.getElementById('margeDisplay')?.textContent || ''
+            totalTTC: (document.getElementById('totalTTC') || {}).textContent || (document.getElementById('totalTTCInput') || {}).value || '',
+            totalHT: (document.getElementById('displayCoutHT') || {}).textContent || (document.getElementById('totalHT') || {}).textContent || '',
+            mpr: (document.getElementById('aidesMPR') || {}).textContent || '',
+            cee: (document.getElementById('aidesCEE') || {}).textContent || '',
+            totalAides: (document.getElementById('totalAides') || {}).textContent || '',
+            rac: (document.getElementById('racAmount') || {}).textContent || '',
+            marge: (document.getElementById('margeDisplay') || {}).textContent || ''
         }
     };
     
