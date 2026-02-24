@@ -553,6 +553,13 @@ function calc(){
     document.getElementById('scenarioSummary').innerHTML = summaryHTML;
     document.getElementById('scenarioSummary').style.borderLeftColor=borderColor;
     
+    // Recalculate RAC offert based on current percentage and new rb
+    var currentPct = parseFloat(document.getElementById('racPourcent').value) || 0;
+    if(currentPct > 0) {
+        var newOffert = Math.round(rb * (currentPct / 100));
+        document.getElementById('racOffert').value = Math.max(0, newOffert);
+    }
+    
     calcRAC(rb,chForMarge,ta,taForMarge,tt);
     syncGesteCoFromAdmin();
     if(typeof dbg==='function') dbg('calc: sc='+sc+' ct='+ct+' ad='+ad+' ce='+ce+' ch='+ch+' chFM='+chForMarge+' tt='+tt+' rb='+rb+' taFM='+taForMarge);
