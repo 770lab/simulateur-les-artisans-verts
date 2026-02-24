@@ -1954,7 +1954,16 @@ function saveSimulation() {
     // Hide previous folder link
     document.getElementById('saveResult').style.display = 'none';
     
-    // Send to Apps Script (no-cors = opaque response, like upload)
+    // Save locally in the simulator
+    try {
+        var saved = JSON.parse(localStorage.getItem('pac_simulations') || '[]');
+        saved.push(data);
+        if (saved.length > 50) saved = saved.slice(-50); // Keep last 50
+        localStorage.setItem('pac_simulations', JSON.stringify(saved));
+        localStorage.setItem('pac_last_simulation', JSON.stringify(data));
+    } catch(e) { /* localStorage may be unavailable */ }
+    
+    // Send to Apps Script
     fetch(UPLOAD_SCRIPT_URL, {
         method: 'POST',
         mode: 'no-cors',
@@ -1962,10 +1971,9 @@ function saveSimulation() {
         body: JSON.stringify(data)
     })
     .then(function() {
-        // no-cors = opaque response, on assume succès
         btn.innerHTML = '✅ Enregistré — ' + clientName;
         btn.style.borderColor = 'rgba(52,211,153,0.8)';
-        showToast('✅ Dossier "' + clientName + '" enregistré sur Google Drive !', 'success');
+        showToast('✅ Simulation "' + clientName + '" enregistrée !', 'success');
         
         setTimeout(function() {
             btn.innerHTML = originalText;
