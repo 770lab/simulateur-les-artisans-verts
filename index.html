@@ -702,7 +702,12 @@
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
                     <div class="form-group" style="margin-bottom: 0;">
                         <label for="prixCumac" style="font-size: 10px;">Prix cumac (€/MWhc)</label>
-                        <input type="number" id="prixCumac" value="12.5" step="0.01" oninput="calc()" style="font-weight: 600;">
+                        <input type="number" id="prixCumac" value="12.5" step="0.5" min="0" readonly oninput="calcCEEDetail(); calc();" onchange="calcCEEDetail(); calc();" style="font-weight: 600; opacity: 0.6;">
+                        <small style="font-size: 11px; color: rgba(0,0,0,0.4); margin-top: 4px; display: block;">
+                            <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
+                                <input type="checkbox" id="lockCumac" checked onchange="toggleLockCumac()"> Verrouiller
+                            </label>
+                        </small>
                     </div>
                     <div class="form-group" style="margin-bottom: 0;">
                         <label style="font-size: 10px;">kWh cumac</label>

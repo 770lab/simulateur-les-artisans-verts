@@ -304,6 +304,23 @@ function updateFromTTC(){
     calc();
 }
 
+function toggleLockCumac(){
+    var locked = document.getElementById('lockCumac').checked;
+    var input = document.getElementById('prixCumac');
+    if(locked){
+        // Re-sync from ménage category
+        var menageVal = document.getElementById('menageCEE').value;
+        input.value = (menageVal === 'tm') ? 12.5 : 7.5;
+        input.readOnly = true;
+        input.style.opacity = '0.6';
+    } else {
+        input.readOnly = false;
+        input.style.opacity = '1';
+    }
+    calcCEEDetail();
+    calc();
+}
+
 function updateFromDetail(){
     document.getElementById('lockCoutHT').checked=false;
     
@@ -492,6 +509,13 @@ function calc(){
     taForMarge = ad + ceForMarge;
     
     if(mode){
+        // Auto-sync prixCumac if locked
+        var lockCumac = document.getElementById('lockCumac');
+        if(lockCumac && lockCumac.checked){
+            var menageVal = document.getElementById('menageCEE').value;
+            var pxAuto = (menageVal === 'tm') ? 12.5 : 7.5;
+            document.getElementById('prixCumac').value = pxAuto;
+        }
         document.getElementById('kwhCumac').value=Math.round(lastCEEDetailKwhc).toLocaleString('fr-FR');
     }
     
