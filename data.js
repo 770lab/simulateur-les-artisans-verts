@@ -5,7 +5,7 @@
 
 // URL du Google Apps Script pour l'upload de documents
 // → À remplacer par l'URL de déploiement (voir google-apps-script-upload.js)
-var UPLOAD_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzMHunMorVZcG6caZLsKuJgjGAEWgpL7rJOaaiARbJR59DdaE_fFp483WWWXkgbB57TAw/exec';
+var UPLOAD_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxDlt0epmyZbXSHHw__bA1XZsSMnTH9WApi7zQOCUKiZbBsKLPqi75JdPR14y1mqlfrxg/exec';
 
 // Clé publique VAPID pour les notifications push
 var VAPID_PUBLIC_KEY = 'BPCzvYHBwJ78-QKT67mfnRAyMwPqdiQO1gxlyQOFfb_L-W6jeWRS1WhPaO28DerABQvwx84xPbyq-MNLmyS0-vQ';
