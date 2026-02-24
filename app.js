@@ -171,7 +171,7 @@ function calcCEEDetail() {
     const sc = document.getElementById('scenario').value;
     const zn = document.getElementById('zone').value;
     const menage = document.getElementById('menageCEE').value;
-    const price = mode ? (CEE_PRICE[menage] || CEE_PRICE.autres) : 6.5;
+    const price = mode ? (parseFloat(document.getElementById('prixCumac').value) || CEE_PRICE.autres) : 6.5;
     const tl = document.getElementById('typeLogement').value;
     const surfaceVal = document.getElementById('surface').value;
     const coefS = getSurfaceCoef(surfaceVal);
@@ -492,10 +492,6 @@ function calc(){
     taForMarge = ad + ceForMarge;
     
     if(mode){
-        // Sync prixCumac with ménage CEE category
-        const menageVal = document.getElementById('menageCEE').value;
-        const pxAuto = (menageVal === 'tm') ? 12.5 : 7.5;
-        document.getElementById('prixCumac').value = pxAuto;
         document.getElementById('kwhCumac').value=Math.round(lastCEEDetailKwhc).toLocaleString('fr-FR');
     }
     
