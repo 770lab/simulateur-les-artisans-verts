@@ -171,7 +171,7 @@ function calcCEEDetail() {
     const sc = document.getElementById('scenario').value;
     const zn = document.getElementById('zone').value;
     const menage = document.getElementById('menageCEE').value;
-    const price = CEE_PRICE[menage] || CEE_PRICE.autres;
+    const price = mode ? (CEE_PRICE[menage] || CEE_PRICE.autres) : 6.5;
     const tl = document.getElementById('typeLogement').value;
     const surfaceVal = document.getElementById('surface').value;
     const coefS = getSurfaceCoef(surfaceVal);
