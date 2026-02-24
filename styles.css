@@ -1143,6 +1143,17 @@
             border-color: rgba(59,130,246,0.25);
             color: rgba(147,197,253,0.9);
         }
+        .btn-dark-export.save-btn {
+            background: rgba(52,211,153,0.15);
+            border-color: rgba(52,211,153,0.3);
+            color: #34d399;
+            font-size: 14px;
+        }
+        .btn-dark-export.save-btn:hover {
+            background: rgba(52,211,153,0.25);
+            border-color: rgba(52,211,153,0.5);
+            color: #6ee7b7;
+        }
 
         .summary-header {
             font-size: 12px;

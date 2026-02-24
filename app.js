@@ -1898,6 +1898,86 @@ function showLocalNotif(title, body) {
 }
 
 // ============================================
+// SAVE SIMULATION
+// ============================================
+
+function saveSimulation() {
+    var nom = (document.getElementById('nom').value || '').trim();
+    var prenom = (document.getElementById('prenom').value || '').trim();
+    
+    if (!nom && !prenom) {
+        alert('Remplissez au moins le nom du client avant d\'enregistrer.');
+        return;
+    }
+    
+    var clientName = (prenom ? prenom + ' ' : '') + nom;
+    
+    // Collect all simulation data
+    var data = {
+        action: 'save_simulation',
+        timestamp: new Date().toISOString(),
+        savedBy: currentUser || 'inconnu',
+        client: {
+            nom: nom,
+            prenom: prenom,
+            departement: document.getElementById('departement').value || '',
+            rfr: document.getElementById('rfr').value || '',
+            foyer: document.getElementById('foyer').value || '',
+            elec: document.getElementById('typeElec')?.value || '',
+            construction: document.getElementById('construction')?.value || ''
+        },
+        scenario: {
+            type: document.getElementById('scenario').value || '',
+            etas: document.getElementById('etas').value || '',
+            surface: document.getElementById('surface').value || ''
+        },
+        resultats: {
+            totalTTC: document.getElementById('totalTTC')?.textContent || document.getElementById('totalTTCInput')?.value || '',
+            totalHT: document.getElementById('displayCoutHT')?.textContent || document.getElementById('totalHT')?.textContent || '',
+            mpr: document.getElementById('aidesMPR')?.textContent || '',
+            cee: document.getElementById('aidesCEE')?.textContent || '',
+            totalAides: document.getElementById('totalAides')?.textContent || '',
+            rac: document.getElementById('racAmount')?.textContent || '',
+            marge: document.getElementById('margeDisplay')?.textContent || ''
+        }
+    };
+    
+    // Show saving state
+    var btn = event.target.closest('.save-btn');
+    var originalText = btn.innerHTML;
+    btn.innerHTML = '⏳ Enregistrement...';
+    btn.disabled = true;
+    
+    // Send to Apps Script
+    fetch(UPLOAD_SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify(data)
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(result) {
+        if (result.success) {
+            btn.innerHTML = '✅ Enregistré !';
+            btn.style.borderColor = 'rgba(52,211,153,0.6)';
+            setTimeout(function() {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                btn.style.borderColor = '';
+            }, 3000);
+        } else {
+            throw new Error(result.error || 'Erreur');
+        }
+    })
+    .catch(function(err) {
+        btn.innerHTML = '❌ Erreur';
+        alert('Erreur d\'enregistrement : ' + err.message);
+        setTimeout(function() {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }, 2000);
+    });
+}
+
+// ============================================
 // INIT
 // ============================================
 dbg('🚀 Init start');
