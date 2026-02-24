@@ -639,33 +639,35 @@
             font-size: 18px;
             padding: 8px;
         }
-        /* Results-bottom: right column as tight flex stack */
+        /* Break results-bottom so children float in the grid */
         .main-content:not(.fournisseur-mode):not(.telepro-mode) .results-bottom {
-            grid-column: 2;
-            grid-row: 2 / 4;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-top: 0;
-            padding-top: 0;
-            border-top: none;
-            justify-content: flex-start;
+            display: contents;
         }
-        /* Status badge tighter */
-        .main-content:not(.fournisseur-mode):not(.telepro-mode) .results-bottom #statusBadge {
-            margin-top: 0;
-        }
-        /* Action buttons tighter */
-        .main-content:not(.fournisseur-mode):not(.telepro-mode) .results-bottom .action-buttons-row {
-            margin-top: 0;
-        }
-        /* Save button: full width at bottom of both columns */
-        .main-content:not(.fournisseur-mode):not(.telepro-mode) .btn-save-simulation {
+        /* Save button: full width bottom */
+        .main-content:not(.fournisseur-mode):not(.telepro-mode) .results-bottom .btn-save-simulation {
             grid-column: 1 / -1;
+            order: 100;
             margin-top: 12px;
         }
-        .main-content:not(.fournisseur-mode):not(.telepro-mode) #saveResult {
+        .main-content:not(.fournisseur-mode):not(.telepro-mode) .results-bottom #saveResult {
             grid-column: 1 / -1;
+            order: 101;
+        }
+        /* Status + actions + upload: right column */
+        .main-content:not(.fournisseur-mode):not(.telepro-mode) .results-bottom #statusBadge {
+            grid-column: 2;
+            grid-row: 2;
+            margin-top: 0;
+            order: 1;
+        }
+        .main-content:not(.fournisseur-mode):not(.telepro-mode) .results-bottom .action-buttons-row {
+            grid-column: 2;
+            margin-top: 0;
+            order: 2;
+        }
+        .main-content:not(.fournisseur-mode):not(.telepro-mode) .results-bottom .upload-panel {
+            grid-column: 2;
+            order: 3;
         }
 
         /* Mobile: single column */
@@ -674,14 +676,12 @@
                 grid-template-columns: 1fr;
             }
             .main-content:not(.fournisseur-mode):not(.telepro-mode) .results-strip,
-            .main-content:not(.fournisseur-mode):not(.telepro-mode) .results-bottom {
+            .main-content:not(.fournisseur-mode):not(.telepro-mode) .results-bottom .btn-save-simulation,
+            .main-content:not(.fournisseur-mode):not(.telepro-mode) .results-bottom #statusBadge,
+            .main-content:not(.fournisseur-mode):not(.telepro-mode) .results-bottom .action-buttons-row,
+            .main-content:not(.fournisseur-mode):not(.telepro-mode) .results-bottom .upload-panel {
                 grid-column: 1;
                 grid-row: auto;
-            }
-            .main-content:not(.fournisseur-mode):not(.telepro-mode) .results-bottom {
-                border-top: 1px solid rgba(255,255,255,0.08);
-                padding-top: 16px;
-                margin-top: 16px;
             }
         }
 
