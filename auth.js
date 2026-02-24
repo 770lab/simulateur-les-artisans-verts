@@ -181,8 +181,11 @@ function showApp(){
             document.getElementById('userRoleDisplay').textContent = '📞 Téléprospecteur';
             switchView('telepro');
         } else {
-            // Commercial : verrouillé en mode fournisseur, pas de toggle
-            document.getElementById('viewToggle').style.display = 'none';
+            // Commercial : toggle visible avec Client + Pro, défaut = fournisseur
+            document.getElementById('viewToggle').style.display = '';
+            document.getElementById('togClient').style.display = '';
+            document.getElementById('togFournisseur').style.display = '';
+            document.getElementById('togTelepro').style.display = 'none';
             document.getElementById('userRoleDisplay').textContent = '📊 Commercial';
             switchView('fournisseur');
         }
