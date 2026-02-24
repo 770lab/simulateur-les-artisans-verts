@@ -574,75 +574,32 @@
         }
         .summary-card::before { display: none; }
 
-        /* Results: same auto-fit grid as parameters — columns align */
-        .results-strip {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 14px;
-            margin-top: 0;
-            align-items: stretch;
-        }
+        /* Results groups */
         .results-group { min-width: 0; }
         .results-group-hero { display: flex; flex-direction: column; }
 
-        /* ===== CLIENT VIEW: 2-column — results left, actions right ===== */
-        .main-content:not(.fournisseur-mode):not(.telepro-mode) .summary-card {
+        /* ===== ALL VIEWS: 2-column — results left, actions right ===== */
+        .summary-card {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            grid-template-rows: auto 1fr;
+            grid-template-rows: auto auto;
             gap: 0 16px;
             align-items: start;
         }
         /* Scenario badge: full width top */
-        .main-content:not(.fournisseur-mode):not(.telepro-mode) .scenario-label-dark {
+        .scenario-label-dark {
             grid-column: 1 / -1;
-            text-align: center;
-            border-left: none;
-            border-bottom: 2px solid #34d399;
-            border-radius: 12px;
-            margin-bottom: 10px;
         }
         /* Results strip: left column stacked */
-        .main-content:not(.fournisseur-mode):not(.telepro-mode) .results-strip {
+        .results-strip {
+            display: grid;
             grid-column: 1;
             grid-row: 2;
             grid-template-columns: 1fr;
             gap: 0;
         }
-        /* Hide section titles in client view */
-        .main-content:not(.fournisseur-mode):not(.telepro-mode) .dark-section-title {
-            display: none;
-        }
-        /* Compact cards */
-        .main-content:not(.fournisseur-mode):not(.telepro-mode) .result-row-card {
-            padding: 10px 14px;
-            margin-bottom: 6px;
-            border-radius: 10px;
-        }
-        .main-content:not(.fournisseur-mode):not(.telepro-mode) .result-row-card .rrc-label {
-            font-size: 12px;
-        }
-        .main-content:not(.fournisseur-mode):not(.telepro-mode) .result-row-card .rrc-value {
-            font-size: 18px !important;
-        }
-        /* RAC hero */
-        .main-content:not(.fournisseur-mode):not(.telepro-mode) #racHeroCard {
-            padding: 18px 16px;
-            border-radius: 14px;
-            margin-top: 4px;
-        }
-        .main-content:not(.fournisseur-mode):not(.telepro-mode) #resteCharge {
-            font-size: 40px !important;
-        }
-        .main-content:not(.fournisseur-mode):not(.telepro-mode) #gesteCoSection {
-            margin-top: 8px !important;
-        }
-        .main-content:not(.fournisseur-mode):not(.telepro-mode) #gesteCoSection input[type="number"] {
-            font-size: 18px;
-            padding: 8px;
-        }
         /* Right column: tight flex, top-aligned */
-        .main-content:not(.fournisseur-mode):not(.telepro-mode) .results-bottom {
+        .results-bottom {
             grid-column: 2;
             grid-row: 2;
             display: flex;
@@ -652,40 +609,38 @@
             padding-top: 0;
             border-top: none;
         }
-        .main-content:not(.fournisseur-mode):not(.telepro-mode) .results-bottom #statusBadge {
+        .results-bottom #statusBadge {
             margin-top: 0;
         }
-        .main-content:not(.fournisseur-mode):not(.telepro-mode) .results-bottom .action-buttons-row {
+        .results-bottom .action-buttons-row {
             margin-top: 0;
         }
-        /* Push save button to end in client view */
-        .main-content:not(.fournisseur-mode):not(.telepro-mode) .results-bottom .btn-save-simulation {
+        /* Push save button to end */
+        .results-bottom .btn-save-simulation {
             order: 10;
         }
-        .main-content:not(.fournisseur-mode):not(.telepro-mode) .results-bottom #saveResult {
+        .results-bottom #saveResult {
             order: 11;
         }
 
-        /* Mobile: single column */
+        /* Mobile: single column for all views */
         @media (max-width: 700px) {
-            .main-content:not(.fournisseur-mode):not(.telepro-mode) .summary-card {
+            .summary-card {
                 grid-template-columns: 1fr;
             }
-            .main-content:not(.fournisseur-mode):not(.telepro-mode) .results-bottom {
+            .results-strip,
+            .results-bottom {
                 grid-column: 1;
                 grid-row: auto;
+            }
+            .results-bottom {
                 border-top: 1px solid rgba(255,255,255,0.08);
                 padding-top: 16px;
                 margin-top: 16px;
             }
         }
 
-        /* Bottom section: vertical stack */
-        .results-bottom {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255,255,255,0.08);
-        }
+        /* Bottom section: default overrides (used by grid now) */
 
         /* Action buttons: vertical stack with pair option */
         .action-buttons-row {
