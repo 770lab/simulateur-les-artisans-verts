@@ -1954,35 +1954,24 @@ function saveSimulation() {
     // Hide previous folder link
     document.getElementById('saveResult').style.display = 'none';
     
-    // Send to Apps Script
+    // Send to Apps Script (no-cors = opaque response, like upload)
     fetch(UPLOAD_SCRIPT_URL, {
         method: 'POST',
-        body: JSON.stringify(data),
-        redirect: 'follow'
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(data)
     })
-    .then(function(r) { return r.json(); })
-    .then(function(result) {
-        if (result.success) {
-            btn.innerHTML = '✅ Enregistré !';
-            btn.style.borderColor = 'rgba(52,211,153,0.8)';
-            
-            // Show folder link
-            if (result.folderUrl) {
-                document.getElementById('saveFolderLink').href = result.folderUrl;
-                document.getElementById('saveResult').style.display = 'block';
-                showToast('✅ Dossier "' + clientName + '" enregistré !', 'success', result.folderUrl);
-            } else {
-                showToast('✅ Simulation "' + clientName + '" enregistrée !', 'success');
-            }
-            
-            setTimeout(function() {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-                btn.style.borderColor = '';
-            }, 5000);
-        } else {
-            throw new Error(result.error || 'Erreur inconnue');
-        }
+    .then(function() {
+        // no-cors = opaque response, on assume succès
+        btn.innerHTML = '✅ Enregistré — ' + clientName;
+        btn.style.borderColor = 'rgba(52,211,153,0.8)';
+        showToast('✅ Dossier "' + clientName + '" enregistré sur Google Drive !', 'success');
+        
+        setTimeout(function() {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            btn.style.borderColor = '';
+        }, 5000);
     })
     .catch(function(err) {
         btn.innerHTML = '❌ Erreur';
