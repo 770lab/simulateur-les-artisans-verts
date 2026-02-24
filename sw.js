@@ -1,106 +1,45 @@
-// ============================================
-// SERVICE WORKER — Simulateur PAC PWA
-// Les Artisans Verts © 2026
-// ============================================
+// Chab'app Service Worker v2 - Version sûre (pas d'écran blanc)
+const CACHE_NAME = 'chabapp-v2';
 
-const CACHE_NAME = 'pac-sim-v19';
-const ASSETS = [
-  './',
-  './index.html',
-  './styles.css',
-  './data.js',
-  './security.js',
-  './auth.js',
-  './app.js',
-  './script-telepro.js',
-  './icon-192.png',
-  './icon-512.png'
-];
-
-// Install — cache les fichiers
-self.addEventListener('install', function(event) {
-  self.skipWaiting(); // Force activation immédiate
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(function(cache) {
-      return cache.addAll(ASSETS);
-    })
-  );
+// Installation : on ne pré-cache RIEN pour éviter les écrans blancs
+self.addEventListener('install', (event) => {
+  console.log('[SW] Installation v2...');
+  self.skipWaiting();
 });
 
-// Activate — nettoie les anciens caches
-self.addEventListener('activate', function(event) {
+// Activation : nettoyage des anciens caches
+self.addEventListener('activate', (event) => {
+  console.log('[SW] Activation v2...');
   event.waitUntil(
-    caches.keys().then(function(names) {
+    caches.keys().then((cacheNames) => {
       return Promise.all(
-        names.filter(function(n) { return n !== CACHE_NAME; })
-             .map(function(n) { return caches.delete(n); })
+        cacheNames
+          .filter((name) => name !== CACHE_NAME)
+          .map((name) => caches.delete(name))
       );
-    }).then(function() {
-      return self.clients.claim(); // Prend le contrôle immédiatement
-    })
+    }).then(() => self.clients.claim())
   );
 });
 
-// Fetch — network first, fallback to cache
-self.addEventListener('fetch', function(event) {
+// Fetch : TOUJOURS réseau d'abord, cache en dernier recours
+self.addEventListener('fetch', (event) => {
+  if (event.request.method !== 'GET') return;
+
   event.respondWith(
     fetch(event.request)
-      .then(function(response) {
-        // Met à jour le cache
-        var clone = response.clone();
-        caches.open(CACHE_NAME).then(function(cache) {
-          cache.put(event.request, clone);
-        });
+      .then((response) => {
+        // Mettre en cache seulement les réponses valides
+        if (response && response.status === 200 && response.type === 'basic') {
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseClone);
+          });
+        }
         return response;
       })
-      .catch(function() {
+      .catch(() => {
+        // Réseau indisponible → essayer le cache
         return caches.match(event.request);
       })
-  );
-});
-
-// Push notifications
-self.addEventListener('push', function(event) {
-  var data = { title: 'Les Artisans Verts', body: 'Nouvelle notification', icon: './icon-192.png' };
-  
-  if (event.data) {
-    try {
-      data = event.data.json();
-    } catch(e) {
-      data.body = event.data.text();
-    }
-  }
-
-  var options = {
-    body: data.body || '',
-    icon: data.icon || './icon-192.png',
-    badge: './icon-192.png',
-    vibrate: [200, 100, 200],
-    tag: data.tag || 'lav-notif',
-    data: { url: data.url || './index.html' },
-    actions: data.actions || []
-  };
-
-  event.waitUntil(
-    self.registration.showNotification(data.title || 'Les Artisans Verts', options)
-  );
-});
-
-// Clic sur notification → ouvre l'appli
-self.addEventListener('notificationclick', function(event) {
-  event.notification.close();
-  var url = event.notification.data.url || './index.html';
-  
-  event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function(windowClients) {
-      // Si déjà ouvert, focus
-      for (var i = 0; i < windowClients.length; i++) {
-        if (windowClients[i].url.indexOf('index.html') !== -1) {
-          return windowClients[i].focus();
-        }
-      }
-      // Sinon ouvre un nouvel onglet
-      return clients.openWindow(url);
-    })
   );
 });
