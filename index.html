@@ -901,20 +901,26 @@
                     </div>
                 </div>
 
-                <!-- === BOTTOM: Status + Actions + Docs === -->
+                <!-- === BOTTOM: Save + Actions + Docs === -->
                 <div class="results-bottom">
+                    <!-- SAVE: main CTA -->
+                    <button class="btn-save-simulation" id="btnSave" onclick="saveSimulation()">
+                        💾 Enregistrer la simulation
+                    </button>
+                    <div id="saveResult" style="display:none; margin-top: 8px; text-align: center;">
+                        <a id="saveFolderLink" href="#" target="_blank" style="color: #34d399; font-size: 13px; font-weight: 600;">
+                            📁 Ouvrir le dossier client
+                        </a>
+                    </div>
+
                     <!-- Status -->
-                    <div id="statusBadge" class="status-badge ok" style="cursor: default;">
+                    <div id="statusBadge" class="status-badge ok" style="cursor: default; margin-top: 12px;">
                         <span id="statusIcon">✅</span>
                         <span id="statusText">Voulez-vous un devis ?</span>
                     </div>
 
                     <!-- Action buttons -->
                     <div class="action-buttons-row" id="actionButtons">
-                        <!-- SAVE SIMULATION -->
-                        <button class="btn-dark-export save-btn" onclick="saveSimulation()">
-                            💾 Enregistrer la simulation
-                        </button>
                         <!-- Client view: single PDF -->
                         <button class="btn-dark-export pdf client-only" onclick="exportPDF('client')">
                             📄 Télécharger le PDF

@@ -1845,10 +1845,12 @@ function sendSubscriptionToServer(subscription) {
     var data = JSON.stringify(subscription);
     fetch(UPLOAD_SCRIPT_URL, {
         method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'subscribe_push', subscription: data })
-    }).catch(function(err) { dbg('Push sync error: ' + err); });
+        body: JSON.stringify({ action: 'subscribe_push', subscription: data }),
+        redirect: 'follow'
+    })
+    .then(function(r) { return r.text(); })
+    .then(function(t) { dbg('Push subscription synced: ' + t); })
+    .catch(function(err) { dbg('Push sync error: ' + err); });
 }
 
 function urlBase64ToUint8Array(base64String) {
@@ -1943,10 +1945,13 @@ function saveSimulation() {
     };
     
     // Show saving state
-    var btn = event.target.closest('.save-btn');
+    var btn = document.getElementById('btnSave');
     var originalText = btn.innerHTML;
     btn.innerHTML = '⏳ Enregistrement...';
     btn.disabled = true;
+    
+    // Hide previous folder link
+    document.getElementById('saveResult').style.display = 'none';
     
     // Send to Apps Script
     fetch(UPLOAD_SCRIPT_URL, {
@@ -1956,13 +1961,20 @@ function saveSimulation() {
     .then(function(r) { return r.json(); })
     .then(function(result) {
         if (result.success) {
-            btn.innerHTML = '✅ Enregistré !';
-            btn.style.borderColor = 'rgba(52,211,153,0.6)';
+            btn.innerHTML = '✅ Enregistré — ' + clientName;
+            btn.style.borderColor = 'rgba(52,211,153,0.8)';
+            
+            // Show folder link
+            if (result.folderUrl) {
+                document.getElementById('saveFolderLink').href = result.folderUrl;
+                document.getElementById('saveResult').style.display = 'block';
+            }
+            
             setTimeout(function() {
                 btn.innerHTML = originalText;
                 btn.disabled = false;
                 btn.style.borderColor = '';
-            }, 3000);
+            }, 5000);
         } else {
             throw new Error(result.error || 'Erreur');
         }
