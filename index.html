@@ -902,17 +902,8 @@
                     </div>
                 </div>
 
-                <!-- === BOTTOM: Save + Actions + Docs === -->
+                <!-- === BOTTOM: Actions + Docs === -->
                 <div class="results-bottom">
-                    <!-- SAVE: main CTA -->
-                    <button class="btn-save-simulation" id="btnSave" onclick="saveSimulation()">
-                        💾 Enregistrer la simulation
-                    </button>
-                    <div id="saveResult" style="display:none; margin-top: 8px; text-align: center;">
-                        <a id="saveFolderLink" href="#" target="_blank" style="color: #34d399; font-size: 13px; font-weight: 600;">
-                            📁 Ouvrir le dossier client
-                        </a>
-                    </div>
 
                     <!-- Status -->
                     <div id="statusBadge" class="status-badge ok" style="cursor: default; margin-top: 12px;">
@@ -974,6 +965,17 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- SAVE: full width (outside results-bottom for grid placement) -->
+                <button class="btn-save-simulation" id="btnSave" onclick="saveSimulation()">
+                    💾 Enregistrer la simulation
+                </button>
+                <div id="saveResult" style="display:none; margin-top: 8px; text-align: center;">
+                    <a id="saveFolderLink" href="#" target="_blank" style="color: #34d399; font-size: 13px; font-weight: 600;">
+                        📁 Ouvrir le dossier client
+                    </a>
+                </div>
+
                 </div>
             </div>
         </div>
