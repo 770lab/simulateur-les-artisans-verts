@@ -566,7 +566,7 @@ function calcRAC(rb,ch,ta,taForMarge,tt){
     }
     
     const currentScenario = document.getElementById('scenario').value;
-    const seuilOK = (currentScenario === 'PAC + SSC' || currentScenario === 'SSC') ? 6000 : 4000;
+    const seuilOK = currentScenario === 'PAC + SSC' ? 9000 : (currentScenario === 'SSC' ? 6000 : 4000);
     
     // Calculate max % offerable (fournisseur)
     if(mode){
