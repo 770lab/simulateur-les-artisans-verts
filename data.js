@@ -8,7 +8,7 @@
 var UPLOAD_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzMHunMorVZcG6caZLsKuJgjGAEWgpL7rJOaaiARbJR59DdaE_fFp483WWWXkgbB57TAw/exec';
 
 // Clé publique VAPID pour les notifications push
-var VAPID_PUBLIC_KEY = 'BIJgFL-8yu1kfz92UA5Y6GxkKK6rTd4bnZDfAXjaH-Bbhqm7XgJwZuGA2RkU9drjhr9K_Alg4-pvgrg8FtjY8y8';
+var VAPID_PUBLIC_KEY = 'BPCzvYHBwJ78-QKT67mfnRAyMwPqdiQO1gxlyQOFfb_L-W6jeWRS1WhPaO28DerABQvwx84xPbyq-MNLmyS0-vQ';
 
 const DEPT_ZONE = {
     "01":"H1","02":"H1","03":"H1","04":"H2","05":"H1","06":"H3","07":"H2","08":"H1","09":"H2","10":"H1",
