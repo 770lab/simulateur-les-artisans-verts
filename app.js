@@ -553,11 +553,14 @@ function calc(){
     document.getElementById('scenarioSummary').innerHTML = summaryHTML;
     document.getElementById('scenarioSummary').style.borderLeftColor=borderColor;
     
-    // Recalculate RAC offert based on current percentage and new rb
-    var currentPct = parseFloat(document.getElementById('racPourcent').value) || 0;
-    if(currentPct > 0) {
-        var newOffert = Math.round(rb * (currentPct / 100));
-        document.getElementById('racOffert').value = Math.max(0, newOffert);
+    // Keep RAC offert (montant) fixed, recalculate percentage from new rb
+    var currentOffert = parseFloat(document.getElementById('racOffert').value) || 0;
+    if(currentOffert > 0 && rb > 0) {
+        var newPct = Math.min(100, Math.max(0, Math.round((currentOffert / rb) * 100)));
+        document.getElementById('racPourcent').value = newPct;
+    } else if(rb <= 0) {
+        document.getElementById('racPourcent').value = 0;
+        document.getElementById('racOffert').value = 0;
     }
     
     calcRAC(rb,chForMarge,ta,taForMarge,tt);
