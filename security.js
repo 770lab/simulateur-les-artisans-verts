@@ -1,6 +1,6 @@
 // ============================================
 // SECURITY — Protections anti-copie, auto-update
-// Les Artisans Verts © 2026
+// 770 Lab © 2026
 // ============================================
 
 // Debug helper
@@ -111,19 +111,19 @@ function showUpdatePopup(){
     
     // Console warning
     console.log('%c⛔ STOP', 'color:red;font-size:48px;font-weight:bold;');
-    console.log('%cCe simulateur est la propriété de Les Artisans Verts. Toute copie ou reproduction est interdite.', 'color:#fbbf24;font-size:14px;');
+    console.log('%cCe simulateur est la propriété de 770 Lab. Toute copie ou reproduction est interdite.', 'color:#fbbf24;font-size:14px;');
     
     // Invisible watermark — fingerprint dans le DOM
     var _wm = document.createElement('div');
     _wm.style.cssText = 'position:fixed;opacity:0;pointer-events:none;z-index:-1;font-size:0;';
-    _wm.setAttribute('data-owner','Les Artisans Verts - LAV-770-SIM-2026');
+    _wm.setAttribute('data-owner','770 Lab - LAV-770-SIM-2026');
     _wm.setAttribute('data-license','Propriétaire - Reproduction interdite');
     _wm.setAttribute('data-trace', btoa('LAV|' + Date.now() + '|' + navigator.userAgent));
     document.body.appendChild(_wm);
     
     // Hidden watermark in all print outputs
     var _wmStyle = document.createElement('style');
-    _wmStyle.textContent = '@media print { body::after { content: "Les Artisans Verts © 2026 — LAV-770-SIM"; position: fixed; bottom: 5px; right: 5px; font-size: 7px; color: rgba(0,0,0,0.08); z-index: 99999; } }';
+    _wmStyle.textContent = '@media print { body::after { content: "770 Lab © 2026 — LAV-770-SIM"; position: fixed; bottom: 5px; right: 5px; font-size: 7px; color: rgba(0,0,0,0.08); z-index: 99999; } }';
     document.head.appendChild(_wmStyle);
     
     // Domain lock — only works on authorized domains
