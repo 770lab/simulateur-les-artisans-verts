@@ -58,12 +58,12 @@ function doLogin(){
                 try{ localStorage.setItem('pac_user', JSON.stringify(currentUser)); localStorage.setItem('pac_api','1'); localStorage.setItem('pac_login_time', Date.now().toString()); }catch(e){}
                 showApp();
             } else {
-                // API rejected → try local fallback
-                errEl.style.color = '#dc2626';
-                doLoginLocal(u, p, errEl);
+                // API responded but rejected → wrong password, do NOT fallback to local
+                errEl.textContent = 'Identifiant ou mot de passe incorrect';
+                errEl.style.display = 'block';
             }
         }, function(err){
-            // Fallback local
+            // API unreachable → fallback to local hardcoded users
             errEl.style.color = '#dc2626';
             doLoginLocal(u, p, errEl);
         });
