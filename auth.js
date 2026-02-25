@@ -1,6 +1,6 @@
 // ============================================
 // AUTH — Connexion, utilisateurs, sessions
-// Les Artisans Verts © 2026
+// 770 Lab © 2026
 // ============================================
 
 const API_URL = 'https://script.google.com/macros/s/AKfycbwMCcrAU9QrP6N6G2haz2dCdO4dFEH0aeNlyeIvpP5EDw_R2JTjSHrLr2E74EhUGlqn/exec';
@@ -55,7 +55,7 @@ function doLogin(){
                     name: usr.name || u,
                     role: _r
                 };
-                try{ localStorage.setItem('pac_user', JSON.stringify(currentUser)); localStorage.setItem('pac_api','1'); }catch(e){}
+                try{ localStorage.setItem('pac_user', JSON.stringify(currentUser)); localStorage.setItem('pac_api','1'); localStorage.setItem('pac_login_time', Date.now().toString()); }catch(e){}
                 showApp();
             } else {
                 // API rejected → try local fallback
@@ -104,13 +104,13 @@ document.getElementById('loginUser').addEventListener('keydown', e=>{ if(e.key==
 function doLogout(){
     logAction('Déconnexion', currentUser ? currentUser.name : '');
     currentUser = null;
-    try{ localStorage.removeItem('pac_user'); localStorage.removeItem('pac_api'); }catch(e){}
+    try{ localStorage.removeItem('pac_user'); localStorage.removeItem('pac_api'); localStorage.removeItem('pac_login_time'); }catch(e){}
     location.reload();
 }
 
 function goToLogin(){
     currentUser = null;
-    try{ localStorage.removeItem('pac_user'); }catch(e){}
+    try{ localStorage.removeItem('pac_user'); localStorage.removeItem('pac_login_time'); }catch(e){}
     document.getElementById('appScreen').style.display = 'none';
     document.getElementById('loginScreen').style.display = 'flex';
 }
@@ -129,6 +129,9 @@ function switchView(v){
     document.getElementById('togFournisseur').classList.remove('active');
     document.getElementById('togTelepro').classList.remove('active');
 
+    // Save montant offert before recalc
+    var savedOffert = parseInt(document.getElementById('racOffert').value) || 0;
+
     if(v === 'telepro'){
         mode = 1;
         mc.classList.add('fournisseur-mode');
@@ -146,6 +149,18 @@ function switchView(v){
         logAction('Vue client', '');
     }
     try{ calc(); }catch(e){}
+
+    // After calc, restore montant € and recalculate pct for client view
+    if(v !== 'fournisseur' && v !== 'telepro' && savedOffert > 0){
+        document.getElementById('racOffert').value = savedOffert;
+        var racText = document.getElementById('resteCharge').textContent;
+        var racBrut = parseInt(racText.replace(/[^\d-]/g,'')) || 0;
+        var newPct = racBrut > 0 ? Math.min(100, Math.round((savedOffert / racBrut) * 100)) : 0;
+        document.getElementById('racPourcent').value = newPct;
+        document.getElementById('gesteCoClient').value = newPct;
+        var montantInput = document.getElementById('gesteCoMontantInput');
+        if(montantInput) montantInput.value = savedOffert;
+    }
 }
 
 function showApp(){
@@ -217,6 +232,16 @@ function checkAutoLogin(){
         if(stored){
             const data = JSON.parse(stored);
             if(data && data.id){
+                // Check session age - expire after 24h
+                var loginTime = parseInt(localStorage.getItem('pac_login_time') || '0');
+                var now = Date.now();
+                if(loginTime && (now - loginTime) > 24 * 60 * 60 * 1000) {
+                    // Session expired - force re-login
+                    localStorage.removeItem('pac_user');
+                    localStorage.removeItem('pac_api');
+                    localStorage.removeItem('pac_login_time');
+                    return false;
+                }
                 if(localStorage.getItem('pac_api')) useAPI = true;
                 currentUser = data;
                 showApp();

@@ -1,6 +1,6 @@
 // ============================================
 // APP — Calculs, UI, exports, logging
-// Les Artisans Verts © 2026
+// 770 Lab © 2026
 // ============================================
 
 function detectDept() {
@@ -664,7 +664,7 @@ function shareDevis(){
     const totalAides=document.getElementById('totalAides').textContent;
     const rac=document.getElementById('resteCharge').textContent;
     
-    const text = `🏠 Estimation PAC — ${prenom} ${nom}\n\n📋 ${scenario}\n💰 Installation TTC : ${ttc}\n🎁 Total aides : ${totalAides}\n🏠 Reste à charge : ${rac}\n\nSimulation réalisée par Les Artisans Verts`;
+    const text = `🏠 Estimation PAC — ${prenom} ${nom}\n\n📋 ${scenario}\n💰 Installation TTC : ${ttc}\n🎁 Total aides : ${totalAides}\n🏠 Reste à charge : ${rac}\n\nSimulation réalisée par 770 Lab`;
     
     if(navigator.share){
         navigator.share({
@@ -865,7 +865,7 @@ function sendWhatsApp(){
         racLines += `\n• *Reste à charge final : ${racFinal.toLocaleString('fr-FR')} €*`;
     }
 
-    const text = `🏠 *Demande de devis - Les Artisans Verts*\n\n👤 *Client :* ${prenom} ${nom}\n\n📋 *Configuration :*\n• Scénario : ${scenario}\n• ${categorie}\n• ${zone}\n• ${surface}\n• ${etas}\n\n💰 *Montants :*\n• Total TTC : ${ttc}\n• Aides MPR : ${aidesMPR}\n• Aides CEE : ${aidesCEE}\n• Total aides : ${totalAides}\n${racLines}\n\nJe souhaite obtenir un devis détaillé.`;
+    const text = `🏠 *Demande de devis - 770 Lab*\n\n👤 *Client :* ${prenom} ${nom}\n\n📋 *Configuration :*\n• Scénario : ${scenario}\n• ${categorie}\n• ${zone}\n• ${surface}\n• ${etas}\n\n💰 *Montants :*\n• Total TTC : ${ttc}\n• Aides MPR : ${aidesMPR}\n• Aides CEE : ${aidesCEE}\n• Total aides : ${totalAides}\n${racLines}\n\nJe souhaite obtenir un devis détaillé.`;
     window.open('https://api.whatsapp.com/send?text='+encodeURIComponent(text), '_blank');
 }
 
@@ -876,7 +876,7 @@ function sendMail(){
     const fullName = (prenom + ' ' + nom).trim();
     const scenario = document.getElementById('scenario').options[document.getElementById('scenario').selectedIndex].text;
 
-    const subject = `Votre projet ${scenario} - Documents à transmettre - Les Artisans Verts`;
+    const subject = `Votre projet ${scenario} - Documents à transmettre - 770 Lab`;
 
     const body = `Bonjour ${fullName},\n\nSuite à notre échange téléphonique, votre projet d'installation de ${scenario} peut être éligible aux aides MaPrimeRénov'.\n\n👉 Afin de réserver votre éligibilité et lancer la constitution de votre dossier, il nous manque simplement quelques documents.\nMerci de nous les transmettre par retour de mail (photos ou scans suffisent) :\n\n• Dernier avis d'imposition de toutes les personnes figurant sur la taxe foncière\n• Dernière taxe foncière (ou acte notarié si achat de moins d'un an)\n• Pièces d'identité recto-verso des titulaires\n\n⏱️ Dès réception, nous analysons votre dossier en priorité et vous confirmons votre niveau d'aides.\n\nPlus tôt nous recevons les documents, plus vite nous pouvons sécuriser votre montant d'aides et planifier la suite de votre projet.\n\nSi vous le souhaitez, je peux également vous guider par téléphone pour l'envoi.\n\nJe reste à votre entière disposition.\n\nBien cordialement,`;
 
