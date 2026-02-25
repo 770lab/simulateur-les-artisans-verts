@@ -1168,16 +1168,38 @@ function syncGesteCoFromAdmin(){
     updateGesteCoDisplay();
 }
 
+function syncGesteCoFromMontant(){
+    const montant = parseInt(document.getElementById('gesteCoMontantInput').value) || 0;
+    // Get current RAC brut (before geste)
+    const racText = document.getElementById('resteCharge').textContent;
+    const racBrut = parseInt(racText.replace(/[^\d-]/g,'')) || 0;
+    // Calculate percentage from montant
+    var pct = 0;
+    if(racBrut > 0) {
+        pct = Math.min(100, Math.max(0, Math.round((montant / racBrut) * 100)));
+    }
+    document.getElementById('gesteCoClient').value = pct;
+    document.getElementById('racPourcent').value = pct;
+    document.getElementById('racOffert').value = montant;
+    updateGesteCoDisplay();
+    logRACChange();
+}
+
 function updateGesteCoDisplay(){
     const pct = parseInt(document.getElementById('racPourcent').value) || 0;
     const offert = parseInt(document.getElementById('racOffert').value) || 0;
     const montantEl = document.getElementById('gesteCoMontant');
     const montantInput = document.getElementById('gesteCoMontantInput');
-    if(montantInput) montantInput.value = offert > 0 ? offert : 0;
-    if(pct > 0 && offert > 0){
-        montantEl.textContent = '−' + offert.toLocaleString('fr-FR') + ' €';
-    } else {
-        montantEl.textContent = '—';
+    // Only update montant input if not focused (user typing)
+    if(montantInput && document.activeElement !== montantInput) {
+        montantInput.value = offert > 0 ? offert : 0;
+    }
+    if(montantEl){
+        if(pct > 0 && offert > 0){
+            montantEl.textContent = '−' + offert.toLocaleString('fr-FR') + ' €';
+        } else {
+            montantEl.textContent = '—';
+        }
     }
 }
 
@@ -1525,10 +1547,11 @@ function syncSurfaces(from) {
         ? document.getElementById('baremeSurface').value
         : (from === 'cee')
         ? document.getElementById('ceeSurface').value
-        : document.getElementById('dimSurface').value;
+        : (document.getElementById('dimSurface') || {}).value || '100';
     const s = parseInt(val) || 100;
     document.getElementById('baremeSurface').value = s;
-    document.getElementById('dimSurface').value = s;
+    var dimSurf = document.getElementById('dimSurface');
+    if (dimSurf) dimSurf.value = s;
     const ceeSurf = document.getElementById('ceeSurface');
     if (ceeSurf) ceeSurf.value = s;
 

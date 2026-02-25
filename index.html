@@ -499,7 +499,7 @@
                     </div>
                     <div class="form-group" style="margin-bottom: 0;" id="ceeSurfaceGroup">
                         <label style="color: #6b7280; font-size: 11px;">Surface (m²)</label>
-                        <input type="number" id="ceeSurface" min="1" step="1" value="95" oninput="syncSurfaces('cee')">
+                        <input type="number" id="ceeSurface" min="1" step="1" value="95" oninput="syncSurfaces('cee'); calcBareme()">
                     </div>
                 </div>
 
@@ -724,28 +724,28 @@
                 <div style="margin-bottom: 14px;">
                     <label style="font-weight: 600; color: #374151; font-size: 12px; display: block; margin-bottom: 8px;">Travaux d'isolation réalisés</label>
                     <div style="display: flex; flex-direction: column; gap: 5px;" id="isoChecklist">
-                        <label class="iso-check" onclick="setTimeout(function(){evalIsolation();calcBareme()},10)">
-                            <input type="checkbox" name="isoWork" value="combles">
+                        <label class="iso-check">
+                            <input type="checkbox" name="isoWork" onchange="evalIsolation();calcBareme()" value="combles">
                             <span class="iso-info"><span class="iso-title">Combles / Toiture</span><span class="iso-sub">Isolation soufflée, rampants, sarking…</span></span>
                             <select class="iso-quand" onchange="evalIsolation();calcBareme()"><option value="recent">&lt; 5 ans</option><option value="ancien">&gt; 5 ans</option></select>
                         </label>
-                        <label class="iso-check" onclick="setTimeout(function(){evalIsolation();calcBareme()},10)">
-                            <input type="checkbox" name="isoWork" value="murs">
+                        <label class="iso-check">
+                            <input type="checkbox" name="isoWork" onchange="evalIsolation();calcBareme()" value="murs">
                             <span class="iso-info"><span class="iso-title">Murs (ITE / ITI)</span><span class="iso-sub">Isolation thermique extérieure ou intérieure</span></span>
                             <select class="iso-quand" onchange="evalIsolation();calcBareme()"><option value="recent">&lt; 5 ans</option><option value="ancien">&gt; 5 ans</option></select>
                         </label>
-                        <label class="iso-check" onclick="setTimeout(function(){evalIsolation();calcBareme()},10)">
-                            <input type="checkbox" name="isoWork" value="fenetres">
+                        <label class="iso-check">
+                            <input type="checkbox" name="isoWork" onchange="evalIsolation();calcBareme()" value="fenetres">
                             <span class="iso-info"><span class="iso-title">Fenêtres double/triple</span><span class="iso-sub">Remplacement des menuiseries</span></span>
                             <select class="iso-quand" onchange="evalIsolation();calcBareme()"><option value="recent">&lt; 5 ans</option><option value="ancien">&gt; 5 ans</option></select>
                         </label>
-                        <label class="iso-check" onclick="setTimeout(function(){evalIsolation();calcBareme()},10)">
-                            <input type="checkbox" name="isoWork" value="plancher">
+                        <label class="iso-check">
+                            <input type="checkbox" name="isoWork" onchange="evalIsolation();calcBareme()" value="plancher">
                             <span class="iso-info"><span class="iso-title">Plancher bas</span><span class="iso-sub">Vide sanitaire, sous-sol</span></span>
                             <select class="iso-quand" onchange="evalIsolation();calcBareme()"><option value="recent">&lt; 5 ans</option><option value="ancien">&gt; 5 ans</option></select>
                         </label>
-                        <label class="iso-check" onclick="setTimeout(function(){evalIsolation();calcBareme()},10)">
-                            <input type="checkbox" name="isoWork" value="vmc">
+                        <label class="iso-check">
+                            <input type="checkbox" name="isoWork" onchange="evalIsolation();calcBareme()" value="vmc">
                             <span class="iso-info"><span class="iso-title">VMC double flux</span><span class="iso-sub">Ventilation performante</span></span>
                             <select class="iso-quand" onchange="evalIsolation();calcBareme()"><option value="recent">&lt; 5 ans</option><option value="ancien">&gt; 5 ans</option></select>
                         </label>
@@ -866,7 +866,7 @@
                                 </div>
                                 <div>
                                     <div class="amount-label" style="color: rgba(255,255,255,0.45); margin-bottom: 4px;">Montant offert (€)</div>
-                                    <input type="number" id="gesteCoMontantInput" value="0" readonly style="border-color: rgba(139,92,246,0.3); opacity: 0.7;">
+                                    <input type="number" id="gesteCoMontantInput" value="0" min="0" step="1" oninput="syncGesteCoFromMontant()" style="border-color: rgba(139,92,246,0.3);">
                                 </div>
                             </div>
                             <div id="gesteCoMontant" style="display: none;">—</div>
