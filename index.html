@@ -615,17 +615,24 @@
             text-align: right;
             padding: 4px 8px;
             width: 140px;
-            border: 1px solid transparent;
+            border: none;
             border-radius: 8px;
-            background: transparent;
+            background: none;
+            -webkit-appearance: none;
+            -moz-appearance: textfield;
+            appearance: none;
             color: #60a5fa;
             font-variant-numeric: tabular-nums;
-            transition: border-color 0.2s;
+            font-family: inherit;
+        }
+        .ttc-input-dark::-webkit-outer-spin-button,
+        .ttc-input-dark::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
         }
         .ttc-input-dark:focus {
-            border-color: rgba(96,165,250,0.3);
-            box-shadow: none;
             outline: none;
+            border-bottom: 1px solid rgba(96,165,250,0.4);
         }
 
         .btn-dark-export {
@@ -1548,8 +1555,11 @@
                 <div class="fournisseur-only" style="margin-bottom: 12px;">
                     <div class="result-row-card" style="background: rgba(96,165,250,0.08); border-color: rgba(96,165,250,0.15); flex-wrap: wrap;">
                         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                            <div class="rrc-label">Coût installation TTC</div>
-                            <input type="number" class="ttc-input-dark" id="totalTTCInput" value="10890" step="1" oninput="updateFromTTC()">
+                            <div class="rrc-label">&#128176; Coût installation TTC</div>
+                            <div style="display: flex; align-items: center; gap: 4px;">
+                                <input type="number" class="ttc-input-dark" id="totalTTCInput" value="10890" step="1" oninput="updateFromTTC()">
+                                <span style="font-size: 20px; font-weight: 700; color: #60a5fa;">€</span>
+                            </div>
                         </div>
                         <small style="font-size: 11px; color: rgba(255,255,255,0.35); margin-top: 4px; width: 100%;">
                             <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
