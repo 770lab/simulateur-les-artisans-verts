@@ -624,20 +624,24 @@
         .rac-dark-section .note-small { color: rgba(255,255,255,0.35); }
 
         .ttc-input-dark {
-            font-size: 20px;
+            font-size: 26px;
             font-weight: 700;
             text-align: right;
-            padding: 4px 8px;
-            width: 140px;
-            border: none;
-            border-radius: 8px;
-            background: none;
+            padding: 0;
+            margin: 0;
+            width: 150px;
+            border: none !important;
+            border-radius: 0;
+            background: none !important;
+            background-color: transparent !important;
             -webkit-appearance: none;
             -moz-appearance: textfield;
             appearance: none;
             color: #60a5fa;
+            color-scheme: dark;
             font-variant-numeric: tabular-nums;
             font-family: inherit;
+            box-shadow: none !important;
         }
         .ttc-input-dark::-webkit-outer-spin-button,
         .ttc-input-dark::-webkit-inner-spin-button {
@@ -645,8 +649,9 @@
             margin: 0;
         }
         .ttc-input-dark:focus {
-            outline: none;
-            border-bottom: 1px solid rgba(96,165,250,0.4);
+            outline: none !important;
+            border: none !important;
+            box-shadow: none !important;
         }
 
         .btn-dark-export {
@@ -1568,20 +1573,16 @@
 
                 <!-- TOTAL TTC (editable fournisseur) -->
                 <div class="fournisseur-only" style="margin-bottom: 12px;">
-                    <div class="result-row-card" style="background: rgba(96,165,250,0.08); border-color: rgba(96,165,250,0.15); flex-wrap: wrap;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                            <div class="rrc-label">&#128176; Coût installation TTC</div>
-                            <div style="display: flex; align-items: center; gap: 4px;">
-                                <input type="number" class="ttc-input-dark" id="totalTTCInput" value="10890" step="1" oninput="updateFromTTC()">
-                                <span style="font-size: 20px; font-weight: 700; color: #60a5fa;">€</span>
-                            </div>
-                        </div>
-                        <small style="font-size: 11px; color: rgba(255,255,255,0.35); margin-top: 4px; width: 100%;">
-                            <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
-                                <input type="checkbox" id="lockTTC" checked onchange="calc()"> Verrouiller (auto selon scénario)
-                            </label>
-                        </small>
+                    <div class="result-row-card" style="background: rgba(96,165,250,0.08); border-color: rgba(96,165,250,0.15);">
+                        <div class="rrc-label">&#128176; Coût installation TTC</div>
+                        <div class="rrc-value blue" id="totalTTCEditable" contenteditable="true" oninput="onTTCEdit()" style="cursor: text; min-width: 60px;">10 890 €</div>
                     </div>
+                    <input type="hidden" id="totalTTCInput" value="10890">
+                    <small style="font-size: 11px; color: rgba(255,255,255,0.35); margin-top: 6px; display: block;">
+                        <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
+                            <input type="checkbox" id="lockTTC" checked onchange="calc()"> Verrouiller (auto selon scénario)
+                        </label>
+                    </small>
                 </div>
 
                 <!-- COÛT HT fournisseur -->
@@ -2215,6 +2216,31 @@ function fmt(n){
     return Math.round(n).toLocaleString('fr-FR')+' \u20AC';
 }
 
+function onTTCEdit(){
+    const el = document.getElementById('totalTTCEditable');
+    const raw = el.textContent.replace(/[^0-9]/g, '');
+    const val = parseInt(raw) || 0;
+    document.getElementById('totalTTCInput').value = val;
+    document.getElementById('lockTTC').checked = false;
+    calc();
+}
+
+// Prevent Enter from adding linebreaks, and reformat on blur
+document.addEventListener('DOMContentLoaded', function(){
+    const tte = document.getElementById('totalTTCEditable');
+    if(tte){
+        tte.addEventListener('keydown', function(e){
+            if(e.key === 'Enter'){ e.preventDefault(); tte.blur(); }
+        });
+        tte.addEventListener('blur', function(){
+            const raw = tte.textContent.replace(/[^0-9]/g, '');
+            const val = parseInt(raw) || 0;
+            document.getElementById('totalTTCInput').value = val;
+            tte.textContent = fmt(val);
+        });
+    }
+});
+
 function updateFromTTC(){
     document.getElementById('lockTTC').checked=false;
     calc();
@@ -2316,6 +2342,8 @@ function calc(){
         if(lockTTC){
             tt = D.TTC[sc] || 0;
             document.getElementById('totalTTCInput').value=tt;
+            const tte = document.getElementById('totalTTCEditable');
+            if(tte) tte.textContent = fmt(tt);
         }else{
             tt=parseFloat(document.getElementById('totalTTCInput').value)||0;
         }
@@ -2419,6 +2447,8 @@ function calc(){
     const displayTTC = (!mode && rb < 0) ? (ta + 1) : tt;
     
     document.getElementById('totalTTC').textContent=fmt(displayTTC);
+    const tteSync = document.getElementById('totalTTCEditable');
+    if(tteSync && document.activeElement !== tteSync) tteSync.textContent = fmt(tt);
     document.getElementById('aidesMPR').textContent=fmt(ad);
     document.getElementById('aidesCEE').textContent=fmt(ceDisplay);
     document.getElementById('totalAides').textContent=fmt(ta);
