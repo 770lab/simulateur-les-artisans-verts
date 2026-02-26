@@ -610,21 +610,21 @@
         .rac-dark-section .note-small { color: rgba(255,255,255,0.35); }
 
         .ttc-input-dark {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 700;
             text-align: right;
-            padding: 10px 14px;
-            width: 100%;
-            border: 2px solid rgba(96,165,250,0.4);
-            border-radius: 10px;
-            background: rgba(255,255,255,0.05);
-            color: #f1f5f9;
-            margin-bottom: 6px;
+            padding: 4px 8px;
+            width: 140px;
+            border: 1px solid rgba(96,165,250,0.3);
+            border-radius: 8px;
+            background: rgba(96,165,250,0.1);
+            color: #60a5fa;
+            font-variant-numeric: tabular-nums;
             transition: border-color 0.2s;
         }
         .ttc-input-dark:focus {
             border-color: #60a5fa;
-            box-shadow: 0 0 0 3px rgba(96,165,250,0.15);
+            box-shadow: 0 0 0 2px rgba(96,165,250,0.15);
             outline: none;
         }
 
@@ -1546,13 +1546,17 @@
 
                 <!-- TOTAL TTC (editable fournisseur) -->
                 <div class="fournisseur-only" style="margin-bottom: 12px;">
-                    <div class="dark-section-title">Coût installation</div>
-                    <input type="number" class="ttc-input-dark" id="totalTTCInput" value="10890" step="1" oninput="updateFromTTC()">
-                    <small style="font-size: 11px; color: rgba(255,255,255,0.35); margin-top: 4px; display: block;">
-                        <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
-                            <input type="checkbox" id="lockTTC" checked onchange="calc()"> Verrouiller (auto selon scénario)
-                        </label>
-                    </small>
+                    <div class="result-row-card" style="background: rgba(96,165,250,0.08); border-color: rgba(96,165,250,0.15); flex-wrap: wrap;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                            <div class="rrc-label">Coût installation TTC</div>
+                            <input type="number" class="ttc-input-dark" id="totalTTCInput" value="10890" step="1" oninput="updateFromTTC()">
+                        </div>
+                        <small style="font-size: 11px; color: rgba(255,255,255,0.35); margin-top: 4px; width: 100%;">
+                            <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
+                                <input type="checkbox" id="lockTTC" checked onchange="calc()"> Verrouiller (auto selon scénario)
+                            </label>
+                        </small>
+                    </div>
                 </div>
 
                 <!-- COÛT HT fournisseur -->
