@@ -463,6 +463,20 @@
             display: none;
         }
 
+        /* Telepro mode: like fournisseur but hides marge, dimensionnement, photo */
+        .telepro-mode .fournisseur-only {
+            display: block;
+        }
+        .telepro-mode .ttc-readonly {
+            display: none !important;
+        }
+        .telepro-mode .client-only {
+            display: none;
+        }
+        .telepro-mode .telepro-hide {
+            display: none !important;
+        }
+
         .results-sidebar {
             position: sticky;
             top: 100px;
@@ -1030,6 +1044,7 @@
                 <span class="user-role" id="userRoleDisplay">&mdash;</span>
                 <div class="view-toggle" id="viewToggle">
                     <button class="toggle-opt active" id="togClient" onclick="switchView('client')">&#128100; Client</button>
+                    <button class="toggle-opt" id="togTelepro" onclick="switchView('telepro')">&#128222; Telepro</button>
                     <button class="toggle-opt" id="togFournisseur" onclick="switchView('fournisseur')">&#128202; Pro</button>
                 </div>
                 <button class="btn-hist" id="btnHistory" onclick="openHistory()" style="display:none;">&#128203;</button>
@@ -1354,7 +1369,7 @@
             </div>
 
             <!-- ===================== NOTE DE DIMENSIONNEMENT (fournisseur) ===================== -->
-            <div class="card fournisseur-only" id="dimensionnementCard">
+            <div class="card fournisseur-only telepro-hide" id="dimensionnementCard">
                 <h2 class="card-title">&#128208; Dimensionnement PAC</h2>
                 <div style="font-size: 12px; color: #64748b; margin-bottom: 18px;">Estimation de la puissance recommandée · Formule : P = G &times; V &times; &#916;T</div>
 
@@ -1613,7 +1628,7 @@
                 </div>
 
                 <!-- MARGE fournisseur -->
-                <div class="fournisseur-only" style="margin-top: 4px;">
+                <div class="fournisseur-only telepro-hide" style="margin-top: 4px;">
                     <div class="result-row-card" style="background: rgba(248,113,113,0.06); border-color: rgba(248,113,113,0.12);">
                         <div class="rrc-label">&#128202; Marge finale (HT)</div>
                         <div class="rrc-value" id="margeFinal" style="font-size: 18px;">&mdash;</div>
@@ -2843,6 +2858,7 @@ const FALLBACK_USERS = {
     'marc':    { pass:'marc26',    name:'Marc',        role:'commercial' },
     'julie':   { pass:'julie26',   name:'Julie',       role:'commercial' },
     'thomas':  { pass:'thomas26',  name:'Thomas',      role:'commercial' },
+    'telepro': { pass:'telepro26', name:'Téléprospecteur', role:'telepro' },
 };
 let currentUser = null;
 let useAPI = false;
@@ -2937,17 +2953,29 @@ function doGuestLogin(){
 }
 
 function switchView(v){
+    const mc = document.getElementById('mainContent');
+    const togC = document.getElementById('togClient');
+    const togT = document.getElementById('togTelepro');
+    const togF = document.getElementById('togFournisseur');
+    // Reset all
+    mc.classList.remove('fournisseur-mode', 'telepro-mode');
+    togC.classList.remove('active');
+    if(togT) togT.classList.remove('active');
+    togF.classList.remove('active');
+    
     if(v === 'fournisseur'){
         mode = 1;
-        document.getElementById('mainContent').classList.add('fournisseur-mode');
-        document.getElementById('togFournisseur').classList.add('active');
-        document.getElementById('togClient').classList.remove('active');
+        mc.classList.add('fournisseur-mode');
+        togF.classList.add('active');
         logAction('Vue fournisseur', '');
+    } else if(v === 'telepro'){
+        mode = 1;
+        mc.classList.add('telepro-mode');
+        if(togT) togT.classList.add('active');
+        logAction('Vue telepro', '');
     } else {
         mode = 0;
-        document.getElementById('mainContent').classList.remove('fournisseur-mode');
-        document.getElementById('togClient').classList.add('active');
-        document.getElementById('togFournisseur').classList.remove('active');
+        togC.classList.add('active');
     }
     try{ calc(); }catch(e){}
 }
@@ -2962,23 +2990,46 @@ function showApp(){
         // Vue client uniquement
         mode = 0;
         document.getElementById('mainContent').classList.remove('fournisseur-mode');
+        document.getElementById('mainContent').classList.remove('telepro-mode');
         document.getElementById('guestBar').style.display = 'flex';
         document.getElementById('userBar').style.display = 'none';
     } else {
-        // Commercial/admin : vue fournisseur par défaut
-        mode = 1;
-        document.getElementById('mainContent').classList.add('fournisseur-mode');
         document.getElementById('guestBar').style.display = 'none';
         document.getElementById('userBar').style.display = 'flex';
         document.getElementById('userNameDisplay').textContent = currentUser.name;
-        document.getElementById('userRoleDisplay').textContent = currentUser.role === 'admin' ? '\uD83D\uDC51 Admin' : '\uD83D\uDCCA Commercial';
-        // Admin-only buttons
+        
         const isAdmin = currentUser.role === 'admin';
+        const isTelepro = currentUser.role === 'telepro';
+        
+        // Role label
+        if(isAdmin) document.getElementById('userRoleDisplay').textContent = '\uD83D\uDC51 Admin';
+        else if(isTelepro) document.getElementById('userRoleDisplay').textContent = '\uD83D\uDCDE Téléprospecteur';
+        else document.getElementById('userRoleDisplay').textContent = '\uD83D\uDCCA Commercial';
+        
+        // Tab visibility: admin sees all 3, telepro sees Client+Telepro, commercial sees Client+Pro
+        const togT = document.getElementById('togTelepro');
+        const togF = document.getElementById('togFournisseur');
+        if(isAdmin){
+            if(togT) togT.style.display = '';
+            togF.style.display = '';
+        } else if(isTelepro){
+            if(togT) togT.style.display = '';
+            togF.style.display = 'none';
+        } else {
+            if(togT) togT.style.display = 'none';
+            togF.style.display = '';
+        }
+        
+        // Default view
+        if(isTelepro){
+            switchView('telepro');
+        } else {
+            switchView('fournisseur');
+        }
+        
+        // Admin-only buttons
         document.getElementById('btnHistory').style.display = isAdmin ? '' : 'none';
         document.getElementById('btnPwd').style.display = isAdmin ? '' : 'none';
-        // Toggle default to fournisseur
-        document.getElementById('togFournisseur').classList.add('active');
-        document.getElementById('togClient').classList.remove('active');
     }
 
     try { updateSurfaceOptions(); } catch(e){}
