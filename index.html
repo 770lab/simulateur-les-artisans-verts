@@ -948,7 +948,7 @@
 <!-- LOGIN SCREEN -->
 <div id="loginScreen" class="login-container">
     <div class="login-box">
-        <div class="login-logo"><span>🏠 LES ARTISANS VERTS</span></div>
+        <div class="login-logo"><span>&#127968; LES ARTISANS VERTS</span></div>
         <h2>Simulateur <span>PAC 2026</span></h2>
         <p class="login-sub">Connexion commerciale</p>
         <div class="form-group"><label>Nom d'utilisateur</label><input type="text" id="loginUser" placeholder="Utilisateur" autofocus></div>
@@ -957,7 +957,7 @@
         <p id="loginError" class="login-error"></p>
         <div style="margin-top:20px;padding-top:18px;border-top:1px solid #e5e7eb;text-align:center;">
             <p style="color:#9ca3af;font-size:12px;margin-bottom:10px;">Pas de compte ?</p>
-            <button onclick="doGuestLogin()" style="width:100%;padding:11px;background:#f3f4f6;color:#374151;border:1px solid #d1d5db;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;">👤 Continuer en vue client</button>
+            <button onclick="doGuestLogin()" style="width:100%;padding:11px;background:#f3f4f6;color:#374151;border:1px solid #d1d5db;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;">&#128100; Continuer en vue client</button>
         </div>
     </div>
 </div>
@@ -966,7 +966,7 @@
 <div id="historyModal" class="hist-overlay" onclick="if(event.target===this)this.classList.remove('active')">
     <div class="hist-modal">
         <div class="hist-modal-header">
-            <h3>📋 Journal des modifications</h3>
+            <h3>&#128203; Journal des modifications</h3>
             <button class="hist-modal-close" onclick="document.getElementById('historyModal').classList.remove('active')">&times;</button>
         </div>
         <div class="hist-modal-body" id="historyBody"></div>
@@ -977,7 +977,7 @@
 <div id="pwdModal" class="hist-overlay" onclick="if(event.target===this)this.classList.remove('active')">
     <div class="hist-modal" style="max-width:380px;">
         <div class="hist-modal-header">
-            <h3>🔑 Changer mon mot de passe</h3>
+            <h3>&#128273; Changer mon mot de passe</h3>
             <button class="hist-modal-close" onclick="document.getElementById('pwdModal').classList.remove('active')">&times;</button>
         </div>
         <div class="hist-modal-body">
@@ -1007,7 +1007,7 @@
             <!-- Row 1: Logo + Title + Refresh -->
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
                 <div style="display:flex; align-items:center; gap:10px;">
-                    <div style="background:linear-gradient(135deg,#16a34a,#15803d); color:white; padding:8px 12px; border-radius:8px; font-weight:700; font-size:13px; letter-spacing:0.3px; box-shadow:0 2px 8px rgba(22,163,74,0.3);">🏠 LAV</div>
+                    <div style="background:linear-gradient(135deg,#16a34a,#15803d); color:white; padding:8px 12px; border-radius:8px; font-weight:700; font-size:13px; letter-spacing:0.3px; box-shadow:0 2px 8px rgba(22,163,74,0.3);">&#127968; LAV</div>
                     <div style="font-size:16px; font-weight:700; color:#1d1d1f; line-height:1.2;">Simulateur PAC <span style="font-size:11px; background:#16a34a; color:white; padding:1px 6px; border-radius:4px; vertical-align:middle;">2026</span></div>
                 </div>
                 <button class="btn-reset" onclick="reset()" title="Rafraîchir"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></button>
@@ -1015,19 +1015,19 @@
             <!-- Row 2: User controls -->
             <!-- GUEST BAR -->
             <div class="guest-bar" id="guestBar" style="display:none;">
-                <button class="btn-login-small" onclick="goToLogin()">🔑 Se connecter</button>
+                <button class="btn-login-small" onclick="goToLogin()">&#128273; Se connecter</button>
             </div>
             <!-- USER BAR -->
             <div class="user-bar" id="userBar" style="display:none;">
-                <span class="user-name" id="userNameDisplay">—</span>
-                <span class="user-role" id="userRoleDisplay">—</span>
+                <span class="user-name" id="userNameDisplay">&mdash;</span>
+                <span class="user-role" id="userRoleDisplay">&mdash;</span>
                 <div class="view-toggle" id="viewToggle">
-                    <button class="toggle-opt active" id="togClient" onclick="switchView('client')">👤 Client</button>
-                    <button class="toggle-opt" id="togFournisseur" onclick="switchView('fournisseur')">📊 Pro</button>
+                    <button class="toggle-opt active" id="togClient" onclick="switchView('client')">&#128100; Client</button>
+                    <button class="toggle-opt" id="togFournisseur" onclick="switchView('fournisseur')">&#128202; Pro</button>
                 </div>
-                <button class="btn-hist" id="btnHistory" onclick="openHistory()" style="display:none;">📋</button>
-                <button class="btn-hist" id="btnPwd" onclick="openPwdModal()" style="display:none;">🔑</button>
-                <button class="btn-logout" onclick="doLogout()">â†ª</button>
+                <button class="btn-hist" id="btnHistory" onclick="openHistory()" style="display:none;">&#128203;</button>
+                <button class="btn-hist" id="btnPwd" onclick="openPwdModal()" style="display:none;">&#128273;</button>
+                <button class="btn-logout" onclick="doLogout()">&#8618;</button>
             </div>
         </div>
     </div>
@@ -1038,7 +1038,7 @@
                 <h2 class="card-title">Paramètres</h2>
 
                 <!-- Info client -->
-                <div style="font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">👤 Informations client</div>
+                <div style="font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">&#128100; Informations client</div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
                     <div class="form-group" style="margin-bottom: 0;">
                         <label>Nom</label>
@@ -1052,10 +1052,10 @@
                 <div class="grid-3col" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
                     <div class="form-group" style="margin-bottom: 0;">
                         <label for="departement">Département</label>
-                        <input type="text" id="departement" placeholder="Ex: 33, 75…" maxlength="3" style="text-align: center; font-weight: 600;" oninput="detectDept()">
+                        <input type="text" id="departement" placeholder="Ex: 33, 75&#8230;" maxlength="3" style="text-align: center; font-weight: 600;" oninput="detectDept()">
                     </div>
                     <div class="form-group" style="margin-bottom: 0;">
-                        <label for="rfr">Revenu fiscal de réf. (€)</label>
+                        <label for="rfr">Revenu fiscal de réf. (&euro;)</label>
                         <input type="number" id="rfr" placeholder="Ex: 35 000" oninput="detectProfil()" style="font-weight: 600;">
                     </div>
                     <div class="form-group" style="margin-bottom: 0;">
@@ -1084,8 +1084,8 @@
                 <input type="hidden" id="typeLogement" value="maison">
                 <select id="surface" style="display:none;">
                     <option value="S<70">S &lt; 70 m²</option>
-                    <option value="70<=S<90">70 â‰¤ S &lt; 90 m²</option>
-                    <option value="S>=90" selected>S â‰¥ 90 m²</option>
+                    <option value="70<=S<90">70 &le; S &lt; 90 m²</option>
+                    <option value="S>=90" selected>S &ge; 90 m²</option>
                 </select>
                 <select id="categorie" style="display:none;">
                     <option value="BLEU">BLEU</option><option value="JAUNE">JAUNE</option>
@@ -1097,7 +1097,7 @@
 
                 <!-- Bloc résultat MPR -->
                 <div id="mprResultBloc" style="display: none; border-radius: 12px; padding: 20px; text-align: center; transition: all 0.2s; margin-bottom: 16px;">
-                    <div id="mprProfilIcon" style="font-size: 32px; margin-bottom: 6px;">🔵</div>
+                    <div id="mprProfilIcon" style="font-size: 32px; margin-bottom: 6px;">&#128309;</div>
                     <div id="mprProfilLabel" style="font-size: 18px; font-weight: 800; margin-bottom: 4px;">Profil Bleu</div>
                     <div id="mprProfilDesc" style="font-size: 13px; font-weight: 500; opacity: 0.85; margin-bottom: 10px;">Revenus très modestes</div>
                     <div class="grid-3col" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
@@ -1111,7 +1111,7 @@
                         </div>
                         <div style="background: rgba(255,255,255,0.25); border-radius: 8px; padding: 8px;">
                             <div style="font-size: 10px; text-transform: uppercase; opacity: 0.7; letter-spacing: 0.5px;">Seuil</div>
-                            <div id="mprInfoSeuil" style="font-size: 14px; font-weight: 700;">—</div>
+                            <div id="mprInfoSeuil" style="font-size: 14px; font-weight: 700;">&mdash;</div>
                         </div>
                     </div>
                     <div id="mprInfoRFR" style="font-size: 12px; margin-top: 10px; opacity: 0.75;"></div>
@@ -1119,7 +1119,7 @@
                 </div>
 
                 <!-- Paramètres techniques + CEE -->
-                <div style="font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">âš¡ Scénario & Aides CEE</div>
+                <div style="font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">&#9889; Scénario & Aides CEE</div>
                 <div class="grid-3col" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px;">
                     <div class="form-group" style="margin-bottom: 0;">
                         <label for="scenario" style="color: rgba(255,255,255,0.7);">Scénario</label>
@@ -1163,10 +1163,10 @@
                 </select>
                 <div style="display:none;">
                     <select id="menageCEE" onchange="calcCEEDetail()">
-                        <option value="tm">Très modestes (12,5 €/MWhc)</option>
-                        <option value="autres">Autres ménages (7,5 €/MWhc)</option>
+                        <option value="tm">Très modestes (12,5 &euro;/MWhc)</option>
+                        <option value="autres">Autres ménages (7,5 &euro;/MWhc)</option>
                     </select>
-                    <input type="text" id="ceeCoefSurface" disabled value="—">
+                    <input type="text" id="ceeCoefSurface" disabled value="&mdash;">
                     <div id="ceeSurfaceInfo"></div>
                 </div>
 
@@ -1174,16 +1174,16 @@
                 <div class="cee-kpi-row" style="grid-template-columns: 1fr 1fr; margin-top: 4px;">
                     <div class="cee-kpi" style="background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.1);">
                         <div class="kpi-label" style="color: rgba(255,255,255,0.6);">Volume CEE</div>
-                        <div class="kpi-value" id="ceeOutKwhc" style="color: #fbbf24;">—</div>
+                        <div class="kpi-value" id="ceeOutKwhc" style="color: #fbbf24;">&mdash;</div>
                     </div>
                     <div class="cee-kpi" style="background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.1);">
                         <div class="kpi-label" style="color: rgba(255,255,255,0.6);">Prime CEE</div>
-                        <div class="kpi-value" id="ceeOutPrime" style="color: #34d399;">—</div>
+                        <div class="kpi-value" id="ceeOutPrime" style="color: #34d399;">&mdash;</div>
                     </div>
                 </div>
                 <!-- Détail fournisseur -->
                 <div class="fournisseur-only" style="margin-top: 4px; font-size: 11px; color: rgba(255,255,255,0.4); font-family: ui-monospace, monospace;">
-                    <span id="ceeOutDetail">—</span> · <span id="ceeOutPrix">—</span>
+                    <span id="ceeOutDetail">&mdash;</span> · <span id="ceeOutPrix">&mdash;</span>
                 </div>
 
                 </div><!-- /mprCeeWrapper -->
@@ -1199,7 +1199,7 @@
                             </div>
                             <div>
                                 <label>Forfait calculé</label>
-                                <input type="text" id="cee148Forfait" disabled value="—" style="background: #f1f5f9; font-weight: 600;">
+                                <input type="text" id="cee148Forfait" disabled value="&mdash;" style="background: #f1f5f9; font-weight: 600;">
                             </div>
                             <div>
                                 <label>Note interne</label>
@@ -1208,11 +1208,11 @@
                         </div>
                     </div>
                     <div id="ceeBloc143" class="cee-hidden" style="margin-top: 8px;">
-                        <div style="font-size: 12px; font-weight: 600; color: #2563eb; margin-bottom: 8px;">📙 BAR-TH-143 — SSC · <span style="color: #059669;">Coup de pouce ×2</span></div>
+                        <div style="font-size: 12px; font-weight: 600; color: #2563eb; margin-bottom: 8px;">&#128217; BAR-TH-143 &mdash; SSC · <span style="color: #059669;">Coup de pouce &times;2</span></div>
                         <div class="cee-grid">
                             <div>
                                 <label>Forfait par zone</label>
-                                <input type="text" id="cee143Forfait" disabled value="—" style="background: #f1f5f9; font-weight: 600;">
+                                <input type="text" id="cee143Forfait" disabled value="&mdash;" style="background: #f1f5f9; font-weight: 600;">
                                 <div class="cee-hint">H1: 134 800 · H2: 121 000 · H3: 100 500 kWhc</div>
                             </div>
                         </div>
@@ -1220,8 +1220,8 @@
                     <div class="cee-kpi-row" style="grid-template-columns: 1fr; margin-top: 8px;">
                         <div class="cee-kpi" id="ceeKpi148" style="display:none;">
                             <div class="kpi-label">Dont BAR-TH-148</div>
-                            <div class="kpi-value" id="ceeOut148" style="color: #059669;">—</div>
-                            <div class="kpi-detail" id="ceeOut148Detail">—</div>
+                            <div class="kpi-value" id="ceeOut148" style="color: #059669;">&mdash;</div>
+                            <div class="kpi-detail" id="ceeOut148Detail">&mdash;</div>
                         </div>
                     </div>
                     <div class="cee-result" id="ceeResult"></div>
@@ -1232,7 +1232,7 @@
 
             <!-- ===================== BARÈME PAC (client) ===================== -->
             <div class="card" id="baremeCard">
-                <h2 class="card-title">📐 Puissance PAC recommandée</h2>
+                <h2 class="card-title">&#128208; Puissance PAC recommandée</h2>
                 <div style="font-size: 12px; color: #64748b; margin-bottom: 14px;">Estimation selon la surface, l'année de construction et l'isolation</div>
 
                 <!-- Hidden input for sync -->
@@ -1252,7 +1252,7 @@
                             <input type="checkbox" name="isoWork" value="combles">
                             <span class="iso-info">
                                 <span class="iso-title">Combles / Toiture</span>
-                                <span class="iso-sub">Isolation soufflée, rampants, sarking…</span>
+                                <span class="iso-sub">Isolation soufflée, rampants, sarking&#8230;</span>
                             </span>
                             <select class="iso-quand" onchange="evalIsolation();calcBareme()">
                                 <option value="recent">&lt; 5 ans</option>
@@ -1307,7 +1307,7 @@
                     <!-- Résultat isolation (fournisseur only) -->
                     <div id="isoResult" class="fournisseur-only" style="margin-top: 10px; padding: 10px 14px; border-radius: 8px; font-size: 13px; background: #f8fafc; border: 1.5px solid #e2e8f0;">
                         <span style="font-weight: 600;" id="isoStateName">État d'origine / Non précisé</span>
-                        <span style="color: #64748b;"> — </span>
+                        <span style="color: #64748b;"> &mdash; </span>
                         <span style="font-weight: 700; color: #16a34a;" id="dimGDisplay">G = 0,95</span>
                     </div>
                 </div>
@@ -1348,8 +1348,8 @@
 
             <!-- ===================== NOTE DE DIMENSIONNEMENT (fournisseur) ===================== -->
             <div class="card fournisseur-only" id="dimensionnementCard">
-                <h2 class="card-title">📐 Dimensionnement PAC</h2>
-                <div style="font-size: 12px; color: #64748b; margin-bottom: 18px;">Estimation de la puissance recommandée · Formule : P = G × V × Î”T</div>
+                <h2 class="card-title">&#128208; Dimensionnement PAC</h2>
+                <div style="font-size: 12px; color: #64748b; margin-bottom: 18px;">Estimation de la puissance recommandée · Formule : P = G &times; V &times; &#916;T</div>
 
                 <!-- Surface + Hauteur -->
                 <div class="dim-row">
@@ -1376,27 +1376,27 @@
                     <div style="font-weight: 700; color: white; font-size: 14px; margin-bottom: 14px; text-align: center;">RÉSULTATS DU DIMENSIONNEMENT</div>
                     
                     <div style="background: rgba(255,255,255,0.1); border-radius: 8px; padding: 12px; margin-bottom: 10px; text-align: center;">
-                        <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">Déperditions totales (P = G × V × Î”T)</div>
-                        <div style="font-size: 28px; font-weight: 800; color: #fbbf24;" id="dimDeperditions">—</div>
-                        <div style="font-size: 12px; color: #cbd5e1;" id="dimDepFormula">—</div>
+                        <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">Déperditions totales (P = G &times; V &times; &#916;T)</div>
+                        <div style="font-size: 28px; font-weight: 800; color: #fbbf24;" id="dimDeperditions">&mdash;</div>
+                        <div style="font-size: 12px; color: #cbd5e1;" id="dimDepFormula">&mdash;</div>
                     </div>
 
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                         <div style="background: rgba(255,255,255,0.1); border-radius: 8px; padding: 12px; text-align: center;">
                             <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase;">Puissance PAC</div>
-                            <div style="font-size: 24px; font-weight: 800; color: #34d399;" id="dimPuissancePAC">—</div>
-                            <div style="font-size: 11px; color: #cbd5e1;" id="dimPuissancePACDetail">—</div>
+                            <div style="font-size: 24px; font-weight: 800; color: #34d399;" id="dimPuissancePAC">&mdash;</div>
+                            <div style="font-size: 11px; color: #cbd5e1;" id="dimPuissancePACDetail">&mdash;</div>
                         </div>
                         <div style="background: rgba(255,255,255,0.1); border-radius: 8px; padding: 12px; text-align: center;">
                             <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase;">Puissance appoint</div>
-                            <div style="font-size: 24px; font-weight: 800; color: #f97316;" id="dimPuissanceAppoint">—</div>
-                            <div style="font-size: 11px; color: #cbd5e1;" id="dimPuissanceAppointDetail">—</div>
+                            <div style="font-size: 24px; font-weight: 800; color: #f97316;" id="dimPuissanceAppoint">&mdash;</div>
+                            <div style="font-size: 11px; color: #cbd5e1;" id="dimPuissanceAppointDetail">&mdash;</div>
                         </div>
                     </div>
                     
                     <div style="background: rgba(255,255,255,0.08); border-radius: 8px; padding: 10px; margin-top: 10px; text-align: center;">
                         <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase;">Puissance totale (PAC + appoint)</div>
-                        <div style="font-size: 20px; font-weight: 700; color: white;" id="dimPuissanceTotale">—</div>
+                        <div style="font-size: 20px; font-weight: 700; color: white;" id="dimPuissanceTotale">&mdash;</div>
                     </div>
                 </div>
 
@@ -1414,7 +1414,7 @@
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                         <div>
                             <label style="font-size: 12px; color: #64748b;">Marque PAC</label>
-                            <input type="text" id="dimMarque" placeholder="Ex: Daikin, Atlantic…" style="width: 100%; padding: 8px 10px; border: 1px solid #d2d2d7; border-radius: 6px;">
+                            <input type="text" id="dimMarque" placeholder="Ex: Daikin, Atlantic&#8230;" style="width: 100%; padding: 8px 10px; border: 1px solid #d2d2d7; border-radius: 6px;">
                         </div>
                         <div>
                             <label style="font-size: 12px; color: #64748b;">Référence PAC</label>
@@ -1433,7 +1433,7 @@
                         <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">PAC Matériel</label>
                         <input type="number" id="coutPACMateriel" value="2900" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
                         <input type="number" id="qtePACMateriel" value="1" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
-                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalPACMateriel">2 900 €</div>
+                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalPACMateriel">2 900 &euro;</div>
                     </div>
                     
                     <!-- PAC Pose -->
@@ -1441,7 +1441,7 @@
                         <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">PAC Pose</label>
                         <input type="number" id="coutPACPose" value="2500" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
                         <input type="number" id="qtePACPose" value="1" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
-                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalPACPose">2 500 €</div>
+                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalPACPose">2 500 &euro;</div>
                     </div>
                     
                     <!-- Ballon Matériel -->
@@ -1449,7 +1449,7 @@
                         <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">Ballon Matériel</label>
                         <input type="number" id="coutBallonMateriel" value="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
                         <input type="number" id="qteBallonMateriel" value="0" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
-                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalBallonMateriel">0 €</div>
+                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalBallonMateriel">0 &euro;</div>
                     </div>
                     
                     <!-- Ballon Pose -->
@@ -1457,7 +1457,7 @@
                         <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">Ballon Pose</label>
                         <input type="number" id="coutBallonPose" value="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
                         <input type="number" id="qteBallonPose" value="0" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
-                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalBallonPose">0 €</div>
+                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalBallonPose">0 &euro;</div>
                     </div>
                     
                     <!-- Accessoires -->
@@ -1465,7 +1465,7 @@
                         <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">Access.</label>
                         <input type="number" id="coutAccessoires" value="500" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
                         <input type="number" id="qteAccessoires" value="1" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
-                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalAccessoires">500 €</div>
+                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalAccessoires">500 &euro;</div>
                     </div>
                     
                     <!-- Admin -->
@@ -1473,7 +1473,7 @@
                         <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">Admin</label>
                         <input type="number" id="coutAdmin" value="400" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
                         <input type="number" id="qteAdmin" value="1" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
-                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalAdmin">400 €</div>
+                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalAdmin">400 &euro;</div>
                     </div>
                     
                     <!-- Mandat MPR -->
@@ -1481,7 +1481,7 @@
                         <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">Mandat MPR</label>
                         <input type="number" id="coutMandat" value="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
                         <input type="number" id="qteMandat" value="1" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
-                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalMandat">0 €</div>
+                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalMandat">0 &euro;</div>
                     </div>
                     
                     <!-- Demande mairie -->
@@ -1489,7 +1489,7 @@
                         <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">Mairie</label>
                         <input type="number" id="coutMairie" value="250" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
                         <input type="number" id="qteMairie" value="0" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
-                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalMairie">0 €</div>
+                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalMairie">0 &euro;</div>
                     </div>
                     
                     <!-- Prévisite -->
@@ -1498,8 +1498,8 @@
                             <input type="checkbox" id="checkPrevisite" onchange="updateFromDetail()" style="width: 16px; height: 16px;"> Prévisite
                         </label>
                         <input type="number" id="coutPrevisite" value="200" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
-                        <div style="text-align: center; font-weight: 600; color: #64748b;">—</div>
-                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalPrevisite">0 €</div>
+                        <div style="text-align: center; font-weight: 600; color: #64748b;">&mdash;</div>
+                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalPrevisite">0 &euro;</div>
                     </div>
                 </div>
                 
@@ -1512,13 +1512,13 @@
                 <div style="background: #0071e3; color: white; padding: 14px; border-radius: 8px; margin-bottom: 12px;">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <span style="font-weight: 600; font-size: 14px;">TOTAL COÛT HT</span>
-                        <span style="font-size: 20px; font-weight: 700;" id="coutTotalHTDisplay">6 200 €</span>
+                        <span style="font-size: 20px; font-weight: 700;" id="coutTotalHTDisplay">6 200 &euro;</span>
                     </div>
                 </div>
                 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                     <div class="form-group" style="margin-bottom: 0;">
-                        <label for="prixCumac">Prix cumac (€/MWhc) — auto selon ménage</label>
+                        <label for="prixCumac">Prix cumac (&euro;/MWhc) &mdash; auto selon ménage</label>
                         <input type="number" id="prixCumac" value="12.5" step="0.01" oninput="calc()" style="font-weight: 600;">
                     </div>
 
@@ -1534,13 +1534,13 @@
 
         <div class="results-sidebar" id="resultsSidebar">
             <div class="summary-card" style="margin-bottom: 0;">
-                <div class="scenario-label-dark" id="scenarioSummary">—</div>
+                <div class="scenario-label-dark" id="scenarioSummary">&mdash;</div>
 
                 <!-- TOTAL TTC (readonly client) -->
                 <div class="ttc-readonly">
                     <div class="result-row-card" style="background: rgba(96,165,250,0.08); border-color: rgba(96,165,250,0.15);">
-                        <div class="rrc-label">💰 Coût installation TTC</div>
-                        <div class="rrc-value blue" id="totalTTC">—</div>
+                        <div class="rrc-label">&#128176; Coût installation TTC</div>
+                        <div class="rrc-value blue" id="totalTTC">&mdash;</div>
                     </div>
                 </div>
 
@@ -1562,7 +1562,7 @@
                             <div class="rrc-label">Coût HT</div>
                             <div style="font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 2px;">Matériel + pose + admin</div>
                         </div>
-                        <div class="rrc-value" id="displayCoutHT" style="font-size: 18px;">—</div>
+                        <div class="rrc-value" id="displayCoutHT" style="font-size: 18px;">&mdash;</div>
                     </div>
                 </div>
 
@@ -1573,7 +1573,7 @@
 
                 <div class="result-row-card">
                     <div class="rrc-label">MaPrimeRénov'</div>
-                    <div class="rrc-value green" id="aidesMPR" style="font-size: 18px;">—</div>
+                    <div class="rrc-value green" id="aidesMPR" style="font-size: 18px;">&mdash;</div>
                 </div>
 
                 <div class="result-row-card">
@@ -1581,7 +1581,7 @@
                         <div class="rrc-label">Certificats CEE</div>
                         <div style="font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 2px;" id="ceeSourceLabel">BAR-TH détaillé</div>
                     </div>
-                    <div class="rrc-value green" id="aidesCEE" style="font-size: 18px;">—</div>
+                    <div class="rrc-value green" id="aidesCEE" style="font-size: 18px;">&mdash;</div>
                 </div>
 
                 <div class="glow-separator"></div>
@@ -1589,20 +1589,20 @@
                 <!-- TOTAL AIDES -->
                 <div class="result-highlight-card">
                     <div class="rhc-label">Total des aides</div>
-                    <div class="rhc-value" id="totalAides">—</div>
+                    <div class="rhc-value" id="totalAides">&mdash;</div>
                 </div>
 
                 <!-- RESTE À CHARGE -->
                 <div class="result-row-card" style="background: rgba(251,191,36,0.08); border-color: rgba(251,191,36,0.15);">
-                    <div class="rrc-label">🏠 Reste à charge estimé</div>
-                    <div class="rrc-value yellow" id="resteCharge">—</div>
+                    <div class="rrc-label">&#127968; Reste à charge estimé</div>
+                    <div class="rrc-value yellow" id="resteCharge">&mdash;</div>
                 </div>
 
                 <!-- MARGE fournisseur -->
                 <div class="fournisseur-only" style="margin-top: 4px;">
                     <div class="result-row-card" style="background: rgba(248,113,113,0.06); border-color: rgba(248,113,113,0.12);">
-                        <div class="rrc-label">📊 Marge finale (HT)</div>
-                        <div class="rrc-value" id="margeFinal" style="font-size: 18px;">—</div>
+                        <div class="rrc-label">&#128202; Marge finale (HT)</div>
+                        <div class="rrc-value" id="margeFinal" style="font-size: 18px;">&mdash;</div>
                     </div>
                 </div>
 
@@ -1617,28 +1617,28 @@
                             <input type="number" id="racPourcent" value="0" min="0" max="100" step="1" oninput="updatePct()" onchange="logRACChange()">
                         </div>
                         <div>
-                            <div class="amount-label" style="color: rgba(255,255,255,0.45); margin-bottom: 4px;">RAC offert (€)</div>
+                            <div class="amount-label" style="color: rgba(255,255,255,0.45); margin-bottom: 4px;">RAC offert (&euro;)</div>
                             <input type="number" id="racOffert" value="0" min="0" step="1" oninput="updateAmt()" onchange="logRACChange()">
                         </div>
                     </div>
                     <div id="maxPctInfo" style="font-size: 12px; padding: 10px 14px; border-radius: 8px; background: rgba(5,150,105,0.12); border: 1px solid rgba(5,150,105,0.25); color: #34d399; margin-bottom: 6px;">
-                        Remise max : <strong id="maxPctValue">—</strong> pour rester en dossier vert
+                        Remise max : <strong id="maxPctValue">&mdash;</strong> pour rester en dossier vert
                     </div>
                     <div class="note-small" style="font-size: 11px; margin-bottom: 8px; color: rgba(255,255,255,0.3);">Appliqué sur le RAC brut. N'affecte pas le prix cumac.</div>
                 </div>
 
                 <!-- Status + Actions -->
                 <div id="statusBadge" class="status-badge ok" style="margin-bottom: 14px;" onclick="shareDevis()">
-                    <span id="statusIcon">âœ…</span>
+                    <span id="statusIcon">&#9989;</span>
                     <span id="statusText">Voulez-vous un devis ?</span>
                 </div>
 
                 <button id="exportBtn" class="btn-dark-export pdf" onclick="exportPDF()">
-                    📄 Exporter en PDF
+                    &#128196; Exporter en PDF
                 </button>
                 
                 <button id="whatsappBtn" class="btn-dark-export whatsapp" onclick="sendWhatsApp()">
-                    💬 Envoyer par WhatsApp
+                    &#128172; Envoyer par WhatsApp
                 </button>
             </div>
         </div>
@@ -1655,7 +1655,7 @@
             <!-- EN-TÊTE -->
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 3px solid #16a34a;">
                 <div style="display: flex; align-items: center; gap: 12px;">
-                    <div style="background: linear-gradient(135deg, #16a34a, #15803d); color: white; padding: 8px 14px; border-radius: 8px; font-weight: 700; font-size: 14px;">🏠 LES ARTISANS VERTS</div>
+                    <div style="background: linear-gradient(135deg, #16a34a, #15803d); color: white; padding: 8px 14px; border-radius: 8px; font-weight: 700; font-size: 14px;">&#127968; LES ARTISANS VERTS</div>
                     <div style="font-size: 12px; color: #6b7280;">Simulateur Aides PAC 2026</div>
                 </div>
                 <div style="text-align: right;">
@@ -1670,7 +1670,7 @@
             <!-- CLIENT + PROFIL -->
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; page-break-inside: avoid;">
                 <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px;">
-                    <div style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">👤 Client</div>
+                    <div style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">&#128100; Client</div>
                     <table style="width: 100%; font-size: 12px; border-collapse: collapse;">
                         <tr><td style="padding: 2px 0; color: #6b7280; width: 45%;">Nom</td><td style="padding: 2px 0; font-weight: 600;" id="printNom"></td></tr>
                         <tr><td style="padding: 2px 0; color: #6b7280;">Département</td><td style="padding: 2px 0; font-weight: 600;" id="printDept"></td></tr>
@@ -1680,8 +1680,8 @@
                     </table>
                 </div>
                 <div id="printProfilCard" style="border-radius: 8px; padding: 12px; color: white;">
-                    <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; opacity: 0.8;">🏛️ Profil MaPrimeRénov'</div>
-                    <div id="printProfilIcon" style="font-size: 28px; margin-bottom: 2px;">🔵</div>
+                    <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; opacity: 0.8;">&#127963;&#65039; Profil MaPrimeRénov'</div>
+                    <div id="printProfilIcon" style="font-size: 28px; margin-bottom: 2px;">&#128309;</div>
                     <div id="printProfilLabel" style="font-size: 18px; font-weight: 800;"></div>
                     <div id="printProfilDesc" style="font-size: 12px; opacity: 0.85; margin-top: 2px;"></div>
                     <div id="printProfilSeuil" style="font-size: 11px; opacity: 0.7; margin-top: 4px;"></div>
@@ -1690,7 +1690,7 @@
 
             <!-- CONFIGURATION TECHNIQUE -->
             <div style="background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 12px; margin-bottom: 14px; page-break-inside: avoid;">
-                <div style="font-size: 10px; font-weight: 700; color: #0369a1; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">âš™ï¸ Configuration technique</div>
+                <div style="font-size: 10px; font-weight: 700; color: #0369a1; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">&#9881;&#65039; Configuration technique</div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
                     <div><div style="font-size: 10px; color: #64748b;">Scénario</div><div style="font-size: 13px; font-weight: 700; color: #0f172a;" id="printScenario"></div></div>
                     <div><div style="font-size: 10px; color: #64748b;">Surface</div><div style="font-size: 13px; font-weight: 700; color: #0f172a;" id="printSurface"></div></div>
@@ -1705,7 +1705,7 @@
 
             <!-- ESTIMATION FINANCIÈRE -->
             <div style="margin-bottom: 14px; page-break-inside: avoid;">
-                <div style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">💰 Estimation financière</div>
+                <div style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">&#128176; Estimation financière</div>
                 <div style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
                     <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
                         <tr style="background: #f8fafc;">
@@ -1713,11 +1713,11 @@
                             <td style="padding: 10px 14px; text-align: right; font-weight: 800; font-size: 16px;" id="printTTC"></td>
                         </tr>
                         <tr style="border-top: 1px solid #f1f5f9;">
-                            <td style="padding: 8px 14px; color: #6b7280;">â†³ MaPrimeRénov'</td>
+                            <td style="padding: 8px 14px; color: #6b7280;">&#8627; MaPrimeRénov'</td>
                             <td style="padding: 8px 14px; text-align: right; font-weight: 700; color: #2563eb; font-size: 14px;" id="printMPR"></td>
                         </tr>
                         <tr style="border-top: 1px solid #f1f5f9;">
-                            <td style="padding: 8px 14px; color: #6b7280;">â†³ Prime CEE</td>
+                            <td style="padding: 8px 14px; color: #6b7280;">&#8627; Prime CEE</td>
                             <td style="padding: 8px 14px; text-align: right; font-weight: 700; color: #2563eb; font-size: 14px;" id="printCEE"></td>
                         </tr>
                         <tr style="border-top: 2px solid #16a34a; background: #f0fdf4;">
@@ -1745,7 +1745,7 @@
 
             <!-- PIED DE PAGE -->
             <div style="text-align: center; padding-top: 12px; border-top: 1px solid #e5e7eb;">
-                <div style="font-size: 10px; color: #9ca3af;">Document généré automatiquement — Les Artisans Verts · Propulsé par 770 Lab</div>
+                <div style="font-size: 10px; color: #9ca3af;">Document généré automatiquement &mdash; Les Artisans Verts · Propulsé par 770 Lab</div>
                 <div style="font-size: 9px; color: #d1d5db; margin-top: 2px;">Ce document est une estimation et ne constitue pas un devis contractuel</div>
             </div>
         </div>
@@ -1771,7 +1771,7 @@ window.onerror=function(msg,url,line,col,err){
 // BARÈMES DE REVENUS MPR 2026
 // ============================================
 // ============================================
-// TABLE DÉPARTEMENTS → ZONE CLIMATIQUE (source officielle)
+// TABLE DÉPARTEMENTS \u2192 ZONE CLIMATIQUE (source officielle)
 // ============================================
 const DEPT_ZONE = {
     "01":"H1","02":"H1","03":"H1","04":"H2","05":"H1","06":"H3","07":"H2","08":"H1","09":"H2","10":"H1",
@@ -1801,7 +1801,7 @@ function detectDept() {
     const zone = DEPT_ZONE[deptInput] || DEPT_ZONE[deptKey];
     if (zone) {
         document.getElementById('zone').value = zone;
-        document.getElementById('deptZoneResult').textContent = `→ Zone ${zone}${isIDF ? ' · IDF' : ''}`;
+        document.getElementById('deptZoneResult').textContent = `\u2192 Zone ${zone}${isIDF ? ' · IDF' : ''}`;
         
         // Auto Tbase dimensionnement
         const tbase = DEPT_TBASE[deptKey] || DEPT_TBASE[deptInput];
@@ -1812,7 +1812,7 @@ function detectDept() {
         calc();
         calcCEEDetail();
     } else {
-        document.getElementById('deptZoneResult').textContent = 'âŒ Département inconnu';
+        document.getElementById('deptZoneResult').textContent = '\u274C Département inconnu';
         
     }
 }
@@ -1864,13 +1864,13 @@ function detectProfil() {
     let profil, icon, label, desc, bg, color;
 
     if (rfr <= seuils[0]) {
-        profil = 'BLEU'; icon = '🔵'; label = 'Profil Bleu'; desc = 'Revenus très modestes';
+        profil = 'BLEU'; icon = '\uD83D\uDD35'; label = 'Profil Bleu'; desc = 'Revenus très modestes';
         bg = 'linear-gradient(135deg, #1e40af, #3b82f6)'; color = '#ffffff';
     } else if (rfr <= seuils[1]) {
-        profil = 'JAUNE'; icon = '🟡'; label = 'Profil Jaune'; desc = 'Revenus modestes';
+        profil = 'JAUNE'; icon = '\uD83D\uDFE1'; label = 'Profil Jaune'; desc = 'Revenus modestes';
         bg = 'linear-gradient(135deg, #ca8a04, #eab308)'; color = '#ffffff';
     } else if (rfr <= seuils[2]) {
-        profil = 'VIOLET'; icon = '🟣'; label = 'Profil Violet'; desc = 'Revenus intermédiaires';
+        profil = 'VIOLET'; icon = '\uD83D\uDFE3'; label = 'Profil Violet'; desc = 'Revenus intermédiaires';
         bg = 'linear-gradient(135deg, #6b21a8, #a855f7)'; color = '#ffffff';
     } else {
         profil = 'ROSE'; icon = '<span style="display:inline-block;width:28px;height:28px;border-radius:50%;background:#f472b6;"></span>'; label = 'Profil Rose'; desc = 'Revenus supérieurs';
@@ -1892,15 +1892,15 @@ function detectProfil() {
     document.getElementById('mprInfoRegion').textContent = regionLabel + ' · ' + zn;
     document.getElementById('mprInfoFoyer').textContent = nb + ' pers.';
     document.getElementById('mprInfoSeuil').textContent = profil === 'ROSE'
-        ? '> ' + seuilVal.toLocaleString('fr-FR') + ' €'
-        : 'â‰¤ ' + seuilVal.toLocaleString('fr-FR') + ' €';
-    document.getElementById('mprInfoRFR').textContent = 'RFR déclaré : ' + rfr.toLocaleString('fr-FR') + ' €';
+        ? '> ' + seuilVal.toLocaleString('fr-FR') + ' \u20AC'
+        : '\u2264 ' + seuilVal.toLocaleString('fr-FR') + ' \u20AC';
+    document.getElementById('mprInfoRFR').textContent = 'RFR déclaré : ' + rfr.toLocaleString('fr-FR') + ' \u20AC';
 
     // Aide MPR pour le scénario en cours
     const sc = document.getElementById('scenario').value;
     const mpr = D.MPR[sc] ? D.MPR[sc][profil] : 0;
     document.getElementById('mprInfoAide').textContent = mpr > 0
-        ? 'Aide MaPrimeRénov\' : ' + mpr.toLocaleString('fr-FR') + ' €'
+        ? 'Aide MaPrimeRénov\' : ' + mpr.toLocaleString('fr-FR') + ' \u20AC'
         : 'Pas d\'aide MaPrimeRénov\' pour ce profil';
 
     document.getElementById('categorie').value = profil;
@@ -1920,32 +1920,32 @@ function toggleRevenus() {
 }
 
 // ============================================
-// CEE DÉTAIL — BAR-TH-171 / 143 / 148
+// CEE DÉTAIL \u2014 BAR-TH-171 / 143 / 148
 // (Source : fiche BAR-TH-171 vA78.4)
 // ============================================
-const CEE_PRICE = { tm: 12.5, autres: 7.5 }; // €/MWhc
+const CEE_PRICE = { tm: 12.5, autres: 7.5 }; // \u20AC/MWhc
 
 const BAR143 = { H1: 134800, H2: 121000, H3: 100500 };
 
-// BAR-TH-148 v.A73.3 — Forfaits officiels (à compter du 01/11/2025)
+// BAR-TH-148 v.A73.3 \u2014 Forfaits officiels (à compter du 01/11/2025)
 const BAR148 = { maison: 14700, appartement: 11800 };
 
 const BAR171 = {
     maison: {
         base: { lt140: 90900, ge140: 109200 },
         coefSurface: (S) => (S < 70 ? 0.5 : (S < 90 ? 0.7 : 1.0)),
-        tranches: "Maison : S<70→0,5 · 70â‰¤S<90→0,7 · Sâ‰¥90→1"
+        tranches: "Maison : S<70\u21920,5 · 70\u2264S<90\u21920,7 · S\u226590\u21921"
     },
     appartement: {
         base: { lt140: 48700, ge140: 58900 },
         coefSurface: (S) => (S < 35 ? 0.5 : (S < 60 ? 0.7 : 1.0)),
-        tranches: "Appart : S<35→0,5 · 35â‰¤S<60→0,7 · Sâ‰¥60→1"
+        tranches: "Appart : S<35\u21920,5 · 35\u2264S<60\u21920,7 · S\u226560\u21921"
     },
     coefZone: { H1: 1.2, H2: 1.0, H3: 0.7 }
 };
 
 
-// Surface dropdown → catégorie pour table CEE (maison: les 5 anciennes catégories)
+// Surface dropdown \u2192 catégorie pour table CEE (maison: les 5 anciennes catégories)
 function surfaceToCategory(surfaceVal) {
     // surfaceVal comes from the dropdown: "S<70", "70<=S<90", "S>=90" (maison) or "S<35", "35<=S<60", "S>=60" (appart)
     // Map to table CEE keys
@@ -1975,12 +1975,12 @@ function updateSurfaceOptions() {
     sel.innerHTML = '';
     if (tl === 'maison') {
         sel.add(new Option('S < 70 m²', 'S<70'));
-        sel.add(new Option('70 â‰¤ S < 90 m²', '70<=S<90'));
-        sel.add(new Option('S â‰¥ 90 m²', 'S>=90'));
+        sel.add(new Option('70 \u2264 S < 90 m²', '70<=S<90'));
+        sel.add(new Option('S \u2265 90 m²', 'S>=90'));
     } else {
         sel.add(new Option('S < 35 m²', 'S<35'));
-        sel.add(new Option('35 â‰¤ S < 60 m²', '35<=S<60'));
-        sel.add(new Option('S â‰¥ 60 m²', 'S>=60'));
+        sel.add(new Option('35 \u2264 S < 60 m²', '35<=S<60'));
+        sel.add(new Option('S \u2265 60 m²', 'S>=60'));
     }
     // Set option with same coef level
     const coefToMaison = { 0.5: 'S<70', 0.7: '70<=S<90', 1: 'S>=90' };
@@ -2057,9 +2057,9 @@ function calcCEEDetail() {
     if (ceeSurfInfo) {
         const s = parseInt(document.getElementById('ceeSurface').value) || 0;
         if (tl === 'maison') {
-            ceeSurfInfo.textContent = s < 70 ? '→ S < 70 m² (coef 0,5)' : (s < 90 ? '→ 70 â‰¤ S < 90 m² (coef 0,7)' : '→ S â‰¥ 90 m² (coef 1)');
+            ceeSurfInfo.textContent = s < 70 ? '\u2192 S < 70 m² (coef 0,5)' : (s < 90 ? '\u2192 70 \u2264 S < 90 m² (coef 0,7)' : '\u2192 S \u2265 90 m² (coef 1)');
         } else {
-            ceeSurfInfo.textContent = s < 35 ? '→ S < 35 m² (coef 0,5)' : (s < 60 ? '→ 35 â‰¤ S < 60 m² (coef 0,7)' : '→ S â‰¥ 60 m² (coef 1)');
+            ceeSurfInfo.textContent = s < 35 ? '\u2192 S < 35 m² (coef 0,5)' : (s < 60 ? '\u2192 35 \u2264 S < 60 m² (coef 0,7)' : '\u2192 S \u2265 60 m² (coef 1)');
         }
     }
 
@@ -2086,11 +2086,11 @@ function calcCEEDetail() {
         const base = BAR171[tl].base[etasKey];
         const cz = BAR171.coefZone[zn];
         document.getElementById('ceeCoefSurface').value = coefS.toString().replace('.', ',');
-        const CDP = 5; // Coup de pouce Chauffage ×5 (arrêté 74e, oct 2025)
+        const CDP = 5; // Coup de pouce Chauffage \u00D75 (arrêté 74e, oct 2025)
         const kwhc171 = base * coefS * cz * CDP;
         totalKwhc += kwhc171;
         details.push(`171: ${fmtIntCEE(kwhc171)}`);
-        statusParts.push(`âœ… 171: base ${fmtIntCEE(base)} × coef ${coefS} × zone ${cz} × CdP ×${CDP}`);
+        statusParts.push(`\u2705 171: base ${fmtIntCEE(base)} \u00D7 coef ${coefS} \u00D7 zone ${cz} \u00D7 CdP \u00D7${CDP}`);
     }
 
     // === BAR-TH-148 ===
@@ -2104,7 +2104,7 @@ function calcCEEDetail() {
         document.getElementById('ceeOut148').textContent = fmtEurCEE(prime148);
         document.getElementById('ceeOut148Detail').textContent = `${fmtIntCEE(kwhc148)} kWhc`;
         document.getElementById('ceeKpi148').style.display = 'block';
-        statusParts.push(`âœ… 148: ${fmtIntCEE(kwhc148)} kWhc (v.A73.3 · ${typeLabel})`);
+        statusParts.push(`\u2705 148: ${fmtIntCEE(kwhc148)} kWhc (v.A73.3 · ${typeLabel})`);
     } else {
         document.getElementById('ceeKpi148').style.display = 'none';
     }
@@ -2114,18 +2114,18 @@ function calcCEEDetail() {
         const base143 = BAR143[zn];
         const CDP143 = 2;
         const kwhc143avecCdP = base143 * CDP143;
-        // Si cumul avec 171 : CdP va sur 171 (×5 > ×2), 143 = forfait base
-        // Si 143 seul : CdP ×2 applicable
+        // Si cumul avec 171 : CdP va sur 171 (\u00D75 > \u00D72), 143 = forfait base
+        // Si 143 seul : CdP \u00D72 applicable
         const has171 = fiches.includes('171');
         const kwhc143 = has171 ? base143 : kwhc143avecCdP;
         totalKwhc += kwhc143;
         details.push(`143: ${fmtIntCEE(kwhc143)}`);
         if (has171) {
-            document.getElementById('cee143Forfait').value = `${fmtIntCEE(base143)} kWhc (${zn}) — CdP sur 171`;
-            statusParts.push(`âœ… 143: forfait ${zn} = ${fmtIntCEE(base143)} kWhc (CdP ×${CDP143} = ${fmtIntCEE(kwhc143avecCdP)} si seul)`);
+            document.getElementById('cee143Forfait').value = `${fmtIntCEE(base143)} kWhc (${zn}) \u2014 CdP sur 171`;
+            statusParts.push(`\u2705 143: forfait ${zn} = ${fmtIntCEE(base143)} kWhc (CdP \u00D7${CDP143} = ${fmtIntCEE(kwhc143avecCdP)} si seul)`);
         } else {
-            document.getElementById('cee143Forfait').value = `${fmtIntCEE(base143)} × ${CDP143} = ${fmtIntCEE(kwhc143avecCdP)} kWhc (${zn})`;
-            statusParts.push(`âœ… 143: forfait ${zn} ${fmtIntCEE(base143)} × CdP ×${CDP143} = ${fmtIntCEE(kwhc143avecCdP)} kWhc`);
+            document.getElementById('cee143Forfait').value = `${fmtIntCEE(base143)} \u00D7 ${CDP143} = ${fmtIntCEE(kwhc143avecCdP)} kWhc (${zn})`;
+            statusParts.push(`\u2705 143: forfait ${zn} ${fmtIntCEE(base143)} \u00D7 CdP \u00D7${CDP143} = ${fmtIntCEE(kwhc143avecCdP)} kWhc`);
         }
     }
 
@@ -2136,7 +2136,7 @@ function calcCEEDetail() {
     document.getElementById('ceeOutKwhc').textContent = `${fmtIntCEE(totalKwhc)} kWhc`;
     document.getElementById('ceeOutDetail').textContent = details.join(' + ');
     document.getElementById('ceeOutPrime').textContent = fmtEurCEE(primeCEE);
-    document.getElementById('ceeOutPrix').textContent = `${price.toString().replace('.', ',')} €/MWhc · ${menage === 'tm' ? 'Très modestes' : 'Autres'}`;
+    document.getElementById('ceeOutPrix').textContent = `${price.toString().replace('.', ',')} \u20AC/MWhc · ${menage === 'tm' ? 'Très modestes' : 'Autres'}`;
 
     const resultEl = document.getElementById('ceeResult');
     if (statusParts.length > 0) {
@@ -2148,17 +2148,17 @@ function calcCEEDetail() {
 
   } catch(e) {
     console.error('calcCEEDetail() error:', e);
-    if(typeof dbg==='function') dbg('âŒ calcCEEDetail: '+e.message+' at line '+(e.stack||'').split('\n')[1]);
+    if(typeof dbg==='function') dbg('\u274C calcCEEDetail: '+e.message+' at line '+(e.stack||'').split('\n')[1]);
     const errDiv = document.getElementById('calcErrorDebug');
-    if (errDiv) { errDiv.textContent = 'âš  CEEDetail: ' + e.message; errDiv.style.display = 'block'; errDiv.style.color = '#dc2626'; errDiv.style.background = '#fef2f2'; }
+    if (errDiv) { errDiv.textContent = 'â\u0161\u00A0 CEEDetail: ' + e.message; errDiv.style.display = 'block'; errDiv.style.color = '#dc2626'; errDiv.style.background = '#fef2f2'; }
   }
 }
 
 function fmtIntCEE(n) {
-    return isFinite(n) ? Math.round(n).toLocaleString('fr-FR') : '—';
+    return isFinite(n) ? Math.round(n).toLocaleString('fr-FR') : '\u2014';
 }
 function fmtEurCEE(n) {
-    return isFinite(n) ? Math.round(n).toLocaleString('fr-FR') + ' €' : '—';
+    return isFinite(n) ? Math.round(n).toLocaleString('fr-FR') + ' \u20AC' : '\u2014';
 }
 
 // ============================================
@@ -2183,7 +2183,7 @@ let savedRacPourcent = 0;
 let savedRacOffert = 0;
 
 function fmt(n){
-    return Math.round(n).toLocaleString('fr-FR')+' €';
+    return Math.round(n).toLocaleString('fr-FR')+' \u20AC';
 }
 
 function updateFromTTC(){
@@ -2217,7 +2217,7 @@ function updateFromDetail(){
     // Prévisite (checkbox)
     const prevChecked = document.getElementById('checkPrevisite').checked;
     const prevCost = prevChecked ? (parseFloat(document.getElementById('coutPrevisite').value) || 0) : 0;
-    document.getElementById('totalPrevisite').textContent = prevChecked ? fmt(prevCost) : '0 €';
+    document.getElementById('totalPrevisite').textContent = prevChecked ? fmt(prevCost) : '0 \u20AC';
     totalGlobal += prevCost;
     
     document.getElementById('coutTotalHTDisplay').textContent = fmt(totalGlobal);
@@ -2334,7 +2334,7 @@ function calc(){
                 // Prévisite
                 const prevOn = document.getElementById('checkPrevisite').checked;
                 const prevCost = prevOn ? (parseFloat(document.getElementById('coutPrevisite').value) || 200) : 0;
-                document.getElementById('totalPrevisite').textContent = prevOn ? fmt(prevCost) : '0 €';
+                document.getElementById('totalPrevisite').textContent = prevOn ? fmt(prevCost) : '0 \u20AC';
                 ch = detail.pac_materiel + detail.pac_pose + detail.ballon_materiel + detail.ballon_pose + detail.accessoires + detail.admin + (ad > 0 ? mandatVal : 0) + mairieVal + prevCost;
             }else{
                 ch = D.COUT[sc] || 0;
@@ -2382,7 +2382,7 @@ function calc(){
     const ta=ad+ceDisplay;
     const rb=tt-ta;
     
-    // Compute pro-level RAC (using très modestes CEE pricing) for auto-geste detection
+    // Compute pro-level RAC (prix cumac très modestes) for auto-geste detection
     const proCEE = (lastCEEDetailKwhc / 1000) * 12.5;
     const proRB = tt - (ad + proCEE);
     
@@ -2407,9 +2407,9 @@ function calc(){
     
     let summaryHTML;
     if (sc === 'SSC') {
-        summaryHTML = `<strong class="${colorClass}">${st}</strong><span class="separator">•</span>${ct2}<span class="separator">•</span>Zone ${zn2}`;
+        summaryHTML = `<strong class="${colorClass}">${st}</strong><span class="separator">\u2022</span>${ct2}<span class="separator">\u2022</span>Zone ${zn2}`;
     } else {
-        summaryHTML = `<strong class="${colorClass}">${st}</strong><span class="separator">•</span>${ct2}<span class="separator">•</span>Zone ${zn2}<span class="separator">•</span>${sf2}<span class="separator">•</span>${et2}`;
+        summaryHTML = `<strong class="${colorClass}">${st}</strong><span class="separator">\u2022</span>${ct2}<span class="separator">\u2022</span>Zone ${zn2}<span class="separator">\u2022</span>${sf2}<span class="separator">\u2022</span>${et2}`;
     }
     document.getElementById('scenarioSummary').innerHTML = summaryHTML;
     document.getElementById('scenarioSummary').style.borderLeftColor=borderColor;
@@ -2423,9 +2423,9 @@ function calc(){
   } catch(e) {
     _calcRunning = false;
     console.error('calc() error:', e);
-    if(typeof dbg==='function') dbg('âŒ calc: '+e.message+' at '+(e.stack||'').split('\n')[1]);
+    if(typeof dbg==='function') dbg('\u274C calc: '+e.message+' at '+(e.stack||'').split('\n')[1]);
     const errDiv = document.getElementById('calcErrorDebug');
-    if (errDiv) { errDiv.textContent = 'âš  calc(): ' + e.message; errDiv.style.display = 'block'; errDiv.style.color = '#dc2626'; errDiv.style.background = '#fef2f2'; }
+    if (errDiv) { errDiv.textContent = 'â\u0161\u00A0 calc(): ' + e.message; errDiv.style.display = 'block'; errDiv.style.color = '#dc2626'; errDiv.style.background = '#fef2f2'; }
   }
 }
 
@@ -2444,14 +2444,12 @@ function calcRAC(rb,ch,ta,taForMarge,tt,proRB){
         document.getElementById('racOffert').value = Math.round(mo);
         document.getElementById('racPourcent').value = po;
         autoGesteApplied = true;
-        if(typeof dbg==='function') dbg('Auto-geste: rb='+Math.round(rb)+' proRB='+Math.round(proRB)+' mo='+Math.round(mo)+' → RAC=1€');
     } else if(mode && autoGesteApplied){
         document.getElementById('racPourcent').value = savedRacPourcent;
         document.getElementById('racOffert').value = savedRacOffert;
         po = parseFloat(savedRacPourcent) || 0;
         mo = parseFloat(savedRacOffert) || 0;
         autoGesteApplied = false;
-        if(typeof dbg==='function') dbg('Auto-geste reset: restored po='+po+' mo='+mo);
     } else if(!mode && proRB !== undefined && proRB >= 0 && autoGesteApplied){
         document.getElementById('racPourcent').value = savedRacPourcent;
         document.getElementById('racOffert').value = savedRacOffert;
@@ -2461,11 +2459,10 @@ function calcRAC(rb,ch,ta,taForMarge,tt,proRB){
     }
     
     const rc=rb-mo;
-    // RAC négatif → afficher 1€ en vue client, vrai montant en vue fournisseur
-    document.getElementById('resteCharge').textContent = (rc < 0 && !mode) ? '1 €' : fmt(rc);
+    // RAC négatif \u2192 afficher 1\u20AC en vue client, vrai montant en vue fournisseur
+    document.getElementById('resteCharge').textContent = (rc < 0 && !mode) ? '1 \u20AC' : fmt(rc);
     
     const rbForMarge = tt - taForMarge;
-    // Pour la marge, utiliser les valeurs originales (pas l'auto-geste)
     const moForMarge = autoGesteApplied ? (parseFloat(savedRacOffert)||0) : mo;
     const rcForMarge = rbForMarge - moForMarge;
     const vhForMarge = Math.max(0,rcForMarge)/1.055;
@@ -2523,12 +2520,12 @@ function calcRAC(rb,ch,ta,taForMarge,tt,proRB){
     if(mgForMarge>=seuilOK){
         bd.className='status-badge ok';
         bd.onclick=shareDevis;
-        icon.textContent='âœ…';
+        icon.textContent='\u2705';
         txt.textContent='Voulez-vous un devis ?';
     }else{
         bd.className='status-badge danger';
         bd.onclick=null;
-        icon.textContent='âŒ';
+        icon.textContent='\u274C';
         txt.textContent='Dossier refusé';
     }
 }
@@ -2541,11 +2538,11 @@ function shareDevis(){
     const totalAides=document.getElementById('totalAides').textContent;
     const rac=document.getElementById('resteCharge').textContent;
     
-    const text = `🏠 Estimation PAC — ${prenom} ${nom}\n\n📋 ${scenario}\n💰 Installation TTC : ${ttc}\n🎁 Total aides : ${totalAides}\n🏠 Reste à charge : ${rac}\n\nSimulation réalisée par Les Artisans Verts`;
+    const text = `\uD83C\uDFE0 Estimation PAC \u2014 ${prenom} ${nom}\n\n\uD83D\uDCCB ${scenario}\n\uD83D\uDCB0 Installation TTC : ${ttc}\n\uD83C\uDF81 Total aides : ${totalAides}\n\uD83C\uDFE0 Reste à charge : ${rac}\n\nSimulation réalisée par Les Artisans Verts`;
     
     if(navigator.share){
         navigator.share({
-            title: 'Devis PAC — ' + (prenom + ' ' + nom).trim(),
+            title: 'Devis PAC \u2014 ' + (prenom + ' ' + nom).trim(),
             text: text
         }).catch(()=>{});
     }else{
@@ -2553,7 +2550,7 @@ function shareDevis(){
         navigator.clipboard.writeText(text).then(()=>{
             const bd=document.getElementById('statusBadge');
             const oldTxt=document.getElementById('statusText').textContent;
-            document.getElementById('statusText').textContent='âœ“ Copié !';
+            document.getElementById('statusText').textContent='\u2713 Copié !';
             setTimeout(()=>{ document.getElementById('statusText').textContent=oldTxt; }, 2000);
         }).catch(()=>{
             window.open('https://api.whatsapp.com/send?text='+encodeURIComponent(text),'_blank');
@@ -2724,7 +2721,7 @@ function sendWhatsApp(){
     const aidesCEE=document.getElementById('aidesCEE').textContent;
     const totalAides=document.getElementById('totalAides').textContent;
     const rac=document.getElementById('resteCharge').textContent;
-    const message=`🏠 *Demande de devis - Les Artisans Verts*%0A%0A👤 *Client :* ${prenom} ${nom}%0A%0A📋 *Configuration :*%0A• Scénario : ${scenario}%0A• ${categorie}%0A• ${zone}%0A• ${surface}%0A• ${etas}%0A%0A💰 *Montants :*%0A• Total TTC : ${ttc}%0A• Aides MPR : ${aidesMPR}%0A• Aides CEE : ${aidesCEE}%0A• Total aides : ${totalAides}%0A• Reste à charge : ${rac}%0A%0AJe souhaite obtenir un devis détaillé.`;
+    const message=`\uD83C\uDFE0 *Demande de devis - Les Artisans Verts*%0A%0A\uD83D\uDC64 *Client :* ${prenom} ${nom}%0A%0A\uD83D\uDCCB *Configuration :*%0A\u2022 Scénario : ${scenario}%0A\u2022 ${categorie}%0A\u2022 ${zone}%0A\u2022 ${surface}%0A\u2022 ${etas}%0A%0A\uD83D\uDCB0 *Montants :*%0A\u2022 Total TTC : ${ttc}%0A\u2022 Aides MPR : ${aidesMPR}%0A\u2022 Aides CEE : ${aidesCEE}%0A\u2022 Total aides : ${totalAides}%0A\u2022 Reste à charge : ${rac}%0A%0AJe souhaite obtenir un devis détaillé.`;
     window.open(`https://api.whatsapp.com/send?text=${message}`, '_blank');
 }
 
@@ -2735,19 +2732,19 @@ function exportPDF(){
     const fullName = (prenom + ' ' + nom).trim();
 
     // En-tête
-    document.getElementById('printTitle').textContent = 'Dossier — ' + fullName;
+    document.getElementById('printTitle').textContent = 'Dossier \u2014 ' + fullName;
     document.getElementById('printDate').textContent = new Date().toLocaleDateString('fr-FR', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
     document.getElementById('printCommercial').textContent = currentUser ? ('Commercial : ' + currentUser.name) : '';
 
     // Client info
     document.getElementById('printNom').textContent = fullName;
-    document.getElementById('printDept').textContent = document.getElementById('departement').value || '—';
+    document.getElementById('printDept').textContent = document.getElementById('departement').value || '\u2014';
     const zoneEl = document.getElementById('zone');
-    document.getElementById('printZone').textContent = zoneEl ? zoneEl.value : '—';
+    document.getElementById('printZone').textContent = zoneEl ? zoneEl.value : '\u2014';
     const foyerEl = document.getElementById('foyer');
-    document.getElementById('printFoyer').textContent = foyerEl ? foyerEl.options[foyerEl.selectedIndex].text : '—';
+    document.getElementById('printFoyer').textContent = foyerEl ? foyerEl.options[foyerEl.selectedIndex].text : '\u2014';
     const rfr = document.getElementById('rfr').value;
-    document.getElementById('printRFR').textContent = rfr ? parseInt(rfr).toLocaleString('fr-FR') + ' €' : '—';
+    document.getElementById('printRFR').textContent = rfr ? parseInt(rfr).toLocaleString('fr-FR') + ' \u20AC' : '\u2014';
 
     // Profil MPR
     const profilLabel = document.getElementById('mprProfilLabel');
@@ -2755,9 +2752,9 @@ function exportPDF(){
     const profilCard = document.getElementById('printProfilCard');
     const cat = document.getElementById('categorie').value;
     const profilColors = { BLEU:'#2563eb', JAUNE:'#d97706', VIOLET:'#7c3aed', ROSE:'#db2777' };
-    const profilIcons = { BLEU:'🔵', JAUNE:'🟡', VIOLET:'🟣', ROSE:'🔴' };
+    const profilIcons = { BLEU:'\uD83D\uDD35', JAUNE:'\uD83D\uDFE1', VIOLET:'\uD83D\uDFE3', ROSE:'\uD83D\uDD34' };
     profilCard.style.background = profilColors[cat] || '#64748b';
-    document.getElementById('printProfilIcon').textContent = profilIcons[cat] || 'âšª';
+    document.getElementById('printProfilIcon').textContent = profilIcons[cat] || '\u26AA';
     document.getElementById('printProfilLabel').textContent = profilLabel ? profilLabel.textContent : cat;
     document.getElementById('printProfilDesc').textContent = profilDesc ? profilDesc.textContent : '';
     const seuilEl = document.getElementById('mprInfoSeuil');
@@ -2769,12 +2766,12 @@ function exportPDF(){
     const ceeSurf = document.getElementById('ceeSurface');
     document.getElementById('printSurface').textContent = (ceeSurf ? ceeSurf.value : '95') + ' m²';
     const etas = document.getElementById('etas');
-    document.getElementById('printETAS').textContent = etas ? etas.options[etas.selectedIndex].text : '—';
+    document.getElementById('printETAS').textContent = etas ? etas.options[etas.selectedIndex].text : '\u2014';
     const baremeReco = document.getElementById('baremeReco');
-    document.getElementById('printPACReco').textContent = baremeReco ? baremeReco.textContent : '—';
+    document.getElementById('printPACReco').textContent = baremeReco ? baremeReco.textContent : '\u2014';
     const isoState = document.getElementById('isoStateName');
-    document.getElementById('printIsolation').textContent = isoState ? isoState.textContent : '—';
-    document.getElementById('printAnnee').textContent = document.getElementById('dimAnnee').value || '—';
+    document.getElementById('printIsolation').textContent = isoState ? isoState.textContent : '\u2014';
+    document.getElementById('printAnnee').textContent = document.getElementById('dimAnnee').value || '\u2014';
 
     // Montants
     document.getElementById('printTTC').textContent = document.getElementById('totalTTC').textContent;
@@ -2788,16 +2785,16 @@ function exportPDF(){
     const ceePrixEl = document.getElementById('ceeOutPrix');
     let ceeDetail = '';
     if(ceeFiches) ceeDetail += 'Fiches : ' + ceeFiches.textContent;
-    if(ceeDetailEl && ceeDetailEl.textContent !== '—') ceeDetail += ' · ' + ceeDetailEl.textContent;
-    if(ceePrixEl && ceePrixEl.textContent !== '—') ceeDetail += ' · ' + ceePrixEl.textContent;
-    document.getElementById('printCEEDetail').textContent = ceeDetail || '—';
+    if(ceeDetailEl && ceeDetailEl.textContent !== '\u2014') ceeDetail += ' · ' + ceeDetailEl.textContent;
+    if(ceePrixEl && ceePrixEl.textContent !== '\u2014') ceeDetail += ' · ' + ceePrixEl.textContent;
+    document.getElementById('printCEEDetail').textContent = ceeDetail || '\u2014';
 
     // RAC
     document.getElementById('printRAC').textContent = document.getElementById('resteCharge').textContent;
     const pct = document.getElementById('racPourcent').value;
     const offert = document.getElementById('racOffert').value;
     if(parseInt(pct) > 0 || parseInt(offert) > 0){
-        document.getElementById('printRACDetail').textContent = 'Prise en charge fournisseur : ' + pct + '% soit ' + offert + ' €';
+        document.getElementById('printRACDetail').textContent = 'Prise en charge fournisseur : ' + pct + '% soit ' + offert + ' \u20AC';
     } else {
         document.getElementById('printRACDetail').textContent = '';
     }
@@ -2960,7 +2957,7 @@ function showApp(){
         document.getElementById('guestBar').style.display = 'none';
         document.getElementById('userBar').style.display = 'flex';
         document.getElementById('userNameDisplay').textContent = currentUser.name;
-        document.getElementById('userRoleDisplay').textContent = currentUser.role === 'admin' ? '👑 Admin' : '📊 Commercial';
+        document.getElementById('userRoleDisplay').textContent = currentUser.role === 'admin' ? '\uD83D\uDC51 Admin' : '\uD83D\uDCCA Commercial';
         // Admin-only buttons
         const isAdmin = currentUser.role === 'admin';
         document.getElementById('btnHistory').style.display = isAdmin ? '' : 'none';
@@ -3024,7 +3021,7 @@ function doChangePassword(){
             errEl.style.color = '#dc2626';
             if(d.success){
                 errEl.style.display = 'none';
-                okEl.textContent = 'âœ… Mot de passe modifié !';
+                okEl.textContent = '\u2705 Mot de passe modifié !';
                 okEl.style.display = 'block';
                 setTimeout(()=>{ document.getElementById('pwdModal').classList.remove('active'); }, 1500);
             } else {
@@ -3042,7 +3039,7 @@ function doChangePassword(){
         if(!account){ errEl.textContent='Compte introuvable'; errEl.style.display='block'; return; }
         if(account.pass !== oldP){ errEl.textContent='Ancien mot de passe incorrect'; errEl.style.display='block'; return; }
         account.pass = newP;
-        okEl.textContent = 'âœ… Modifié (session uniquement en mode local)';
+        okEl.textContent = '\u2705 Modifié (session uniquement en mode local)';
         okEl.style.display = 'block';
         logAction('Changement mot de passe', currentUser.name);
         setTimeout(()=>{ document.getElementById('pwdModal').classList.remove('active'); }, 1500);
@@ -3112,7 +3109,7 @@ function renderJournal(entries){
         html += '</div>';
     });
     if(currentUser && currentUser.role === 'admin'){
-        html += '<div class="hist-clear"><button onclick="clearJournal()">🗑ï¸ Vider le journal</button></div>';
+        html += '<div class="hist-clear"><button onclick="clearJournal()">\uD83D\uDDD1\uFE0F Vider le journal</button></div>';
     }
     body.innerHTML = html;
 }
@@ -3140,7 +3137,7 @@ function logExport(type){
 function logRACChange(){
     const pct = document.getElementById('racPourcent').value;
     const offert = document.getElementById('racOffert').value;
-    logAction('RAC modifié', pct + '% / ' + offert + ' €');
+    logAction('RAC modifié', pct + '% / ' + offert + ' \u20AC');
 }
 
 
@@ -3191,7 +3188,7 @@ const DEPT_TBASE = {
 
 let currentG = 0.95;
 
-// ============ DIMENSIONNEMENT — Année → G auto ============
+// ============ DIMENSIONNEMENT \u2014 Année \u2192 G auto ============
 
 // Table G par année de construction
 function getGFromAnnee(annee) {
@@ -3256,7 +3253,7 @@ function getBaremePAC(surface) {
     const kw = (base) * 2 + 4; // 4, 6, 8, 10, ...
     
     // Simpler approach: use explicit formula
-    const step = Math.floor((surface - 1) / 10); // 0=â‰¤10, ... 3=31-40, 4=41-50, 5=51-60...
+    const step = Math.floor((surface - 1) / 10); // 0=\u226410, ... 3=31-40, 4=41-50, 5=51-60...
     const kwBase = Math.max(4, Math.floor(surface / 10) * 2);
     
     // Even simpler: keep the proven table + extend
@@ -3324,8 +3321,8 @@ function calcBareme() {
     score -= totalChecks * reductionPerItem;
     score -= recentCount * recentBonus;
 
-    // All 5 checked + all recent → score should be ~0-5
-    // 5*12 + 5*3 = 75, from base 90 → 15, from base 55 → -20 → clamped to 5
+    // All 5 checked + all recent \u2192 score should be ~0-5
+    // 5*12 + 5*3 = 75, from base 90 \u2192 15, from base 55 \u2192 -20 \u2192 clamped to 5
 
     // Clamp 3-97%
     score = Math.max(3, Math.min(97, score));
@@ -3337,12 +3334,12 @@ function calcBareme() {
     if (score <= 25) {
         el.textContent = lowKW + ' kW';
         el.style.color = '#16a34a';
-        alt.textContent = 'Isolation performante → puissance optimisée';
+        alt.textContent = 'Isolation performante \u2192 puissance optimisée';
         if (hint) hint.textContent = '';
     } else if (score >= 75) {
         el.textContent = highKW + ' kW';
         el.style.color = '#dc2626';
-        alt.textContent = 'Isolation faible → puissance supérieure conseillée';
+        alt.textContent = 'Isolation faible \u2192 puissance supérieure conseillée';
         if (hint) hint.textContent = '';
     } else {
         el.textContent = lowKW + ' ou ' + highKW + ' kW';
@@ -3416,13 +3413,13 @@ function calcDim() {
     const puissanceAppoint = puissanceTotale - puissancePAC;
 
     document.getElementById('dimDeperditions').textContent = Math.round(P).toLocaleString('fr-FR') + ' W';
-    document.getElementById('dimDepFormula').textContent = `${G.toFixed(2).replace('.', ',')} × ${Math.round(V)} × ${deltaT}`;
+    document.getElementById('dimDepFormula').textContent = `${G.toFixed(2).replace('.', ',')} \u00D7 ${Math.round(V)} \u00D7 ${deltaT}`;
 
     document.getElementById('dimPuissancePAC').textContent = (puissancePAC / 1000).toFixed(1).replace('.', ',') + ' kW';
-    document.getElementById('dimPuissancePACDetail').textContent = `${Math.round(P).toLocaleString('fr-FR')} W × ${T1}%`;
+    document.getElementById('dimPuissancePACDetail').textContent = `${Math.round(P).toLocaleString('fr-FR')} W \u00D7 ${T1}%`;
 
     document.getElementById('dimPuissanceAppoint').textContent = (puissanceAppoint / 1000).toFixed(1).replace('.', ',') + ' kW';
-    document.getElementById('dimPuissanceAppointDetail').textContent = `(P × ${T2}% âˆ’ PAC)`;
+    document.getElementById('dimPuissanceAppointDetail').textContent = `(P \u00D7 ${T2}% \u2212 PAC)`;
 
     document.getElementById('dimPuissanceTotale').textContent = (puissanceTotale / 1000).toFixed(1).replace('.', ',') + ' kW';
 }
@@ -3430,9 +3427,9 @@ function calcDim() {
 // ============================================
 // INIT
 // ============================================
-dbg('🚀 Init start');
+dbg('\uD83D\uDE80 Init start');
 checkAutoLogin();
-dbg('🏁 Init complete');
+dbg('\uD83C\uDFC1 Init complete');
 // Triple-tap to show debug panel
 </script>
 </body>
