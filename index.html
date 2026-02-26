@@ -948,7 +948,7 @@
 <!-- LOGIN SCREEN -->
 <div id="loginScreen" class="login-container">
     <div class="login-box">
-        <div class="login-logo"><span>ðŸ  LES ARTISANS VERTS</span></div>
+        <div class="login-logo"><span>🏠 LES ARTISANS VERTS</span></div>
         <h2>Simulateur <span>PAC 2026</span></h2>
         <p class="login-sub">Connexion commerciale</p>
         <div class="form-group"><label>Nom d'utilisateur</label><input type="text" id="loginUser" placeholder="Utilisateur" autofocus></div>
@@ -957,7 +957,7 @@
         <p id="loginError" class="login-error"></p>
         <div style="margin-top:20px;padding-top:18px;border-top:1px solid #e5e7eb;text-align:center;">
             <p style="color:#9ca3af;font-size:12px;margin-bottom:10px;">Pas de compte ?</p>
-            <button onclick="doGuestLogin()" style="width:100%;padding:11px;background:#f3f4f6;color:#374151;border:1px solid #d1d5db;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;">ðŸ‘¤ Continuer en vue client</button>
+            <button onclick="doGuestLogin()" style="width:100%;padding:11px;background:#f3f4f6;color:#374151;border:1px solid #d1d5db;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;">👤 Continuer en vue client</button>
         </div>
     </div>
 </div>
@@ -966,7 +966,7 @@
 <div id="historyModal" class="hist-overlay" onclick="if(event.target===this)this.classList.remove('active')">
     <div class="hist-modal">
         <div class="hist-modal-header">
-            <h3>ðŸ“‹ Journal des modifications</h3>
+            <h3>📋 Journal des modifications</h3>
             <button class="hist-modal-close" onclick="document.getElementById('historyModal').classList.remove('active')">&times;</button>
         </div>
         <div class="hist-modal-body" id="historyBody"></div>
@@ -977,7 +977,7 @@
 <div id="pwdModal" class="hist-overlay" onclick="if(event.target===this)this.classList.remove('active')">
     <div class="hist-modal" style="max-width:380px;">
         <div class="hist-modal-header">
-            <h3>ðŸ”‘ Changer mon mot de passe</h3>
+            <h3>🔑 Changer mon mot de passe</h3>
             <button class="hist-modal-close" onclick="document.getElementById('pwdModal').classList.remove('active')">&times;</button>
         </div>
         <div class="hist-modal-body">
@@ -1007,26 +1007,26 @@
             <!-- Row 1: Logo + Title + Refresh -->
             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
                 <div style="display:flex; align-items:center; gap:10px;">
-                    <div style="background:linear-gradient(135deg,#16a34a,#15803d); color:white; padding:8px 12px; border-radius:8px; font-weight:700; font-size:13px; letter-spacing:0.3px; box-shadow:0 2px 8px rgba(22,163,74,0.3);">ðŸ  LAV</div>
+                    <div style="background:linear-gradient(135deg,#16a34a,#15803d); color:white; padding:8px 12px; border-radius:8px; font-weight:700; font-size:13px; letter-spacing:0.3px; box-shadow:0 2px 8px rgba(22,163,74,0.3);">🏠 LAV</div>
                     <div style="font-size:16px; font-weight:700; color:#1d1d1f; line-height:1.2;">Simulateur PAC <span style="font-size:11px; background:#16a34a; color:white; padding:1px 6px; border-radius:4px; vertical-align:middle;">2026</span></div>
                 </div>
-                <button class="btn-reset" onclick="reset()" title="RafraÃ®chir"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></button>
+                <button class="btn-reset" onclick="reset()" title="Rafraîchir"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></button>
             </div>
             <!-- Row 2: User controls -->
             <!-- GUEST BAR -->
             <div class="guest-bar" id="guestBar" style="display:none;">
-                <button class="btn-login-small" onclick="goToLogin()">ðŸ”‘ Se connecter</button>
+                <button class="btn-login-small" onclick="goToLogin()">🔑 Se connecter</button>
             </div>
             <!-- USER BAR -->
             <div class="user-bar" id="userBar" style="display:none;">
-                <span class="user-name" id="userNameDisplay">â€”</span>
-                <span class="user-role" id="userRoleDisplay">â€”</span>
+                <span class="user-name" id="userNameDisplay">—</span>
+                <span class="user-role" id="userRoleDisplay">—</span>
                 <div class="view-toggle" id="viewToggle">
-                    <button class="toggle-opt active" id="togClient" onclick="switchView('client')">ðŸ‘¤ Client</button>
-                    <button class="toggle-opt" id="togFournisseur" onclick="switchView('fournisseur')">ðŸ“Š Pro</button>
+                    <button class="toggle-opt active" id="togClient" onclick="switchView('client')">👤 Client</button>
+                    <button class="toggle-opt" id="togFournisseur" onclick="switchView('fournisseur')">📊 Pro</button>
                 </div>
-                <button class="btn-hist" id="btnHistory" onclick="openHistory()" style="display:none;">ðŸ“‹</button>
-                <button class="btn-hist" id="btnPwd" onclick="openPwdModal()" style="display:none;">ðŸ”‘</button>
+                <button class="btn-hist" id="btnHistory" onclick="openHistory()" style="display:none;">📋</button>
+                <button class="btn-hist" id="btnPwd" onclick="openPwdModal()" style="display:none;">🔑</button>
                 <button class="btn-logout" onclick="doLogout()">â†ª</button>
             </div>
         </div>
@@ -1035,27 +1035,27 @@
     <div class="main-content" id="mainContent">
         <div class="parameters-section">
             <div class="card">
-                <h2 class="card-title">ParamÃ¨tres</h2>
+                <h2 class="card-title">Paramètres</h2>
 
                 <!-- Info client -->
-                <div style="font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">ðŸ‘¤ Informations client</div>
+                <div style="font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">👤 Informations client</div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
                     <div class="form-group" style="margin-bottom: 0;">
                         <label>Nom</label>
                         <input type="text" id="nom" placeholder="Nom du client" oninput="checkExport()" onchange="logClientChange()">
                     </div>
                     <div class="form-group" style="margin-bottom: 0;">
-                        <label>PrÃ©nom</label>
-                        <input type="text" id="prenom" placeholder="PrÃ©nom du client" oninput="checkExport()" onchange="logClientChange()">
+                        <label>Prénom</label>
+                        <input type="text" id="prenom" placeholder="Prénom du client" oninput="checkExport()" onchange="logClientChange()">
                     </div>
                 </div>
                 <div class="grid-3col" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
                     <div class="form-group" style="margin-bottom: 0;">
-                        <label for="departement">DÃ©partement</label>
-                        <input type="text" id="departement" placeholder="Ex: 33, 75â€¦" maxlength="3" style="text-align: center; font-weight: 600;" oninput="detectDept()">
+                        <label for="departement">Département</label>
+                        <input type="text" id="departement" placeholder="Ex: 33, 75…" maxlength="3" style="text-align: center; font-weight: 600;" oninput="detectDept()">
                     </div>
                     <div class="form-group" style="margin-bottom: 0;">
-                        <label for="rfr">Revenu fiscal de rÃ©f. (â‚¬)</label>
+                        <label for="rfr">Revenu fiscal de réf. (€)</label>
                         <input type="number" id="rfr" placeholder="Ex: 35 000" oninput="detectProfil()" style="font-weight: 600;">
                     </div>
                     <div class="form-group" style="margin-bottom: 0;">
@@ -1073,7 +1073,7 @@
                     </div>
                 </div>
 
-                <!-- Hidden: auto-gÃ©rÃ©s -->
+                <!-- Hidden: auto-gérés -->
                 <select id="zone" onchange="calc()" style="display:none;">
                     <option value="H1">H1</option><option value="H2">H2</option><option value="H3">H3</option>
                 </select>
@@ -1083,26 +1083,26 @@
                 </select>
                 <input type="hidden" id="typeLogement" value="maison">
                 <select id="surface" style="display:none;">
-                    <option value="S<70">S &lt; 70 mÂ²</option>
-                    <option value="70<=S<90">70 â‰¤ S &lt; 90 mÂ²</option>
-                    <option value="S>=90" selected>S â‰¥ 90 mÂ²</option>
+                    <option value="S<70">S &lt; 70 m²</option>
+                    <option value="70<=S<90">70 â‰¤ S &lt; 90 m²</option>
+                    <option value="S>=90" selected>S â‰¥ 90 m²</option>
                 </select>
                 <select id="categorie" style="display:none;">
                     <option value="BLEU">BLEU</option><option value="JAUNE">JAUNE</option>
                     <option value="VIOLET">VIOLET</option><option value="ROSE">ROSE</option>
                 </select>
 
-                <!-- ===== BLOC RÃ‰SULTAT MPR + CEE ===== -->
+                <!-- ===== BLOC RÉSULTAT MPR + CEE ===== -->
                 <div id="mprCeeWrapper" style="margin-top: 14px; border-radius: 14px; padding: 20px; background: linear-gradient(160deg, #0f172a 0%, #1e3a5f 40%, #134e4a 100%); color: white;">
 
-                <!-- Bloc rÃ©sultat MPR -->
+                <!-- Bloc résultat MPR -->
                 <div id="mprResultBloc" style="display: none; border-radius: 12px; padding: 20px; text-align: center; transition: all 0.2s; margin-bottom: 16px;">
-                    <div id="mprProfilIcon" style="font-size: 32px; margin-bottom: 6px;">ðŸ”µ</div>
+                    <div id="mprProfilIcon" style="font-size: 32px; margin-bottom: 6px;">🔵</div>
                     <div id="mprProfilLabel" style="font-size: 18px; font-weight: 800; margin-bottom: 4px;">Profil Bleu</div>
-                    <div id="mprProfilDesc" style="font-size: 13px; font-weight: 500; opacity: 0.85; margin-bottom: 10px;">Revenus trÃ¨s modestes</div>
+                    <div id="mprProfilDesc" style="font-size: 13px; font-weight: 500; opacity: 0.85; margin-bottom: 10px;">Revenus très modestes</div>
                     <div class="grid-3col" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
                         <div style="background: rgba(255,255,255,0.25); border-radius: 8px; padding: 8px;">
-                            <div style="font-size: 10px; text-transform: uppercase; opacity: 0.7; letter-spacing: 0.5px;">RÃ©gion / Zone</div>
+                            <div style="font-size: 10px; text-transform: uppercase; opacity: 0.7; letter-spacing: 0.5px;">Région / Zone</div>
                             <div id="mprInfoRegion" style="font-size: 14px; font-weight: 700;">Province</div>
                         </div>
                         <div style="background: rgba(255,255,255,0.25); border-radius: 8px; padding: 8px;">
@@ -1111,21 +1111,21 @@
                         </div>
                         <div style="background: rgba(255,255,255,0.25); border-radius: 8px; padding: 8px;">
                             <div style="font-size: 10px; text-transform: uppercase; opacity: 0.7; letter-spacing: 0.5px;">Seuil</div>
-                            <div id="mprInfoSeuil" style="font-size: 14px; font-weight: 700;">â€”</div>
+                            <div id="mprInfoSeuil" style="font-size: 14px; font-weight: 700;">—</div>
                         </div>
                     </div>
                     <div id="mprInfoRFR" style="font-size: 12px; margin-top: 10px; opacity: 0.75;"></div>
                     <div id="mprInfoAide" style="font-size: 15px; font-weight: 700; margin-top: 8px; background: rgba(255,255,255,0.3); border-radius: 8px; padding: 8px;"></div>
                 </div>
 
-                <!-- ParamÃ¨tres techniques + CEE -->
-                <div style="font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">âš¡ ScÃ©nario & Aides CEE</div>
+                <!-- Paramètres techniques + CEE -->
+                <div style="font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">âš¡ Scénario & Aides CEE</div>
                 <div class="grid-3col" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px;">
                     <div class="form-group" style="margin-bottom: 0;">
-                        <label for="scenario" style="color: rgba(255,255,255,0.7);">ScÃ©nario</label>
+                        <label for="scenario" style="color: rgba(255,255,255,0.7);">Scénario</label>
                         <select id="scenario" onchange="onScenarioChange()">
                             <option value="PAC">PAC</option>
-                            <option value="PAC + BALLON Ã‰LECTRIQUE">PAC + BALLON Ã‰LECTRIQUE</option>
+                            <option value="PAC + BALLON ÉLECTRIQUE">PAC + BALLON ÉLECTRIQUE</option>
                             <option value="PAC + BALLON THERMO">PAC + BALLON THERMO</option>
                             <option value="PAC + SSC">PAC + SSC</option>
                             <option value="SSC">SSC</option>
@@ -1139,7 +1139,7 @@
                         </select>
                     </div>
                     <div class="form-group" style="margin-bottom: 0;" id="ceeSurfaceGroup">
-                        <label style="color: rgba(255,255,255,0.7);">Surface chauffÃ©e (mÂ²)</label>
+                        <label style="color: rgba(255,255,255,0.7);">Surface chauffée (m²)</label>
                         <input type="number" id="ceeSurface" min="1" step="1" value="95" oninput="syncSurfaces('cee')">
                     </div>
                 </div>
@@ -1163,10 +1163,10 @@
                 </select>
                 <div style="display:none;">
                     <select id="menageCEE" onchange="calcCEEDetail()">
-                        <option value="tm">TrÃ¨s modestes (12,5 â‚¬/MWhc)</option>
-                        <option value="autres">Autres mÃ©nages (7,5 â‚¬/MWhc)</option>
+                        <option value="tm">Très modestes (12,5 €/MWhc)</option>
+                        <option value="autres">Autres ménages (7,5 €/MWhc)</option>
                     </select>
-                    <input type="text" id="ceeCoefSurface" disabled value="â€”">
+                    <input type="text" id="ceeCoefSurface" disabled value="—">
                     <div id="ceeSurfaceInfo"></div>
                 </div>
 
@@ -1174,21 +1174,21 @@
                 <div class="cee-kpi-row" style="grid-template-columns: 1fr 1fr; margin-top: 4px;">
                     <div class="cee-kpi" style="background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.1);">
                         <div class="kpi-label" style="color: rgba(255,255,255,0.6);">Volume CEE</div>
-                        <div class="kpi-value" id="ceeOutKwhc" style="color: #fbbf24;">â€”</div>
+                        <div class="kpi-value" id="ceeOutKwhc" style="color: #fbbf24;">—</div>
                     </div>
                     <div class="cee-kpi" style="background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.1);">
                         <div class="kpi-label" style="color: rgba(255,255,255,0.6);">Prime CEE</div>
-                        <div class="kpi-value" id="ceeOutPrime" style="color: #34d399;">â€”</div>
+                        <div class="kpi-value" id="ceeOutPrime" style="color: #34d399;">—</div>
                     </div>
                 </div>
-                <!-- DÃ©tail fournisseur -->
+                <!-- Détail fournisseur -->
                 <div class="fournisseur-only" style="margin-top: 4px; font-size: 11px; color: rgba(255,255,255,0.4); font-family: ui-monospace, monospace;">
-                    <span id="ceeOutDetail">â€”</span> Â· <span id="ceeOutPrix">â€”</span>
+                    <span id="ceeOutDetail">—</span> · <span id="ceeOutPrix">—</span>
                 </div>
 
                 </div><!-- /mprCeeWrapper -->
 
-                <!-- Blocs fournisseur dÃ©tail -->
+                <!-- Blocs fournisseur détail -->
                 <div class="fournisseur-only">
                     <div class="cee-bloc-171" id="ceeBloc171" style="display:none;"></div>
                     <div class="cee-bloc-148 cee-hidden" id="ceeBloc148" style="margin-top: 8px;">
@@ -1198,8 +1198,8 @@
                                 <input type="number" id="ceeKwhc148" min="0" step="100" value="9000" oninput="calcCEEDetail()">
                             </div>
                             <div>
-                                <label>Forfait calculÃ©</label>
-                                <input type="text" id="cee148Forfait" disabled value="â€”" style="background: #f1f5f9; font-weight: 600;">
+                                <label>Forfait calculé</label>
+                                <input type="text" id="cee148Forfait" disabled value="—" style="background: #f1f5f9; font-weight: 600;">
                             </div>
                             <div>
                                 <label>Note interne</label>
@@ -1208,20 +1208,20 @@
                         </div>
                     </div>
                     <div id="ceeBloc143" class="cee-hidden" style="margin-top: 8px;">
-                        <div style="font-size: 12px; font-weight: 600; color: #2563eb; margin-bottom: 8px;">ðŸ“™ BAR-TH-143 â€” SSC Â· <span style="color: #059669;">Coup de pouce Ã—2</span></div>
+                        <div style="font-size: 12px; font-weight: 600; color: #2563eb; margin-bottom: 8px;">📙 BAR-TH-143 — SSC · <span style="color: #059669;">Coup de pouce ×2</span></div>
                         <div class="cee-grid">
                             <div>
                                 <label>Forfait par zone</label>
-                                <input type="text" id="cee143Forfait" disabled value="â€”" style="background: #f1f5f9; font-weight: 600;">
-                                <div class="cee-hint">H1: 134 800 Â· H2: 121 000 Â· H3: 100 500 kWhc</div>
+                                <input type="text" id="cee143Forfait" disabled value="—" style="background: #f1f5f9; font-weight: 600;">
+                                <div class="cee-hint">H1: 134 800 · H2: 121 000 · H3: 100 500 kWhc</div>
                             </div>
                         </div>
                     </div>
                     <div class="cee-kpi-row" style="grid-template-columns: 1fr; margin-top: 8px;">
                         <div class="cee-kpi" id="ceeKpi148" style="display:none;">
                             <div class="kpi-label">Dont BAR-TH-148</div>
-                            <div class="kpi-value" id="ceeOut148" style="color: #059669;">â€”</div>
-                            <div class="kpi-detail" id="ceeOut148Detail">â€”</div>
+                            <div class="kpi-value" id="ceeOut148" style="color: #059669;">—</div>
+                            <div class="kpi-detail" id="ceeOut148Detail">—</div>
                         </div>
                     </div>
                     <div class="cee-result" id="ceeResult"></div>
@@ -1230,29 +1230,29 @@
                 <div id="calcErrorDebug" style="color: red; font-size: 12px; font-weight: 600; margin-top: 8px; padding: 6px; background: #fef2f2; border-radius: 6px;"></div>
             </div>
 
-            <!-- ===================== BARÃˆME PAC (client) ===================== -->
+            <!-- ===================== BARÈME PAC (client) ===================== -->
             <div class="card" id="baremeCard">
-                <h2 class="card-title">ðŸ“ Puissance PAC recommandÃ©e</h2>
-                <div style="font-size: 12px; color: #64748b; margin-bottom: 14px;">Estimation selon la surface, l'annÃ©e de construction et l'isolation</div>
+                <h2 class="card-title">📐 Puissance PAC recommandée</h2>
+                <div style="font-size: 12px; color: #64748b; margin-bottom: 14px;">Estimation selon la surface, l'année de construction et l'isolation</div>
 
                 <!-- Hidden input for sync -->
                 <input type="hidden" id="baremeSurface" value="100">
 
-                <!-- AnnÃ©e de construction -->
+                <!-- Année de construction -->
                 <div class="form-group" style="margin-bottom: 14px;">
-                    <label>AnnÃ©e de construction</label>
+                    <label>Année de construction</label>
                     <input type="number" id="dimAnnee" value="2000" min="1900" max="2026" oninput="evalIsolation(); calcBareme(); calcDim()">
                 </div>
 
                 <!-- Questionnaire isolation -->
                 <div style="margin-bottom: 14px;">
-                    <label style="font-weight: 600; color: #1d1d1f; font-size: 13px; display: block; margin-bottom: 10px;">Travaux d'isolation rÃ©alisÃ©s</label>
+                    <label style="font-weight: 600; color: #1d1d1f; font-size: 13px; display: block; margin-bottom: 10px;">Travaux d'isolation réalisés</label>
                     <div style="display: flex; flex-direction: column; gap: 6px;" id="isoChecklist">
                         <label class="iso-check" onclick="setTimeout(function(){evalIsolation();calcBareme()},10)">
                             <input type="checkbox" name="isoWork" value="combles">
                             <span class="iso-info">
                                 <span class="iso-title">Combles / Toiture</span>
-                                <span class="iso-sub">Isolation soufflÃ©e, rampants, sarkingâ€¦</span>
+                                <span class="iso-sub">Isolation soufflée, rampants, sarking…</span>
                             </span>
                             <select class="iso-quand" onchange="evalIsolation();calcBareme()">
                                 <option value="recent">&lt; 5 ans</option>
@@ -1263,7 +1263,7 @@
                             <input type="checkbox" name="isoWork" value="murs">
                             <span class="iso-info">
                                 <span class="iso-title">Murs (ITE / ITI)</span>
-                                <span class="iso-sub">Isolation thermique extÃ©rieure ou intÃ©rieure</span>
+                                <span class="iso-sub">Isolation thermique extérieure ou intérieure</span>
                             </span>
                             <select class="iso-quand" onchange="evalIsolation();calcBareme()">
                                 <option value="recent">&lt; 5 ans</option>
@@ -1273,7 +1273,7 @@
                         <label class="iso-check" onclick="setTimeout(function(){evalIsolation();calcBareme()},10)">
                             <input type="checkbox" name="isoWork" value="fenetres">
                             <span class="iso-info">
-                                <span class="iso-title">FenÃªtres double / triple vitrage</span>
+                                <span class="iso-title">Fenêtres double / triple vitrage</span>
                                 <span class="iso-sub">Remplacement des menuiseries</span>
                             </span>
                             <select class="iso-quand" onchange="evalIsolation();calcBareme()">
@@ -1296,7 +1296,7 @@
                             <input type="checkbox" name="isoWork" value="vmc">
                             <span class="iso-info">
                                 <span class="iso-title">VMC double flux</span>
-                                <span class="iso-sub">Ventilation mÃ©canique contrÃ´lÃ©e performante</span>
+                                <span class="iso-sub">Ventilation mécanique contrôlée performante</span>
                             </span>
                             <select class="iso-quand" onchange="evalIsolation();calcBareme()">
                                 <option value="recent">&lt; 5 ans</option>
@@ -1304,17 +1304,17 @@
                             </select>
                         </label>
                     </div>
-                    <!-- RÃ©sultat isolation (fournisseur only) -->
+                    <!-- Résultat isolation (fournisseur only) -->
                     <div id="isoResult" class="fournisseur-only" style="margin-top: 10px; padding: 10px 14px; border-radius: 8px; font-size: 13px; background: #f8fafc; border: 1.5px solid #e2e8f0;">
-                        <span style="font-weight: 600;" id="isoStateName">Ã‰tat d'origine / Non prÃ©cisÃ©</span>
-                        <span style="color: #64748b;"> â€” </span>
+                        <span style="font-weight: 600;" id="isoStateName">État d'origine / Non précisé</span>
+                        <span style="color: #64748b;"> — </span>
                         <span style="font-weight: 700; color: #16a34a;" id="dimGDisplay">G = 0,95</span>
                     </div>
                 </div>
 
-                <!-- RÃ©sultat barÃ¨me visuel -->
+                <!-- Résultat barème visuel -->
                 <div id="baremeResult" style="padding: 20px; background: linear-gradient(135deg, #f0fdf4, #ecfdf5); border-radius: 12px; border: 1.5px solid #bbf7d0;">
-                    <div style="font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; text-align: center;">PAC recommandÃ©e</div>
+                    <div style="font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; text-align: center;">PAC recommandée</div>
                     
                     <!-- Gauge visuelle -->
                     <div id="baremeGauge" style="position: relative; margin: 0 auto; max-width: 340px;">
@@ -1330,12 +1330,12 @@
                         </div>
                         <!-- Labels bas -->
                         <div style="display: flex; justify-content: space-between; font-size: 10px; color: #94a3b8;">
-                            <span>Bien isolÃ©</span>
-                            <span>Mal isolÃ©</span>
+                            <span>Bien isolé</span>
+                            <span>Mal isolé</span>
                         </div>
                     </div>
 
-                    <!-- RÃ©sultat texte -->
+                    <!-- Résultat texte -->
                     <div style="text-align: center; margin-top: 14px;">
                         <div id="baremeReco" style="font-size: 32px; font-weight: 800; color: #16a34a;">10 kW</div>
                         <div id="baremeAlt" style="font-size: 13px; color: #64748b; margin-top: 2px;"></div>
@@ -1343,97 +1343,97 @@
                     </div>
                 </div>
 
-                <!-- Tableau supprimÃ© - logique intÃ©grÃ©e dans calcBareme -->
+                <!-- Tableau supprimé - logique intégrée dans calcBareme -->
             </div>
 
             <!-- ===================== NOTE DE DIMENSIONNEMENT (fournisseur) ===================== -->
             <div class="card fournisseur-only" id="dimensionnementCard">
-                <h2 class="card-title">ðŸ“ Dimensionnement PAC</h2>
-                <div style="font-size: 12px; color: #64748b; margin-bottom: 18px;">Estimation de la puissance recommandÃ©e Â· Formule : P = G Ã— V Ã— Î”T</div>
+                <h2 class="card-title">📐 Dimensionnement PAC</h2>
+                <div style="font-size: 12px; color: #64748b; margin-bottom: 18px;">Estimation de la puissance recommandée · Formule : P = G × V × Î”T</div>
 
                 <!-- Surface + Hauteur -->
                 <div class="dim-row">
                     <div class="dim-field">
-                        <label>Surface au sol (mÂ²) <span class="req">*</span></label>
+                        <label>Surface au sol (m²) <span class="req">*</span></label>
                         <input type="number" id="dimSurface" value="100" min="1" oninput="syncSurfaces('dim')">
-                        <div class="dim-hint">Exemple : 100 mÂ²</div>
+                        <div class="dim-hint">Exemple : 100 m²</div>
                     </div>
                     <div class="dim-field">
                         <label>Hauteur sous plafond (m)</label>
                         <input type="number" id="dimHauteur" value="2.5" min="1.5" max="5" step="0.1" oninput="calcDim()">
-                        <div class="dim-hint">DÃ©faut : 2,5 m</div>
+                        <div class="dim-hint">Défaut : 2,5 m</div>
                     </div>
                 </div>
 
-                <!-- ParamÃ¨tres avancÃ©s (masquÃ©s, gardÃ©s pour calcul) -->
+                <!-- Paramètres avancés (masqués, gardés pour calcul) -->
                 <input type="hidden" id="dimTbase" value="-7">
                 <input type="hidden" id="dimTint" value="21">
                 <input type="hidden" id="dimT1" value="60">
                 <input type="hidden" id="dimT2" value="140">
 
-                <!-- RÃ‰SULTATS -->
+                <!-- RÉSULTATS -->
                 <div style="background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%); border-radius: 12px; padding: 20px; margin-bottom: 16px;">
-                    <div style="font-weight: 700; color: white; font-size: 14px; margin-bottom: 14px; text-align: center;">RÃ‰SULTATS DU DIMENSIONNEMENT</div>
+                    <div style="font-weight: 700; color: white; font-size: 14px; margin-bottom: 14px; text-align: center;">RÉSULTATS DU DIMENSIONNEMENT</div>
                     
                     <div style="background: rgba(255,255,255,0.1); border-radius: 8px; padding: 12px; margin-bottom: 10px; text-align: center;">
-                        <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">DÃ©perditions totales (P = G Ã— V Ã— Î”T)</div>
-                        <div style="font-size: 28px; font-weight: 800; color: #fbbf24;" id="dimDeperditions">â€”</div>
-                        <div style="font-size: 12px; color: #cbd5e1;" id="dimDepFormula">â€”</div>
+                        <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">Déperditions totales (P = G × V × Î”T)</div>
+                        <div style="font-size: 28px; font-weight: 800; color: #fbbf24;" id="dimDeperditions">—</div>
+                        <div style="font-size: 12px; color: #cbd5e1;" id="dimDepFormula">—</div>
                     </div>
 
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                         <div style="background: rgba(255,255,255,0.1); border-radius: 8px; padding: 12px; text-align: center;">
                             <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase;">Puissance PAC</div>
-                            <div style="font-size: 24px; font-weight: 800; color: #34d399;" id="dimPuissancePAC">â€”</div>
-                            <div style="font-size: 11px; color: #cbd5e1;" id="dimPuissancePACDetail">â€”</div>
+                            <div style="font-size: 24px; font-weight: 800; color: #34d399;" id="dimPuissancePAC">—</div>
+                            <div style="font-size: 11px; color: #cbd5e1;" id="dimPuissancePACDetail">—</div>
                         </div>
                         <div style="background: rgba(255,255,255,0.1); border-radius: 8px; padding: 12px; text-align: center;">
                             <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase;">Puissance appoint</div>
-                            <div style="font-size: 24px; font-weight: 800; color: #f97316;" id="dimPuissanceAppoint">â€”</div>
-                            <div style="font-size: 11px; color: #cbd5e1;" id="dimPuissanceAppointDetail">â€”</div>
+                            <div style="font-size: 24px; font-weight: 800; color: #f97316;" id="dimPuissanceAppoint">—</div>
+                            <div style="font-size: 11px; color: #cbd5e1;" id="dimPuissanceAppointDetail">—</div>
                         </div>
                     </div>
                     
                     <div style="background: rgba(255,255,255,0.08); border-radius: 8px; padding: 10px; margin-top: 10px; text-align: center;">
                         <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase;">Puissance totale (PAC + appoint)</div>
-                        <div style="font-size: 20px; font-weight: 700; color: white;" id="dimPuissanceTotale">â€”</div>
+                        <div style="font-size: 20px; font-weight: 700; color: white;" id="dimPuissanceTotale">—</div>
                     </div>
                 </div>
 
-                <!-- TempÃ©rature d'eau -->
+                <!-- Température d'eau -->
                 <div class="dim-row" style="margin-bottom: 0;">
                     <div class="dim-field">
-                        <label>TÂ° d'eau du circuit (Â°C)</label>
+                        <label>T° d'eau du circuit (°C)</label>
                         <input type="number" id="dimTeau" value="60" step="5" min="30" max="80">
                     </div>
                 </div>
 
-                <!-- Ã‰quipement -->
+                <!-- Équipement -->
                 <div style="margin-top: 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px;">
-                    <div style="font-weight: 600; color: #1d1d1f; font-size: 13px; margin-bottom: 10px;">MatÃ©riel installÃ©</div>
+                    <div style="font-weight: 600; color: #1d1d1f; font-size: 13px; margin-bottom: 10px;">Matériel installé</div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                         <div>
                             <label style="font-size: 12px; color: #64748b;">Marque PAC</label>
-                            <input type="text" id="dimMarque" placeholder="Ex: Daikin, Atlanticâ€¦" style="width: 100%; padding: 8px 10px; border: 1px solid #d2d2d7; border-radius: 6px;">
+                            <input type="text" id="dimMarque" placeholder="Ex: Daikin, Atlantic…" style="width: 100%; padding: 8px 10px; border: 1px solid #d2d2d7; border-radius: 6px;">
                         </div>
                         <div>
-                            <label style="font-size: 12px; color: #64748b;">RÃ©fÃ©rence PAC</label>
-                            <input type="text" id="dimReference" placeholder="RÃ©f. modÃ¨le" style="width: 100%; padding: 8px 10px; border: 1px solid #d2d2d7; border-radius: 6px;">
+                            <label style="font-size: 12px; color: #64748b;">Référence PAC</label>
+                            <input type="text" id="dimReference" placeholder="Réf. modèle" style="width: 100%; padding: 8px 10px; border: 1px solid #d2d2d7; border-radius: 6px;">
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="card fournisseur-only">
-                <h2 class="card-title">CoÃ»ts (Vue Fournisseur)</h2>
+                <h2 class="card-title">Coûts (Vue Fournisseur)</h2>
                 
                 <div style="background: #f5f5f7; padding: 16px; border-radius: 8px; margin-bottom: 8px;">
-                    <!-- PAC MatÃ©riel -->
+                    <!-- PAC Matériel -->
                     <div style="display: grid; grid-template-columns: 120px 1fr 80px 100px; gap: 8px; align-items: center; margin-bottom: 10px;">
-                        <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">PAC MatÃ©riel</label>
+                        <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">PAC Matériel</label>
                         <input type="number" id="coutPACMateriel" value="2900" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
                         <input type="number" id="qtePACMateriel" value="1" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
-                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalPACMateriel">2 900 â‚¬</div>
+                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalPACMateriel">2 900 €</div>
                     </div>
                     
                     <!-- PAC Pose -->
@@ -1441,15 +1441,15 @@
                         <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">PAC Pose</label>
                         <input type="number" id="coutPACPose" value="2500" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
                         <input type="number" id="qtePACPose" value="1" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
-                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalPACPose">2 500 â‚¬</div>
+                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalPACPose">2 500 €</div>
                     </div>
                     
-                    <!-- Ballon MatÃ©riel -->
+                    <!-- Ballon Matériel -->
                     <div style="display: grid; grid-template-columns: 120px 1fr 80px 100px; gap: 8px; align-items: center; margin-bottom: 10px;">
-                        <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">Ballon MatÃ©riel</label>
+                        <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">Ballon Matériel</label>
                         <input type="number" id="coutBallonMateriel" value="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
                         <input type="number" id="qteBallonMateriel" value="0" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
-                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalBallonMateriel">0 â‚¬</div>
+                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalBallonMateriel">0 €</div>
                     </div>
                     
                     <!-- Ballon Pose -->
@@ -1457,7 +1457,7 @@
                         <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">Ballon Pose</label>
                         <input type="number" id="coutBallonPose" value="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
                         <input type="number" id="qteBallonPose" value="0" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
-                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalBallonPose">0 â‚¬</div>
+                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalBallonPose">0 €</div>
                     </div>
                     
                     <!-- Accessoires -->
@@ -1465,7 +1465,7 @@
                         <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">Access.</label>
                         <input type="number" id="coutAccessoires" value="500" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
                         <input type="number" id="qteAccessoires" value="1" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
-                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalAccessoires">500 â‚¬</div>
+                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalAccessoires">500 €</div>
                     </div>
                     
                     <!-- Admin -->
@@ -1473,7 +1473,7 @@
                         <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">Admin</label>
                         <input type="number" id="coutAdmin" value="400" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
                         <input type="number" id="qteAdmin" value="1" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
-                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalAdmin">400 â‚¬</div>
+                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalAdmin">400 €</div>
                     </div>
                     
                     <!-- Mandat MPR -->
@@ -1481,7 +1481,7 @@
                         <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">Mandat MPR</label>
                         <input type="number" id="coutMandat" value="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
                         <input type="number" id="qteMandat" value="1" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
-                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalMandat">0 â‚¬</div>
+                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalMandat">0 €</div>
                     </div>
                     
                     <!-- Demande mairie -->
@@ -1489,36 +1489,36 @@
                         <label style="color: #1d1d1f; font-weight: 600; font-size: 13px;">Mairie</label>
                         <input type="number" id="coutMairie" value="250" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
                         <input type="number" id="qteMairie" value="0" min="0" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: center;">
-                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalMairie">0 â‚¬</div>
+                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalMairie">0 €</div>
                     </div>
                     
-                    <!-- PrÃ©visite -->
+                    <!-- Prévisite -->
                     <div style="display: grid; grid-template-columns: 120px 1fr 80px 100px; gap: 8px; align-items: center;">
                         <label style="color: #1d1d1f; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 6px;">
-                            <input type="checkbox" id="checkPrevisite" onchange="updateFromDetail()" style="width: 16px; height: 16px;"> PrÃ©visite
+                            <input type="checkbox" id="checkPrevisite" onchange="updateFromDetail()" style="width: 16px; height: 16px;"> Prévisite
                         </label>
                         <input type="number" id="coutPrevisite" value="200" step="1" oninput="updateFromDetail()" style="padding: 8px 12px; border: 1px solid #d2d2d7; border-radius: 6px; font-weight: 600; text-align: right;">
-                        <div style="text-align: center; font-weight: 600; color: #64748b;">â€”</div>
-                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalPrevisite">0 â‚¬</div>
+                        <div style="text-align: center; font-weight: 600; color: #64748b;">—</div>
+                        <div style="font-weight: 700; text-align: right; color: #1d1d1f;" id="totalPrevisite">0 €</div>
                     </div>
                 </div>
                 
                 <small style="font-size: 11px; color: #86868b; margin-bottom: 12px; display: block; text-align: center;">
                     <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
-                        <input type="checkbox" id="lockCoutHT" checked onchange="calc()"> Verrouiller les coÃ»ts (auto selon scÃ©nario)
+                        <input type="checkbox" id="lockCoutHT" checked onchange="calc()"> Verrouiller les coûts (auto selon scénario)
                     </label>
                 </small>
                 
                 <div style="background: #0071e3; color: white; padding: 14px; border-radius: 8px; margin-bottom: 12px;">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span style="font-weight: 600; font-size: 14px;">TOTAL COÃ›T HT</span>
-                        <span style="font-size: 20px; font-weight: 700;" id="coutTotalHTDisplay">6 200 â‚¬</span>
+                        <span style="font-weight: 600; font-size: 14px;">TOTAL COÛT HT</span>
+                        <span style="font-size: 20px; font-weight: 700;" id="coutTotalHTDisplay">6 200 €</span>
                     </div>
                 </div>
                 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                     <div class="form-group" style="margin-bottom: 0;">
-                        <label for="prixCumac">Prix cumac (â‚¬/MWhc) â€” auto selon mÃ©nage</label>
+                        <label for="prixCumac">Prix cumac (€/MWhc) — auto selon ménage</label>
                         <input type="number" id="prixCumac" value="12.5" step="0.01" oninput="calc()" style="font-weight: 600;">
                     </div>
 
@@ -1534,54 +1534,54 @@
 
         <div class="results-sidebar" id="resultsSidebar">
             <div class="summary-card" style="margin-bottom: 0;">
-                <div class="scenario-label-dark" id="scenarioSummary">â€”</div>
+                <div class="scenario-label-dark" id="scenarioSummary">—</div>
 
                 <!-- TOTAL TTC (readonly client) -->
                 <div class="ttc-readonly">
                     <div class="result-row-card" style="background: rgba(96,165,250,0.08); border-color: rgba(96,165,250,0.15);">
-                        <div class="rrc-label">ðŸ’° CoÃ»t installation TTC</div>
-                        <div class="rrc-value blue" id="totalTTC">â€”</div>
+                        <div class="rrc-label">💰 Coût installation TTC</div>
+                        <div class="rrc-value blue" id="totalTTC">—</div>
                     </div>
                 </div>
 
                 <!-- TOTAL TTC (editable fournisseur) -->
                 <div class="fournisseur-only" style="margin-bottom: 12px;">
-                    <div class="dark-section-title">CoÃ»t installation</div>
+                    <div class="dark-section-title">Coût installation</div>
                     <input type="number" class="ttc-input-dark" id="totalTTCInput" value="10890" step="1" oninput="updateFromTTC()">
                     <small style="font-size: 11px; color: rgba(255,255,255,0.35); margin-top: 4px; display: block;">
                         <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
-                            <input type="checkbox" id="lockTTC" checked onchange="calc()"> Verrouiller (auto selon scÃ©nario)
+                            <input type="checkbox" id="lockTTC" checked onchange="calc()"> Verrouiller (auto selon scénario)
                         </label>
                     </small>
                 </div>
 
-                <!-- COÃ›T HT fournisseur -->
+                <!-- COÛT HT fournisseur -->
                 <div class="fournisseur-only" style="margin-bottom: 4px;">
                     <div class="result-row-card">
                         <div>
-                            <div class="rrc-label">CoÃ»t HT</div>
-                            <div style="font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 2px;">MatÃ©riel + pose + admin</div>
+                            <div class="rrc-label">Coût HT</div>
+                            <div style="font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 2px;">Matériel + pose + admin</div>
                         </div>
-                        <div class="rrc-value" id="displayCoutHT" style="font-size: 18px;">â€”</div>
+                        <div class="rrc-value" id="displayCoutHT" style="font-size: 18px;">—</div>
                     </div>
                 </div>
 
                 <div class="glow-separator"></div>
 
-                <!-- ESTIMATION FINANCIÃˆRE -->
-                <div class="dark-section-title">Estimation financiÃ¨re</div>
+                <!-- ESTIMATION FINANCIÈRE -->
+                <div class="dark-section-title">Estimation financière</div>
 
                 <div class="result-row-card">
-                    <div class="rrc-label">MaPrimeRÃ©nov'</div>
-                    <div class="rrc-value green" id="aidesMPR" style="font-size: 18px;">â€”</div>
+                    <div class="rrc-label">MaPrimeRénov'</div>
+                    <div class="rrc-value green" id="aidesMPR" style="font-size: 18px;">—</div>
                 </div>
 
                 <div class="result-row-card">
                     <div>
                         <div class="rrc-label">Certificats CEE</div>
-                        <div style="font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 2px;" id="ceeSourceLabel">BAR-TH dÃ©taillÃ©</div>
+                        <div style="font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 2px;" id="ceeSourceLabel">BAR-TH détaillé</div>
                     </div>
-                    <div class="rrc-value green" id="aidesCEE" style="font-size: 18px;">â€”</div>
+                    <div class="rrc-value green" id="aidesCEE" style="font-size: 18px;">—</div>
                 </div>
 
                 <div class="glow-separator"></div>
@@ -1589,20 +1589,20 @@
                 <!-- TOTAL AIDES -->
                 <div class="result-highlight-card">
                     <div class="rhc-label">Total des aides</div>
-                    <div class="rhc-value" id="totalAides">â€”</div>
+                    <div class="rhc-value" id="totalAides">—</div>
                 </div>
 
-                <!-- RESTE Ã€ CHARGE -->
+                <!-- RESTE À CHARGE -->
                 <div class="result-row-card" style="background: rgba(251,191,36,0.08); border-color: rgba(251,191,36,0.15);">
-                    <div class="rrc-label">ðŸ  Reste Ã  charge estimÃ©</div>
-                    <div class="rrc-value yellow" id="resteCharge">â€”</div>
+                    <div class="rrc-label">🏠 Reste à charge estimé</div>
+                    <div class="rrc-value yellow" id="resteCharge">—</div>
                 </div>
 
                 <!-- MARGE fournisseur -->
                 <div class="fournisseur-only" style="margin-top: 4px;">
                     <div class="result-row-card" style="background: rgba(248,113,113,0.06); border-color: rgba(248,113,113,0.12);">
-                        <div class="rrc-label">ðŸ“Š Marge finale (HT)</div>
-                        <div class="rrc-value" id="margeFinal" style="font-size: 18px;">â€”</div>
+                        <div class="rrc-label">📊 Marge finale (HT)</div>
+                        <div class="rrc-value" id="margeFinal" style="font-size: 18px;">—</div>
                     </div>
                 </div>
 
@@ -1617,14 +1617,14 @@
                             <input type="number" id="racPourcent" value="0" min="0" max="100" step="1" oninput="updatePct()" onchange="logRACChange()">
                         </div>
                         <div>
-                            <div class="amount-label" style="color: rgba(255,255,255,0.45); margin-bottom: 4px;">RAC offert (â‚¬)</div>
+                            <div class="amount-label" style="color: rgba(255,255,255,0.45); margin-bottom: 4px;">RAC offert (€)</div>
                             <input type="number" id="racOffert" value="0" min="0" step="1" oninput="updateAmt()" onchange="logRACChange()">
                         </div>
                     </div>
                     <div id="maxPctInfo" style="font-size: 12px; padding: 10px 14px; border-radius: 8px; background: rgba(5,150,105,0.12); border: 1px solid rgba(5,150,105,0.25); color: #34d399; margin-bottom: 6px;">
-                        Remise max : <strong id="maxPctValue">â€”</strong> pour rester en dossier vert
+                        Remise max : <strong id="maxPctValue">—</strong> pour rester en dossier vert
                     </div>
-                    <div class="note-small" style="font-size: 11px; margin-bottom: 8px; color: rgba(255,255,255,0.3);">AppliquÃ© sur le RAC brut. N'affecte pas le prix cumac.</div>
+                    <div class="note-small" style="font-size: 11px; margin-bottom: 8px; color: rgba(255,255,255,0.3);">Appliqué sur le RAC brut. N'affecte pas le prix cumac.</div>
                 </div>
 
                 <!-- Status + Actions -->
@@ -1634,28 +1634,28 @@
                 </div>
 
                 <button id="exportBtn" class="btn-dark-export pdf" onclick="exportPDF()">
-                    ðŸ“„ Exporter en PDF
+                    📄 Exporter en PDF
                 </button>
                 
                 <button id="whatsappBtn" class="btn-dark-export whatsapp" onclick="sendWhatsApp()">
-                    ðŸ’¬ Envoyer par WhatsApp
+                    💬 Envoyer par WhatsApp
                 </button>
             </div>
         </div>
     </div>
 
     <div class="footer">
-        <p style="margin: 0;">PropulsÃ© par 770 Lab</p>
+        <p style="margin: 0;">Propulsé par 770 Lab</p>
     </div>
 </div><!-- /appScreen -->
 
     <div id="printArea" style="display: none;">
         <div style="padding: 20px 30px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1f2937; max-width: 800px; margin: 0 auto;">
             
-            <!-- EN-TÃŠTE -->
+            <!-- EN-TÊTE -->
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 3px solid #16a34a;">
                 <div style="display: flex; align-items: center; gap: 12px;">
-                    <div style="background: linear-gradient(135deg, #16a34a, #15803d); color: white; padding: 8px 14px; border-radius: 8px; font-weight: 700; font-size: 14px;">ðŸ  LES ARTISANS VERTS</div>
+                    <div style="background: linear-gradient(135deg, #16a34a, #15803d); color: white; padding: 8px 14px; border-radius: 8px; font-weight: 700; font-size: 14px;">🏠 LES ARTISANS VERTS</div>
                     <div style="font-size: 12px; color: #6b7280;">Simulateur Aides PAC 2026</div>
                 </div>
                 <div style="text-align: right;">
@@ -1670,18 +1670,18 @@
             <!-- CLIENT + PROFIL -->
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; page-break-inside: avoid;">
                 <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px;">
-                    <div style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">ðŸ‘¤ Client</div>
+                    <div style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">👤 Client</div>
                     <table style="width: 100%; font-size: 12px; border-collapse: collapse;">
                         <tr><td style="padding: 2px 0; color: #6b7280; width: 45%;">Nom</td><td style="padding: 2px 0; font-weight: 600;" id="printNom"></td></tr>
-                        <tr><td style="padding: 2px 0; color: #6b7280;">DÃ©partement</td><td style="padding: 2px 0; font-weight: 600;" id="printDept"></td></tr>
+                        <tr><td style="padding: 2px 0; color: #6b7280;">Département</td><td style="padding: 2px 0; font-weight: 600;" id="printDept"></td></tr>
                         <tr><td style="padding: 2px 0; color: #6b7280;">Zone</td><td style="padding: 2px 0; font-weight: 600;" id="printZone"></td></tr>
                         <tr><td style="padding: 2px 0; color: #6b7280;">Foyer</td><td style="padding: 2px 0; font-weight: 600;" id="printFoyer"></td></tr>
                         <tr><td style="padding: 2px 0; color: #6b7280;">RFR</td><td style="padding: 2px 0; font-weight: 600;" id="printRFR"></td></tr>
                     </table>
                 </div>
                 <div id="printProfilCard" style="border-radius: 8px; padding: 12px; color: white;">
-                    <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; opacity: 0.8;">ðŸ›ï¸ Profil MaPrimeRÃ©nov'</div>
-                    <div id="printProfilIcon" style="font-size: 28px; margin-bottom: 2px;">ðŸ”µ</div>
+                    <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; opacity: 0.8;">🏛️ Profil MaPrimeRénov'</div>
+                    <div id="printProfilIcon" style="font-size: 28px; margin-bottom: 2px;">🔵</div>
                     <div id="printProfilLabel" style="font-size: 18px; font-weight: 800;"></div>
                     <div id="printProfilDesc" style="font-size: 12px; opacity: 0.85; margin-top: 2px;"></div>
                     <div id="printProfilSeuil" style="font-size: 11px; opacity: 0.7; margin-top: 4px;"></div>
@@ -1692,20 +1692,20 @@
             <div style="background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 12px; margin-bottom: 14px; page-break-inside: avoid;">
                 <div style="font-size: 10px; font-weight: 700; color: #0369a1; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">âš™ï¸ Configuration technique</div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
-                    <div><div style="font-size: 10px; color: #64748b;">ScÃ©nario</div><div style="font-size: 13px; font-weight: 700; color: #0f172a;" id="printScenario"></div></div>
+                    <div><div style="font-size: 10px; color: #64748b;">Scénario</div><div style="font-size: 13px; font-weight: 700; color: #0f172a;" id="printScenario"></div></div>
                     <div><div style="font-size: 10px; color: #64748b;">Surface</div><div style="font-size: 13px; font-weight: 700; color: #0f172a;" id="printSurface"></div></div>
                     <div><div style="font-size: 10px; color: #64748b;">ETAS</div><div style="font-size: 13px; font-weight: 700; color: #0f172a;" id="printETAS"></div></div>
                 </div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 6px;">
-                    <div><div style="font-size: 10px; color: #64748b;">PAC recommandÃ©e</div><div style="font-size: 13px; font-weight: 700; color: #16a34a;" id="printPACReco"></div></div>
+                    <div><div style="font-size: 10px; color: #64748b;">PAC recommandée</div><div style="font-size: 13px; font-weight: 700; color: #16a34a;" id="printPACReco"></div></div>
                     <div><div style="font-size: 10px; color: #64748b;">Isolation</div><div style="font-size: 13px; font-weight: 700; color: #0f172a;" id="printIsolation"></div></div>
                     <div><div style="font-size: 10px; color: #64748b;">Construction</div><div style="font-size: 13px; font-weight: 700; color: #0f172a;" id="printAnnee"></div></div>
                 </div>
             </div>
 
-            <!-- ESTIMATION FINANCIÃˆRE -->
+            <!-- ESTIMATION FINANCIÈRE -->
             <div style="margin-bottom: 14px; page-break-inside: avoid;">
-                <div style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">ðŸ’° Estimation financiÃ¨re</div>
+                <div style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">💰 Estimation financière</div>
                 <div style="border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
                     <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
                         <tr style="background: #f8fafc;">
@@ -1713,7 +1713,7 @@
                             <td style="padding: 10px 14px; text-align: right; font-weight: 800; font-size: 16px;" id="printTTC"></td>
                         </tr>
                         <tr style="border-top: 1px solid #f1f5f9;">
-                            <td style="padding: 8px 14px; color: #6b7280;">â†³ MaPrimeRÃ©nov'</td>
+                            <td style="padding: 8px 14px; color: #6b7280;">â†³ MaPrimeRénov'</td>
                             <td style="padding: 8px 14px; text-align: right; font-weight: 700; color: #2563eb; font-size: 14px;" id="printMPR"></td>
                         </tr>
                         <tr style="border-top: 1px solid #f1f5f9;">
@@ -1728,14 +1728,14 @@
                 </div>
             </div>
 
-            <!-- DÃ‰TAIL CEE -->
+            <!-- DÉTAIL CEE -->
             <div style="background: #fefce8; border: 1px solid #fde68a; border-radius: 8px; padding: 8px 12px; margin-bottom: 14px; font-size: 11px; color: #92400e; page-break-inside: avoid;">
-                <strong>DÃ©tail CEE :</strong> <span id="printCEEDetail"></span>
+                <strong>Détail CEE :</strong> <span id="printCEEDetail"></span>
             </div>
 
-            <!-- RESTE Ã€ CHARGE -->
+            <!-- RESTE À CHARGE -->
             <div style="border: 2px solid #0f172a; border-radius: 10px; padding: 16px; margin-bottom: 14px; text-align: center; page-break-inside: avoid;">
-                <div style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Reste Ã  charge client</div>
+                <div style="font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">Reste à charge client</div>
                 <div id="printRAC" style="font-size: 36px; font-weight: 800; color: #0f172a;"></div>
                 <div id="printRACDetail" style="font-size: 12px; color: #6b7280; margin-top: 2px;"></div>
             </div>
@@ -1745,7 +1745,7 @@
 
             <!-- PIED DE PAGE -->
             <div style="text-align: center; padding-top: 12px; border-top: 1px solid #e5e7eb;">
-                <div style="font-size: 10px; color: #9ca3af;">Document gÃ©nÃ©rÃ© automatiquement â€” Les Artisans Verts Â· PropulsÃ© par 770 Lab</div>
+                <div style="font-size: 10px; color: #9ca3af;">Document généré automatiquement — Les Artisans Verts · Propulsé par 770 Lab</div>
                 <div style="font-size: 9px; color: #d1d5db; margin-top: 2px;">Ce document est une estimation et ne constitue pas un devis contractuel</div>
             </div>
         </div>
@@ -1768,10 +1768,10 @@ window.onerror=function(msg,url,line,col,err){
 };
 
 // ============================================
-// BARÃˆMES DE REVENUS MPR 2026
+// BARÈMES DE REVENUS MPR 2026
 // ============================================
 // ============================================
-// TABLE DÃ‰PARTEMENTS â†’ ZONE CLIMATIQUE (source officielle)
+// TABLE DÉPARTEMENTS → ZONE CLIMATIQUE (source officielle)
 // ============================================
 const DEPT_ZONE = {
     "01":"H1","02":"H1","03":"H1","04":"H2","05":"H1","06":"H3","07":"H2","08":"H1","09":"H2","10":"H1",
@@ -1801,7 +1801,7 @@ function detectDept() {
     const zone = DEPT_ZONE[deptInput] || DEPT_ZONE[deptKey];
     if (zone) {
         document.getElementById('zone').value = zone;
-        document.getElementById('deptZoneResult').textContent = `â†’ Zone ${zone}${isIDF ? ' Â· IDF' : ''}`;
+        document.getElementById('deptZoneResult').textContent = `→ Zone ${zone}${isIDF ? ' · IDF' : ''}`;
         
         // Auto Tbase dimensionnement
         const tbase = DEPT_TBASE[deptKey] || DEPT_TBASE[deptInput];
@@ -1812,7 +1812,7 @@ function detectDept() {
         calc();
         calcCEEDetail();
     } else {
-        document.getElementById('deptZoneResult').textContent = 'âŒ DÃ©partement inconnu';
+        document.getElementById('deptZoneResult').textContent = 'âŒ Département inconnu';
         
     }
 }
@@ -1864,20 +1864,20 @@ function detectProfil() {
     let profil, icon, label, desc, bg, color;
 
     if (rfr <= seuils[0]) {
-        profil = 'BLEU'; icon = 'ðŸ”µ'; label = 'Profil Bleu'; desc = 'Revenus trÃ¨s modestes';
+        profil = 'BLEU'; icon = '🔵'; label = 'Profil Bleu'; desc = 'Revenus très modestes';
         bg = 'linear-gradient(135deg, #1e40af, #3b82f6)'; color = '#ffffff';
     } else if (rfr <= seuils[1]) {
-        profil = 'JAUNE'; icon = 'ðŸŸ¡'; label = 'Profil Jaune'; desc = 'Revenus modestes';
+        profil = 'JAUNE'; icon = '🟡'; label = 'Profil Jaune'; desc = 'Revenus modestes';
         bg = 'linear-gradient(135deg, #ca8a04, #eab308)'; color = '#ffffff';
     } else if (rfr <= seuils[2]) {
-        profil = 'VIOLET'; icon = 'ðŸŸ£'; label = 'Profil Violet'; desc = 'Revenus intermÃ©diaires';
+        profil = 'VIOLET'; icon = '🟣'; label = 'Profil Violet'; desc = 'Revenus intermédiaires';
         bg = 'linear-gradient(135deg, #6b21a8, #a855f7)'; color = '#ffffff';
     } else {
-        profil = 'ROSE'; icon = '<span style="display:inline-block;width:28px;height:28px;border-radius:50%;background:#f472b6;"></span>'; label = 'Profil Rose'; desc = 'Revenus supÃ©rieurs';
+        profil = 'ROSE'; icon = '<span style="display:inline-block;width:28px;height:28px;border-radius:50%;background:#f472b6;"></span>'; label = 'Profil Rose'; desc = 'Revenus supérieurs';
         bg = 'linear-gradient(135deg, #9d174d, #f472b6)'; color = '#ffffff';
     }
 
-    const regionLabel = region === 'IDF' ? 'ÃŽle-de-France' : 'Province';
+    const regionLabel = region === 'IDF' ? 'Île-de-France' : 'Province';
     const seuilIdx = profil === 'BLEU' ? 0 : (profil === 'JAUNE' ? 1 : 2);
     const seuilVal = seuils[seuilIdx];
 
@@ -1889,23 +1889,23 @@ function detectProfil() {
     document.getElementById('mprProfilLabel').textContent = label;
     document.getElementById('mprProfilDesc').textContent = desc;
     const zn = document.getElementById('zone').value;
-    document.getElementById('mprInfoRegion').textContent = regionLabel + ' Â· ' + zn;
+    document.getElementById('mprInfoRegion').textContent = regionLabel + ' · ' + zn;
     document.getElementById('mprInfoFoyer').textContent = nb + ' pers.';
     document.getElementById('mprInfoSeuil').textContent = profil === 'ROSE'
-        ? '> ' + seuilVal.toLocaleString('fr-FR') + ' â‚¬'
-        : 'â‰¤ ' + seuilVal.toLocaleString('fr-FR') + ' â‚¬';
-    document.getElementById('mprInfoRFR').textContent = 'RFR dÃ©clarÃ© : ' + rfr.toLocaleString('fr-FR') + ' â‚¬';
+        ? '> ' + seuilVal.toLocaleString('fr-FR') + ' €'
+        : 'â‰¤ ' + seuilVal.toLocaleString('fr-FR') + ' €';
+    document.getElementById('mprInfoRFR').textContent = 'RFR déclaré : ' + rfr.toLocaleString('fr-FR') + ' €';
 
-    // Aide MPR pour le scÃ©nario en cours
+    // Aide MPR pour le scénario en cours
     const sc = document.getElementById('scenario').value;
     const mpr = D.MPR[sc] ? D.MPR[sc][profil] : 0;
     document.getElementById('mprInfoAide').textContent = mpr > 0
-        ? 'Aide MaPrimeRÃ©nov\' : ' + mpr.toLocaleString('fr-FR') + ' â‚¬'
-        : 'Pas d\'aide MaPrimeRÃ©nov\' pour ce profil';
+        ? 'Aide MaPrimeRénov\' : ' + mpr.toLocaleString('fr-FR') + ' €'
+        : 'Pas d\'aide MaPrimeRénov\' pour ce profil';
 
     document.getElementById('categorie').value = profil;
 
-    // Sync catÃ©gorie mÃ©nage CEE
+    // Sync catégorie ménage CEE
     document.getElementById('menageCEE').value = (profil === 'BLEU') ? 'tm' : 'autres';
 
     calc();
@@ -1920,32 +1920,32 @@ function toggleRevenus() {
 }
 
 // ============================================
-// CEE DÃ‰TAIL â€” BAR-TH-171 / 143 / 148
+// CEE DÉTAIL — BAR-TH-171 / 143 / 148
 // (Source : fiche BAR-TH-171 vA78.4)
 // ============================================
-const CEE_PRICE = { tm: 12.5, autres: 7.5 }; // â‚¬/MWhc
+const CEE_PRICE = { tm: 12.5, autres: 7.5 }; // €/MWhc
 
 const BAR143 = { H1: 134800, H2: 121000, H3: 100500 };
 
-// BAR-TH-148 v.A73.3 â€” Forfaits officiels (Ã  compter du 01/11/2025)
+// BAR-TH-148 v.A73.3 — Forfaits officiels (à compter du 01/11/2025)
 const BAR148 = { maison: 14700, appartement: 11800 };
 
 const BAR171 = {
     maison: {
         base: { lt140: 90900, ge140: 109200 },
         coefSurface: (S) => (S < 70 ? 0.5 : (S < 90 ? 0.7 : 1.0)),
-        tranches: "Maison : S<70â†’0,5 Â· 70â‰¤S<90â†’0,7 Â· Sâ‰¥90â†’1"
+        tranches: "Maison : S<70→0,5 · 70â‰¤S<90→0,7 · Sâ‰¥90→1"
     },
     appartement: {
         base: { lt140: 48700, ge140: 58900 },
         coefSurface: (S) => (S < 35 ? 0.5 : (S < 60 ? 0.7 : 1.0)),
-        tranches: "Appart : S<35â†’0,5 Â· 35â‰¤S<60â†’0,7 Â· Sâ‰¥60â†’1"
+        tranches: "Appart : S<35→0,5 · 35â‰¤S<60→0,7 · Sâ‰¥60→1"
     },
     coefZone: { H1: 1.2, H2: 1.0, H3: 0.7 }
 };
 
 
-// Surface dropdown â†’ catÃ©gorie pour table CEE (maison: les 5 anciennes catÃ©gories)
+// Surface dropdown → catégorie pour table CEE (maison: les 5 anciennes catégories)
 function surfaceToCategory(surfaceVal) {
     // surfaceVal comes from the dropdown: "S<70", "70<=S<90", "S>=90" (maison) or "S<35", "35<=S<60", "S>=60" (appart)
     // Map to table CEE keys
@@ -1974,13 +1974,13 @@ function updateSurfaceOptions() {
     const oldCoef = getSurfaceCoef(sel.value); // preserve coef level
     sel.innerHTML = '';
     if (tl === 'maison') {
-        sel.add(new Option('S < 70 mÂ²', 'S<70'));
-        sel.add(new Option('70 â‰¤ S < 90 mÂ²', '70<=S<90'));
-        sel.add(new Option('S â‰¥ 90 mÂ²', 'S>=90'));
+        sel.add(new Option('S < 70 m²', 'S<70'));
+        sel.add(new Option('70 â‰¤ S < 90 m²', '70<=S<90'));
+        sel.add(new Option('S â‰¥ 90 m²', 'S>=90'));
     } else {
-        sel.add(new Option('S < 35 mÂ²', 'S<35'));
-        sel.add(new Option('35 â‰¤ S < 60 mÂ²', '35<=S<60'));
-        sel.add(new Option('S â‰¥ 60 mÂ²', 'S>=60'));
+        sel.add(new Option('S < 35 m²', 'S<35'));
+        sel.add(new Option('35 â‰¤ S < 60 m²', '35<=S<60'));
+        sel.add(new Option('S â‰¥ 60 m²', 'S>=60'));
     }
     // Set option with same coef level
     const coefToMaison = { 0.5: 'S<70', 0.7: '70<=S<90', 1: 'S>=90' };
@@ -2003,7 +2003,7 @@ function syncEtas() {
 function onScenarioChange() {
     const sc = document.getElementById('scenario').value;
     const isSSC = (sc === 'SSC');
-    // SSC seul: hide ETAS, surface, barÃ¨me PAC (143 = forfait zone only)
+    // SSC seul: hide ETAS, surface, barème PAC (143 = forfait zone only)
     document.getElementById('etasGroup').style.display = isSSC ? 'none' : '';
     document.getElementById('ceeSurfaceGroup').style.display = isSSC ? 'none' : '';
     document.getElementById('baremeCard').style.display = isSSC ? 'none' : '';
@@ -2029,12 +2029,12 @@ function toggleCEE() {
     if (arrow) arrow.classList.toggle('open');
 }
 
-// Quelle(s) fiche(s) BAR-TH s'appliquent selon le scÃ©nario
-// Depuis 01/01/2026 : BAR-TH-148 NON cumulable avec BAR-TH-171 (arrÃªtÃ© 15/12/2025)
+// Quelle(s) fiche(s) BAR-TH s'appliquent selon le scénario
+// Depuis 01/01/2026 : BAR-TH-148 NON cumulable avec BAR-TH-171 (arrêté 15/12/2025)
 function getCEEFiches(scenario) {
     switch(scenario) {
         case 'PAC':                    return ['171'];
-        case 'PAC + BALLON Ã‰LECTRIQUE': return ['171'];
+        case 'PAC + BALLON ÉLECTRIQUE': return ['171'];
         case 'PAC + BALLON THERMO':     return ['171']; // 148 non cumulable depuis 01/2026
         case 'PAC + SSC':              return ['171', '143']; // cumul 171+143, CdP sur 171 uniquement
         case 'SSC':                    return ['143']; // SSC seul = BAR-TH-143 uniquement
@@ -2057,9 +2057,9 @@ function calcCEEDetail() {
     if (ceeSurfInfo) {
         const s = parseInt(document.getElementById('ceeSurface').value) || 0;
         if (tl === 'maison') {
-            ceeSurfInfo.textContent = s < 70 ? 'â†’ S < 70 mÂ² (coef 0,5)' : (s < 90 ? 'â†’ 70 â‰¤ S < 90 mÂ² (coef 0,7)' : 'â†’ S â‰¥ 90 mÂ² (coef 1)');
+            ceeSurfInfo.textContent = s < 70 ? '→ S < 70 m² (coef 0,5)' : (s < 90 ? '→ 70 â‰¤ S < 90 m² (coef 0,7)' : '→ S â‰¥ 90 m² (coef 1)');
         } else {
-            ceeSurfInfo.textContent = s < 35 ? 'â†’ S < 35 mÂ² (coef 0,5)' : (s < 60 ? 'â†’ 35 â‰¤ S < 60 mÂ² (coef 0,7)' : 'â†’ S â‰¥ 60 mÂ² (coef 1)');
+            ceeSurfInfo.textContent = s < 35 ? '→ S < 35 m² (coef 0,5)' : (s < 60 ? '→ 35 â‰¤ S < 60 m² (coef 0,7)' : '→ S â‰¥ 60 m² (coef 1)');
         }
     }
 
@@ -2086,11 +2086,11 @@ function calcCEEDetail() {
         const base = BAR171[tl].base[etasKey];
         const cz = BAR171.coefZone[zn];
         document.getElementById('ceeCoefSurface').value = coefS.toString().replace('.', ',');
-        const CDP = 5; // Coup de pouce Chauffage Ã—5 (arrÃªtÃ© 74e, oct 2025)
+        const CDP = 5; // Coup de pouce Chauffage ×5 (arrêté 74e, oct 2025)
         const kwhc171 = base * coefS * cz * CDP;
         totalKwhc += kwhc171;
         details.push(`171: ${fmtIntCEE(kwhc171)}`);
-        statusParts.push(`âœ… 171: base ${fmtIntCEE(base)} Ã— coef ${coefS} Ã— zone ${cz} Ã— CdP Ã—${CDP}`);
+        statusParts.push(`âœ… 171: base ${fmtIntCEE(base)} × coef ${coefS} × zone ${cz} × CdP ×${CDP}`);
     }
 
     // === BAR-TH-148 ===
@@ -2104,7 +2104,7 @@ function calcCEEDetail() {
         document.getElementById('ceeOut148').textContent = fmtEurCEE(prime148);
         document.getElementById('ceeOut148Detail').textContent = `${fmtIntCEE(kwhc148)} kWhc`;
         document.getElementById('ceeKpi148').style.display = 'block';
-        statusParts.push(`âœ… 148: ${fmtIntCEE(kwhc148)} kWhc (v.A73.3 Â· ${typeLabel})`);
+        statusParts.push(`âœ… 148: ${fmtIntCEE(kwhc148)} kWhc (v.A73.3 · ${typeLabel})`);
     } else {
         document.getElementById('ceeKpi148').style.display = 'none';
     }
@@ -2114,18 +2114,18 @@ function calcCEEDetail() {
         const base143 = BAR143[zn];
         const CDP143 = 2;
         const kwhc143avecCdP = base143 * CDP143;
-        // Si cumul avec 171 : CdP va sur 171 (Ã—5 > Ã—2), 143 = forfait base
-        // Si 143 seul : CdP Ã—2 applicable
+        // Si cumul avec 171 : CdP va sur 171 (×5 > ×2), 143 = forfait base
+        // Si 143 seul : CdP ×2 applicable
         const has171 = fiches.includes('171');
         const kwhc143 = has171 ? base143 : kwhc143avecCdP;
         totalKwhc += kwhc143;
         details.push(`143: ${fmtIntCEE(kwhc143)}`);
         if (has171) {
-            document.getElementById('cee143Forfait').value = `${fmtIntCEE(base143)} kWhc (${zn}) â€” CdP sur 171`;
-            statusParts.push(`âœ… 143: forfait ${zn} = ${fmtIntCEE(base143)} kWhc (CdP Ã—${CDP143} = ${fmtIntCEE(kwhc143avecCdP)} si seul)`);
+            document.getElementById('cee143Forfait').value = `${fmtIntCEE(base143)} kWhc (${zn}) — CdP sur 171`;
+            statusParts.push(`âœ… 143: forfait ${zn} = ${fmtIntCEE(base143)} kWhc (CdP ×${CDP143} = ${fmtIntCEE(kwhc143avecCdP)} si seul)`);
         } else {
-            document.getElementById('cee143Forfait').value = `${fmtIntCEE(base143)} Ã— ${CDP143} = ${fmtIntCEE(kwhc143avecCdP)} kWhc (${zn})`;
-            statusParts.push(`âœ… 143: forfait ${zn} ${fmtIntCEE(base143)} Ã— CdP Ã—${CDP143} = ${fmtIntCEE(kwhc143avecCdP)} kWhc`);
+            document.getElementById('cee143Forfait').value = `${fmtIntCEE(base143)} × ${CDP143} = ${fmtIntCEE(kwhc143avecCdP)} kWhc (${zn})`;
+            statusParts.push(`âœ… 143: forfait ${zn} ${fmtIntCEE(base143)} × CdP ×${CDP143} = ${fmtIntCEE(kwhc143avecCdP)} kWhc`);
         }
     }
 
@@ -2136,7 +2136,7 @@ function calcCEEDetail() {
     document.getElementById('ceeOutKwhc').textContent = `${fmtIntCEE(totalKwhc)} kWhc`;
     document.getElementById('ceeOutDetail').textContent = details.join(' + ');
     document.getElementById('ceeOutPrime').textContent = fmtEurCEE(primeCEE);
-    document.getElementById('ceeOutPrix').textContent = `${price.toString().replace('.', ',')} â‚¬/MWhc Â· ${menage === 'tm' ? 'TrÃ¨s modestes' : 'Autres'}`;
+    document.getElementById('ceeOutPrix').textContent = `${price.toString().replace('.', ',')} €/MWhc · ${menage === 'tm' ? 'Très modestes' : 'Autres'}`;
 
     const resultEl = document.getElementById('ceeResult');
     if (statusParts.length > 0) {
@@ -2155,19 +2155,19 @@ function calcCEEDetail() {
 }
 
 function fmtIntCEE(n) {
-    return isFinite(n) ? Math.round(n).toLocaleString('fr-FR') : 'â€”';
+    return isFinite(n) ? Math.round(n).toLocaleString('fr-FR') : '—';
 }
 function fmtEurCEE(n) {
-    return isFinite(n) ? Math.round(n).toLocaleString('fr-FR') + ' â‚¬' : 'â€”';
+    return isFinite(n) ? Math.round(n).toLocaleString('fr-FR') + ' €' : '—';
 }
 
 // ============================================
-// DONNÃ‰ES PRINCIPALES
+// DONNÉES PRINCIPALES
 // ============================================
-const D={TTC:{"PAC":10890,"PAC + BALLON Ã‰LECTRIQUE":13750,"PAC + BALLON THERMO":13750,"PAC + SSC":25850,"SSC":15000},MPR:{"PAC":{BLEU:5000,JAUNE:4000,VIOLET:3000,ROSE:0},"PAC + BALLON Ã‰LECTRIQUE":{BLEU:5000,JAUNE:4000,VIOLET:3000,ROSE:0},"PAC + BALLON THERMO":{BLEU:6200,JAUNE:4800,VIOLET:3400,ROSE:0},"PAC + SSC":{BLEU:15000,JAUNE:12000,VIOLET:7000,ROSE:0},"SSC":{BLEU:10000,JAUNE:8000,VIOLET:4000,ROSE:0}},COUT:{"PAC":6600,"PAC + BALLON Ã‰LECTRIQUE":6800,"PAC + BALLON THERMO":7200,"PAC + SSC":11650,"SSC":8500},COUT_DETAIL:{"PAC":{pac_materiel:2900,pac_pose:2500,ballon_materiel:0,ballon_pose:0,accessoires:800,admin:400,mairie:0},"PAC + BALLON Ã‰LECTRIQUE":{pac_materiel:2900,pac_pose:2500,ballon_materiel:200,ballon_pose:0,accessoires:800,admin:400,mairie:0},"PAC + BALLON THERMO":{pac_materiel:2900,pac_pose:2500,ballon_materiel:1100,ballon_pose:500,accessoires:800,admin:400,mairie:0},"PAC + SSC":{pac_materiel:5700,pac_pose:4500,ballon_materiel:0,ballon_pose:0,accessoires:800,admin:400,mairie:250},"SSC":{pac_materiel:4200,pac_pose:3500,ballon_materiel:0,ballon_pose:0,accessoires:500,admin:300,mairie:250}},CEE:{"140-170":{H1:{PAC:{"S<70":274800,"70<S<90":384720,"90<S<110":549600,"110<S<130":604560,"S>130":879360},"BALLON ELECTRIQUE":{"S<70":274800,"70<S<90":384720,"90<S<110":549600,"110<S<130":604560,"S>130":879360},"BALLON THERMO":{"S<70":289500,"70<S<90":399420,"90<S<110":564300,"110<S<130":619260,"S>130":894060},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H2:{PAC:{"S<70":229000,"70<S<90":320600,"90<S<110":458000,"110<S<130":503800,"S>130":732800},"BALLON ELECTRIQUE":{"S<70":229000,"70<S<90":320600,"90<S<110":458000,"110<S<130":503800,"S>130":732800},"BALLON THERMO":{"S<70":243700,"70<S<90":335300,"90<S<110":472700,"110<S<130":518500,"S>130":747500},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H3:{PAC:{"S<70":160300,"70<S<90":224420,"90<S<110":320600,"110<S<130":352660,"S>130":512960},"BALLON ELECTRIQUE":{"S<70":160300,"70<S<90":224420,"90<S<110":320600,"110<S<130":352660,"S>130":512960},"BALLON THERMO":{"S<70":175000,"70<S<90":239120,"90<S<110":335300,"110<S<130":367360,"S>130":527660},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}}},"111-140":{H1:{PAC:{"S<70":238500,"70<S<90":333900,"90<S<110":477000,"110<S<130":524700,"S>130":763200},"BALLON ELECTRIQUE":{"S<70":238500,"70<S<90":333900,"90<S<110":477000,"110<S<130":524700,"S>130":763200},"BALLON THERMO":{"S<70":253200,"70<S<90":348600,"90<S<110":491700,"110<S<130":539400,"S>130":777900},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H2:{PAC:{"S<70":198750,"70<S<90":278250,"90<S<110":397500,"110<S<130":437250,"S>130":636000},"BALLON ELECTRIQUE":{"S<70":198750,"70<S<90":278250,"90<S<110":397500,"110<S<130":437250,"S>130":636000},"BALLON THERMO":{"S<70":213450,"70<S<90":292950,"90<S<110":412200,"110<S<130":451950,"S>130":650700},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H3:{PAC:{"S<70":139125,"70<S<90":194775,"90<S<110":278250,"110<S<130":306075,"S>130":445200},"BALLON ELECTRIQUE":{"S<70":139125,"70<S<90":194775,"90<S<110":278250,"110<S<130":306075,"S>130":445200},"BALLON THERMO":{"S<70":153825,"70<S<90":209475,"90<S<110":292950,"110<S<130":320775,"S>130":459900},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}}}}};
-const M={"PAC":"PAC","PAC + BALLON Ã‰LECTRIQUE":"BALLON ELECTRIQUE","PAC + BALLON THERMO":"BALLON THERMO","PAC + SSC":"BALLON SSC","SSC":"BALLON SSC"};
+const D={TTC:{"PAC":10890,"PAC + BALLON ÉLECTRIQUE":13750,"PAC + BALLON THERMO":13750,"PAC + SSC":25850,"SSC":15000},MPR:{"PAC":{BLEU:5000,JAUNE:4000,VIOLET:3000,ROSE:0},"PAC + BALLON ÉLECTRIQUE":{BLEU:5000,JAUNE:4000,VIOLET:3000,ROSE:0},"PAC + BALLON THERMO":{BLEU:6200,JAUNE:4800,VIOLET:3400,ROSE:0},"PAC + SSC":{BLEU:15000,JAUNE:12000,VIOLET:7000,ROSE:0},"SSC":{BLEU:10000,JAUNE:8000,VIOLET:4000,ROSE:0}},COUT:{"PAC":6600,"PAC + BALLON ÉLECTRIQUE":6800,"PAC + BALLON THERMO":7200,"PAC + SSC":11650,"SSC":8500},COUT_DETAIL:{"PAC":{pac_materiel:2900,pac_pose:2500,ballon_materiel:0,ballon_pose:0,accessoires:800,admin:400,mairie:0},"PAC + BALLON ÉLECTRIQUE":{pac_materiel:2900,pac_pose:2500,ballon_materiel:200,ballon_pose:0,accessoires:800,admin:400,mairie:0},"PAC + BALLON THERMO":{pac_materiel:2900,pac_pose:2500,ballon_materiel:1100,ballon_pose:500,accessoires:800,admin:400,mairie:0},"PAC + SSC":{pac_materiel:5700,pac_pose:4500,ballon_materiel:0,ballon_pose:0,accessoires:800,admin:400,mairie:250},"SSC":{pac_materiel:4200,pac_pose:3500,ballon_materiel:0,ballon_pose:0,accessoires:500,admin:300,mairie:250}},CEE:{"140-170":{H1:{PAC:{"S<70":274800,"70<S<90":384720,"90<S<110":549600,"110<S<130":604560,"S>130":879360},"BALLON ELECTRIQUE":{"S<70":274800,"70<S<90":384720,"90<S<110":549600,"110<S<130":604560,"S>130":879360},"BALLON THERMO":{"S<70":289500,"70<S<90":399420,"90<S<110":564300,"110<S<130":619260,"S>130":894060},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H2:{PAC:{"S<70":229000,"70<S<90":320600,"90<S<110":458000,"110<S<130":503800,"S>130":732800},"BALLON ELECTRIQUE":{"S<70":229000,"70<S<90":320600,"90<S<110":458000,"110<S<130":503800,"S>130":732800},"BALLON THERMO":{"S<70":243700,"70<S<90":335300,"90<S<110":472700,"110<S<130":518500,"S>130":747500},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H3:{PAC:{"S<70":160300,"70<S<90":224420,"90<S<110":320600,"110<S<130":352660,"S>130":512960},"BALLON ELECTRIQUE":{"S<70":160300,"70<S<90":224420,"90<S<110":320600,"110<S<130":352660,"S>130":512960},"BALLON THERMO":{"S<70":175000,"70<S<90":239120,"90<S<110":335300,"110<S<130":367360,"S>130":527660},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}}},"111-140":{H1:{PAC:{"S<70":238500,"70<S<90":333900,"90<S<110":477000,"110<S<130":524700,"S>130":763200},"BALLON ELECTRIQUE":{"S<70":238500,"70<S<90":333900,"90<S<110":477000,"110<S<130":524700,"S>130":763200},"BALLON THERMO":{"S<70":253200,"70<S<90":348600,"90<S<110":491700,"110<S<130":539400,"S>130":777900},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H2:{PAC:{"S<70":198750,"70<S<90":278250,"90<S<110":397500,"110<S<130":437250,"S>130":636000},"BALLON ELECTRIQUE":{"S<70":198750,"70<S<90":278250,"90<S<110":397500,"110<S<130":437250,"S>130":636000},"BALLON THERMO":{"S<70":213450,"70<S<90":292950,"90<S<110":412200,"110<S<130":451950,"S>130":650700},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}},H3:{PAC:{"S<70":139125,"70<S<90":194775,"90<S<110":278250,"110<S<130":306075,"S>130":445200},"BALLON ELECTRIQUE":{"S<70":139125,"70<S<90":194775,"90<S<110":278250,"110<S<130":306075,"S>130":445200},"BALLON THERMO":{"S<70":153825,"70<S<90":209475,"90<S<110":292950,"110<S<130":320775,"S>130":459900},"BALLON SSC":{"S<70":769200,"70<S<90":769200,"90<S<110":769200,"110<S<130":769200,"S>130":769200}}}}};
+const M={"PAC":"PAC","PAC + BALLON ÉLECTRIQUE":"BALLON ELECTRIQUE","PAC + BALLON THERMO":"BALLON THERMO","PAC + SSC":"BALLON SSC","SSC":"BALLON SSC"};
 
-const SCENARIO_NAMES = {"PAC":"PAC","PAC + BALLON Ã‰LECTRIQUE":"PAC + Ballon Ã‰lectrique","PAC + BALLON THERMO":"PAC + Ballon Thermo","PAC + SSC":"PAC + SSC","SSC":"SSC"};
+const SCENARIO_NAMES = {"PAC":"PAC","PAC + BALLON ÉLECTRIQUE":"PAC + Ballon Électrique","PAC + BALLON THERMO":"PAC + Ballon Thermo","PAC + SSC":"PAC + SSC","SSC":"SSC"};
 
 function getCEE(et, zn, cs, sf){
     if(!D.CEE[et]) return 0;
@@ -2183,7 +2183,7 @@ let savedRacPourcent = 0;
 let savedRacOffert = 0;
 
 function fmt(n){
-    return Math.round(n).toLocaleString('fr-FR')+' â‚¬';
+    return Math.round(n).toLocaleString('fr-FR')+' €';
 }
 
 function updateFromTTC(){
@@ -2214,10 +2214,10 @@ function updateFromDetail(){
         totalGlobal += t;
     });
     
-    // PrÃ©visite (checkbox)
+    // Prévisite (checkbox)
     const prevChecked = document.getElementById('checkPrevisite').checked;
     const prevCost = prevChecked ? (parseFloat(document.getElementById('coutPrevisite').value) || 0) : 0;
-    document.getElementById('totalPrevisite').textContent = prevChecked ? fmt(prevCost) : '0 â‚¬';
+    document.getElementById('totalPrevisite').textContent = prevChecked ? fmt(prevCost) : '0 €';
     totalGlobal += prevCost;
     
     document.getElementById('coutTotalHTDisplay').textContent = fmt(totalGlobal);
@@ -2244,7 +2244,7 @@ function getCoutFromDetail(sc, ad) {
     return t;
 }
 
-// Frais pass-through (facturÃ©s au client, ajoutÃ©s au TTC)
+// Frais pass-through (facturés au client, ajoutés au TTC)
 // These are revenue items that shouldn't reduce margin
 function getPassThrough() {
     if(mode) {
@@ -2331,10 +2331,10 @@ function calc(){
                 document.getElementById('coutMairie').value = mairieVal > 0 ? mairieVal : 250;
                 document.getElementById('qteMairie').value = mairieVal > 0 ? 1 : 0;
                 document.getElementById('totalMairie').textContent = fmt(mairieVal);
-                // PrÃ©visite
+                // Prévisite
                 const prevOn = document.getElementById('checkPrevisite').checked;
                 const prevCost = prevOn ? (parseFloat(document.getElementById('coutPrevisite').value) || 200) : 0;
-                document.getElementById('totalPrevisite').textContent = prevOn ? fmt(prevCost) : '0 â‚¬';
+                document.getElementById('totalPrevisite').textContent = prevOn ? fmt(prevCost) : '0 €';
                 ch = detail.pac_materiel + detail.pac_pose + detail.ballon_materiel + detail.ballon_pose + detail.accessoires + detail.admin + (ad > 0 ? mandatVal : 0) + mairieVal + prevCost;
             }else{
                 ch = D.COUT[sc] || 0;
@@ -2356,7 +2356,7 @@ function calc(){
         ch=getCoutFromDetail(sc, ad);
     }
     
-    // Pass-through costs (mandat, mairie, prÃ©visite) are revenue items
+    // Pass-through costs (mandat, mairie, prévisite) are revenue items
     // They're displayed in costs but excluded from margin calculation
     const chForMarge = ch - getPassThrough();
     
@@ -2369,7 +2369,7 @@ function calc(){
     taForMarge = ad + ceForMarge;
     
     if(mode){
-        // Sync prixCumac with mÃ©nage CEE category
+        // Sync prixCumac with ménage CEE category
         const menageVal = document.getElementById('menageCEE').value;
         const pxAuto = (menageVal === 'tm') ? 12.5 : 7.5;
         document.getElementById('prixCumac').value = pxAuto;
@@ -2377,7 +2377,7 @@ function calc(){
     }
     
     const ceDisplay = ce;
-    const ceeSourceText = getCEEFiches(sc).map(f => 'BAR-TH-' + f).join(' + ') + ' dÃ©taillÃ©';
+    const ceeSourceText = getCEEFiches(sc).map(f => 'BAR-TH-' + f).join(' + ') + ' détaillé';
     
     const ta=ad+ceDisplay;
     const rb=tt-ta;
@@ -2407,9 +2407,9 @@ function calc(){
     
     let summaryHTML;
     if (sc === 'SSC') {
-        summaryHTML = `<strong class="${colorClass}">${st}</strong><span class="separator">â€¢</span>${ct2}<span class="separator">â€¢</span>Zone ${zn2}`;
+        summaryHTML = `<strong class="${colorClass}">${st}</strong><span class="separator">•</span>${ct2}<span class="separator">•</span>Zone ${zn2}`;
     } else {
-        summaryHTML = `<strong class="${colorClass}">${st}</strong><span class="separator">â€¢</span>${ct2}<span class="separator">â€¢</span>Zone ${zn2}<span class="separator">â€¢</span>${sf2}<span class="separator">â€¢</span>${et2}`;
+        summaryHTML = `<strong class="${colorClass}">${st}</strong><span class="separator">•</span>${ct2}<span class="separator">•</span>Zone ${zn2}<span class="separator">•</span>${sf2}<span class="separator">•</span>${et2}`;
     }
     document.getElementById('scenarioSummary').innerHTML = summaryHTML;
     document.getElementById('scenarioSummary').style.borderLeftColor=borderColor;
@@ -2461,8 +2461,8 @@ function calcRAC(rb,ch,ta,taForMarge,tt,proRB){
     }
     
     const rc=rb-mo;
-    // RAC nÃ©gatif â†’ afficher 1â‚¬ en vue client, vrai montant en vue fournisseur
-    document.getElementById('resteCharge').textContent = (rc < 0 && !mode) ? '1 â‚¬' : fmt(rc);
+    // RAC négatif → afficher 1€ en vue client, vrai montant en vue fournisseur
+    document.getElementById('resteCharge').textContent = (rc < 0 && !mode) ? '1 €' : fmt(rc);
     
     const rbForMarge = tt - taForMarge;
     // Pour la marge, utiliser les valeurs originales (pas l'auto-geste)
@@ -2529,7 +2529,7 @@ function calcRAC(rb,ch,ta,taForMarge,tt,proRB){
         bd.className='status-badge danger';
         bd.onclick=null;
         icon.textContent='âŒ';
-        txt.textContent='Dossier refusÃ©';
+        txt.textContent='Dossier refusé';
     }
 }
 
@@ -2541,11 +2541,11 @@ function shareDevis(){
     const totalAides=document.getElementById('totalAides').textContent;
     const rac=document.getElementById('resteCharge').textContent;
     
-    const text = `ðŸ  Estimation PAC â€” ${prenom} ${nom}\n\nðŸ“‹ ${scenario}\nðŸ’° Installation TTC : ${ttc}\nðŸŽ Total aides : ${totalAides}\nðŸ  Reste Ã  charge : ${rac}\n\nSimulation rÃ©alisÃ©e par Les Artisans Verts`;
+    const text = `🏠 Estimation PAC — ${prenom} ${nom}\n\n📋 ${scenario}\n💰 Installation TTC : ${ttc}\n🎁 Total aides : ${totalAides}\n🏠 Reste à charge : ${rac}\n\nSimulation réalisée par Les Artisans Verts`;
     
     if(navigator.share){
         navigator.share({
-            title: 'Devis PAC â€” ' + (prenom + ' ' + nom).trim(),
+            title: 'Devis PAC — ' + (prenom + ' ' + nom).trim(),
             text: text
         }).catch(()=>{});
     }else{
@@ -2553,7 +2553,7 @@ function shareDevis(){
         navigator.clipboard.writeText(text).then(()=>{
             const bd=document.getElementById('statusBadge');
             const oldTxt=document.getElementById('statusText').textContent;
-            document.getElementById('statusText').textContent='âœ“ CopiÃ© !';
+            document.getElementById('statusText').textContent='âœ“ Copié !';
             setTimeout(()=>{ document.getElementById('statusText').textContent=oldTxt; }, 2000);
         }).catch(()=>{
             window.open('https://api.whatsapp.com/send?text='+encodeURIComponent(text),'_blank');
@@ -2724,7 +2724,7 @@ function sendWhatsApp(){
     const aidesCEE=document.getElementById('aidesCEE').textContent;
     const totalAides=document.getElementById('totalAides').textContent;
     const rac=document.getElementById('resteCharge').textContent;
-    const message=`ðŸ  *Demande de devis - Les Artisans Verts*%0A%0AðŸ‘¤ *Client :* ${prenom} ${nom}%0A%0AðŸ“‹ *Configuration :*%0Aâ€¢ ScÃ©nario : ${scenario}%0Aâ€¢ ${categorie}%0Aâ€¢ ${zone}%0Aâ€¢ ${surface}%0Aâ€¢ ${etas}%0A%0AðŸ’° *Montants :*%0Aâ€¢ Total TTC : ${ttc}%0Aâ€¢ Aides MPR : ${aidesMPR}%0Aâ€¢ Aides CEE : ${aidesCEE}%0Aâ€¢ Total aides : ${totalAides}%0Aâ€¢ Reste Ã  charge : ${rac}%0A%0AJe souhaite obtenir un devis dÃ©taillÃ©.`;
+    const message=`🏠 *Demande de devis - Les Artisans Verts*%0A%0A👤 *Client :* ${prenom} ${nom}%0A%0A📋 *Configuration :*%0A• Scénario : ${scenario}%0A• ${categorie}%0A• ${zone}%0A• ${surface}%0A• ${etas}%0A%0A💰 *Montants :*%0A• Total TTC : ${ttc}%0A• Aides MPR : ${aidesMPR}%0A• Aides CEE : ${aidesCEE}%0A• Total aides : ${totalAides}%0A• Reste à charge : ${rac}%0A%0AJe souhaite obtenir un devis détaillé.`;
     window.open(`https://api.whatsapp.com/send?text=${message}`, '_blank');
 }
 
@@ -2734,20 +2734,20 @@ function exportPDF(){
     const prenom=document.getElementById('prenom').value.trim() || '';
     const fullName = (prenom + ' ' + nom).trim();
 
-    // En-tÃªte
-    document.getElementById('printTitle').textContent = 'Dossier â€” ' + fullName;
+    // En-tête
+    document.getElementById('printTitle').textContent = 'Dossier — ' + fullName;
     document.getElementById('printDate').textContent = new Date().toLocaleDateString('fr-FR', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
     document.getElementById('printCommercial').textContent = currentUser ? ('Commercial : ' + currentUser.name) : '';
 
     // Client info
     document.getElementById('printNom').textContent = fullName;
-    document.getElementById('printDept').textContent = document.getElementById('departement').value || 'â€”';
+    document.getElementById('printDept').textContent = document.getElementById('departement').value || '—';
     const zoneEl = document.getElementById('zone');
-    document.getElementById('printZone').textContent = zoneEl ? zoneEl.value : 'â€”';
+    document.getElementById('printZone').textContent = zoneEl ? zoneEl.value : '—';
     const foyerEl = document.getElementById('foyer');
-    document.getElementById('printFoyer').textContent = foyerEl ? foyerEl.options[foyerEl.selectedIndex].text : 'â€”';
+    document.getElementById('printFoyer').textContent = foyerEl ? foyerEl.options[foyerEl.selectedIndex].text : '—';
     const rfr = document.getElementById('rfr').value;
-    document.getElementById('printRFR').textContent = rfr ? parseInt(rfr).toLocaleString('fr-FR') + ' â‚¬' : 'â€”';
+    document.getElementById('printRFR').textContent = rfr ? parseInt(rfr).toLocaleString('fr-FR') + ' €' : '—';
 
     // Profil MPR
     const profilLabel = document.getElementById('mprProfilLabel');
@@ -2755,7 +2755,7 @@ function exportPDF(){
     const profilCard = document.getElementById('printProfilCard');
     const cat = document.getElementById('categorie').value;
     const profilColors = { BLEU:'#2563eb', JAUNE:'#d97706', VIOLET:'#7c3aed', ROSE:'#db2777' };
-    const profilIcons = { BLEU:'ðŸ”µ', JAUNE:'ðŸŸ¡', VIOLET:'ðŸŸ£', ROSE:'ðŸ”´' };
+    const profilIcons = { BLEU:'🔵', JAUNE:'🟡', VIOLET:'🟣', ROSE:'🔴' };
     profilCard.style.background = profilColors[cat] || '#64748b';
     document.getElementById('printProfilIcon').textContent = profilIcons[cat] || 'âšª';
     document.getElementById('printProfilLabel').textContent = profilLabel ? profilLabel.textContent : cat;
@@ -2767,14 +2767,14 @@ function exportPDF(){
     const sc = document.getElementById('scenario');
     document.getElementById('printScenario').textContent = sc.options[sc.selectedIndex].text;
     const ceeSurf = document.getElementById('ceeSurface');
-    document.getElementById('printSurface').textContent = (ceeSurf ? ceeSurf.value : '95') + ' mÂ²';
+    document.getElementById('printSurface').textContent = (ceeSurf ? ceeSurf.value : '95') + ' m²';
     const etas = document.getElementById('etas');
-    document.getElementById('printETAS').textContent = etas ? etas.options[etas.selectedIndex].text : 'â€”';
+    document.getElementById('printETAS').textContent = etas ? etas.options[etas.selectedIndex].text : '—';
     const baremeReco = document.getElementById('baremeReco');
-    document.getElementById('printPACReco').textContent = baremeReco ? baremeReco.textContent : 'â€”';
+    document.getElementById('printPACReco').textContent = baremeReco ? baremeReco.textContent : '—';
     const isoState = document.getElementById('isoStateName');
-    document.getElementById('printIsolation').textContent = isoState ? isoState.textContent : 'â€”';
-    document.getElementById('printAnnee').textContent = document.getElementById('dimAnnee').value || 'â€”';
+    document.getElementById('printIsolation').textContent = isoState ? isoState.textContent : '—';
+    document.getElementById('printAnnee').textContent = document.getElementById('dimAnnee').value || '—';
 
     // Montants
     document.getElementById('printTTC').textContent = document.getElementById('totalTTC').textContent;
@@ -2782,22 +2782,22 @@ function exportPDF(){
     document.getElementById('printCEE').textContent = document.getElementById('aidesCEE').textContent;
     document.getElementById('printTotalAides').textContent = document.getElementById('totalAides').textContent;
 
-    // DÃ©tail CEE
+    // Détail CEE
     const ceeFiches = document.getElementById('ceeFichesLabel');
     const ceeDetailEl = document.getElementById('ceeOutDetail');
     const ceePrixEl = document.getElementById('ceeOutPrix');
     let ceeDetail = '';
     if(ceeFiches) ceeDetail += 'Fiches : ' + ceeFiches.textContent;
-    if(ceeDetailEl && ceeDetailEl.textContent !== 'â€”') ceeDetail += ' Â· ' + ceeDetailEl.textContent;
-    if(ceePrixEl && ceePrixEl.textContent !== 'â€”') ceeDetail += ' Â· ' + ceePrixEl.textContent;
-    document.getElementById('printCEEDetail').textContent = ceeDetail || 'â€”';
+    if(ceeDetailEl && ceeDetailEl.textContent !== '—') ceeDetail += ' · ' + ceeDetailEl.textContent;
+    if(ceePrixEl && ceePrixEl.textContent !== '—') ceeDetail += ' · ' + ceePrixEl.textContent;
+    document.getElementById('printCEEDetail').textContent = ceeDetail || '—';
 
     // RAC
     document.getElementById('printRAC').textContent = document.getElementById('resteCharge').textContent;
     const pct = document.getElementById('racPourcent').value;
     const offert = document.getElementById('racOffert').value;
     if(parseInt(pct) > 0 || parseInt(offert) > 0){
-        document.getElementById('printRACDetail').textContent = 'Prise en charge fournisseur : ' + pct + '% soit ' + offert + ' â‚¬';
+        document.getElementById('printRACDetail').textContent = 'Prise en charge fournisseur : ' + pct + '% soit ' + offert + ' €';
     } else {
         document.getElementById('printRACDetail').textContent = '';
     }
@@ -2848,7 +2848,7 @@ function apiCall(params, callback, errorCallback) {
                 if(m) try { d = JSON.parse(m[0]); } catch(e2){}
             }
             if(d) callback(d);
-            else if(errorCallback) errorCallback('RÃ©ponse invalide');
+            else if(errorCallback) errorCallback('Réponse invalide');
         })
         .catch(e => { if(errorCallback) errorCallback(e.message); });
 }
@@ -2906,7 +2906,7 @@ document.getElementById('loginPass').addEventListener('keydown', e=>{ if(e.key==
 document.getElementById('loginUser').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
 
 function doLogout(){
-    logAction('DÃ©connexion', currentUser ? currentUser.name : '');
+    logAction('Déconnexion', currentUser ? currentUser.name : '');
     currentUser = null;
     try{ localStorage.removeItem('pac_user'); localStorage.removeItem('pac_api'); }catch(e){}
     location.reload();
@@ -2954,13 +2954,13 @@ function showApp(){
         document.getElementById('guestBar').style.display = 'flex';
         document.getElementById('userBar').style.display = 'none';
     } else {
-        // Commercial/admin : vue fournisseur par dÃ©faut
+        // Commercial/admin : vue fournisseur par défaut
         mode = 1;
         document.getElementById('mainContent').classList.add('fournisseur-mode');
         document.getElementById('guestBar').style.display = 'none';
         document.getElementById('userBar').style.display = 'flex';
         document.getElementById('userNameDisplay').textContent = currentUser.name;
-        document.getElementById('userRoleDisplay').textContent = currentUser.role === 'admin' ? 'ðŸ‘‘ Admin' : 'ðŸ“Š Commercial';
+        document.getElementById('userRoleDisplay').textContent = currentUser.role === 'admin' ? '👑 Admin' : '📊 Commercial';
         // Admin-only buttons
         const isAdmin = currentUser.role === 'admin';
         document.getElementById('btnHistory').style.display = isAdmin ? '' : 'none';
@@ -3015,7 +3015,7 @@ function doChangePassword(){
     okEl.style.display = 'none';
 
     if(!oldP || !newP){ errEl.textContent='Tous les champs sont requis'; errEl.style.display='block'; return; }
-    if(newP.length < 4){ errEl.textContent='Minimum 4 caractÃ¨res'; errEl.style.display='block'; return; }
+    if(newP.length < 4){ errEl.textContent='Minimum 4 caractères'; errEl.style.display='block'; return; }
     if(newP !== conf){ errEl.textContent='Les mots de passe ne correspondent pas'; errEl.style.display='block'; return; }
 
     if(useAPI && API_URL){
@@ -3024,7 +3024,7 @@ function doChangePassword(){
             errEl.style.color = '#dc2626';
             if(d.success){
                 errEl.style.display = 'none';
-                okEl.textContent = 'âœ… Mot de passe modifiÃ© !';
+                okEl.textContent = 'âœ… Mot de passe modifié !';
                 okEl.style.display = 'block';
                 setTimeout(()=>{ document.getElementById('pwdModal').classList.remove('active'); }, 1500);
             } else {
@@ -3042,7 +3042,7 @@ function doChangePassword(){
         if(!account){ errEl.textContent='Compte introuvable'; errEl.style.display='block'; return; }
         if(account.pass !== oldP){ errEl.textContent='Ancien mot de passe incorrect'; errEl.style.display='block'; return; }
         account.pass = newP;
-        okEl.textContent = 'âœ… ModifiÃ© (session uniquement en mode local)';
+        okEl.textContent = 'âœ… Modifié (session uniquement en mode local)';
         okEl.style.display = 'block';
         logAction('Changement mot de passe', currentUser.name);
         setTimeout(()=>{ document.getElementById('pwdModal').classList.remove('active'); }, 1500);
@@ -3098,7 +3098,7 @@ function openHistory(){
 function renderJournal(entries){
     const body = document.getElementById('historyBody');
     if(!entries || entries.length === 0){
-        body.innerHTML = '<div class="hist-empty">Aucune entrÃ©e dans le journal</div>';
+        body.innerHTML = '<div class="hist-empty">Aucune entrée dans le journal</div>';
         return;
     }
     let html = '';
@@ -3112,7 +3112,7 @@ function renderJournal(entries){
         html += '</div>';
     });
     if(currentUser && currentUser.role === 'admin'){
-        html += '<div class="hist-clear"><button onclick="clearJournal()">ðŸ—‘ï¸ Vider le journal</button></div>';
+        html += '<div class="hist-clear"><button onclick="clearJournal()">🗑ï¸ Vider le journal</button></div>';
     }
     body.innerHTML = html;
 }
@@ -3126,12 +3126,12 @@ function clearJournal(){
 // Log key actions
 function logScenarioChange(){
     const sc = document.getElementById('scenario').value;
-    logAction('Changement scÃ©nario', sc);
+    logAction('Changement scénario', sc);
 }
 function logClientChange(){
     const nom = document.getElementById('nom').value.trim();
     const prenom = document.getElementById('prenom').value.trim();
-    if(nom || prenom) logAction('Client modifiÃ©', (prenom + ' ' + nom).trim());
+    if(nom || prenom) logAction('Client modifié', (prenom + ' ' + nom).trim());
 }
 function logExport(type){
     const nom = document.getElementById('nom').value.trim() || 'Client';
@@ -3140,7 +3140,7 @@ function logExport(type){
 function logRACChange(){
     const pct = document.getElementById('racPourcent').value;
     const offert = document.getElementById('racOffert').value;
-    logAction('RAC modifiÃ©', pct + '% / ' + offert + ' â‚¬');
+    logAction('RAC modifié', pct + '% / ' + offert + ' €');
 }
 
 
@@ -3175,7 +3175,7 @@ function logRACChange(){
 // DIMENSIONNEMENT PAC
 // ============================================
 
-// Tbase par dÃ©partement (Â°C) - valeurs conventionnelles
+// Tbase par département (°C) - valeurs conventionnelles
 const DEPT_TBASE = {
     '01':-10,'02':-9,'03':-8,'04':-8,'05':-10,'06':-5,'07':-6,'08':-10,'09':-8,'10':-10,
     '11':-5,'12':-8,'13':-5,'14':-7,'15':-10,'16':-5,'17':-5,'18':-8,'19':-8,'20':-2,
@@ -3191,9 +3191,9 @@ const DEPT_TBASE = {
 
 let currentG = 0.95;
 
-// ============ DIMENSIONNEMENT â€” AnnÃ©e â†’ G auto ============
+// ============ DIMENSIONNEMENT — Année → G auto ============
 
-// Table G par annÃ©e de construction
+// Table G par année de construction
 function getGFromAnnee(annee) {
     if (annee >= 2021) return 0.6;   // RE 2020
     if (annee >= 2013) return 0.7;   // RT 2012
@@ -3201,7 +3201,7 @@ function getGFromAnnee(annee) {
     if (annee >= 2001) return 0.8;
     if (annee >= 1990) return 0.95;  // RT 2000
     if (annee >= 1983) return 1.1;
-    if (annee >= 1975) return 1.3;   // 1Ã¨re rÃ©glementation
+    if (annee >= 1975) return 1.3;   // 1ère réglementation
     return 1.6;                       // Avant 1975
 }
 
@@ -3216,7 +3216,7 @@ function evalIsolation() {
         if (quand && quand.value === 'recent') recentCount++;
     });
 
-    // DÃ©termination auto de l'Ã©tat
+    // Détermination auto de l'état
     if (count === 0) {
         currentIsolation = 'origine';
     } else if (count >= 3 && recentCount >= 2) {
@@ -3226,7 +3226,7 @@ function evalIsolation() {
     }
 
     // Affichage
-    const names = { origine: 'Ã‰tat d\'origine / Non prÃ©cisÃ©', partielle: 'RÃ©novation partielle', totale: 'RÃ©novation totale' };
+    const names = { origine: 'État d\'origine / Non précisé', partielle: 'Rénovation partielle', totale: 'Rénovation totale' };
     const colors = { origine: '#64748b', partielle: '#d97706', totale: '#16a34a' };
     const el = document.getElementById('isoStateName');
     if (el) { el.textContent = names[currentIsolation]; el.style.color = colors[currentIsolation]; }
@@ -3243,13 +3243,13 @@ function getEffectiveG() {
     return g;
 }
 
-// ============ BARÃˆME PAC ============
-// Pattern: every 10mÂ², alternating single/double recommendations
-// +2kW per 20mÂ² step
+// ============ BARÈME PAC ============
+// Pattern: every 10m², alternating single/double recommendations
+// +2kW per 20m² step
 function getBaremePAC(surface) {
     if (surface <= 40) return [4];
     if (surface <= 50) return [6];
-    // From 60mÂ²: pattern repeats every 20mÂ²
+    // From 60m²: pattern repeats every 20m²
     // 60-70 = [6,8], 80 = [8], 90 = [8,10], 100 = [10], etc.
     const base = Math.floor((surface - 1) / 20); // 0-indexed group
     const inGroup = ((surface - 1) % 20) < 10 ? 0 : 1; // first or second half
@@ -3309,7 +3309,7 @@ function calcBareme() {
         if (quand && quand.value === 'recent') recentCount++;
     });
 
-    // Base score from annÃ©e
+    // Base score from année
     let score;
     if (annee < 1975) score = 90;
     else if (annee < 1990) score = 75;
@@ -3324,8 +3324,8 @@ function calcBareme() {
     score -= totalChecks * reductionPerItem;
     score -= recentCount * recentBonus;
 
-    // All 5 checked + all recent â†’ score should be ~0-5
-    // 5*12 + 5*3 = 75, from base 90 â†’ 15, from base 55 â†’ -20 â†’ clamped to 5
+    // All 5 checked + all recent → score should be ~0-5
+    // 5*12 + 5*3 = 75, from base 90 → 15, from base 55 → -20 → clamped to 5
 
     // Clamp 3-97%
     score = Math.max(3, Math.min(97, score));
@@ -3337,17 +3337,17 @@ function calcBareme() {
     if (score <= 25) {
         el.textContent = lowKW + ' kW';
         el.style.color = '#16a34a';
-        alt.textContent = 'Isolation performante â†’ puissance optimisÃ©e';
+        alt.textContent = 'Isolation performante → puissance optimisée';
         if (hint) hint.textContent = '';
     } else if (score >= 75) {
         el.textContent = highKW + ' kW';
         el.style.color = '#dc2626';
-        alt.textContent = 'Isolation faible â†’ puissance supÃ©rieure conseillÃ©e';
+        alt.textContent = 'Isolation faible → puissance supérieure conseillée';
         if (hint) hint.textContent = '';
     } else {
         el.textContent = lowKW + ' ou ' + highKW + ' kW';
         el.style.color = '#d97706';
-        alt.textContent = lowKW + ' kW = Ã©conomique Â· ' + highKW + ' kW = confort';
+        alt.textContent = lowKW + ' kW = économique · ' + highKW + ' kW = confort';
         if (hint) hint.textContent = '';
     }
 }
@@ -3416,13 +3416,13 @@ function calcDim() {
     const puissanceAppoint = puissanceTotale - puissancePAC;
 
     document.getElementById('dimDeperditions').textContent = Math.round(P).toLocaleString('fr-FR') + ' W';
-    document.getElementById('dimDepFormula').textContent = `${G.toFixed(2).replace('.', ',')} Ã— ${Math.round(V)} Ã— ${deltaT}`;
+    document.getElementById('dimDepFormula').textContent = `${G.toFixed(2).replace('.', ',')} × ${Math.round(V)} × ${deltaT}`;
 
     document.getElementById('dimPuissancePAC').textContent = (puissancePAC / 1000).toFixed(1).replace('.', ',') + ' kW';
-    document.getElementById('dimPuissancePACDetail').textContent = `${Math.round(P).toLocaleString('fr-FR')} W Ã— ${T1}%`;
+    document.getElementById('dimPuissancePACDetail').textContent = `${Math.round(P).toLocaleString('fr-FR')} W × ${T1}%`;
 
     document.getElementById('dimPuissanceAppoint').textContent = (puissanceAppoint / 1000).toFixed(1).replace('.', ',') + ' kW';
-    document.getElementById('dimPuissanceAppointDetail').textContent = `(P Ã— ${T2}% âˆ’ PAC)`;
+    document.getElementById('dimPuissanceAppointDetail').textContent = `(P × ${T2}% âˆ’ PAC)`;
 
     document.getElementById('dimPuissanceTotale').textContent = (puissanceTotale / 1000).toFixed(1).replace('.', ',') + ' kW';
 }
@@ -3430,9 +3430,9 @@ function calcDim() {
 // ============================================
 // INIT
 // ============================================
-dbg('ðŸš€ Init start');
+dbg('🚀 Init start');
 checkAutoLogin();
-dbg('ðŸ Init complete');
+dbg('🏁 Init complete');
 // Triple-tap to show debug panel
 </script>
 </body>
