@@ -1466,10 +1466,12 @@
 
 /* Print: updated for tab system */
 @media print {
-    .tab-pac-active #printArea { display: block !important; }
+    .tab-pac-active #printArea { display: none !important; }
+    .tab-pac-active #pacDevisArea { display: block !important; }
     .tab-pac-active #iteDevisArea { display: none !important; }
     .tab-ite-active #printArea { display: none !important; }
     .tab-ite-active #iteDevisArea { display: block !important; }
+    .tab-ite-active #pacDevisArea { display: none !important; }
 }
 
 /* Shared client card */
@@ -2730,6 +2732,7 @@
 
 
     <div id="iteDevisArea" style="display: none;"></div>
+    <div id="pacDevisArea" style="display: none;"></div>
 
 <script>
 // Debug helper
@@ -4793,6 +4796,16 @@ function ite_loadDossier(f){
     var em=g(23);ite_$('iteEmail').value=em&&em.toLowerCase()!=='n\u00e9ant'?em:'';
     var pm={'grande':'grande','simple':'modeste','classique':'classique'};
     ite_$('itePrecarite').value=pm[g(26).toLowerCase()]||'classique';
+    // Auto-fill profil from col 27 (couleur profil: bleu/jaune/violet/rose)
+    var profilMap={'bleu':'BLEU','jaune':'JAUNE','violet':'VIOLET','rose':'ROSE'};
+    var profilColor=profilMap[g(27).toLowerCase()];
+    if(profilColor){
+        var catEl=document.getElementById('categorie');
+        if(catEl) catEl.value=profilColor;
+        var menEl=document.getElementById('menageCEE');
+        if(menEl) menEl.value=(profilColor==='BLEU')?'tm':'autres';
+        try{syncProfilPrecarite();}catch(e){}
+    }
     (function(){var ch=g(34).toLowerCase(),tc=ite_$('iteTypeChauffage');if(!tc)return;
         if(ch.includes('fioul')||ch.includes('fuel'))tc.value='Fioul';
         else if(ch.includes('gaz'))tc.value='Gaz';
@@ -4959,6 +4972,159 @@ function ite_generateDevis(){
 }
 
 // ============================================
+// PAC DEVIS GENERATION (PDF)
+// ============================================
+function pac_dvTH(){return'<div class="dv-th"><div>D\u00e9tail</div><div class="c">Qt\u00e9</div><div class="r">P.U TTC</div><div class="r">Total TTC</div><div class="r">TVA</div></div>';}
+function pac_dvFT(p,t){return'<div class="dv-footer">LES ARTISANS VERTS SAS \u00b7 40\u202f000 \u20ac \u00b7 6 passage Eug\u00e8ne Barbier, 92400 Courbevoie \u00b7 contact@artisansverts.energy \u00b7 01 87 66 27 08 \u00b7 SIRET 878 062 793 00038 \u00b7 TVA FR34 878062793 \u00b7 Assurance GROUPE LEADER LUNS2507132 01/01/2026-31/12/2026<span class="dv-pn">'+p+'/'+t+'</span></div>';}
+function pac_fmt(n){return parseFloat(n).toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+' \u20ac';}
+
+function pac_generateDevis(){
+    // PAC model
+    var pacKey=document.getElementById('marquePAC').value;
+    var pac=PAC_CATALOG[pacKey];
+    if(!pac){alert('Veuillez s\u00e9lectionner un mod\u00e8le PAC');return;}
+
+    // Client info
+    var nom=(document.getElementById('prenom').value.trim()+' '+document.getElementById('nom').value.trim()).trim()||'CLIENT';
+    var num=ite_V('iteNumDevis'),nc=ite_V('iteNumClient')||num;
+    var dRaw=ite_V('iteDateDevis').split('-'),df=dRaw.length===3?(dRaw[2]+'/'+dRaw[1]+'/'+dRaw[0]):'';
+    var adr=ite_V('iteAdresse'),vil=ite_V('iteVille'),tel=ite_V('iteTel'),em=ite_V('iteEmail');
+    var zn=document.getElementById('zone').value;
+    var prec=ite_V('itePrecarite'),tch=ite_V('iteTypeChauffage');
+    var tlog='Maison individuelle / +15 ans';
+    var con=ite_V('iteConseiller');
+    var tva=parseFloat(document.getElementById('tvaProduit').value)||5.5;
+
+    // PAC pricing
+    var pPAC=parseFloat(document.getElementById('prixPAC').value)||0;
+    var pPose=parseFloat(document.getElementById('prixPose').value)||0;
+
+    // Ballon
+    var wBallon=document.getElementById('includeBallon').value==='oui';
+    var refBal=wBallon?document.getElementById('refBallon').value:'';
+    var pBal=wBallon?(parseFloat(document.getElementById('prixBallon').value)||0):0;
+    var pBPose=wBallon?(parseFloat(document.getElementById('prixPoseBallon').value)||0):0;
+    var copBal=wBallon?document.getElementById('copBallon').value:'';
+    var balMap={'PERFORMER2_200L':'THALEOS Performer 2 200L','PERFORMER2_270L':'THALEOS Performer 2 270L'};
+    var balName=balMap[refBal]||refBal;
+
+    // SSC
+    var wSSC=document.getElementById('includeSSC').value==='oui';
+    var pSSC=wSSC?(parseFloat(document.getElementById('prixSSC').value)||0):0;
+    var pSSCPose=wSSC?(parseFloat(document.getElementById('prixPoseSSC').value)||0):0;
+
+    // Totals
+    var ttc=pPAC+pPose+(wBallon?pBal+pBPose:0)+(wSSC?pSSC+pSSCPose:0);
+    var ht=ttc/(1+tva/100);
+    var tvam=ttc-ht;
+
+    // Aides
+    var sc=document.getElementById('scenario').value;
+    var ct=document.getElementById('categorie').value;
+    var ad=(D.MPR[sc]&&D.MPR[sc][ct])?D.MPR[sc][ct]:0;
+    var ce=lastCEEDetailPrime||0;
+    var totalAides=ad+ce;
+    var reste=ttc-totalAides;
+    if(reste<0) reste=1;
+    var kwhc=lastCEEDetailKwhc||0;
+
+    var tp=2;
+    var precL={classique:'Classique',modeste:'Modeste',grande:'Grande pr\u00e9carit\u00e9'}[prec]||prec;
+    var edfQR='https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https%3A%2F%2Fparticulier.edf.fr%2Ffr%2Faccueil%2Faides-financement%2Fprofessionnels%2Fpartenaire.html%3FidPartenaire%3D225117';
+    var etasVal=pac.etas.split('/')[0]||pac.etas;
+
+    // === PAGE 1 ===
+    var pg1='<div class="ite-page">';
+    pg1+='<div class="dv-header"><div style="font-size:18pt;font-weight:900;"><span style="color:#333;">ARTISANS</span> <span style="color:#16a34a;">VERTS</span></div>';
+    pg1+='<div style="display:flex;gap:4mm;align-items:flex-start;">';
+    pg1+='<div style="border:2px solid #1e3a8a;border-radius:4px;padding:3px 5px;width:68px;text-align:center;"><div style="background:#1e3a8a;color:#fff;font-weight:900;font-size:8pt;margin:-3px -5px 2px;padding:2px 0;border-radius:2px 2px 0 0;">RGE</div><div style="font-size:6pt;color:#1e3a8a;font-weight:700;">QUALIBAT</div><div style="font-size:5.5pt;">N\u00b0 E-E206267<br>VAL 03/02/2027</div></div>';
+    pg1+='<div style="border:2px solid #1e3a8a;border-radius:4px;padding:3px 5px;width:68px;text-align:center;"><div style="background:#1e3a8a;color:#fff;font-weight:900;font-size:8pt;margin:-3px -5px 2px;padding:2px 0;border-radius:2px 2px 0 0;">RGE</div><div style="font-size:6pt;color:#1e3a8a;font-weight:700;">QualiPAC</div><div style="font-size:5.5pt;">N\u00b0 QS/64543<br>VAL 12/12/2027</div></div>';
+    pg1+='<img src="'+edfQR+'" style="width:18mm;height:18mm;border:1px solid #ccc;border-radius:2px;"></div></div>';
+
+    pg1+='<div class="dv-title"><span>DEVIS : '+num+'</span><span>'+nom+'</span></div>';
+    pg1+='<div class="dv-info"><div class="dv-info-l">N\u00b0 Client : <b>'+nc+'</b><br>Date : <b>'+df+'</b><br>Adresse chantier : '+adr+'<br>'+vil+'<br>Conseiller : <b>'+con+'</b></div><div class="dv-info-r">'+adr+'<br>'+vil+'<br>T\u00e9l : '+tel+'<br>Email : '+em+'<br>Zone : <b>'+zn+'</b><br>Pr\u00e9carit\u00e9 : <b>'+precL+'</b><br>Chauffage : <b>'+tch+'</b><br>'+tlog+'</div></div>';
+
+    pg1+=pac_dvTH();
+
+    // BAR-TH-171: PAC
+    pg1+='<div class="dv-block"><b>BAR-TH-171 : Pompe \u00e0 chaleur air/eau</b><br>';
+    pg1+=pac.n+' \u00b7 R\u00e9f : '+pac.r+' \u00b7 ETAS '+etasVal+'%<br>';
+    pg1+='COP 35\u00b0 : '+pac.cop35+' \u00b7 COP 55\u00b0 : '+pac.cop55+' \u00b7 Classe : '+pac.cls+'<br>';
+    pg1+='R\u00e9frig\u00e9rant '+pac.ref+' \u00b7 '+pac.db+'<br><br>';
+    pg1+='LES ARTISANS VERTS \u00b7 SIRET 87806279300038 \u00b7 RGE E-E206267 / QualiPAC QS/64543</div>';
+
+    pg1+='<div class="dv-row"><div class="n">*'+pac.n+'</div><div class="c">1 U</div><div class="r">'+pac_fmt(pPAC)+'</div><div class="r">'+pac_fmt(pPAC)+'</div><div class="r">'+tva.toFixed(2).replace('.',',')+'%</div></div>';
+    pg1+='<div class="dv-specs">'+pac.m+' \u00b7 '+pac.r+' \u00b7 ETAS:'+etasVal+'% \u00b7 COP@35:'+pac.cop35+' \u00b7 COP@55:'+pac.cop55+' \u00b7 '+pac.ref+' \u00b7 '+pac.cls+'</div>';
+
+    pg1+='<div class="dv-row"><div class="n">Forfait mise en service PAC</div><div class="c">1 U</div><div class="r">'+pac_fmt(pPose)+'</div><div class="r">'+pac_fmt(pPose)+'</div><div class="r">'+tva.toFixed(2).replace('.',',')+'%</div></div>';
+    pg1+='<div class="dv-specs">Raccordements hydrauliques \u00b7 \u00c9lectriques \u00b7 Mise en service \u00b7 Garantie fabricant</div>';
+
+    // BAR-TH-148: Ballon if included
+    if(wBallon){
+        pg1+='<div class="dv-block" style="margin-top:3mm;"><b>BAR-TH-148 : Chauffe-eau thermodynamique</b><br>';
+        pg1+='COP : '+copBal+' \u00b7 '+balName+'<br>';
+        pg1+='LES ARTISANS VERTS \u00b7 SIRET 87806279300038 \u00b7 RGE E-E206267</div>';
+        pg1+='<div class="dv-row"><div class="n">CET '+balName+'</div><div class="c">1 U</div><div class="r">'+pac_fmt(pBal)+'</div><div class="r">'+pac_fmt(pBal)+'</div><div class="r">'+tva.toFixed(2).replace('.',',')+'%</div></div>';
+        pg1+='<div class="dv-row"><div class="n">Forfait pose CET</div><div class="c">1 U</div><div class="r">'+pac_fmt(pBPose)+'</div><div class="r">'+pac_fmt(pBPose)+'</div><div class="r">'+tva.toFixed(2).replace('.',',')+'%</div></div>';
+    }
+
+    pg1+=pac_dvFT(1,tp)+'</div>';
+
+    // === PAGE 2 ===
+    var pg2='<div class="ite-page">';
+    pg2+='<div style="font-size:12pt;font-weight:900;border-bottom:2px solid #000;padding-bottom:2mm;margin-bottom:3mm;display:flex;justify-content:space-between;"><span>DEVIS '+num+' du '+df+'</span><span>'+nom+'</span></div>';
+    pg2+=pac_dvTH();
+
+    // SSC if included
+    if(wSSC){
+        pg2+='<div class="dv-block"><b>Syst\u00e8me Solaire Combin\u00e9 (SSC)</b><br>';
+        pg2+='THALEOS SSC 420L SUNBOOSTER \u00b7 Certification QS/62338<br>';
+        pg2+='LES ARTISANS VERTS \u00b7 SIRET 87806279300038 \u00b7 RGE E-E206267</div>';
+        pg2+='<div class="dv-row"><div class="n">SSC THALEOS 420L SUNBOOSTER</div><div class="c">1 U</div><div class="r">'+pac_fmt(pSSC)+'</div><div class="r">'+pac_fmt(pSSC)+'</div><div class="r">'+tva.toFixed(2).replace('.',',')+'%</div></div>';
+        pg2+='<div class="dv-row"><div class="n">Forfait pose SSC</div><div class="c">1 U</div><div class="r">'+pac_fmt(pSSCPose)+'</div><div class="r">'+pac_fmt(pSSCPose)+'</div><div class="r">'+tva.toFixed(2).replace('.',',')+'%</div></div>';
+    }
+
+    // PAC specifications table
+    pg2+='<div class="dv-cond" style="margin-top:4mm;"><h4>Fiche technique \u2014 '+pac.n+'</h4>';
+    pg2+='<table style="width:100%;font-size:7.5pt;border-collapse:collapse;margin-top:2mm;">';
+    pg2+='<tr><td style="padding:1px 4px;border:0.5px solid #ccc;">R\u00e9f\u00e9rence</td><td style="padding:1px 4px;border:0.5px solid #ccc;font-weight:600;">'+pac.r+'</td><td style="padding:1px 4px;border:0.5px solid #ccc;">Alimentation</td><td style="padding:1px 4px;border:0.5px solid #ccc;font-weight:600;">'+pac.a+'</td></tr>';
+    pg2+='<tr><td style="padding:1px 4px;border:0.5px solid #ccc;">COP @35\u00b0</td><td style="padding:1px 4px;border:0.5px solid #ccc;font-weight:600;">'+pac.cop35+'</td><td style="padding:1px 4px;border:0.5px solid #ccc;">COP @55\u00b0</td><td style="padding:1px 4px;border:0.5px solid #ccc;font-weight:600;">'+pac.cop55+'</td></tr>';
+    pg2+='<tr><td style="padding:1px 4px;border:0.5px solid #ccc;">Puissance @35\u00b0</td><td style="padding:1px 4px;border:0.5px solid #ccc;font-weight:600;">'+pac.cap35+'</td><td style="padding:1px 4px;border:0.5px solid #ccc;">Puissance @55\u00b0</td><td style="padding:1px 4px;border:0.5px solid #ccc;font-weight:600;">'+pac.cap55+'</td></tr>';
+    pg2+='<tr><td style="padding:1px 4px;border:0.5px solid #ccc;">ETAS</td><td style="padding:1px 4px;border:0.5px solid #ccc;font-weight:600;">'+pac.etas+'%</td><td style="padding:1px 4px;border:0.5px solid #ccc;">SCOP</td><td style="padding:1px 4px;border:0.5px solid #ccc;font-weight:600;">'+pac.scop+'</td></tr>';
+    pg2+='<tr><td style="padding:1px 4px;border:0.5px solid #ccc;">Classe \u00e9nergie</td><td style="padding:1px 4px;border:0.5px solid #ccc;font-weight:600;">'+pac.cls+'</td><td style="padding:1px 4px;border:0.5px solid #ccc;">R\u00e9frig\u00e9rant</td><td style="padding:1px 4px;border:0.5px solid #ccc;font-weight:600;">'+pac.ref+'</td></tr>';
+    pg2+='<tr><td style="padding:1px 4px;border:0.5px solid #ccc;">Bruit</td><td style="padding:1px 4px;border:0.5px solid #ccc;font-weight:600;">'+pac.db+'</td><td style="padding:1px 4px;border:0.5px solid #ccc;">Dimensions</td><td style="padding:1px 4px;border:0.5px solid #ccc;font-weight:600;">'+pac.dim+'</td></tr>';
+    pg2+='<tr><td style="padding:1px 4px;border:0.5px solid #ccc;">Poids</td><td style="padding:1px 4px;border:0.5px solid #ccc;font-weight:600;">'+pac.kg+'</td><td style="padding:1px 4px;border:0.5px solid #ccc;">Garantie</td><td style="padding:1px 4px;border:0.5px solid #ccc;font-weight:600;">'+pac.rg+' ans</td></tr>';
+    pg2+='</table></div>';
+
+    // CEE conditions
+    pg2+='<div class="dv-cond"><h4>Termes et conditions CEE</h4><p>Prime de <b>'+pac_fmt(ce)+'</b> ('+Math.round(kwhc).toLocaleString('fr-FR')+' kWhc) dont EDF (SIREN 552 081 317) est \u00e0 l\'origine dans le cadre des CEE.</p></div>';
+
+    // Waste management
+    pg2+='<div class="dv-cond"><b>Gestion des d\u00e9chets</b><br>Gestion, \u00e9vacuation et traitements des d\u00e9chets de chantier.</div>';
+
+    // Totaux + signature
+    pg2+='<div class="dv-totaux"><div class="dv-sig">Apposer signature<br>"Bon pour accord"<br>Le :</div><div><table class="dv-tt">';
+    pg2+='<tr><td>Total H.T</td><td>'+pac_fmt(ht)+'</td></tr>';
+    pg2+='<tr><td>TVA '+tva.toFixed(1).replace('.',',')+'%</td><td>'+pac_fmt(tvam)+'</td></tr>';
+    pg2+='<tr class="ttc"><td><b>Total TTC</b></td><td><b>'+pac_fmt(ttc)+'</b></td></tr>';
+    if(ad>0){pg2+='<tr><td>MaPrimeR\u00e9nov\' ('+ct+')</td><td>- '+pac_fmt(ad)+'</td></tr>';}
+    pg2+='<tr><td>Prime CEE EDF</td><td>- '+pac_fmt(ce)+'</td></tr>';
+    if(ad>0){pg2+='<tr><td>Total aides</td><td>- '+pac_fmt(totalAides)+'</td></tr>';}
+    pg2+='<tr class="reste"><td><b>Reste \u00e0 r\u00e9gler</b></td><td><b>'+pac_fmt(reste)+'</b></td></tr>';
+    pg2+='</table></div></div>';
+
+    // Legal
+    pg2+='<div class="dv-legal" style="margin-top:6mm;">Ce devis est gratuit et valable 30 jours.<br>M\u00e9diation : CM2C - 14 rue Saint Jean 75017 Paris \u00b7 0609204886 \u00b7 cm2c.net</div>';
+
+    pg2+=pac_dvFT(2,tp)+'</div>';
+
+    // Inject and print
+    document.getElementById('pacDevisArea').innerHTML=pg1+pg2;
+    document.getElementById('pacDevisArea').style.display='block';
+    window.print();
+}
+
+// ============================================
 // TAB SYSTEM
 // ============================================
 function switchTab(tab){
@@ -4984,15 +5150,14 @@ function switchTab(tab){
     }
 })();
 
-// Override print for tab-aware printing  
+// Override print for tab-aware devis generation
 (function(){
-    var origExportPDF=window.exportPDF;
     window.exportPDF=function(){
         var mc=document.getElementById('mainContent');
         if(mc.classList.contains('tab-ite-active')){
             ite_generateDevis();
         } else {
-            origExportPDF.apply(this,arguments);
+            pac_generateDevis();
         }
     };
 })();
