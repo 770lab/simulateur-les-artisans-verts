@@ -1569,6 +1569,17 @@
                     <!-- Champs client (PAC + ITE) -->
                     <div style="margin-top:16px;">
                         <hr class="dossier-hero-divider">
+                        <!-- Nom + Prénom en premier -->
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>Nom</label>
+                                <input type="text" id="nom" placeholder="Nom du client" oninput="checkExport()" onchange="logClientChange()">
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>Pr&eacute;nom</label>
+                                <input type="text" id="prenom" placeholder="Pr&eacute;nom du client" oninput="checkExport()" onchange="logClientChange()">
+                            </div>
+                        </div>
                         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
                             <div class="form-group" style="margin-bottom:0;">
                                 <label>Adresse travaux</label>
@@ -1603,10 +1614,17 @@
                                 <select id="iteConseiller"><option value="">&mdash; S&eacute;lectionner &mdash;</option><option>&Agrave; d&eacute;finir</option></select>
                             </div>
                         </div>
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
                             <div class="form-group" style="margin-bottom:0;">
                                 <label>Chauffage actuel</label>
-                                <select id="iteTypeChauffage"><option>Combustible</option><option>&Eacute;lectrique</option></select>
+                                <select id="iteTypeChauffage">
+                                        <option value="Gaz">Gaz naturel</option>
+                                        <option value="Fioul">Fioul</option>
+                                        <option value="Électrique">Électrique</option>
+                                        <option value="Bois">Bois / Granulés</option>
+                                        <option value="PAC">Pompe à chaleur</option>
+                                        <option value="Autre">Autre</option>
+                                    </select>
                             </div>
                             <div class="form-group" style="margin-bottom:0;">
                                 <label>Pr&eacute;carit&eacute; CEE (auto)</label>
@@ -1617,42 +1635,30 @@
                                 </select>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Info client -->
-                <div style="font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">&#128100; Informations client</div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label>Nom</label>
-                        <input type="text" id="nom" placeholder="Nom du client" oninput="checkExport()" onchange="logClientChange()">
-                    </div>
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label>Prénom</label>
-                        <input type="text" id="prenom" placeholder="Prénom du client" oninput="checkExport()" onchange="logClientChange()">
-                    </div>
-                </div>
-                <div class="grid-3col" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label for="departement">Département</label>
-                        <input type="text" id="departement" placeholder="Ex: 33, 75&#8230;" maxlength="3" style="text-align: center; font-weight: 600;" oninput="detectDept()">
-                    </div>
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label for="rfr">Revenu fiscal de réf. (&euro;)</label>
-                        <input type="number" id="rfr" placeholder="Ex: 35 000" oninput="detectProfil()" style="font-weight: 600;">
-                    </div>
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label for="nbPersonnes">Foyer</label>
-                        <select id="nbPersonnes" onchange="detectProfil()">
-                            <option value="1">1 personne</option>
-                            <option value="2">2 personnes</option>
-                            <option value="3">3 personnes</option>
-                            <option value="4" selected>4 personnes</option>
-                            <option value="5">5 personnes</option>
-                            <option value="6">6 personnes</option>
-                            <option value="7">7 personnes</option>
-                            <option value="8">8 personnes</option>
-                        </select>
+                        <!-- Département + RFR + Foyer -->
+                        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label for="departement">D&eacute;partement</label>
+                                <input type="text" id="departement" placeholder="Ex: 33, 75&hellip;" maxlength="3" style="text-align:center;font-weight:600;" oninput="detectDept()">
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label for="rfr">Revenu fiscal de r&eacute;f. (&euro;)</label>
+                                <input type="number" id="rfr" placeholder="Ex: 35 000" oninput="detectProfil()" style="font-weight:600;">
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label for="nbPersonnes">Foyer</label>
+                                <select id="nbPersonnes" onchange="detectProfil()">
+                                    <option value="1">1 personne</option>
+                                    <option value="2">2 personnes</option>
+                                    <option value="3">3 personnes</option>
+                                    <option value="4" selected>4 personnes</option>
+                                    <option value="5">5 personnes</option>
+                                    <option value="6">6 personnes</option>
+                                    <option value="7">7 personnes</option>
+                                    <option value="8">8 personnes</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -2162,6 +2168,7 @@
                     <div class="ite-fg">
                         <div class="ite-fi full"><label>Type</label>
                             <select id="iteTypeLot2" onchange="ite_switchLot2();ite_calc()">
+                                <option value="101">BAR-EN-101 &mdash; Isolation combles perdus</option>
                                 <option value="103">BAR-EN-103 &mdash; Isolation plancher bas</option>
                                 <option value="148">BAR-TH-148 &mdash; Chauffe-eau thermodynamique</option>
                             </select>
@@ -2170,8 +2177,18 @@
                     <div id="iteLot2Alert"></div>
                 </div>
 
+                <!-- LOT 2: BAR-EN-101 -->
+                <div class="ite-card" id="iteCard101" style="display: none;">
+                    <div class="ite-card-head"><div class="ite-card-icon">&#127968;</div><h3>BAR-EN-101 &mdash; Combles Perdus</h3></div>
+                    <div class="ite-fg">
+                        <div class="ite-fi"><label>Surface (m&sup2;)</label><input type="number" id="iteSurface101" value="50" oninput="ite_calc()"></div>
+                        <div class="ite-fi"><label>Prix mat&eacute;riel (&euro;/m&sup2;)</label><input type="number" id="itePrixMat101" value="20" oninput="ite_calc()"></div>
+                        <div class="ite-fi"><label>Prix MO (&euro;/m&sup2;)</label><input type="number" id="itePrixMo101" value="15" oninput="ite_calc()"></div>
+                    </div>
+                </div>
+
                 <!-- LOT 2: BAR-EN-103 -->
-                <div class="ite-card" id="iteCard103">
+                <div class="ite-card" id="iteCard103" style="display: none;">
                     <div class="ite-card-head"><div class="ite-card-icon">&#127968;</div><h3>BAR-EN-103 &mdash; Plancher Bas</h3></div>
                     <div class="ite-fg">
                         <div class="ite-fi"><label>Surface (m&sup2;)</label><input type="number" id="iteSurface103" value="50" oninput="ite_calc()"></div>
@@ -4283,19 +4300,22 @@ const ite_fmtN=n=>Math.round(n).toLocaleString('fr-FR');
 
 // CEE EDF baremes
 const CEE_ITE_102={classique:{H1:11,H2:9,H3:6},modeste:{H1:16,H2:13,H3:9},grande:{H1:22,H2:18,H3:12}};
+const CEE_ITE_101={classique:{H1:14,H2:11,H3:8},modeste:{H1:20,H2:16,H3:11},grande:{H1:28,H2:22,H3:16}};
 const CEE_ITE_103={classique:{H1:9,H2:7,H3:5},modeste:{H1:13,H2:11,H3:7},grande:{H1:18,H2:15,H3:10}};
 const CEE_ITE_148={classique:150,modeste:200,grande:300};
 
 function ite_switchLot2(){
     var t=ite_V('iteTypeLot2');
+    ite_$('iteCard101').style.display=t==='101'?'block':'none';
     ite_$('iteCard103').style.display=t==='103'?'block':'none';
     ite_$('iteCard148').style.display=t==='148'?'block':'none';
 }
 
 function ite_getLot2Total(){
-    return ite_V('iteTypeLot2')==='103'
-        ? ite_N('iteSurface103')*(ite_N('itePrixMat103')+ite_N('itePrixMo103'))
-        : ite_N('itePrixCET')+ite_N('itePrixPoseCET');
+    var t=ite_V('iteTypeLot2');
+    if(t==='101') return ite_N('iteSurface101')*(ite_N('itePrixMat101')+ite_N('itePrixMo101'));
+    if(t==='103') return ite_N('iteSurface103')*(ite_N('itePrixMat103')+ite_N('itePrixMo103'));
+    return ite_N('itePrixCET')+ite_N('itePrixPoseCET');
 }
 
 function ite_getCEE(){
@@ -4305,10 +4325,11 @@ function ite_getCEE(){
     var t2=ite_V('iteTypeLot2');
     var c102=(CEE_ITE_102[p]||CEE_ITE_102.classique)[z]||0;
     var p1=s*c102;
-    var p2=0,u103=0,u148=0;
-    if(t2==='103'){u103=(CEE_ITE_103[p]||CEE_ITE_103.classique)[z]||0;p2=ite_N('iteSurface103')*u103;}
+    var p2=0,u101=0,u103=0,u148=0;
+    if(t2==='101'){u101=(CEE_ITE_101[p]||CEE_ITE_101.classique)[z]||0;p2=ite_N('iteSurface101')*u101;}
+    else if(t2==='103'){u103=(CEE_ITE_103[p]||CEE_ITE_103.classique)[z]||0;p2=ite_N('iteSurface103')*u103;}
     else{u148=CEE_ITE_148[p]||150;p2=u148;}
-    return{p1:p1,p2:p2,total:p1+p2,c102:c102,u103:u103,u148:u148};
+    return{p1:p1,p2:p2,total:p1+p2,c102:c102,u101:u101,u103:u103,u148:u148};
 }
 
 function ite_calc(){
@@ -4330,28 +4351,31 @@ function ite_calc(){
 
     // PTZ
     var ptzOk=lot2Ok&&totITE>0;
+    var lot2Label=t2==='101'?'101':t2==='103'?'103':'148';
     ite_$('itePtzStatus').innerHTML=ptzOk
-        ?'<div class="ite-alert ite-alert-ptz" style="font-size:14px;">\ud83c\udfdb\ufe0f <b>\u00c9LIGIBLE PTZ</b> \u2014 2 lots conformes (102 + '+(t2==='103'?'103':'148')+')</div>'
+        ?'<div class="ite-alert ite-alert-ptz" style="font-size:14px;">\ud83c\udfdb\ufe0f <b>\u00c9LIGIBLE PTZ</b> \u2014 2 lots conformes (102 + '+lot2Label+')</div>'
         :'<div class="ite-alert ite-alert-warn">\u274c <b>NON \u00c9LIGIBLE PTZ</b> \u2014 '+(lot2Ok?'':'Lot 2 < 1 500 \u20AC')+'</div>';
 
     // CEE Table
+    var lot2Row=t2==='101'?'<tr class="active"><td><b>BAR-EN-101</b> Combles</td><td>'+z+'</td><td>'+p+'</td><td>'+ite_N('iteSurface101')+' m\u00b2</td><td>'+cee.u101+' \u20AC/m\u00b2</td><td class="val">'+ite_fmt(cee.p2)+'</td></tr>'
+        :t2==='103'?'<tr class="active"><td><b>BAR-EN-103</b> Plancher</td><td>'+z+'</td><td>'+p+'</td><td>'+ite_N('iteSurface103')+' m\u00b2</td><td>'+cee.u103+' \u20AC/m\u00b2</td><td class="val">'+ite_fmt(cee.p2)+'</td></tr>'
+        :'<tr class="active"><td><b>BAR-TH-148</b> CET</td><td>'+z+'</td><td>'+p+'</td><td>1 U</td><td>'+cee.u148+' \u20AC forfait</td><td class="val">'+ite_fmt(cee.p2)+'</td></tr>';
     ite_$('iteCeeTableContainer').innerHTML='<table class="ite-cee-table"><tr><th>Op\u00e9ration</th><th>Zone</th><th>Pr\u00e9carit\u00e9</th><th>Qt\u00e9</th><th>\u20AC/unit\u00e9</th><th style="text-align:right">Prime</th></tr>'
         +'<tr class="active"><td><b>BAR-EN-102</b> ITE</td><td>'+z+'</td><td>'+p+'</td><td>'+sITE+' m\u00b2</td><td>'+cee.c102+' \u20AC/m\u00b2</td><td class="val">'+ite_fmt(cee.p1)+'</td></tr>'
-        +(t2==='103'?'<tr class="active"><td><b>BAR-EN-103</b> Plancher</td><td>'+z+'</td><td>'+p+'</td><td>'+ite_N('iteSurface103')+' m\u00b2</td><td>'+cee.u103+' \u20AC/m\u00b2</td><td class="val">'+ite_fmt(cee.p2)+'</td></tr>'
-        :'<tr class="active"><td><b>BAR-TH-148</b> CET</td><td>'+z+'</td><td>'+p+'</td><td>1 U</td><td>'+cee.u148+' \u20AC forfait</td><td class="val">'+ite_fmt(cee.p2)+'</td></tr>')
+        +lot2Row
         +'<tr style="background:rgba(22,163,74,0.08);"><td colspan="5" style="font-weight:900;font-size:13px;">TOTAL CEE EDF</td><td class="val" style="font-size:15px;font-weight:900;">'+ite_fmt(cee.total)+'</td></tr></table>';
 
     // KPI summary
     ite_$('iteAidesSummary').innerHTML='<div class="ite-kpi-row">'
         +'<div class="ite-kpi"><div class="ite-kpi-icon">\ud83e\uddf1</div><div class="ite-kpi-val">'+ite_fmtN(totITE)+' \u20AC</div><div class="ite-kpi-label">LOT 1 \u00b7 ITE</div></div>'
-        +'<div class="ite-kpi"><div class="ite-kpi-icon">'+(t2==='103'?'\ud83c\udfe0':'\ud83d\udebf')+'</div><div class="ite-kpi-val'+(lot2Ok?'':' red')+'">'+ite_fmtN(totLot2)+' \u20AC</div><div class="ite-kpi-label">LOT 2</div></div>'
+        +'<div class="ite-kpi"><div class="ite-kpi-icon">'+(t2==='101'?'\ud83c\udfe0':t2==='103'?'\ud83c\udfe0':'\ud83d\udebf')+'</div><div class="ite-kpi-val'+(lot2Ok?'':' red')+'">'+ite_fmtN(totLot2)+' \u20AC</div><div class="ite-kpi-label">LOT 2</div></div>'
         +'<div class="ite-kpi"><div class="ite-kpi-icon">\ud83d\udcdc</div><div class="ite-kpi-val">'+ite_fmtN(primeCEE)+' \u20AC</div><div class="ite-kpi-label">CEE EDF</div></div>'
         +'<div class="ite-kpi"><div class="ite-kpi-icon">\ud83d\udcb0</div><div class="ite-kpi-val">'+ite_fmtN(reste)+' \u20AC</div><div class="ite-kpi-label">Reste \u00e0 r\u00e9gler</div></div></div>';
 
     // Sidebar update
     var sl1=ite_$('iteSidebarLot1');if(sl1)sl1.textContent=ite_fmtN(totITE)+' \u20AC';
     var sl2=ite_$('iteSidebarLot2');if(sl2){sl2.textContent=ite_fmtN(totLot2)+' \u20AC';sl2.className='rrc-value '+(lot2Ok?'':'red');}
-    var sl2t=ite_$('iteSidebarLot2Type');if(sl2t)sl2t.textContent=t2==='103'?'BAR-EN-103':'BAR-TH-148';
+    var sl2t=ite_$('iteSidebarLot2Type');if(sl2t)sl2t.textContent=t2==='101'?'BAR-EN-101':t2==='103'?'BAR-EN-103':'BAR-TH-148';
     var sl2a=ite_$('iteSidebarLot2Alert');if(sl2a)sl2a.style.display=lot2Ok?'none':'block';
     var sc=ite_$('iteSidebarCEE');if(sc)sc.textContent=ite_fmtN(primeCEE)+' \u20AC';
     var st=ite_$('iteSidebarTTC');if(st)st.textContent=ite_fmtN(ttc)+' \u20AC';
@@ -4434,7 +4458,13 @@ function ite_loadDossier(f){
     var em=g(23);ite_$('iteEmail').value=em&&em.toLowerCase()!=='n\u00e9ant'?em:'';
     var pm={'grande':'grande','simple':'modeste','classique':'classique'};
     ite_$('itePrecarite').value=pm[g(26).toLowerCase()]||'classique';
-    if(g(34).toLowerCase().includes('electr')){var tc=ite_$('iteTypeChauffage');if(tc)tc.value='\u00c9lectrique';}
+    (function(){var ch=g(34).toLowerCase(),tc=ite_$('iteTypeChauffage');if(!tc)return;
+        if(ch.includes('fioul')||ch.includes('fuel'))tc.value='Fioul';
+        else if(ch.includes('gaz'))tc.value='Gaz';
+        else if(ch.includes('electr')||ch.includes('\u00e9lectr'))tc.value='\u00c9lectrique';
+        else if(ch.includes('bois')||ch.includes('granul'))tc.value='Bois';
+        else if(ch.includes('pac')||ch.includes('pompe'))tc.value='PAC';
+    })();
     var z=g(42).toUpperCase();
     if(z){var zs=document.getElementById('zone');if(zs){for(var j=0;j<zs.options.length;j++){if(zs.options[j].value===z){zs.selectedIndex=j;break;}}}}
     try{ite_calc();}catch(e){}
