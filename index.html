@@ -1539,7 +1539,7 @@
         </div>
     </div>
 
-    <div class="main-content" id="mainContent" class="tab-pac-active">
+    <div class="main-content tab-pac-active" id="mainContent">
         <div class="parameters-section">
             <div class="card">
                 <h2 class="card-title">Param&egrave;tres</h2>
@@ -1828,6 +1828,145 @@
             </div>
             </div><!-- end tab-pac-content for params -->
 
+            <!-- ===================== PRODUIT & OPTIONS ===================== -->
+            <div class="tab-pac-content">
+            <div class="card" id="produitCard">
+                <h2 class="card-title">&#9881;&#65039; Produit & Options</h2>
+
+                <!-- PAC Air/Eau -->
+                <div class="produit-bloc">
+                    <div class="produit-bloc-head">
+                        <span class="produit-bloc-icon">&#9881;&#65039;</span>
+                        <span class="produit-bloc-title">Pompe &agrave; Chaleur Air/Eau</span>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 10px;">
+                        <label>Mod&egrave;le PAC</label>
+                        <input id="marquePAC" list="dl_pac" onchange="updatePAC();syncEtasFromPAC();calc();calcCEEDetail()" oninput="updatePAC();syncEtasFromPAC();calc();calcCEEDetail()" placeholder="S&eacute;lectionner un mod&egrave;le..." autocomplete="off" style="width:100%;">
+                        <datalist id="dl_pac">
+                            <option value="THALEOS_04M">THALEOS 4kW Mono</option>
+                            <option value="THALEOS_06M">THALEOS 6kW Mono</option>
+                            <option value="THALEOS_08M">THALEOS 8kW Mono</option>
+                            <option value="THALEOS_10M">THALEOS 10kW Mono</option>
+                            <option value="THALEOS_12M">THALEOS 12kW Mono</option>
+                            <option value="THALEOS_14M">THALEOS 14kW Mono</option>
+                            <option value="THALEOS_16M">THALEOS 16kW Mono</option>
+                            <option value="THALEOS_08T">THALEOS 8kW Tri</option>
+                            <option value="THALEOS_10T">THALEOS 10kW Tri</option>
+                            <option value="THALEOS_12T">THALEOS 12kW Tri</option>
+                            <option value="THALEOS_14T">THALEOS 14kW Tri</option>
+                            <option value="THALEOS_16T">THALEOS 16kW Tri</option>
+                            <option value="THALEOS_BI_08M">THALEOS Bi-Bloc 8kW</option>
+                            <option value="THALEOS_BI_10M">THALEOS Bi-Bloc 10kW</option>
+                            <option value="THALEOS_BI_12M">THALEOS Bi-Bloc 12kW</option>
+                            <option value="THALEOS_BI_14M">THALEOS Bi-Bloc 14kW</option>
+                            <option value="THALEOS_BI_16M">THALEOS Bi-Bloc 16kW</option>
+                            <option value="WELLEA_12T">WELLEA 12kW Tri</option>
+                            <option value="WELLEA_14T">WELLEA 14kW Tri</option>
+                            <option value="WELLEA_16T">WELLEA 16kW Tri</option>
+                            <option value="WELLEA_16M">WELLEA 16kW Mono</option>
+                            <option value="WOLF_FHA_05_06_230">WOLF 5kW Mono</option>
+                            <option value="WOLF_FHA_06_07_230">WOLF 6kW Mono</option>
+                            <option value="WOLF_FHA_08_10_230">WOLF 8kW Mono</option>
+                            <option value="WOLF_FHA_11_14_230">WOLF 11kW Mono</option>
+                            <option value="WOLF_FHA_14_17_230">WOLF 14kW Mono</option>
+                            <option value="WOLF_FHA_14_17_400">WOLF 14kW Tri</option>
+                        </datalist>
+                    </div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:10px;">
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label>Prix PAC TTC (&euro;)</label>
+                            <input type="number" id="prixPAC" value="7650" oninput="calc()">
+                        </div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label>Prix Pose TTC (&euro;)</label>
+                            <input type="number" id="prixPose" value="3240" oninput="calc()">
+                        </div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label>Usage</label>
+                            <select id="usagePAC"><option>Chauffage seul</option><option>Chauffage + ECS</option></select>
+                        </div>
+                    </div>
+                    <div id="pacInfo" style="font-size:11px;color:#64748b;line-height:1.5;min-height:20px;"></div>
+                </div>
+
+                <!-- Ballon Thermodynamique -->
+                <div class="produit-bloc" style="margin-top:14px;">
+                    <div class="produit-bloc-head">
+                        <span class="produit-bloc-icon">&#128703;</span>
+                        <span class="produit-bloc-title">Ballon Thermodynamique</span>
+                    </div>
+                    <div class="form-group" style="margin-bottom:8px;">
+                        <label>Inclure un ballon CET ?</label>
+                        <select id="includeBallon" onchange="toggleProduitOpt('ballonOpt',this.value==='oui');calc();calcCEEDetail()">
+                            <option value="non">Non</option>
+                            <option value="oui">Oui</option>
+                        </select>
+                    </div>
+                    <div class="produit-opt-section" id="ballonOpt">
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>R&eacute;f&eacute;rence</label>
+                                <select id="refBallon">
+                                    <option value="PERFORMER2_200L">Performer 2 &mdash; 200L</option>
+                                    <option value="PERFORMER2_270L">Performer 2 &mdash; 270L</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>Prix TTC (&euro;)</label>
+                                <input type="number" id="prixBallon" value="2000" oninput="calc()">
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>Pose TTC (&euro;)</label>
+                                <input type="number" id="prixPoseBallon" value="860" oninput="calc()">
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>COP</label>
+                                <input id="copBallon" value="2,78">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SSC -->
+                <div class="produit-bloc" style="margin-top:14px;">
+                    <div class="produit-bloc-head">
+                        <span class="produit-bloc-icon">&#9728;&#65039;</span>
+                        <span class="produit-bloc-title">SSC &mdash; Syst&egrave;me Solaire Combin&eacute;</span>
+                    </div>
+                    <div class="form-group" style="margin-bottom:8px;">
+                        <label>Inclure SSC ?</label>
+                        <select id="includeSSC" onchange="toggleProduitOpt('sscOpt',this.value==='oui');calc();calcCEEDetail()">
+                            <option value="non">Non</option>
+                            <option value="oui">Oui &mdash; YODAV (QS/62338)</option>
+                        </select>
+                    </div>
+                    <div class="produit-opt-section" id="sscOpt">
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>Produit</label>
+                                <select id="refSSC"><option>THALEOS SSC 420L SUNBOOSTER</option></select>
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>Prix SSC TTC (&euro;)</label>
+                                <input type="number" id="prixSSC" value="8000" oninput="calc()">
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>Pose SSC TTC (&euro;)</label>
+                                <input type="number" id="prixPoseSSC" value="2500" oninput="calc()">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TVA -->
+                <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label>TVA (%)</label>
+                        <input type="number" id="tvaProduit" value="5.5" step="0.1" oninput="calc()">
+                    </div>
+                </div>
+            </div>
+            </div><!-- end tab-pac-content produit -->
 
             <div class="tab-pac-content">
             <!-- ===================== BARÈME PAC (client) ===================== -->
