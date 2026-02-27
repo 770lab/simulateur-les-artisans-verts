@@ -1756,30 +1756,30 @@
             <!-- ===== PAC-SPECIFIC PARAMETERS ===== -->
             <div class="tab-pac-content">
             <div class="card">
-                <h2 class="card-title">Param&egrave;tres PAC</h2>
-<!-- Paramètres techniques + CEE -->
-                <div style="font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">&#9889; Scénario & Aides CEE</div>
-                <div class="grid-3col" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px;">
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label for="scenario" style="color: rgba(255,255,255,0.7);">Scénario</label>
-                        <select id="scenario" onchange="onScenarioChange()">
-                            <option value="PAC">PAC</option>
-                            <option value="PAC + BALLON ÉLECTRIQUE">PAC + BALLON ÉLECTRIQUE</option>
-                            <option value="PAC + BALLON THERMO">PAC + BALLON THERMO</option>
-                            <option value="PAC + SSC">PAC + SSC</option>
-                            <option value="SSC">SSC</option>
-                        </select>
-                    </div>
-                    <div class="form-group" style="margin-bottom: 0;" id="etasGroup">
-                        <label for="etas" style="color: rgba(255,255,255,0.7);">Plage d'ETAS</label>
-                        <select id="etas" onchange="syncEtas(); calc()">
-                            <option value="111-140">111 &lt; ETAS &lt; 140</option>
-                            <option value="140-170" selected>140 &lt; ETAS &lt; 170</option>
-                        </select>
-                    </div>
+                <h2 class="card-title">&#9889; Aides CEE</h2>
+<!-- Scenario & ETAS hidden (auto-derived from Produit & Options) -->
+                <div style="display:none;">
+                    <select id="scenario" onchange="onScenarioChange()">
+                        <option value="PAC">PAC</option>
+                        <option value="PAC + BALLON ÉLECTRIQUE">PAC + BALLON ÉLECTRIQUE</option>
+                        <option value="PAC + BALLON THERMO">PAC + BALLON THERMO</option>
+                        <option value="PAC + SSC">PAC + SSC</option>
+                        <option value="SSC">SSC</option>
+                    </select>
+                    <select id="etas" onchange="syncEtas(); calc()">
+                        <option value="111-140">111 &lt; ETAS &lt; 140</option>
+                        <option value="140-170" selected>140 &lt; ETAS &lt; 170</option>
+                    </select>
+                    <div id="etasGroup"></div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
                     <div class="form-group" style="margin-bottom: 0;" id="ceeSurfaceGroup">
                         <label style="color: rgba(255,255,255,0.7);">Surface chauffée (m²)</label>
                         <input type="number" id="ceeSurface" min="1" step="1" value="95" oninput="syncSurfaces('cee')">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label style="color: rgba(255,255,255,0.7);">Scénario auto</label>
+                        <input type="text" id="scenarioAutoDisplay" disabled value="PAC" style="background: rgba(255,255,255,0.05); color: #fbbf24; font-weight: 600; border: 1px solid rgba(255,255,255,0.1);">
                     </div>
                 </div>
 
@@ -3005,6 +3005,25 @@ function toggleProduitOpt(id, show) {
     var el = document.getElementById(id);
     if (!el) return;
     el.style.display = show ? 'block' : 'none';
+    autoSyncScenario();
+}
+
+function getAutoScenario() {
+    var ssc = document.getElementById('includeSSC');
+    var bal = document.getElementById('includeBallon');
+    if (ssc && ssc.value === 'oui') return 'PAC + SSC';
+    if (bal && bal.value === 'oui') return 'PAC + BALLON THERMO';
+    return 'PAC';
+}
+
+function autoSyncScenario() {
+    var sc = getAutoScenario();
+    var sel = document.getElementById('scenario');
+    if (sel) { sel.value = sc; }
+    var disp = document.getElementById('scenarioAutoDisplay');
+    if (disp) { disp.value = sc; }
+    syncEtasFromPAC();
+    onScenarioChange();
 }
 
 function onScenarioChange() {
