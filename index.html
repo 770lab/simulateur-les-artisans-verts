@@ -2014,13 +2014,8 @@
                     </div>
                 </div>
 
-                <!-- TVA -->
-                <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-                    <div class="form-group" style="margin-bottom:0;">
-                        <label>TVA (%)</label>
-                        <input type="number" id="tvaProduit" value="5.5" step="0.1" oninput="calc()">
-                    </div>
-                </div>
+                <!-- TVA (hidden, default 5.5%) -->
+                <input type="hidden" id="tvaProduit" value="5.5">
             </div>
             </div><!-- end tab-pac-content produit -->
 
@@ -2041,13 +2036,13 @@
 
                 <!-- Questionnaire isolation -->
                 <div style="margin-bottom: 14px;">
-                    <label style="font-weight: 600; color: #1d1d1f; font-size: 13px; display: block; margin-bottom: 10px;">Travaux d'isolation réalisés</label>
-                    <div style="display: flex; flex-direction: column; gap: 6px;" id="isoChecklist">
+                    <label style="font-weight: 700; color: #1d1d1f; font-size: 14px; display: block; margin-bottom: 12px;">Travaux d&eacute;j&agrave; r&eacute;alis&eacute;s</label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;" id="isoChecklist">
                         <label class="iso-check" onclick="setTimeout(function(){evalIsolation();calcBareme()},10)">
                             <input type="checkbox" name="isoWork" value="combles">
                             <span class="iso-info">
-                                <span class="iso-title">Combles / Toiture</span>
-                                <span class="iso-sub">Isolation soufflée, rampants, sarking&#8230;</span>
+                                <span class="iso-title">&#127968; Combles / Toiture</span>
+                                <span class="iso-sub">Souffl&eacute;e, rampants, sarking</span>
                             </span>
                             <select class="iso-quand" onchange="evalIsolation();calcBareme()">
                                 <option value="recent">&lt; 5 ans</option>
@@ -2057,8 +2052,8 @@
                         <label class="iso-check" onclick="setTimeout(function(){evalIsolation();calcBareme()},10)">
                             <input type="checkbox" name="isoWork" value="murs">
                             <span class="iso-info">
-                                <span class="iso-title">Murs (ITE / ITI)</span>
-                                <span class="iso-sub">Isolation thermique extérieure ou intérieure</span>
+                                <span class="iso-title">&#129521; Murs (ITE / ITI)</span>
+                                <span class="iso-sub">Ext&eacute;rieure ou int&eacute;rieure</span>
                             </span>
                             <select class="iso-quand" onchange="evalIsolation();calcBareme()">
                                 <option value="recent">&lt; 5 ans</option>
@@ -2068,8 +2063,8 @@
                         <label class="iso-check" onclick="setTimeout(function(){evalIsolation();calcBareme()},10)">
                             <input type="checkbox" name="isoWork" value="fenetres">
                             <span class="iso-info">
-                                <span class="iso-title">Fenêtres double / triple vitrage</span>
-                                <span class="iso-sub">Remplacement des menuiseries</span>
+                                <span class="iso-title">&#128999; Fen&ecirc;tres DV / TV</span>
+                                <span class="iso-sub">Double ou triple vitrage</span>
                             </span>
                             <select class="iso-quand" onchange="evalIsolation();calcBareme()">
                                 <option value="recent">&lt; 5 ans</option>
@@ -2079,19 +2074,19 @@
                         <label class="iso-check" onclick="setTimeout(function(){evalIsolation();calcBareme()},10)">
                             <input type="checkbox" name="isoWork" value="plancher">
                             <span class="iso-info">
-                                <span class="iso-title">Plancher bas</span>
-                                <span class="iso-sub">Isolation vide sanitaire, sous-sol, terre-plein</span>
+                                <span class="iso-title">&#11015;&#65039; Plancher bas</span>
+                                <span class="iso-sub">Vide sanitaire, sous-sol</span>
                             </span>
                             <select class="iso-quand" onchange="evalIsolation();calcBareme()">
                                 <option value="recent">&lt; 5 ans</option>
                                 <option value="ancien">&gt; 5 ans</option>
                             </select>
                         </label>
-                        <label class="iso-check" onclick="setTimeout(function(){evalIsolation();calcBareme()},10)">
+                        <label class="iso-check" onclick="setTimeout(function(){evalIsolation();calcBareme()},10)" style="grid-column: 1 / -1;">
                             <input type="checkbox" name="isoWork" value="vmc">
                             <span class="iso-info">
-                                <span class="iso-title">VMC double flux</span>
-                                <span class="iso-sub">Ventilation mécanique contrôlée performante</span>
+                                <span class="iso-title">&#128168; VMC double flux</span>
+                                <span class="iso-sub">Ventilation m&eacute;canique contr&ocirc;l&eacute;e</span>
                             </span>
                             <select class="iso-quand" onchange="evalIsolation();calcBareme()">
                                 <option value="recent">&lt; 5 ans</option>
@@ -4469,22 +4464,71 @@ function calcBareme() {
     // Position cursor
     cursor.style.left = `calc(${score}% - 12px)`;
 
-    // Determine recommendation
+    // Determine recommendation + auto-select PAC
+    var recoKW;
     if (score <= 25) {
         el.textContent = lowKW + ' kW';
         el.style.color = '#16a34a';
         alt.textContent = 'Isolation performante \u2192 puissance optimisée';
         if (hint) hint.textContent = '';
+        recoKW = lowKW;
     } else if (score >= 75) {
         el.textContent = highKW + ' kW';
         el.style.color = '#dc2626';
         alt.textContent = 'Isolation faible \u2192 puissance supérieure conseillée';
         if (hint) hint.textContent = '';
+        recoKW = highKW;
     } else {
         el.textContent = lowKW + ' ou ' + highKW + ' kW';
         el.style.color = '#d97706';
         alt.textContent = lowKW + ' kW = économique · ' + highKW + ' kW = confort';
         if (hint) hint.textContent = '';
+        recoKW = highKW; // prefer comfort
+    }
+    // Auto-select best PAC from catalog (Wolf preferred)
+    autoSelectPAC(recoKW);
+}
+
+function autoSelectPAC(targetKW) {
+    // Priority: Wolf Mono (with 2kW tolerance) > exact match > closest
+    var models = [];
+    for (var key in PAC_CATALOG) {
+        var p = PAC_CATALOG[key];
+        var cap = parseFloat((p.cap35 || '').replace(',', '.')) || 0;
+        var brand = (p.m || '').toUpperCase();
+        var isMono = key.indexOf('_T') === -1 && key.indexOf('_400') === -1;
+        models.push({key: key, brand: brand, kw: cap, mono: isMono});
+    }
+    // First pass: find best Wolf Mono within 2kW (round up preferred)
+    var bestWolf = null, bestWolfDiff = Infinity;
+    for (var i = 0; i < models.length; i++) {
+        var m = models[i];
+        if (!m.mono || m.brand !== 'WOLF') continue;
+        var diff = m.kw - targetKW; // positive = larger (good for comfort)
+        var absDiff = Math.abs(diff);
+        if (absDiff <= 2 && (absDiff < bestWolfDiff || (absDiff === bestWolfDiff && diff > 0))) {
+            bestWolf = m;
+            bestWolfDiff = absDiff;
+        }
+    }
+    // If Wolf found within tolerance, use it
+    var best = bestWolf;
+    // Otherwise fallback: closest Mono from any brand
+    if (!best) {
+        var bestDiff = Infinity;
+        for (var j = 0; j < models.length; j++) {
+            var m2 = models[j];
+            if (!m2.mono) continue;
+            var d = Math.abs(m2.kw - targetKW);
+            if (d < bestDiff) { best = m2; bestDiff = d; }
+        }
+    }
+    if (best) {
+        var sel = document.getElementById('marquePAC');
+        if (sel) {
+            sel.value = best.key;
+            sel.dispatchEvent(new Event('change'));
+        }
     }
 }
 
