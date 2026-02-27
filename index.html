@@ -1883,36 +1883,46 @@
                     </div>
                     <div class="form-group" style="margin-bottom: 10px;">
                         <label>Mod&egrave;le PAC</label>
-                        <input id="marquePAC" list="dl_pac" onchange="updatePAC();syncEtasFromPAC();calc();calcCEEDetail()" oninput="updatePAC();syncEtasFromPAC();calc();calcCEEDetail()" placeholder="S&eacute;lectionner un mod&egrave;le..." autocomplete="off" style="width:100%;">
-                        <datalist id="dl_pac">
-                            <option value="THALEOS_04M">THALEOS 4kW Mono</option>
-                            <option value="THALEOS_06M">THALEOS 6kW Mono</option>
-                            <option value="THALEOS_08M">THALEOS 8kW Mono</option>
-                            <option value="THALEOS_10M">THALEOS 10kW Mono</option>
-                            <option value="THALEOS_12M">THALEOS 12kW Mono</option>
-                            <option value="THALEOS_14M">THALEOS 14kW Mono</option>
-                            <option value="THALEOS_16M">THALEOS 16kW Mono</option>
-                            <option value="THALEOS_08T">THALEOS 8kW Tri</option>
-                            <option value="THALEOS_10T">THALEOS 10kW Tri</option>
-                            <option value="THALEOS_12T">THALEOS 12kW Tri</option>
-                            <option value="THALEOS_14T">THALEOS 14kW Tri</option>
-                            <option value="THALEOS_16T">THALEOS 16kW Tri</option>
-                            <option value="THALEOS_BI_08M">THALEOS Bi-Bloc 8kW</option>
-                            <option value="THALEOS_BI_10M">THALEOS Bi-Bloc 10kW</option>
-                            <option value="THALEOS_BI_12M">THALEOS Bi-Bloc 12kW</option>
-                            <option value="THALEOS_BI_14M">THALEOS Bi-Bloc 14kW</option>
-                            <option value="THALEOS_BI_16M">THALEOS Bi-Bloc 16kW</option>
-                            <option value="WELLEA_12T">WELLEA 12kW Tri</option>
-                            <option value="WELLEA_14T">WELLEA 14kW Tri</option>
-                            <option value="WELLEA_16T">WELLEA 16kW Tri</option>
-                            <option value="WELLEA_16M">WELLEA 16kW Mono</option>
-                            <option value="WOLF_FHA_05_06_230">WOLF 5kW Mono</option>
-                            <option value="WOLF_FHA_06_07_230">WOLF 6kW Mono</option>
-                            <option value="WOLF_FHA_08_10_230">WOLF 8kW Mono</option>
-                            <option value="WOLF_FHA_11_14_230">WOLF 11kW Mono</option>
-                            <option value="WOLF_FHA_14_17_230">WOLF 14kW Mono</option>
-                            <option value="WOLF_FHA_14_17_400">WOLF 14kW Tri</option>
-                        </datalist>
+                        <select id="marquePAC" onchange="updatePAC();syncEtasFromPAC();calc();calcCEEDetail()">
+                            <option value="">-- S&eacute;lectionner un mod&egrave;le --</option>
+                            <optgroup label="THALEOS Mono">
+                                <option value="THALEOS_04M">THALEOS 4kW Mono</option>
+                                <option value="THALEOS_06M">THALEOS 6kW Mono</option>
+                                <option value="THALEOS_08M">THALEOS 8kW Mono</option>
+                                <option value="THALEOS_10M">THALEOS 10kW Mono</option>
+                                <option value="THALEOS_12M">THALEOS 12kW Mono</option>
+                                <option value="THALEOS_14M">THALEOS 14kW Mono</option>
+                                <option value="THALEOS_16M">THALEOS 16kW Mono</option>
+                            </optgroup>
+                            <optgroup label="THALEOS Tri">
+                                <option value="THALEOS_08T">THALEOS 8kW Tri</option>
+                                <option value="THALEOS_10T">THALEOS 10kW Tri</option>
+                                <option value="THALEOS_12T">THALEOS 12kW Tri</option>
+                                <option value="THALEOS_14T">THALEOS 14kW Tri</option>
+                                <option value="THALEOS_16T">THALEOS 16kW Tri</option>
+                            </optgroup>
+                            <optgroup label="THALEOS Bi-Bloc">
+                                <option value="THALEOS_BI_08M">THALEOS Bi-Bloc 8kW</option>
+                                <option value="THALEOS_BI_10M">THALEOS Bi-Bloc 10kW</option>
+                                <option value="THALEOS_BI_12M">THALEOS Bi-Bloc 12kW</option>
+                                <option value="THALEOS_BI_14M">THALEOS Bi-Bloc 14kW</option>
+                                <option value="THALEOS_BI_16M">THALEOS Bi-Bloc 16kW</option>
+                            </optgroup>
+                            <optgroup label="WELLEA">
+                                <option value="WELLEA_12T">WELLEA 12kW Tri</option>
+                                <option value="WELLEA_14T">WELLEA 14kW Tri</option>
+                                <option value="WELLEA_16T">WELLEA 16kW Tri</option>
+                                <option value="WELLEA_16M">WELLEA 16kW Mono</option>
+                            </optgroup>
+                            <optgroup label="WOLF">
+                                <option value="WOLF_FHA_05_06_230">WOLF 5kW Mono</option>
+                                <option value="WOLF_FHA_06_07_230">WOLF 6kW Mono</option>
+                                <option value="WOLF_FHA_08_10_230">WOLF 8kW Mono</option>
+                                <option value="WOLF_FHA_11_14_230">WOLF 11kW Mono</option>
+                                <option value="WOLF_FHA_14_17_230">WOLF 14kW Mono</option>
+                                <option value="WOLF_FHA_14_17_400">WOLF 14kW Tri</option>
+                            </optgroup>
+                        </select>
                     </div>
                     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:10px;">
                         <div class="form-group" style="margin-bottom:0;">
