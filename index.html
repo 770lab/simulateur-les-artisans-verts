@@ -885,20 +885,15 @@
                 display: block !important;
             }
 
-            .tab-pac-active ~ #printArea,
-            body:not(:has(.tab-ite-active)) #printArea {
-                display: block !important;
-            }
-            .tab-ite-active ~ #iteDevisArea,
-            body:has(.tab-ite-active) #iteDevisArea {
-                display: block !important;
-            }
-            body:has(.tab-ite-active) #printArea {
-                display: none !important;
-            }
-            body:not(:has(.tab-ite-active)) #iteDevisArea {
-                display: none !important;
-            }
+            /* PAC tab: show pacDevisArea, hide printArea and iteDevisArea */
+            body:has(.tab-pac-active) #pacDevisArea { display: block !important; }
+            body:has(.tab-pac-active) #printArea { display: none !important; }
+            body:has(.tab-pac-active) #iteDevisArea { display: none !important; }
+
+            /* ITE tab: show iteDevisArea, hide printArea and pacDevisArea */
+            body:has(.tab-ite-active) #iteDevisArea { display: block !important; }
+            body:has(.tab-ite-active) #printArea { display: none !important; }
+            body:has(.tab-ite-active) #pacDevisArea { display: none !important; }
 
             body {
                 background: white;
@@ -1471,15 +1466,6 @@
 .ite-page .dv-legal { font-size: 6.5pt; line-height: 1.45; color: #333; margin-top: 4mm; }
 .ite-page .dv-finance { font-size: 8pt; line-height: 1.6; margin-top: 4mm; }
 
-/* Print: updated for tab system */
-@media print {
-    .tab-pac-active #printArea { display: none !important; }
-    .tab-pac-active #pacDevisArea { display: block !important; }
-    .tab-pac-active #iteDevisArea { display: none !important; }
-    .tab-ite-active #printArea { display: none !important; }
-    .tab-ite-active #iteDevisArea { display: block !important; }
-    .tab-ite-active #pacDevisArea { display: none !important; }
-}
 
 /* Shared client card */
 .shared-client-card {
