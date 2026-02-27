@@ -5053,7 +5053,7 @@ function pac_generateDevis(){
     pg1+='<div class="dv-header"><div><img src="icon-512.png" alt="Les Artisans Verts" style="height:15mm;width:auto;"></div>';
     pg1+='<div style="display:flex;gap:4mm;align-items:flex-start;">';
     pg1+='<div style="border:2px solid #1e3a8a;border-radius:4px;padding:3px 5px;width:68px;text-align:center;"><div style="background:#1e3a8a;color:#fff;font-weight:900;font-size:8pt;margin:-3px -5px 2px;padding:2px 0;border-radius:2px 2px 0 0;">RGE</div><div style="font-size:6pt;color:#1e3a8a;font-weight:700;">QUALIBAT</div><div style="font-size:5.5pt;">N\u00b0 E-E206267<br>VAL 03/02/2027</div></div>';
-    pg1+='<div style="border:2px solid #1e3a8a;border-radius:4px;padding:3px 5px;width:68px;text-align:center;"><div style="background:#1e3a8a;color:#fff;font-weight:900;font-size:8pt;margin:-3px -5px 2px;padding:2px 0;border-radius:2px 2px 0 0;">RGE</div><div style="font-size:6pt;color:#1e3a8a;font-weight:700;">QualiPAC</div><div style="font-size:5.5pt;">N\u00b0 QS/64543<br>VAL 12/12/2027</div></div>';
+    pg1+='<div style="text-align:center;width:78px;"><img src="rge-qualipac.svg" alt="RGE QualiPAC" style="width:78px;height:auto;"><div style="font-size:5.5pt;color:#1e3a8a;font-weight:600;margin-top:1px;">N\u00b0 QPAC/69719<br>VAL 15/02/2027</div></div>';
     pg1+='<img src="'+edfQR+'" style="width:18mm;height:18mm;border:1px solid #ccc;border-radius:2px;"></div></div>';
 
     pg1+='<div class="dv-title"><span>DEVIS : '+num+'</span><span>'+nom+'</span></div>';
@@ -5066,7 +5066,7 @@ function pac_generateDevis(){
     pg1+=pac.n+' \u00b7 R\u00e9f : '+pac.r+' \u00b7 ETAS '+etasVal+'%<br>';
     pg1+='COP 35\u00b0 : '+pac.cop35+' \u00b7 COP 55\u00b0 : '+pac.cop55+' \u00b7 Classe : '+pac.cls+'<br>';
     pg1+='R\u00e9frig\u00e9rant '+pac.ref+' \u00b7 '+pac.db+'<br><br>';
-    pg1+='LES ARTISANS VERTS \u00b7 SIRET 87806279300038 \u00b7 RGE E-E206267 / QualiPAC QS/64543</div>';
+    pg1+='LES ARTISANS VERTS \u00b7 SIRET 87806279300038 \u00b7 RGE E-E206267 / QualiPAC QPAC/69719</div>';
 
     pg1+='<div class="dv-row"><div class="n">*'+pac.n+'</div><div class="c">1 U</div><div class="r">'+pac_fmt(pPAC)+'</div><div class="r">'+pac_fmt(pPAC)+'</div><div class="r">'+tva.toFixed(2).replace('.',',')+'%</div></div>';
     pg1+='<div class="dv-specs">'+pac.m+' \u00b7 '+pac.r+' \u00b7 ETAS:'+etasVal+'% \u00b7 COP@35:'+pac.cop35+' \u00b7 COP@55:'+pac.cop55+' \u00b7 '+pac.ref+' \u00b7 '+pac.cls+'</div>';
