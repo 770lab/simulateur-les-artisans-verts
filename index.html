@@ -2024,7 +2024,8 @@
             <div class="tab-pac-content">
             <!-- ===================== BARÈME PAC (client) ===================== -->
             <div class="card" id="baremeCard">
-                <h2 class="card-title">&#128208; Puissance PAC recommandée</h2>
+                <h2 class="card-title" onclick="var b=document.getElementById('baremeBody');b.style.display=b.style.display==='none'?'':'none';this.querySelector('.chevron').textContent=b.style.display==='none'?'\u25B6':'\u25BC'" style="cursor:pointer;user-select:none;">&#128208; Puissance PAC recommandée <span class="chevron" style="float:right;font-size:12px;color:#94a3b8;">&blacktriangleright;</span></h2>
+                <div id="baremeBody" style="display:none;">
                 <div style="font-size: 12px; color: #64748b; margin-bottom: 14px;">Estimation selon la surface, l'année de construction et l'isolation</div>
 
                 <!-- Hidden input for sync -->
@@ -2136,11 +2137,13 @@
                 </div>
 
                 <!-- Tableau supprimé - logique intégrée dans calcBareme -->
+                </div><!-- end baremeBody -->
             </div>
 
             <!-- ===================== NOTE DE DIMENSIONNEMENT (fournisseur) ===================== -->
             <div class="card fournisseur-only telepro-hide" id="dimensionnementCard">
-                <h2 class="card-title">&#128208; Dimensionnement PAC</h2>
+                <h2 class="card-title" onclick="var b=document.getElementById('dimBody');b.style.display=b.style.display==='none'?'':'none';this.querySelector('.chevron').textContent=b.style.display==='none'?'\u25B6':'\u25BC'" style="cursor:pointer;user-select:none;">&#128208; Dimensionnement PAC <span class="chevron" style="float:right;font-size:12px;color:#94a3b8;">&blacktriangleright;</span></h2>
+                <div id="dimBody" style="display:none;">
                 <div style="font-size: 12px; color: #64748b; margin-bottom: 18px;">Estimation de la puissance recommandée · Formule : P = G &times; V &times; &#916;T</div>
 
                 <!-- Surface + Hauteur -->
@@ -2214,6 +2217,7 @@
                         </div>
                     </div>
                 </div>
+                </div><!-- end dimBody -->
             </div>
 
             <div class="card fournisseur-only">
@@ -2558,10 +2562,14 @@
                     <span id="statusText">Voulez-vous un devis ?</span>
                 </div>
 
+                <button class="btn-dark-export pdf" onclick="pac_generateDevis()" style="background:linear-gradient(135deg,#16a34a,#22c55e);font-weight:700;margin-bottom:8px;">
+                    &#128196; G&eacute;n&eacute;rer le Devis
+                </button>
+
                 <button id="exportBtn" class="btn-dark-export pdf" onclick="exportPDF()">
                     &#128196; Exporter en PDF
                 </button>
-                
+
                 <button id="whatsappBtn" class="btn-dark-export whatsapp" onclick="sendWhatsApp()">
                     &#128172; Envoyer par WhatsApp
                 </button>
