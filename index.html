@@ -4744,6 +4744,18 @@ function ite_loadDossier(f){
         else if(ch.includes('bois')||ch.includes('granul'))tc.value='Bois';
         else if(ch.includes('pac')||ch.includes('pompe'))tc.value='PAC';
     })();
+    // Surface habitable (col 35)
+    var surf=parseFloat(g(35))||0;
+    if(surf>0){
+        var ceeSurf=document.getElementById('ceeSurface');
+        if(ceeSurf){ceeSurf.value=Math.round(surf);try{syncSurfaces('cee');}catch(e){}}
+        var surfSel=document.getElementById('surface');
+        if(surfSel){
+            if(surf<70) surfSel.value='S<70';
+            else if(surf<90) surfSel.value='70<=S<90';
+            else surfSel.value='S>=90';
+        }
+    }
     var z=g(42).toUpperCase();
     if(z){var zs=document.getElementById('zone');if(zs){for(var j=0;j<zs.options.length;j++){if(zs.options[j].value===z){zs.selectedIndex=j;break;}}}}
     try{ite_calc();}catch(e){}
