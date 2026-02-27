@@ -1289,6 +1289,51 @@
     color: #60a5fa;
     border: 1px solid rgba(96,165,250,0.2);
 }
+/* Champs du hero en dark */
+.dossier-hero .form-group label {
+    color: rgba(255,255,255,0.55);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+.dossier-hero .form-group input,
+.dossier-hero .form-group select {
+    background: rgba(255,255,255,0.07) !important;
+    background-color: rgba(255,255,255,0.07) !important;
+    color: white !important;
+    border: 1px solid rgba(255,255,255,0.12) !important;
+    border-radius: 8px;
+}
+.dossier-hero .form-group input::placeholder { color: rgba(255,255,255,0.25) !important; }
+.dossier-hero .form-group input:focus,
+.dossier-hero .form-group select:focus {
+    border-color: #34d399 !important;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(52,211,153,0.15) !important;
+}
+.dossier-hero .form-group select option { background: #1e293b; color: white; }
+.dossier-hero-divider {
+    border: none;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    margin: 16px 0;
+}
+/* Statut de recherche à l'intérieur du hero */
+.dossier-hero .ite-search-status {
+    background: rgba(52,211,153,0.12) !important;
+    color: #34d399 !important;
+    border: 1px solid rgba(52,211,153,0.25) !important;
+}
+.dossier-hero .ite-search-status.err {
+    background: rgba(239,68,68,0.1) !important;
+    color: #f87171 !important;
+    border-color: rgba(239,68,68,0.2) !important;
+}
+.dossier-hero .ite-search-status.loading {
+    background: rgba(96,165,250,0.1) !important;
+    color: #60a5fa !important;
+    border-color: rgba(96,165,250,0.2) !important;
+}
 
 /* ITE QR block */
 .ite-qr-block {
@@ -1458,12 +1503,12 @@
 
                 <!-- ===== HERO RECHERCHE DOSSIER ===== -->
                 <div class="dossier-hero">
-                    <div class="dossier-hero-label">&#128194; Acc&egrave;s rapide</div>
-                    <div class="dossier-hero-title">Rechercher un dossier</div>
-                    <div class="dossier-hero-sub">Saisissez le num&eacute;ro &mdash; toutes les informations s&rsquo;auto-remplissent</div>
+                    <div class="dossier-hero-label">&#128194; Recherche dossier</div>
+                    <div class="dossier-hero-title">Saisir le num&eacute;ro de dossier</div>
+                    <div class="dossier-hero-sub">Toutes les informations s&rsquo;auto-remplissent instantan&eacute;ment</div>
                     <div class="dossier-hero-row">
                         <input
-                            id="dossierHeroInput"
+                            id="iteNumClient"
                             class="dossier-hero-input"
                             type="text"
                             value="AVR-202XX"
@@ -1471,11 +1516,64 @@
                             autocomplete="off"
                             spellcheck="false"
                             onfocus="if(this.value==='AVR-202XX'){this.select();}"
-                            onkeydown="if(event.key==='Enter'){event.preventDefault();searchDossier();}"
+                            onkeydown="if(event.key==='Enter'){event.preventDefault();ite_searchClient();}"
                         >
-                        <button class="dossier-hero-btn" onclick="searchDossier()">&#128269;&nbsp;Chercher</button>
+                        <button id="iteBtnSearch" class="dossier-hero-btn" onclick="ite_searchClient()">&#128269;&nbsp;Chercher</button>
                     </div>
-                    <div id="dossierHeroStatus" class="dossier-hero-status"></div>
+                    <div id="iteSearchStatus" class="ite-search-status" style="margin-top:10px;"></div>
+
+                    <!-- Champs client (ITE) -->
+                    <div class="tab-ite-content" style="margin-top:16px;">
+                        <hr class="dossier-hero-divider">
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>Adresse travaux</label>
+                                <input type="text" id="iteAdresse" placeholder="123 rue...">
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>CP + Ville</label>
+                                <input type="text" id="iteVille" placeholder="75000 Paris">
+                            </div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>T&eacute;l&eacute;phone</label>
+                                <input type="text" id="iteTel" placeholder="06...">
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>E-mail</label>
+                                <input type="text" id="iteEmail" placeholder="client@email.com">
+                            </div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;">
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>N&deg; Devis</label>
+                                <input type="text" id="iteNumDevis" value="AVR-2026-">
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>Date</label>
+                                <input type="date" id="iteDateDevis" value="2026-02-26">
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>Commercial</label>
+                                <select id="iteConseiller"><option value="">&mdash; S&eacute;lectionner &mdash;</option><option>&Agrave; d&eacute;finir</option></select>
+                            </div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>Chauffage actuel</label>
+                                <select id="iteTypeChauffage"><option>Combustible</option><option>&Eacute;lectrique</option></select>
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>Pr&eacute;carit&eacute; CEE (auto)</label>
+                                <select id="itePrecarite" onchange="ite_calc()">
+                                    <option value="classique">Classique</option>
+                                    <option value="modeste">Modeste</option>
+                                    <option value="grande">Grande pr&eacute;carit&eacute;</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Info client -->
@@ -1560,70 +1658,6 @@
                 </div>
 
                 
-                <!-- Google Sheet Search (SHARED - visible in both tabs) -->
-                <div style="margin-top: 12px;">
-                    <div style="font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">&#128269; Recherche dossier (Google Sheet)</div>
-                    <div style="display: flex; gap: 8px; align-items: flex-end;">
-                        <div style="flex: 1;">
-                            <label style="font-size: 11px; color: #6b7280; font-weight: 600;">N&deg; Dossier</label>
-                            <input id="iteNumClient" placeholder="AVR-2026-XXXX" style="width: 100%; padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px;" onkeydown="if(event.key==='Enter'){event.preventDefault();ite_searchClient()}">
-                        </div>
-                        <button id="iteBtnSearch" onclick="ite_searchClient()" style="padding: 8px 16px; border-radius: 8px; background: linear-gradient(135deg, #3b82f6, #2563eb); color: #fff; font-size: 12px; font-weight: 700; border: none; cursor: pointer; white-space: nowrap; height: 37px;">&#128269; Chercher</button>
-                    </div>
-                    <div id="iteSearchStatus" class="ite-search-status"></div>
-                </div>
-
-                <!-- Additional ITE client fields -->
-                <div class="tab-ite-content" style="margin-top: 12px;">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <label>Adresse travaux</label>
-                            <input type="text" id="iteAdresse" placeholder="123 rue...">
-                        </div>
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <label>CP + Ville</label>
-                            <input type="text" id="iteVille" placeholder="75000 Paris">
-                        </div>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <label>T&eacute;l&eacute;phone</label>
-                            <input type="text" id="iteTel" placeholder="06...">
-                        </div>
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <label>E-mail</label>
-                            <input type="text" id="iteEmail" placeholder="client@email.com">
-                        </div>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 12px;">
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <label>N&deg; Devis</label>
-                            <input type="text" id="iteNumDevis" value="AVR-2026-">
-                        </div>
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <label>Date</label>
-                            <input type="date" id="iteDateDevis" value="2026-02-26">
-                        </div>
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <label>Commercial</label>
-                            <select id="iteConseiller"><option value="">&mdash; S&eacute;lectionner &mdash;</option><option>&Agrave; d&eacute;finir</option></select>
-                        </div>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <label>Chauffage actuel</label>
-                            <select id="iteTypeChauffage"><option>Combustible</option><option>&Eacute;lectrique</option></select>
-                        </div>
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <label>Pr&eacute;carit&eacute; CEE (auto)</label>
-                            <select id="itePrecarite" onchange="ite_calc()">
-                                <option value="classique">Classique</option>
-                                <option value="modeste">Modeste</option>
-                                <option value="grande">Grande pr&eacute;carit&eacute;</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
 
             </div><!-- end shared client card -->
 
@@ -4296,24 +4330,6 @@ function syncProfilPrecarite(){
     try{ite_calc();}catch(e){}
 }
 
-// ============================================
-// HERO DOSSIER SEARCH
-// ============================================
-function searchDossier(){
-    var heroInput=document.getElementById('dossierHeroInput');
-    if(!heroInput)return;
-    var val=heroInput.value.trim().toUpperCase();
-    if(!val||val==='AVR-202XX'){
-        var h=document.getElementById('dossierHeroStatus');
-        if(h){h.className='dossier-hero-status err';h.innerHTML='&#10060; Veuillez saisir un num&eacute;ro de dossier';h.style.display='block';}
-        return;
-    }
-    // Sync to legacy input and trigger existing search
-    var legacyInput=document.getElementById('iteNumClient');
-    if(legacyInput) legacyInput.value=val;
-    ite_searchClient();
-}
-
 // Google Sheet search for ITE
 var ite_csvCache=null;
 function ite_setStatus(cls,msg){
@@ -4322,9 +4338,6 @@ function ite_setStatus(cls,msg){
     s.className='ite-search-status '+cls;
     s.innerHTML=msg;
     s.style.display='block';
-    // Mirror to hero search status
-    var h=document.getElementById('dossierHeroStatus');
-    if(h){h.className='dossier-hero-status '+cls;h.innerHTML=msg;}
 }
 function ite_fetchCSV(){
     return new Promise(function(resolve){
