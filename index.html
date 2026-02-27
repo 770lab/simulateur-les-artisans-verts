@@ -272,6 +272,48 @@
         .confort-labels { display: flex; justify-content: space-between; font-size: 11px; color: #94a3b8; margin-top: 2px; }
         .confort-desc { font-size: 12px; color: #64748b; margin-top: 10px; font-style: italic; }
 
+        /* ===== PRODUIT & OPTIONS ===== */
+        .produit-bloc {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 10px;
+            padding: 14px;
+        }
+        .produit-bloc-head {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .produit-bloc-icon {
+            font-size: 18px;
+            width: 32px;
+            height: 32px;
+            background: rgba(34,197,94,0.12);
+            border-radius: 8px;
+            display: grid;
+            place-items: center;
+        }
+        .produit-bloc-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1d1d1f;
+        }
+        .produit-opt-section {
+            display: none;
+            margin-top: 8px;
+            padding: 12px;
+            background: rgba(255,255,255,0.7);
+            border: 1px solid #d1fae5;
+            border-radius: 8px;
+            animation: prodOptIn 0.25s ease;
+        }
+        @keyframes prodOptIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        #pacInfo b { color: #16a34a; }
+
         /* Isolation checklist */
         .iso-check {
             display: flex; align-items: center; gap: 10px; padding: 10px 14px;
@@ -2929,6 +2971,42 @@ function syncEtas() {
     calcCEEDetail();
 }
 
+// ===== PRODUIT & OPTIONS =====
+function updatePAC() {
+    var key = document.getElementById('marquePAC').value;
+    var p = PAC_CATALOG[key];
+    var el = document.getElementById('pacInfo');
+    if (!p || !el) return;
+    var ev = (p.etas || '').split('/').map(function(s){ return parseFloat(s.trim()); });
+    var appType = (ev.length > 1 && ev[1] >= 100) ? 'Haute temp\u00e9rature' : 'Basse temp\u00e9rature';
+    var etasHT = ev.length > 1 ? ev[1] : ev[0];
+    el.innerHTML = '<b>' + p.m + '</b> \u00b7 ' + p.cls + ' \u00b7 ETAS ' + p.etas + '% \u00b7 COP ' + p.cop35 + '/' + p.cop55 + ' \u00b7 ' + p.ref + ' \u00b7 ' + p.dim +
+        '<br><span style="color:#16a34a">\u2192 Application : <b>' + appType + '</b> \u00b7 ETAS HT : <b>' + etasHT + '%</b> (' + (etasHT >= 140 ? '\u2265 140%' : '111-140%') + ')</span>';
+    var dm = document.getElementById('dimMarque');
+    var dr = document.getElementById('dimReference');
+    if (dm) dm.value = p.m;
+    if (dr) dr.value = p.r;
+}
+
+function syncEtasFromPAC() {
+    var key = document.getElementById('marquePAC').value;
+    var p = PAC_CATALOG[key];
+    if (!p) return;
+    var ev = (p.etas || '').split('/').map(function(s){ return parseFloat(s.trim()); });
+    var etasHT = ev.length > 1 ? ev[1] : ev[0];
+    var etasSel = document.getElementById('etas');
+    if (etasSel) {
+        etasSel.value = etasHT >= 140 ? '140-170' : '111-140';
+        syncEtas();
+    }
+}
+
+function toggleProduitOpt(id, show) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.style.display = show ? 'block' : 'none';
+}
+
 function onScenarioChange() {
     const sc = document.getElementById('scenario').value;
     const isSSC = (sc === 'SSC');
@@ -3097,6 +3175,39 @@ const D={TTC:{"PAC":10890,"PAC + BALLON ÉLECTRIQUE":13750,"PAC + BALLON THERMO"
 const M={"PAC":"PAC","PAC + BALLON ÉLECTRIQUE":"BALLON ELECTRIQUE","PAC + BALLON THERMO":"BALLON THERMO","PAC + SSC":"BALLON SSC","SSC":"BALLON SSC"};
 
 const SCENARIO_NAMES = {"PAC":"PAC","PAC + BALLON ÉLECTRIQUE":"PAC + Ballon Électrique","PAC + BALLON THERMO":"PAC + Ballon Thermo","PAC + SSC":"PAC + SSC","SSC":"SSC"};
+
+// ============================================
+// CATALOGUE PAC — Fiches techniques complètes
+// ============================================
+const PAC_CATALOG = {
+    THALEOS_04M:{m:'THALEOS',n:'PAC THALEOS R290 4kW Mono ETAS 195%',r:'THAHP04-M',a:'220-240V/1Ph',cop35:'5,15',cop55:'3,20',cap35:'4,5kW',cap55:'4,6kW',cls:'A+++/A+++',etas:'195/151',scop:'5,20/4,00',db:'56dB(A)',dim:'1130x420x704mm',kg:'93Kg',ref:'R290',ch:'-',pr:'18A',rg:'6'},
+    THALEOS_06M:{m:'THALEOS',n:'PAC THALEOS R290 6kW Mono ETAS 194%',r:'THAHP06-M',a:'220-240V/1Ph',cop35:'4,95',cop55:'3,15',cap35:'6,35kW',cap55:'6,40kW',cls:'A+++/A+++',etas:'194/151',scop:'5,24/4,03',db:'56dB(A)',dim:'1130x420x704mm',kg:'93Kg',ref:'R290',ch:'-',pr:'18A',rg:'6'},
+    THALEOS_08M:{m:'THALEOS',n:'PAC THALEOS R290 8kW Mono ETAS 198%',r:'THAHP08-M',a:'220-240V/1Ph',cop35:'5,00',cop55:'3,30',cap35:'8,40kW',cap55:'7,80kW',cls:'A+++/A+++',etas:'198/152',scop:'5,21/3,94',db:'57dB(A)',dim:'1280x420x1040mm',kg:'141Kg',ref:'R290',ch:'-',pr:'18A',rg:'6'},
+    THALEOS_10M:{m:'THALEOS',n:'PAC THALEOS R290 10kW Mono ETAS 203%',r:'THAHP10-M',a:'220-240V/1Ph',cop35:'4,80',cop55:'3,25',cap35:'10,0kW',cap55:'9,50kW',cls:'A+++/A+++',etas:'203/154',scop:'5,16/3,93',db:'57dB(A)',dim:'1280x420x1040mm',kg:'141Kg',ref:'R290',ch:'-',pr:'18A',rg:'6'},
+    THALEOS_12M:{m:'THALEOS',n:'PAC THALEOS R290 12kW Mono ETAS 186%',r:'THAHP12-M',a:'220-240V/1Ph',cop35:'4,90',cop55:'3,25',cap35:'12,0kW',cap55:'12,0kW',cls:'A+++/A+++',etas:'186/150',scop:'4,96/3,86',db:'57dB(A)',dim:'1280x420x1040mm',kg:'156Kg',ref:'R290',ch:'1,35kg',pr:'35A',rg:'6'},
+    THALEOS_14M:{m:'THALEOS',n:'PAC THALEOS R290 14kW Mono ETAS 186%',r:'THAHP14-M',a:'220-240V/1Ph',cop35:'4,80',cop55:'3,20',cap35:'14,0kW',cap55:'14,0kW',cls:'A+++/A+++',etas:'186/150',scop:'5,13/3,93',db:'58dB(A)',dim:'1280x420x1040mm',kg:'156Kg',ref:'R290',ch:'1,35kg',pr:'35A',rg:'6'},
+    THALEOS_16M:{m:'THALEOS',n:'PAC THALEOS R290 16kW Mono ETAS 188%',r:'THAHP16-M',a:'220-240V/1Ph',cop35:'4,70',cop55:'3,15',cap35:'15,1kW',cap55:'15,1kW',cls:'A+++/A+++',etas:'188/150',scop:'5,16/3,89',db:'60dB(A)',dim:'1280x420x1040mm',kg:'156Kg',ref:'R290',ch:'1,35kg',pr:'35A',rg:'6'},
+    THALEOS_08T:{m:'THALEOS',n:'PAC THALEOS R290 8kW Tri ETAS 198%',r:'THAHP08-T',a:'380-415V/3Ph',cop35:'5,00',cop55:'3,30',cap35:'8,40kW',cap55:'7,80kW',cls:'A+++/A+++',etas:'198/152',scop:'5,16/3,89',db:'57dB(A)',dim:'1280x420x1040mm',kg:'141Kg',ref:'R290',ch:'1,35kg',pr:'10A',rg:'6'},
+    THALEOS_10T:{m:'THALEOS',n:'PAC THALEOS R290 10kW Tri ETAS 203%',r:'THAHP10-T',a:'380-415V/3Ph',cop35:'4,80',cop55:'3,25',cap35:'10,0kW',cap55:'9,50kW',cls:'A+++/A+++',etas:'203/154',scop:'5,16/3,93',db:'57dB(A)',dim:'1280x420x1040mm',kg:'141Kg',ref:'R290',ch:'1,35kg',pr:'10A',rg:'6'},
+    THALEOS_12T:{m:'THALEOS',n:'PAC THALEOS R290 12kW Tri ETAS 150%',r:'THAHP12-T',a:'380-415V/3Ph',cop35:'4,90',cop55:'3,25',cap35:'12,0kW',cap55:'12,0kW',cls:'A+++/A+++',etas:'186/150',scop:'4,98/3,86',db:'58dB(A)',dim:'1280x420x1040mm',kg:'141Kg',ref:'R290',ch:'1,35kg',pr:'10A',rg:'6'},
+    THALEOS_14T:{m:'THALEOS',n:'PAC THALEOS R290 14kW Tri ETAS 150%',r:'THAHP14-T',a:'380-415V/3Ph',cop35:'4,80',cop55:'3,20',cap35:'14,0kW',cap55:'14,0kW',cls:'A+++/A+++',etas:'186/150',scop:'5,13/3,93',db:'59dB(A)',dim:'1280x420x1040mm',kg:'156Kg',ref:'R290',ch:'1,35kg',pr:'14A',rg:'6'},
+    THALEOS_16T:{m:'THALEOS',n:'PAC THALEOS R290 16kW Tri ETAS 150%',r:'THAHP16-T',a:'380-415V/3Ph',cop35:'4,70',cop55:'3,15',cap35:'15,1kW',cap55:'15,1kW',cls:'A+++/A+++',etas:'188/150',scop:'5,05/3,88',db:'60dB(A)',dim:'1280x420x1040mm',kg:'156Kg',ref:'R290',ch:'1,35kg',pr:'14A',rg:'6'},
+    THALEOS_BI_08M:{m:'THALEOS',n:'PAC THALEOS Bi-Bloc R290 8kW Mono ETAS 198%',r:'THAHPOUT8KW-M',a:'220-240V/1Ph',cop35:'5,00',cop55:'3,30',cap35:'8,10kW',cap55:'7,60kW',cls:'A+++/A+++',etas:'198/152',scop:'5,16/3,89',db:'57dB(A)',dim:'1280x420x1040mm',kg:'128Kg',ref:'R290',ch:'1,35kg',pr:'18A',rg:'6'},
+    THALEOS_BI_10M:{m:'THALEOS',n:'PAC THALEOS Bi-Bloc R290 10kW Mono ETAS 203%',r:'THAHPOUT10KW-M',a:'220-240V/1Ph',cop35:'4,80',cop55:'3,25',cap35:'9,80kW',cap55:'9,40kW',cls:'A+++/A+++',etas:'203/154',scop:'5,16/3,93',db:'57dB(A)',dim:'1280x420x1040mm',kg:'128Kg',ref:'R290',ch:'1,35kg',pr:'18A',rg:'6'},
+    THALEOS_BI_12M:{m:'THALEOS',n:'PAC THALEOS Bi-Bloc R290 12kW Mono ETAS 186%',r:'THAHPOUT12KW-M',a:'220-240V/1Ph',cop35:'4,90',cop55:'3,25',cap35:'11,6kW',cap55:'11,5kW',cls:'A+++/A+++',etas:'186/150',scop:'4,98/3,86',db:'58dB(A)',dim:'1280x420x1040mm',kg:'143Kg',ref:'R290',ch:'1,35kg',pr:'18A',rg:'6'},
+    THALEOS_BI_14M:{m:'THALEOS',n:'PAC THALEOS Bi-Bloc R290 14kW Mono ETAS 186%',r:'THAHPOUT14KW-M',a:'220-240V/1Ph',cop35:'4,80',cop55:'3,20',cap35:'13,6kW',cap55:'13,5kW',cls:'A+++/A+++',etas:'186/150',scop:'5,13/3,93',db:'59dB(A)',dim:'1280x420x1040mm',kg:'143Kg',ref:'R290',ch:'1,35kg',pr:'35A',rg:'6'},
+    THALEOS_BI_16M:{m:'THALEOS',n:'PAC THALEOS Bi-Bloc R290 16kW Mono ETAS 188%',r:'THAHPOUT16KW-M',a:'220-240V/1Ph',cop35:'4,70',cop55:'3,15',cap35:'14,9kW',cap55:'14,9kW',cls:'A+++/A+++',etas:'188/150',scop:'5,05/3,88',db:'60dB(A)',dim:'1280x420x1040mm',kg:'143Kg',ref:'R290',ch:'1,35kg',pr:'35A',rg:'6'},
+    WELLEA_12T:{m:'WELLEA',n:'PAC WELLEA R290 12kW HT Tri',r:'BDHW-120R-04T35',a:'380V/3Ph',cop35:'4,90',cop55:'3,25',cap35:'12,1kW',cap55:'12,1kW',cls:'A+++',etas:'150',scop:'3,86',db:'-',dim:'-',kg:'-',ref:'R290',ch:'-',pr:'-',rg:'6'},
+    WELLEA_14T:{m:'WELLEA',n:'PAC WELLEA R290 14kW HT Tri',r:'BDHW-140R-04T35',a:'380V/3Ph',cop35:'4,80',cop55:'3,20',cap35:'14,5kW',cap55:'14,5kW',cls:'A+++',etas:'150',scop:'3,93',db:'-',dim:'-',kg:'-',ref:'R290',ch:'-',pr:'-',rg:'6'},
+    WELLEA_16T:{m:'WELLEA',n:'PAC WELLEA R290 16kW HT Tri',r:'BDHW-160R-04T35',a:'380V/3Ph',cop35:'4,70',cop55:'3,15',cap35:'15,9kW',cap55:'15,9kW',cls:'A+++',etas:'150',scop:'3,88',db:'-',dim:'-',kg:'-',ref:'R290',ch:'-',pr:'-',rg:'6'},
+    WELLEA_16M:{m:'WELLEA',n:'PAC WELLEA R290 16kW HT Mono',r:'BDHW-160R-04M25',a:'220-240V/1Ph',cop35:'4,70',cop55:'3,15',cap35:'15,9kW',cap55:'15,9kW',cls:'A+++',etas:'150',scop:'3,88',db:'-',dim:'-',kg:'-',ref:'R290',ch:'-',pr:'-',rg:'6'},
+    WOLF_FHA_05_06_230:{m:'WOLF',n:'PAC WOLF FHA 05/06 5kW Mono ETAS 181%',r:'9148083',a:'220-240V/1Ph',cop35:'4,7',cop55:'3,1',cap35:'5,0kW',cap55:'5,0kW',cls:'A+++',etas:'181/127',scop:'4,7/3,1',db:'56,8dB(A)',dim:'1295x718x429mm',kg:'79+27Kg',ref:'R32',ch:'1,4kg',pr:'-',rg:'BM-2'},
+    WOLF_FHA_06_07_230:{m:'WOLF',n:'PAC WOLF FHA 06/07 6kW Mono ETAS 167%',r:'9148084',a:'220-240V/1Ph',cop35:'5,2',cop55:'2,8',cap35:'6,0kW',cap55:'6,0kW',cls:'A++',etas:'167/129',scop:'5,2/2,8',db:'59,8dB(A)',dim:'1295x718x429mm',kg:'79+27Kg',ref:'R32',ch:'1,4kg',pr:'-',rg:'BM-2'},
+    WOLF_FHA_08_10_230:{m:'WOLF',n:'PAC WOLF FHA 08/10 8kW Mono ETAS 196%',r:'9148085',a:'220-240V/1Ph',cop35:'4,9',cop55:'2,9',cap35:'8,0kW',cap55:'8,0kW',cls:'A+++',etas:'196/133',scop:'4,9/2,9',db:'60,5dB(A)',dim:'1385x865x526mm',kg:'88+27Kg',ref:'R32',ch:'1,4kg',pr:'-',rg:'BM-2'},
+    WOLF_FHA_11_14_230:{m:'WOLF',n:'PAC WOLF FHA 11/14 11kW Mono ETAS 174%',r:'9148086',a:'220-240V/1Ph',cop35:'5,1',cop55:'3,1',cap35:'11,0kW',cap55:'11,0kW',cls:'A++',etas:'174/126',scop:'5,1/3,1',db:'60,8dB(A)',dim:'1385x865x526mm',kg:'122+27Kg',ref:'R32',ch:'1,75kg',pr:'-',rg:'BM-2'},
+    WOLF_FHA_14_17_230:{m:'WOLF',n:'PAC WOLF FHA 14/17 14kW Mono ETAS 178%',r:'9148087',a:'220-240V/1Ph',cop35:'5,0',cop55:'3,1',cap35:'13,0kW',cap55:'13,0kW',cls:'A+++',etas:'178/131',scop:'5,0/3,1',db:'66,4dB(A)',dim:'1385x865x526mm',kg:'122+27Kg',ref:'R32',ch:'1,75kg',pr:'-',rg:'BM-2'},
+    WOLF_FHA_14_17_400:{m:'WOLF',n:'PAC WOLF FHA 14/17 14kW Tri ETAS 173%',r:'9148089',a:'380-415V/3Ph',cop35:'5,1',cop55:'3,1',cap35:'14,0kW',cap55:'13,0kW',cls:'A++',etas:'173/129',scop:'5,1/3,1',db:'66,6dB(A)',dim:'1385x865x526mm',kg:'122+27Kg',ref:'R32',ch:'1,75kg',pr:'-',rg:'BM-2'}
+};
 
 function getCEE(et, zn, cs, sf){
     if(!D.CEE[et]) return 0;
