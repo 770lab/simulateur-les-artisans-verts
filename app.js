@@ -124,6 +124,44 @@ function syncEtas() {
     calcCEEDetail();
 }
 
+// ===== PRODUIT & OPTIONS =====
+
+function updatePAC() {
+    var key = document.getElementById('marquePAC').value;
+    var p = PAC_CATALOG[key];
+    var el = document.getElementById('pacInfo');
+    if (!p || !el) return;
+    var ev = (p.etas || '').split('/').map(function(s){ return parseFloat(s.trim()); });
+    var appType = (ev.length > 1 && ev[1] >= 100) ? 'Haute temperature' : 'Basse temperature';
+    var etasHT = ev.length > 1 ? ev[1] : ev[0];
+    el.innerHTML = '<b>' + p.m + '</b> \u00b7 ' + p.cls + ' \u00b7 ETAS ' + p.etas + '% \u00b7 COP ' + p.cop35 + '/' + p.cop55 + ' \u00b7 ' + p.ref + ' \u00b7 ' + p.dim +
+        '<br><span style="color:#16a34a">\u2192 Application : <b>' + appType + '</b> \u00b7 ETAS HT : <b>' + etasHT + '%</b> (' + (etasHT >= 140 ? '\u2265 140%' : '111-140%') + ')</span>';
+    // Auto-fill dimMarque & dimReference
+    var dm = document.getElementById('dimMarque');
+    var dr = document.getElementById('dimReference');
+    if (dm) dm.value = p.m;
+    if (dr) dr.value = p.r;
+}
+
+function syncEtasFromPAC() {
+    var key = document.getElementById('marquePAC').value;
+    var p = PAC_CATALOG[key];
+    if (!p) return;
+    var ev = (p.etas || '').split('/').map(function(s){ return parseFloat(s.trim()); });
+    var etasHT = ev.length > 1 ? ev[1] : ev[0];
+    var etasSel = document.getElementById('etas');
+    if (etasSel) {
+        etasSel.value = etasHT >= 140 ? '140-170' : '111-140';
+        syncEtas();
+    }
+}
+
+function toggleProduitOpt(id, show) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.style.display = show ? 'block' : 'none';
+}
+
 function onScenarioChange() {
     const sc = document.getElementById('scenario').value;
     const isSSC = (sc === 'SSC');
