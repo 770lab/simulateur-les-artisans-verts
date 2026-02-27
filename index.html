@@ -1318,6 +1318,49 @@
     border-top: 1px solid rgba(255,255,255,0.1);
     margin: 16px 0;
 }
+/* Picker doublons */
+.dossier-picker-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.45);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 8px;
+}
+.dossier-picker-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.05);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    margin-bottom: 6px;
+}
+.dossier-picker-item:hover {
+    background: rgba(52,211,153,0.12);
+    border-color: rgba(52,211,153,0.3);
+}
+.dossier-picker-num {
+    font-size: 12px;
+    font-weight: 800;
+    color: #34d399;
+    font-family: ui-monospace, monospace;
+    white-space: nowrap;
+}
+.dossier-picker-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: white;
+    flex: 1;
+}
+.dossier-picker-tel {
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    white-space: nowrap;
+}
 /* Statut de recherche à l'intérieur du hero */
 .dossier-hero .ite-search-status {
     background: rgba(52,211,153,0.12) !important;
@@ -1504,15 +1547,15 @@
                 <!-- ===== HERO RECHERCHE DOSSIER ===== -->
                 <div class="dossier-hero">
                     <div class="dossier-hero-label">&#128194; Recherche dossier</div>
-                    <div class="dossier-hero-title">Saisir le num&eacute;ro de dossier</div>
-                    <div class="dossier-hero-sub">Toutes les informations s&rsquo;auto-remplissent instantan&eacute;ment</div>
+                    <div class="dossier-hero-title">Rechercher un dossier</div>
+                    <div class="dossier-hero-sub">Saisissez un t&eacute;l ou un n&deg; de dossier</div>
                     <div class="dossier-hero-row">
                         <input
                             id="iteNumClient"
                             class="dossier-hero-input"
                             type="text"
                             value="AVR-202XX"
-                            placeholder="AVR-202X-XXXX"
+                            placeholder="AVR-202X-XXXX ou 06..."
                             autocomplete="off"
                             spellcheck="false"
                             onfocus="if(this.value==='AVR-202XX'){this.select();}"
@@ -1521,9 +1564,11 @@
                         <button id="iteBtnSearch" class="dossier-hero-btn" onclick="ite_searchClient()">&#128269;&nbsp;Chercher</button>
                     </div>
                     <div id="iteSearchStatus" class="ite-search-status" style="margin-top:10px;"></div>
+                    <!-- Picker doublons -->
+                    <div id="dossierPickerList" style="display:none;margin-top:10px;"></div>
 
-                    <!-- Champs client (ITE) -->
-                    <div class="tab-ite-content" style="margin-top:16px;">
+                    <!-- Champs client (PAC + ITE) -->
+                    <div style="margin-top:16px;">
                         <hr class="dossier-hero-divider">
                         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
                             <div class="form-group" style="margin-bottom:0;">
@@ -4368,49 +4413,104 @@ function ite_fetchCSV(){
     });
 }
 
+// Charge un dossier (row) dans tous les champs
+function ite_loadDossier(f){
+    var g=function(idx){return(f[idx]||'').trim();};
+    document.getElementById('nom').value=g(2)+' '+g(3);
+    document.getElementById('prenom').value=g(1);
+    var cp=g(16)||g(12);
+    if(cp){
+        var dept=cp.substring(0,2);
+        if(dept==='97') dept=cp.substring(0,3);
+        var deptEl=document.getElementById('departement');
+        if(deptEl&&dept){deptEl.value=dept;try{detectDept();}catch(e){}}
+    }
+    ite_$('iteNumClient').value=g(0);
+    ite_$('iteNumDevis').value=g(0);
+    ite_$('iteAdresse').value=g(14)||g(10);
+    var vi=g(20)||g(17);
+    ite_$('iteVille').value=cp&&vi?cp+' '+vi.toUpperCase():'';
+    var t=g(21);if(t&&!t.startsWith('0')&&t.length<=9)t='0'+t;
+    ite_$('iteTel').value=t;
+    var em=g(23);ite_$('iteEmail').value=em&&em.toLowerCase()!=='n\u00e9ant'?em:'';
+    var pm={'grande':'grande','simple':'modeste','classique':'classique'};
+    ite_$('itePrecarite').value=pm[g(26).toLowerCase()]||'classique';
+    if(g(34).toLowerCase().includes('electr')){var tc=ite_$('iteTypeChauffage');if(tc)tc.value='\u00c9lectrique';}
+    var z=g(42).toUpperCase();
+    if(z){var zs=document.getElementById('zone');if(zs){for(var j=0;j<zs.options.length;j++){if(zs.options[j].value===z){zs.selectedIndex=j;break;}}}}
+    try{ite_calc();}catch(e){}
+    try{calc();}catch(e){}
+    try{checkExport();}catch(e){}
+    ite_setStatus('ok','\u2705 '+g(0)+' \u2014 '+(g(1)+' '+g(2)+' '+g(3)).trim());
+    var pl=document.getElementById('dossierPickerList');if(pl)pl.style.display='none';
+}
+
+// Affiche le picker quand plusieurs dossiers correspondent
+var _ite_matches=[];
+function ite_showDossierPicker(matches){
+    _ite_matches=matches;
+    var pl=document.getElementById('dossierPickerList');
+    if(!pl)return;
+    var html='<div class="dossier-picker-title">&#128276; '+matches.length+' dossiers trouv\u00e9s &mdash; lequel charger ?</div>';
+    matches.forEach(function(row,i){
+        var num=(row[0]||'').trim();
+        var prenom=(row[1]||'').trim();
+        var nom=((row[2]||'')+(row[3]?' '+row[3]:'')).trim();
+        var tel=(row[21]||'').trim();
+        var ville=(row[17]||row[20]||'').trim();
+        html+='<div class="dossier-picker-item" onclick="ite_loadDossier(_ite_matches['+i+'])">'
+            +'<span class="dossier-picker-num">'+num+'</span>'
+            +'<span class="dossier-picker-name">'+(prenom+' '+nom).trim()+(ville?' &middot; '+ville:'')+'</span>'
+            +'<span class="dossier-picker-tel">'+tel+'</span>'
+            +'</div>';
+    });
+    pl.innerHTML=html;
+    pl.style.display='block';
+    ite_setStatus('loading','&#128276; '+matches.length+' r\u00e9sultats &mdash; choisissez un dossier ci-dessous');
+}
+
 async function ite_searchClient(){
-    var q=ite_V('iteNumClient').toUpperCase();
-    if(!q){ite_setStatus('err','\u274c N\u00b0 vide');return;}
+    var q=ite_V('iteNumClient').trim();
+    if(!q||q==='AVR-202XX'){ite_setStatus('err','\u274c Saisissez un n\u00b0 de dossier ou un t\u00e9l');return;}
+    var qUp=q.toUpperCase();
+    // Masquer le picker précédent
+    var pl=document.getElementById('dossierPickerList');if(pl)pl.style.display='none';
     ite_$('iteBtnSearch').disabled=true;
     try{
         var rows=await ite_fetchCSV();
         if(!rows){ite_$('iteBtnSearch').disabled=false;return;}
-        var f=null;
-        for(var i=1;i<rows.length;i++){if((rows[i][0]||'').toUpperCase().trim()===q){f=rows[i];break;}}
-        if(!f)for(var i=1;i<rows.length;i++){var id=(rows[i][0]||'').toUpperCase().trim();if(id.includes(q)||q.includes(id)){f=rows[i];break;}}
-        if(!f){ite_setStatus('err','\u274c '+q+' non trouv\u00e9');return;}
-        var g=function(idx){return(f[idx]||'').trim();};
-        // Fill SHARED PAC fields (nom, prenom, departement)
-        document.getElementById('nom').value=g(2)+' '+g(3);
-        document.getElementById('prenom').value=g(1);
-        // Extract département from CP (2 first digits)
-        var cp=g(16)||g(12);
-        if(cp){
-            var dept=cp.substring(0,2);
-            if(dept==='97') dept=cp.substring(0,3); // DOM-TOM
-            var deptEl=document.getElementById('departement');
-            if(deptEl&&dept){deptEl.value=dept;try{detectDept();}catch(e){}}
+        var matches=[];
+        // 1. Correspondance exacte n° dossier (col 0)
+        for(var i=1;i<rows.length;i++){
+            if((rows[i][0]||'').toUpperCase().trim()===qUp) matches.push(rows[i]);
         }
-        // Fill ITE-specific fields
-        ite_$('iteNumClient').value=g(0);
-        ite_$('iteNumDevis').value=g(0);
-        ite_$('iteAdresse').value=g(14)||g(10);
-        var vi=g(20)||g(17);
-        ite_$('iteVille').value=cp&&vi?cp+' '+vi.toUpperCase():'';
-        var t=g(21);if(t&&!t.startsWith('0')&&t.length<=9)t='0'+t;
-        ite_$('iteTel').value=t;
-        var em=g(23);ite_$('iteEmail').value=em&&em.toLowerCase()!=='n\u00e9ant'?em:'';
-        var pm={'grande':'grande','simple':'modeste','classique':'classique'};
-        var precVal=pm[g(26).toLowerCase()]||'classique';
-        ite_$('itePrecarite').value=precVal;
-        if(g(34).toLowerCase().includes('electr')){var tc=ite_$('iteTypeChauffage');if(tc)tc.value='\u00c9lectrique';}
-        var z=g(42).toUpperCase();
-        if(z){var zs=document.getElementById('zone');if(zs){for(var j=0;j<zs.options.length;j++){if(zs.options[j].value===z){zs.selectedIndex=j;break;}}}}
-        // Recalculate both tabs
-        try{ite_calc();}catch(e){}
-        try{calc();}catch(e){}
-        try{checkExport();}catch(e){}
-        ite_setStatus('ok','\u2705 '+g(0)+' \u2014 '+(g(1)+' '+g(2)+' '+g(3)).trim());
+        // 2. Partielle n° dossier
+        if(matches.length===0){
+            for(var i=1;i<rows.length;i++){
+                var id=(rows[i][0]||'').toUpperCase().trim();
+                if(id&&(id.includes(qUp)||qUp.includes(id))) matches.push(rows[i]);
+            }
+        }
+        // 3. Recherche par téléphone (col 21) — normaliser
+        if(matches.length===0){
+            var qTel=q.replace(/[\s.\-]/g,'');
+            if(qTel.length>=6){
+                for(var i=1;i<rows.length;i++){
+                    var t=(rows[i][21]||'').replace(/[\s.\-]/g,'');
+                    if(t&&t===qTel) matches.push(rows[i]);
+                }
+                // Partielle téléphone
+                if(matches.length===0){
+                    for(var i=1;i<rows.length;i++){
+                        var t=(rows[i][21]||'').replace(/[\s.\-]/g,'');
+                        if(t&&(t.includes(qTel)||qTel.includes(t))) matches.push(rows[i]);
+                    }
+                }
+            }
+        }
+        if(matches.length===0){ite_setStatus('err','\u274c '+q+' non trouv\u00e9');return;}
+        if(matches.length===1){ite_loadDossier(matches[0]);}
+        else{ite_showDossierPicker(matches);}
     }catch(e){ite_setStatus('err','\u274c '+e.message);}finally{ite_$('iteBtnSearch').disabled=false;}
 }
 
