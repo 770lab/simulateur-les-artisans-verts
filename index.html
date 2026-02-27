@@ -2414,18 +2414,6 @@
                     </div>
                 </div>
 
-                <!-- Partenaires -->
-                <div class="ite-card">
-                    <div class="ite-card-head"><div class="ite-card-icon">&#129309;</div><h3>Partenaires</h3></div>
-                    <div style="display: flex; gap: 16px; flex-wrap: wrap; align-items: center;">
-                        <div class="ite-qr-block">
-                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=https%3A%2F%2Fparticulier.edf.fr%2Ffr%2Faccueil%2Faides-financement%2Fprofessionnels%2Fpartenaire.html%3FidPartenaire%3D225117" alt="QR EDF" style="width:70px;height:70px;border-radius:4px;">
-                            <div class="ite-qr-label"><b>EDF Partenaire</b><br>ID : 225117<br>Scanner pour v&eacute;rifier</div>
-                        </div>
-                        <div style="background:#fff;border-radius:8px;padding:10px 16px;border:1px solid #e2e8f0;"><span style="font-size:18px;font-weight:900;color:#00457C;letter-spacing:-0.5px;">DOMOFINANCE</span></div>
-                    </div>
-                </div>
-
                 <!-- Financement -->
                 <div class="ite-card">
                     <div class="ite-card-head"><div class="ite-card-icon">&#128179;</div><h3>Financement</h3></div>
@@ -4967,6 +4955,8 @@ function ite_generateDevis(){
         pg3='<div class="ite-page"><div style="font-size:12pt;font-weight:900;border-bottom:2px solid #000;padding-bottom:2mm;margin-bottom:3mm;display:flex;justify-content:space-between;"><span>DEVIS '+num+'</span><span>'+nom+'</span></div>'+ite_dvTH()+'<div class="dv-finance"><b>Conditions de paiement</b><br><br>Mode : <b>Financement</b><br>Montant : <b>'+ite_fmt(reste)+'</b><br>Organisme : <b>DOMOFINANCE</b><br>TAEG : <b>0%</b> \u00b7 Dur\u00e9e : <b>'+ite_V('iteDureeMois')+' mois</b><br>Mensualit\u00e9 hors ass. : <b>'+ite_fmt(ite_N('iteMensHorsAss'))+'</b><br>Mensualit\u00e9 avec ass. : <b>'+ite_fmt(ite_N('iteMensAvecAss'))+'</b><br>Assurance : <b>'+ite_V('iteTypeAssurance')+'</b><br>Total d\u00fb hors ass. : <b>'+ite_fmt(ite_N('iteTotalDuHA'))+'</b><br>Total d\u00fb avec ass. : <b>'+ite_fmt(ite_N('iteTotalDuAA'))+'</b></div><div style="margin-top:10mm;display:flex;gap:20mm;"><div style="flex:1;font-size:8pt;">Fait \u00e0 : <b>'+(vil.split(' ').slice(1).join(' ')||'_____')+'</b><br>Le :<br><br>Signature :</div><div style="flex:1;font-size:8pt;">Repr\u00e9sentant : <b>'+con+'</b><br>A : COURBEVOIE<br>Le :<br><br>Signature :</div></div>'+ite_dvFT(3,tp)+'</div>';
     }
 
+    document.getElementById('pacDevisArea').style.display='none';
+    document.getElementById('pacDevisArea').innerHTML='';
     ite_$('iteDevisArea').innerHTML=pg1+pg2+pg3;
     ite_$('iteDevisArea').style.display='block';
     window.print();
@@ -5120,6 +5110,8 @@ function pac_generateDevis(){
     pg2+=pac_dvFT(2,tp)+'</div>';
 
     // Inject and print
+    document.getElementById('iteDevisArea').style.display='none';
+    document.getElementById('iteDevisArea').innerHTML='';
     document.getElementById('pacDevisArea').innerHTML=pg1+pg2;
     document.getElementById('pacDevisArea').style.display='block';
     window.print();
