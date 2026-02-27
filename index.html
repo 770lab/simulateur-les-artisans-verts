@@ -1588,8 +1588,8 @@
 
                 <!-- ===== HERO RECHERCHE DOSSIER ===== -->
                 <div class="dossier-hero">
-                    <div class="dossier-hero-label">&#128194; Recherche dossier</div>
-                    <div class="dossier-hero-title">Rechercher un dossier</div>
+                    <div class="dossier-hero-label">&#128194; Informations client</div>
+                    <div class="dossier-hero-title">Informations client</div>
                     <div class="dossier-hero-sub">Saisissez un t&eacute;l ou un n&deg; de dossier</div>
                     <div class="dossier-hero-row">
                         <input
@@ -1677,27 +1677,31 @@
                                 </select>
                             </div>
                         </div>
-                        <!-- Département + RFR + Foyer -->
-                        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+                        <!-- Département + Surface + RFR + Foyer -->
+                        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;">
                             <div class="form-group" style="margin-bottom:0;">
                                 <label for="departement">D&eacute;partement</label>
                                 <input type="text" id="departement" placeholder="Ex: 33, 75&hellip;" maxlength="3" style="text-align:center;font-weight:600;" oninput="detectDept()">
                             </div>
                             <div class="form-group" style="margin-bottom:0;">
-                                <label for="rfr">Revenu fiscal de r&eacute;f. (&euro;)</label>
+                                <label for="surfaceClient">Surface (m&sup2;)</label>
+                                <input type="number" id="surfaceClient" placeholder="Ex: 95" min="1" style="font-weight:600;" oninput="syncSurfaceFromClient()">
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label for="rfr">Revenu fiscal (&euro;)</label>
                                 <input type="number" id="rfr" placeholder="Ex: 35 000" oninput="detectProfil()" style="font-weight:600;">
                             </div>
                             <div class="form-group" style="margin-bottom:0;">
                                 <label for="nbPersonnes">Foyer</label>
                                 <select id="nbPersonnes" onchange="detectProfil()">
-                                    <option value="1">1 personne</option>
-                                    <option value="2">2 personnes</option>
-                                    <option value="3">3 personnes</option>
-                                    <option value="4" selected>4 personnes</option>
-                                    <option value="5">5 personnes</option>
-                                    <option value="6">6 personnes</option>
-                                    <option value="7">7 personnes</option>
-                                    <option value="8">8 personnes</option>
+                                    <option value="1">1 pers.</option>
+                                    <option value="2">2 pers.</option>
+                                    <option value="3">3 pers.</option>
+                                    <option value="4" selected>4 pers.</option>
+                                    <option value="5">5 pers.</option>
+                                    <option value="6">6 pers.</option>
+                                    <option value="7">7 pers.</option>
+                                    <option value="8">8 pers.</option>
                                 </select>
                             </div>
                         </div>
@@ -4521,6 +4525,14 @@ function syncSurfaces(from) {
     calc();
 }
 
+function syncSurfaceFromClient() {
+    var v = parseInt(document.getElementById('surfaceClient').value) || 0;
+    if (v > 0) {
+        document.getElementById('ceeSurface').value = v;
+        syncSurfaces('cee');
+    }
+}
+
 function buildBaremeTable() { /* table removed */ }
 
 function selectG(g) { /* legacy compat */ currentG = g; calcDim(); }
@@ -4747,6 +4759,8 @@ function ite_loadDossier(f){
     // Surface habitable (col 35)
     var surf=parseFloat(g(35))||0;
     if(surf>0){
+        var sc=document.getElementById('surfaceClient');
+        if(sc) sc.value=Math.round(surf);
         var ceeSurf=document.getElementById('ceeSurface');
         if(ceeSurf){ceeSurf.value=Math.round(surf);try{syncSurfaces('cee');}catch(e){}}
         var surfSel=document.getElementById('surface');
