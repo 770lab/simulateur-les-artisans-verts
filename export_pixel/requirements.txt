@@ -3,3 +3,4 @@ schedule>=1.2
 beautifulsoup4>=4.12
 google-api-python-client>=2.90
 google-auth>=2.22
+python-dotenv>=1.0

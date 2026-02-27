@@ -1,0 +1,36 @@
+name: Export quotidien Pixel CRM
+
+on:
+  schedule:
+    # Tous les jours à 6h UTC (7h heure de Paris en hiver, 8h en été)
+    - cron: "0 6 * * *"
+  workflow_dispatch: # Permet de lancer manuellement depuis l'onglet Actions
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Installation de Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Installation des dépendances
+        run: pip install -r export_pixel/requirements.txt
+
+      - name: Création du fichier service account
+        run: echo '${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}' > export_pixel/service_account.json
+
+      - name: Lancement de l'export
+        env:
+          PIXEL_EMAIL: ${{ secrets.PIXEL_EMAIL }}
+          PIXEL_PASSWORD: ${{ secrets.PIXEL_PASSWORD }}
+          GOOGLE_DRIVE_FOLDER_ID: ${{ secrets.GOOGLE_DRIVE_FOLDER_ID }}
+          GOOGLE_SERVICE_ACCOUNT_FILE: export_pixel/service_account.json
+        run: |
+          cd export_pixel
+          python3 -c "from export_pixel_crm import run_export; run_export()"

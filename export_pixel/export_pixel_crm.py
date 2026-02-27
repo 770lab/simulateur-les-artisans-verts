@@ -19,6 +19,12 @@ import os
 import sys
 import time
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass  # python-dotenv is optional
+
 import requests
 import schedule
 from bs4 import BeautifulSoup
