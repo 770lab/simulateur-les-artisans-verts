@@ -1182,6 +1182,114 @@
 .ite-search-status.err { display: block; background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
 .ite-search-status.loading { display: block; background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; }
 
+/* === HERO RECHERCHE DOSSIER === */
+.dossier-hero {
+    background: linear-gradient(135deg, #0f172a 0%, #1a2e4a 50%, #0d3321 100%);
+    border-radius: 14px;
+    padding: 22px 20px 18px;
+    margin-bottom: 18px;
+    position: relative;
+    overflow: hidden;
+}
+.dossier-hero::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 120px; height: 120px;
+    background: radial-gradient(circle, rgba(52,211,153,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+}
+.dossier-hero-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+.dossier-hero-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 2px;
+}
+.dossier-hero-sub {
+    font-size: 11px;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 14px;
+}
+.dossier-hero-row {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+}
+.dossier-hero-input {
+    flex: 1;
+    padding: 13px 16px;
+    border: 1.5px solid rgba(255,255,255,0.12) !important;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.07) !important;
+    background-color: rgba(255,255,255,0.07) !important;
+    color: white !important;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    font-family: ui-monospace, 'SF Mono', monospace;
+    transition: all 0.2s;
+}
+.dossier-hero-input::placeholder { color: rgba(255,255,255,0.2); }
+.dossier-hero-input:focus {
+    outline: none;
+    border-color: #34d399;
+    background: rgba(52,211,153,0.07);
+    box-shadow: 0 0 0 3px rgba(52,211,153,0.12);
+}
+.dossier-hero-btn {
+    padding: 13px 20px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #16a34a, #15803d);
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    box-shadow: 0 2px 10px rgba(22,163,74,0.4);
+}
+.dossier-hero-btn:hover {
+    background: linear-gradient(135deg, #15803d, #14532d);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(22,163,74,0.5);
+}
+.dossier-hero-btn:active { transform: translateY(0); }
+.dossier-hero-status {
+    margin-top: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 8px;
+    display: none;
+}
+.dossier-hero-status.ok {
+    display: block;
+    background: rgba(52,211,153,0.12);
+    color: #34d399;
+    border: 1px solid rgba(52,211,153,0.25);
+}
+.dossier-hero-status.err {
+    display: block;
+    background: rgba(239,68,68,0.1);
+    color: #f87171;
+    border: 1px solid rgba(239,68,68,0.2);
+}
+.dossier-hero-status.loading {
+    display: block;
+    background: rgba(96,165,250,0.1);
+    color: #60a5fa;
+    border: 1px solid rgba(96,165,250,0.2);
+}
+
 /* ITE QR block */
 .ite-qr-block {
     display: flex;
@@ -1346,7 +1454,29 @@
     <div class="main-content" id="mainContent" class="tab-pac-active">
         <div class="parameters-section">
             <div class="card">
-                <h2 class="card-title">Param√®tres</h2>
+                <h2 class="card-title">Param&egrave;tres</h2>
+
+                <!-- ===== HERO RECHERCHE DOSSIER ===== -->
+                <div class="dossier-hero">
+                    <div class="dossier-hero-label">&#128194; Acc&egrave;s rapide</div>
+                    <div class="dossier-hero-title">Rechercher un dossier</div>
+                    <div class="dossier-hero-sub">Saisissez le num&eacute;ro &mdash; toutes les informations s&rsquo;auto-remplissent</div>
+                    <div class="dossier-hero-row">
+                        <input
+                            id="dossierHeroInput"
+                            class="dossier-hero-input"
+                            type="text"
+                            value="AVR-202XX"
+                            placeholder="AVR-202X-XXXX"
+                            autocomplete="off"
+                            spellcheck="false"
+                            onfocus="if(this.value==='AVR-202XX'){this.select();}"
+                            onkeydown="if(event.key==='Enter'){event.preventDefault();searchDossier();}"
+                        >
+                        <button class="dossier-hero-btn" onclick="searchDossier()">&#128269;&nbsp;Chercher</button>
+                    </div>
+                    <div id="dossierHeroStatus" class="dossier-hero-status"></div>
+                </div>
 
                 <!-- Info client -->
                 <div style="font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">&#128100; Informations client</div>
@@ -4166,6 +4296,24 @@ function syncProfilPrecarite(){
     try{ite_calc();}catch(e){}
 }
 
+// ============================================
+// HERO DOSSIER SEARCH
+// ============================================
+function searchDossier(){
+    var heroInput=document.getElementById('dossierHeroInput');
+    if(!heroInput)return;
+    var val=heroInput.value.trim().toUpperCase();
+    if(!val||val==='AVR-202XX'){
+        var h=document.getElementById('dossierHeroStatus');
+        if(h){h.className='dossier-hero-status err';h.innerHTML='&#10060; Veuillez saisir un num&eacute;ro de dossier';h.style.display='block';}
+        return;
+    }
+    // Sync to legacy input and trigger existing search
+    var legacyInput=document.getElementById('iteNumClient');
+    if(legacyInput) legacyInput.value=val;
+    ite_searchClient();
+}
+
 // Google Sheet search for ITE
 var ite_csvCache=null;
 function ite_setStatus(cls,msg){
@@ -4174,6 +4322,9 @@ function ite_setStatus(cls,msg){
     s.className='ite-search-status '+cls;
     s.innerHTML=msg;
     s.style.display='block';
+    // Mirror to hero search status
+    var h=document.getElementById('dossierHeroStatus');
+    if(h){h.className='dossier-hero-status '+cls;h.innerHTML=msg;}
 }
 function ite_fetchCSV(){
     return new Promise(function(resolve){
