@@ -952,22 +952,36 @@
             html, body { overflow-x: hidden; }
             .header { padding: 8px 0; }
             .container { padding: 0 8px; }
-            .header .container > div:first-child { margin-bottom: 4px; }
+            .header .container > div:first-child { margin-bottom: 4px; flex-wrap: wrap !important; gap: 8px !important; }
+            .tab-buttons { order: 3; flex: 0 0 100%; justify-content: center; }
+            .main-content { grid-template-columns: 1fr !important; }
             .user-bar { flex-wrap: wrap; gap: 5px; justify-content: center; }
             .user-bar .user-name { font-size: 11px; }
             .user-bar .user-role { font-size: 9px; padding: 1px 5px; }
             .user-bar .btn-hist, .user-bar .btn-logout { padding: 3px 7px; font-size: 10px; }
-            .view-toggle { padding: 2px; }
-            .view-toggle .toggle-opt { padding: 4px 8px; font-size: 10px; }
+            .view-toggle { padding: 2px; width: 100%; }
+            .view-toggle .toggle-opt { padding: 4px 8px; font-size: 10px; flex: 1; }
             .guest-bar { justify-content: center; }
             .guest-bar .btn-login-small { padding: 5px 10px; font-size: 11px; }
             .card { padding: 10px; margin-bottom: 10px; }
             .card-title { font-size: 13px; margin-bottom: 10px; }
             .parameters-section { padding: 6px; }
-            .results-sidebar { padding: 6px; }
+            .results-sidebar { padding: 6px; position: static; }
             .grid-3col { grid-template-columns: 1fr 1fr 1fr !important; gap: 6px !important; }
             .form-group label { font-size: 11px; }
             .form-group input, .form-group select { padding: 7px 8px; font-size: 12px; }
+            /* Stack inline grids */
+            .dossier-hero [style*="grid-template-columns"],
+            #mprCeeWrapper [style*="grid-template-columns"],
+            .card [style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
+            .dim-row { grid-template-columns: 1fr !important; }
+            .rac-grid { grid-template-columns: 1fr !important; }
+            .cee-kpi-row { grid-template-columns: 1fr !important; }
+            #isoChecklist { grid-template-columns: 1fr !important; }
+            .login-box { width: 90% !important; max-width: 340px; padding: 24px !important; box-sizing: border-box; }
+            .dossier-hero { padding: 14px 12px !important; }
+            .dossier-hero-row { flex-direction: column; }
+            .dossier-hero-input { font-size: 14px !important; padding: 10px 12px !important; }
         }
         @media (max-width: 380px) {
             .grid-3col { grid-template-columns: 1fr 1fr !important; }
@@ -975,8 +989,8 @@
         }
 
         /* LOGIN SCREEN */
-        .login-container { display:flex; align-items:center; justify-content:center; min-height:100vh; background:linear-gradient(135deg, #0f172a 0%, #1e3a5f 40%, #134e4a 100%); }
-        .login-box { background:white; padding:40px; border-radius:16px; width:360px; box-shadow:0 20px 60px rgba(0,0,0,0.3); }
+        .login-container { display:flex; align-items:center; justify-content:center; min-height:100vh; background:linear-gradient(135deg, #0f172a 0%, #1e3a5f 40%, #134e4a 100%); padding: 20px; box-sizing: border-box; }
+        .login-box { background:white; padding:40px; border-radius:16px; width:360px; max-width:100%; box-shadow:0 20px 60px rgba(0,0,0,0.3); box-sizing:border-box; }
         .login-box h2 { text-align:center; margin:0 0 6px; font-size:20px; }
         .login-box h2 span { color:#16a34a; }
         .login-box .login-sub { text-align:center; color:#6b7280; font-size:13px; margin-bottom:24px; }

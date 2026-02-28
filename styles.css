@@ -1576,3 +1576,249 @@
         .hist-clear { margin-top:12px; text-align:center; }
         .hist-clear button { font-size:12px; color:#dc2626; background:none; border:1px solid #fecaca; padding:4px 12px; border-radius:6px; cursor:pointer; }
 
+        /* ============================================================
+           MOBILE RESPONSIVENESS FIXES
+           ============================================================ */
+
+        /* --- TABLET (max 768px) --- */
+        @media (max-width: 768px) {
+            /* All inline multi-column grids inside the main form areas → stack */
+            .dossier-hero [style*="grid-template-columns"],
+            #mprCeeWrapper [style*="grid-template-columns"],
+            .parameters-section .card [style*="grid-template-columns"],
+            #isoChecklist {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* Dim row */
+            .dim-row {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* RAC grid */
+            .rac-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* Login box responsive */
+            .login-box {
+                width: 92% !important;
+                max-width: 360px;
+                padding: 28px !important;
+                box-sizing: border-box;
+            }
+        }
+
+        /* --- MOBILE (max 600px) --- additional overrides --- */
+        @media (max-width: 600px) {
+            /* Force single-column on ALL inline grids inside form areas */
+            .dossier-hero [style*="grid-template-columns"],
+            #mprCeeWrapper [style*="grid-template-columns"],
+            .parameters-section [style*="grid-template-columns"],
+            .results-sidebar [style*="grid-template-columns:"],
+            #isoChecklist {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* Cost detail grids (fournisseur): 4-col → 2-col */
+            .fournisseur-only [style*="120px 1fr 80px 100px"] {
+                grid-template-columns: auto 1fr !important;
+                gap: 6px !important;
+            }
+
+            /* CEE KPI row */
+            .cee-kpi-row {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* Dim row */
+            .dim-row {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* RAC grid */
+            .rac-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* Header inline flex: allow wrapping */
+            .header .container > div:first-child {
+                flex-wrap: wrap !important;
+                gap: 8px !important;
+            }
+            .tab-buttons {
+                order: 3;
+                flex: 0 0 100%;
+                justify-content: center;
+            }
+
+            /* Dossier hero sizing */
+            .dossier-hero {
+                padding: 14px 12px !important;
+                border-radius: 10px;
+                margin-bottom: 12px;
+            }
+            .dossier-hero-title {
+                font-size: 14px;
+            }
+            .dossier-hero-input {
+                font-size: 14px !important;
+                padding: 10px 12px !important;
+                letter-spacing: 1px !important;
+            }
+            .dossier-hero-btn {
+                padding: 10px 14px;
+                font-size: 12px;
+            }
+            .dossier-hero-row {
+                flex-direction: column;
+            }
+
+            /* Large value font sizes */
+            .result-highlight-card .rhc-value {
+                font-size: 18px;
+            }
+            .result-row-card .rrc-value {
+                font-size: 16px;
+            }
+            .result-row-card {
+                padding: 10px 12px;
+            }
+            .amount-value {
+                font-size: 20px;
+            }
+            .final-amount .amount-value {
+                font-size: 26px;
+            }
+            .scenario-label-dark {
+                font-size: 12px;
+                padding: 10px 12px;
+            }
+
+            /* Confort slider */
+            .confort-val {
+                font-size: 18px;
+            }
+
+            /* Summary card tighter */
+            .result-highlight-card {
+                padding: 12px 14px;
+                margin-bottom: 8px;
+            }
+
+            /* Status badge */
+            .status-badge {
+                padding: 14px 16px;
+                font-size: 13px;
+            }
+
+            /* Login box */
+            .login-box {
+                width: 90% !important;
+                max-width: 340px;
+                padding: 24px !important;
+                box-sizing: border-box;
+            }
+            .login-box h2 {
+                font-size: 18px;
+            }
+
+            /* User bar layout */
+            .user-bar {
+                flex-wrap: wrap !important;
+                justify-content: center !important;
+                gap: 4px !important;
+            }
+            .view-toggle {
+                width: 100%;
+                margin-top: 4px;
+            }
+
+            /* Prevent horizontal overflow */
+            .parameters-section,
+            .results-sidebar,
+            .card,
+            .dossier-hero {
+                max-width: 100%;
+                overflow-x: hidden;
+            }
+
+            /* Info banner wrap */
+            .info-banner-2026 {
+                font-size: 11px;
+                padding: 8px 12px;
+            }
+
+            /* Upload zones compact */
+            .upload-zone {
+                padding: 8px 10px;
+            }
+            .upload-label {
+                font-size: 12px;
+                white-space: normal;
+            }
+
+            /* G-radio compact */
+            .g-radio {
+                padding: 10px 12px;
+                font-size: 12px;
+            }
+
+            /* Script panel on mobile */
+            .script-iso-grid {
+                grid-template-columns: 1fr !important;
+            }
+            .script-inputs.grid-2,
+            .script-inputs.grid-3 {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* ITE form grids */
+            .ite-fg,
+            .ite-fg.c3 {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* TTCinput dark */
+            .ttc-input-dark {
+                font-size: 20px;
+                width: 100% !important;
+            }
+
+            /* Barème gauge */
+            #baremeGauge {
+                max-width: 100% !important;
+            }
+        }
+
+        /* --- VERY SMALL SCREENS (max 380px) --- */
+        @media (max-width: 380px) {
+            /* Even smaller fonts/paddings */
+            .dossier-hero {
+                padding: 10px 8px !important;
+            }
+            .dossier-hero-title {
+                font-size: 13px;
+            }
+            .result-highlight-card .rhc-value {
+                font-size: 16px;
+            }
+            .result-row-card .rrc-value {
+                font-size: 14px;
+            }
+            .status-badge {
+                padding: 12px;
+                font-size: 12px;
+            }
+            .confort-val {
+                font-size: 16px;
+            }
+            .login-box {
+                padding: 18px !important;
+            }
+            /* Cost detail fully stacked */
+            .fournisseur-only [style*="120px 1fr 80px 100px"] {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
