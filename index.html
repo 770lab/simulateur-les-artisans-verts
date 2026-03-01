@@ -1484,19 +1484,19 @@
 .ite-page .dv-finance { font-size: 8pt; line-height: 1.6; margin-top: 4mm; }
 
 /* PTZ Document Styles */
-.ite-page .ptz-title { text-align: center; font-size: 14pt; font-weight: 900; color: #1e40af; margin: 4mm 0; padding: 3mm; border: 2px solid #1e40af; border-radius: 4px; background: #eff6ff; }
+.ite-page .ptz-title { text-align: center; font-size: 14pt; font-weight: 900; color: #006B3F; margin: 4mm 0; padding: 3mm; border: 2px solid #006B3F; border-radius: 4px; background: #E8F5E9; }
 .ite-page .ptz-section { margin-bottom: 4mm; }
-.ite-page .ptz-section-title { font-size: 9pt; font-weight: 800; color: #1e40af; border-bottom: 1.5px solid #1e40af; padding-bottom: 1.5mm; margin-bottom: 2mm; }
+.ite-page .ptz-section-title { font-size: 9pt; font-weight: 800; color: #006B3F; border-bottom: 1.5px solid #006B3F; padding-bottom: 1.5mm; margin-bottom: 2mm; }
 .ite-page .ptz-grid { display: grid; grid-template-columns: 140px 1fr; gap: 1mm 3mm; font-size: 8pt; line-height: 1.6; }
 .ite-page .ptz-grid .ptz-label { font-weight: 700; color: #374151; }
 .ite-page .ptz-grid .ptz-val { color: #111; }
 .ite-page .ptz-table { width: 100%; border-collapse: collapse; font-size: 8pt; margin-top: 2mm; }
-.ite-page .ptz-table th { background: #1e40af; color: white; padding: 2mm 3mm; text-align: left; font-weight: 700; font-size: 7.5pt; }
+.ite-page .ptz-table th { background: #006B3F; color: white; padding: 2mm 3mm; text-align: left; font-weight: 700; font-size: 7.5pt; }
 .ite-page .ptz-table td { padding: 1.5mm 3mm; border-bottom: 0.5px solid #e5e7eb; }
-.ite-page .ptz-table tr:nth-child(even) td { background: #f8fafc; }
-.ite-page .ptz-table .ptz-total td { font-weight: 900; font-size: 9pt; border-top: 2px solid #1e40af; background: #eff6ff; }
-.ite-page .ptz-highlight { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 4px; padding: 3mm; margin: 2mm 0; }
-.ite-page .ptz-highlight-val { font-size: 14pt; font-weight: 900; color: #1e40af; }
+.ite-page .ptz-table tr:nth-child(even) td { background: #f1f8f2; }
+.ite-page .ptz-table .ptz-total td { font-weight: 900; font-size: 9pt; border-top: 2px solid #006B3F; background: #E8F5E9; }
+.ite-page .ptz-highlight { background: #E8F5E9; border: 1px solid #A5D6A7; border-radius: 4px; padding: 3mm; margin: 2mm 0; }
+.ite-page .ptz-highlight-val { font-size: 14pt; font-weight: 900; color: #006B3F; }
 .ite-page .ptz-sig-block { border: 1px solid #999; padding: 4mm; min-height: 28mm; font-size: 7.5pt; line-height: 1.5; position: relative; }
 .ite-page .sig-canvas-area { width: 100%; height: 18mm; border: 1px dashed #cbd5e1; border-radius: 4px; margin-top: 2mm; background: #fafafa; }
 
@@ -2585,7 +2585,7 @@
                     </button>
                 </div>
                 <div style="margin-top: 8px;">
-                    <button onclick="ite_generatePTZ()" style="width: 100%; padding: 16px; border-radius: 12px; border: none; background: linear-gradient(135deg, #1e40af, #3b82f6); color: white; font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 20px rgba(30,64,175,0.25); transition: all 0.2s; font-family: inherit;">
+                    <button onclick="ite_generatePTZ()" style="width: 100%; padding: 16px; border-radius: 12px; border: none; background: linear-gradient(135deg, #006B3F, #2E9D5E); color: white; font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 20px rgba(0,107,63,0.25); transition: all 0.2s; font-family: inherit;">
                         &#127963;&#65039; G&eacute;n&eacute;rer le document PTZ
                     </button>
                 </div>
@@ -2764,7 +2764,7 @@
                 <button onclick="ite_generateDevis()" class="btn-dark-export pdf" style="margin-top: 14px;">
                     &#128196; G&eacute;n&eacute;rer le Devis ITE
                 </button>
-                <button onclick="ite_generatePTZ()" class="btn-dark-export pdf" style="margin-top: 8px; background: linear-gradient(135deg, #1e40af, #3b82f6) !important;">
+                <button onclick="ite_generatePTZ()" class="btn-dark-export pdf" style="margin-top: 8px; background: linear-gradient(135deg, #006B3F, #2E9D5E) !important;">
                     &#127963;&#65039; G&eacute;n&eacute;rer PTZ
                 </button>
                 <button onclick="esign_openModal()" class="btn-dark-export" style="margin-top: 8px; background: rgba(255,255,255,0.08) !important; border: 1px solid rgba(255,255,255,0.15) !important;">
@@ -5628,27 +5628,27 @@ function ite_generatePTZ(){
     var hasIsoPlancher=(t2==='103')||(hasLot3&&t3==='103');
     var hasCET=(t2==='148')||(hasLot3&&t3==='148');
 
-    // CSS for CERFA form
+    // CSS for CERFA form - Green theme matching official eco-PTZ
     var css='<style>'
     +'.cerfa{font-family:Arial,Helvetica,sans-serif;font-size:8pt;color:#111;line-height:1.5;}'
-    +'.cerfa-hdr{background:#003399;color:white;padding:3mm 4mm;font-size:9pt;font-weight:700;margin-bottom:3mm;}'
+    +'.cerfa-hdr{background:#006B3F;color:white;padding:3mm 4mm;font-size:9pt;font-weight:700;margin-bottom:3mm;}'
     +'.cerfa-hdr-sub{font-size:7pt;font-weight:400;margin-top:1mm;}'
     +'.cerfa-ref{text-align:right;font-size:6.5pt;color:#666;margin-bottom:2mm;}'
-    +'.cerfa-section{border:1px solid #333;margin-bottom:3mm;}'
-    +'.cerfa-section-hdr{background:#e8e8e8;padding:1.5mm 3mm;font-weight:700;font-size:8.5pt;border-bottom:1px solid #333;}'
+    +'.cerfa-section{border:1px solid #2E7D32;margin-bottom:3mm;}'
+    +'.cerfa-section-hdr{background:#E8F5E9;color:#1B5E20;padding:1.5mm 3mm;font-weight:700;font-size:8.5pt;border-bottom:1px solid #2E7D32;}'
     +'.cerfa-section-body{padding:2.5mm 3mm;}'
     +'.cerfa-row{display:flex;gap:3mm;margin-bottom:2mm;align-items:baseline;flex-wrap:wrap;}'
     +'.cerfa-lbl{font-weight:700;min-width:40mm;}'
     +'.cerfa-val{border-bottom:1px solid #333;flex:1;min-width:30mm;padding:0 1mm;}'
     +'.cerfa-chk{margin-right:1mm;font-size:10pt;}'
     +'.cerfa-tbl{width:100%;border-collapse:collapse;font-size:8pt;}'
-    +'.cerfa-tbl th{background:#e8e8e8;border:1px solid #333;padding:1.5mm 2mm;text-align:left;font-weight:700;font-size:7.5pt;}'
-    +'.cerfa-tbl td{border:1px solid #333;padding:1.5mm 2mm;}'
+    +'.cerfa-tbl th{background:#006B3F;color:white;border:1px solid #2E7D32;padding:1.5mm 2mm;text-align:left;font-weight:700;font-size:7.5pt;}'
+    +'.cerfa-tbl td{border:1px solid #2E7D32;padding:1.5mm 2mm;}'
     +'.cerfa-tbl td.r{text-align:right;}'
     +'.cerfa-tbl td.b{font-weight:700;}'
-    +'.cerfa-tbl tr.total td{background:#e8e8e8;font-weight:900;}'
+    +'.cerfa-tbl tr.total td{background:#E8F5E9;font-weight:900;color:#1B5E20;}'
     +'.cerfa-note{font-size:6.5pt;color:#444;line-height:1.4;margin-top:2mm;}'
-    +'.cerfa-sig{border:1px solid #333;padding:3mm;min-height:28mm;font-size:7.5pt;line-height:1.5;}'
+    +'.cerfa-sig{border:1px solid #2E7D32;padding:3mm;min-height:28mm;font-size:7.5pt;line-height:1.5;}'
     +'.cerfa-legal{font-size:7pt;line-height:1.5;margin-top:3mm;}'
     +'.cerfa-legal p{margin:0 0 1.5mm;}'
     +'</style>';
@@ -5765,8 +5765,8 @@ function ite_generatePTZ(){
     pg2+='</table>';
 
     pg2+='<div style="margin-top:4mm;display:grid;grid-template-columns:1fr 1fr;gap:6mm;">';
-    pg2+='<div style="border:2px solid #003399;padding:3mm;border-radius:2px;"><div style="font-weight:700;font-size:7.5pt;color:#003399;margin-bottom:1mm;">Plafond total de l\'\u00e9co-PTZ (\u20ac)</div><div style="font-size:14pt;font-weight:900;color:#003399;">'+ite_fmtN(plafondPTZ)+' \u20ac</div><div style="font-size:6.5pt;color:#666;margin-top:1mm;">'+nbLots+' actions \u2192 plafond '+ite_fmtN(plafondPTZ)+' \u20ac</div></div>';
-    pg2+='<div style="border:2px solid #003399;padding:3mm;border-radius:2px;background:#f0f4ff;"><div style="font-weight:700;font-size:7.5pt;color:#003399;margin-bottom:1mm;">Montant de l\'\u00e9co-PTZ demand\u00e9 (\u20ac)</div><div style="font-size:14pt;font-weight:900;color:#003399;">'+ite_fmtN(Math.round(montantPTZ))+' \u20ac</div><div style="font-size:6.5pt;color:#666;margin-top:1mm;">Reste \u00e0 financer apr\u00e8s aides CEE</div></div>';
+    pg2+='<div style="border:2px solid #006B3F;padding:3mm;border-radius:2px;"><div style="font-weight:700;font-size:7.5pt;color:#006B3F;margin-bottom:1mm;">Plafond total de l\'\u00e9co-PTZ (\u20ac)</div><div style="font-size:14pt;font-weight:900;color:#006B3F;">'+ite_fmtN(plafondPTZ)+' \u20ac</div><div style="font-size:6.5pt;color:#666;margin-top:1mm;">'+nbLots+' actions \u2192 plafond '+ite_fmtN(plafondPTZ)+' \u20ac</div></div>';
+    pg2+='<div style="border:2px solid #006B3F;padding:3mm;border-radius:2px;background:#E8F5E9;"><div style="font-weight:700;font-size:7.5pt;color:#006B3F;margin-bottom:1mm;">Montant de l\'\u00e9co-PTZ demand\u00e9 (\u20ac)</div><div style="font-size:14pt;font-weight:900;color:#006B3F;">'+ite_fmtN(Math.round(montantPTZ))+' \u20ac</div><div style="font-size:6.5pt;color:#666;margin-top:1mm;">Reste \u00e0 financer apr\u00e8s aides CEE</div></div>';
     pg2+='</div>';
 
     pg2+='<div style="margin-top:4mm;">';
