@@ -1498,7 +1498,7 @@
 .ite-page .ptz-highlight { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 4px; padding: 3mm; margin: 2mm 0; }
 .ite-page .ptz-highlight-val { font-size: 14pt; font-weight: 900; color: #1e40af; }
 .ite-page .ptz-sig-block { border: 1px solid #999; padding: 4mm; min-height: 28mm; font-size: 7.5pt; line-height: 1.5; position: relative; }
-.ite-page .ptz-sig-block .sig-canvas-area { width: 100%; height: 18mm; border: 1px dashed #cbd5e1; border-radius: 4px; margin-top: 2mm; background: #fafafa; }
+.ite-page .sig-canvas-area { width: 100%; height: 18mm; border: 1px dashed #cbd5e1; border-radius: 4px; margin-top: 2mm; background: #fafafa; }
 
 /* E-Signature Modal */
 .esign-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 100000; display: flex; align-items: center; justify-content: center; animation: esignFadeIn 0.3s ease; }
@@ -5532,7 +5532,7 @@ function ite_generateDevis(){
     }
     pg2+='<div class="dv-cond"><b>Gestion des d\u00e9chets</b><br>Gestion, \u00e9vacuation et traitements des d\u00e9chets de chantier comprenant la main d\'\u0153uvre li\u00e9e \u00e0 la d\u00e9pose et au tri, le transport des d\u00e9chets de chantiers vers un ou plusieurs points de collecte et co\u00fbts de traitement.</div>';
     var mprRow=mprCET>0?'<tr><td>Estimation MaPrimeR\u00e9nov\' CET **</td><td style="color:#2563eb;">'+ite_fmt(mprCET)+' *</td></tr>':'';
-    pg2+='<div class="dv-totaux"><div class="dv-sig">Apposer signature pr\u00e9c\u00e9d\u00e9e de la mention "Bon pour accord"<br>Le :</div><div><table class="dv-tt"><tr><td>Total H.T</td><td>'+ite_fmt(ht)+'</td></tr><tr><td>Total TVA '+tva.toFixed(1).replace('.',',')+'%</td><td>'+ite_fmt(tvam)+'</td></tr><tr class="ttc"><td><b>Total TTC</b></td><td><b>'+ite_fmt(ttc)+'</b></td></tr><tr><td>Prime CEE *</td><td>- '+ite_fmt(primeCEE)+'</td></tr>'+mprRow+'<tr class="reste"><td><b>Reste \u00e0 payer</b></td><td><b>'+ite_fmt(reste)+'</b></td></tr></table></div></div>';
+    pg2+='<div class="dv-totaux"><div class="dv-sig" data-sig="client">Apposer signature pr\u00e9c\u00e9d\u00e9e de la mention "Bon pour accord"<br>Le :<br><div class="sig-canvas-area" data-sig="client"></div></div><div><table class="dv-tt"><tr><td>Total H.T</td><td>'+ite_fmt(ht)+'</td></tr><tr><td>Total TVA '+tva.toFixed(1).replace('.',',')+'%</td><td>'+ite_fmt(tvam)+'</td></tr><tr class="ttc"><td><b>Total TTC</b></td><td><b>'+ite_fmt(ttc)+'</b></td></tr><tr><td>Prime CEE *</td><td>- '+ite_fmt(primeCEE)+'</td></tr>'+mprRow+'<tr class="reste"><td><b>Reste \u00e0 payer</b></td><td><b>'+ite_fmt(reste)+'</b></td></tr></table></div></div>';
     pg2+='<div class="dv-legal" style="margin-top:6mm;">Ce devis est gratuit et valable 30 jours.'+(wFin?'<br>Paiement par cr\u00e9dit affect\u00e9 DOMOFINANCE.':'')+'<br>Mode de paiement : Ch\u00e8que, Virement, Financement, Esp\u00e8ce<br>M\u00e9diation : CM2C - 14 rue Saint Jean 75017 Paris \u00b7 0609204886 \u00b7 cm2c.net</div>';
     pg2+=ite_dvFT(2,tp)+'</div>';
 
@@ -5562,8 +5562,8 @@ function ite_generateDevis(){
         +'Montant total d\u00fb avec assurance : '+ite_fmt(fTotalAA)+''
         +'</div>'
         +'<div style="margin-top:12mm;display:flex;gap:20mm;font-size:9pt;line-height:1.8;">'
-        +'<div style="flex:1;">Fait \u00e0 : <b>'+villeClean.toUpperCase()+'</b><br>Le :<br><br>Signature du b\u00e9n\u00e9ficiaire :</div>'
-        +'<div style="flex:1;">Nom du repr\u00e9sentant LES ARTISANS VERTS : <b>'+con+'</b><br>A : COURBEVOIE<br>Le :<br><br>Signature du repr\u00e9sentant</div>'
+        +'<div class="dv-sig" data-sig="client" style="flex:1;border:1px solid #999;padding:4mm;">Fait \u00e0 : <b>'+villeClean.toUpperCase()+'</b><br>Le :<br><br>Signature du b\u00e9n\u00e9ficiaire :<div class="sig-canvas-area" data-sig="client"></div></div>'
+        +'<div class="dv-sig" data-sig="rep" style="flex:1;border:1px solid #999;padding:4mm;">Nom du repr\u00e9sentant LES ARTISANS VERTS : <b>'+con+'</b><br>A : COURBEVOIE<br>Le :<br><br>Signature du repr\u00e9sentant<div class="sig-canvas-area" data-sig="rep"></div></div>'
         +'</div>'
         +ite_dvFT(3,tp)+'</div>';
     }
@@ -5574,8 +5574,11 @@ function ite_generateDevis(){
 }
 
 // ============================================
-// PTZ DOCUMENT GENERATION
+// PTZ DOCUMENT GENERATION - CERFA Annexe 1.1
 // ============================================
+function ptz_chk(checked){ return checked?'\u2611':'\u2610'; }
+function ptz_field(val){ return '<span style="border-bottom:1px solid #333;display:inline-block;min-width:30mm;padding:0 2mm;">'+(val||'')+'</span>'; }
+
 function ite_generatePTZ(){
     // Gather data from calculator
     var totLot2=ite_getLot2Total();
@@ -5586,14 +5589,14 @@ function ite_generatePTZ(){
     var t2=ite_V('iteTypeLot2');
     var t3=hasLot3?ite_V('iteTypeLot3'):'';
     var nbLots=hasLot3?3:2;
-    var plafondPTZ=hasLot3?30000:25000;
+    var plafondPTZ=nbLots>=3?30000:25000;
 
     // Check PTZ eligibility
     var lot2Ok=totLot2>=1500;
     var lot3Ok=!hasLot3||totLot3>=1500;
     var ptzOk=lot2Ok&&lot3Ok&&totITE>0;
     if(!ptzOk){
-        alert('Le projet n\'est pas \u00e9ligible au PTZ. V\u00e9rifiez :\n- LOT 1 (ITE) > 0 \u20ac\n- LOT 2 \u2265 1 500 \u20ac\n'+(hasLot3?'- LOT 3 \u2265 1 500 \u20ac':''));
+        alert('Le projet n\'est pas \u00e9ligible \u00e0 l\'\u00e9co-PTZ. V\u00e9rifiez :\n- LOT 1 (ITE) > 0 \u20ac\n- LOT 2 \u2265 1 500 \u20ac\n'+(hasLot3?'- LOT 3 \u2265 1 500 \u20ac':''));
         return;
     }
 
@@ -5602,181 +5605,259 @@ function ite_generatePTZ(){
     var nomVal=document.getElementById('nom').value.trim();
     var nom=(prenomVal+' '+nomVal).trim()||'CLIENT';
     var nomUpper=nomVal.toUpperCase();
-    var prenomUpper=prenomVal.toUpperCase();
+    var prenomUpper=prenomVal.charAt(0).toUpperCase()+prenomVal.slice(1);
     var num=ite_V('iteNumDevis'),nc=ite_V('iteNumClient')||num;
     var dRaw=ite_V('iteDateDevis').split('-'),df=dRaw[2]+'/'+dRaw[1]+'/'+dRaw[0];
     var adr=ite_V('iteAdresse'),vil=ite_V('iteVille'),tel=ite_V('iteTel'),em=ite_V('iteEmail');
-    var zn=document.getElementById('zone').value;
+    var vilParts=vil.split(' ');
+    var cp=vilParts[0]||'';
+    var villeClean=vilParts.slice(1).join(' ')||'';
     var con=ite_V('iteConseiller');
     var tva=parseFloat(ite_$('iteTva')?.value)||5.5;
-    var tch=ite_V('iteTypeChauffage');
-    var prec=ite_V('itePrecarite');
-    var precL={classique:'Classique',modeste:'Modeste',grande:'Tr\u00e8s modeste'}[prec]||prec;
-    var profil=document.getElementById('categorie').value;
-    var profilLabel={BLEU:'Tr\u00e8s modeste',JAUNE:'Modeste',VIOLET:'Interm\u00e9diaire',ROSE:'Sup\u00e9rieur'}[profil]||profil;
-
-    // DOB
-    var dobRaw=(ite_V('iteDobEmprunteur')||'').replace(/[^0-9]/g,'');
-    var dobDisplay=dobRaw.length===8?(dobRaw.slice(0,2)+'/'+dobRaw.slice(2,4)+'/'+dobRaw.slice(4,8)):'__/__/____';
+    var duree=parseInt(ite_V('iteDureeMois'))||120;
 
     // Totals
     var ttc=ite_N('iteMontantTotalProjet');
     var primeCEE=ite_N('itePrimeCEE');
     var reste=ttc-primeCEE;
-    var ht=ttc/(1+tva/100);
     var montantPTZ=Math.min(reste,plafondPTZ);
 
-    // Financing data
-    var duree=parseInt(ite_V('iteDureeMois'))||120;
-    var mensHA=ite_N('iteMensHorsAss');
-    var mensAA=ite_N('iteMensAvecAss');
-    var totalHA=ite_N('iteTotalDuHA');
-    var totalAA=ite_N('iteTotalDuAA');
-    var typeAss=ite_V('iteTypeAssurance');
-    var taeaText=ite_$('iteFinTAEA')?ite_$('iteFinTAEA').textContent:'-';
+    // Action detection: what kind of works
+    var hasIsoMurs=true; // LOT 1 is always ITE
+    var hasIsoToiture=(t2==='101')||(hasLot3&&t3==='101');
+    var hasIsoPlancher=(t2==='103')||(hasLot3&&t3==='103');
+    var hasCET=(t2==='148')||(hasLot3&&t3==='148');
 
-    // MPR CET
-    var has148=(t2==='148')||(hasLot3&&t3==='148');
-    var cat=document.getElementById('categorie').value;
-    var mprCET=has148?(MPR_CET[cat]||0):0;
+    // CSS for CERFA form
+    var css='<style>'
+    +'.cerfa{font-family:Arial,Helvetica,sans-serif;font-size:8pt;color:#111;line-height:1.5;}'
+    +'.cerfa-hdr{background:#003399;color:white;padding:3mm 4mm;font-size:9pt;font-weight:700;margin-bottom:3mm;}'
+    +'.cerfa-hdr-sub{font-size:7pt;font-weight:400;margin-top:1mm;}'
+    +'.cerfa-ref{text-align:right;font-size:6.5pt;color:#666;margin-bottom:2mm;}'
+    +'.cerfa-section{border:1px solid #333;margin-bottom:3mm;}'
+    +'.cerfa-section-hdr{background:#e8e8e8;padding:1.5mm 3mm;font-weight:700;font-size:8.5pt;border-bottom:1px solid #333;}'
+    +'.cerfa-section-body{padding:2.5mm 3mm;}'
+    +'.cerfa-row{display:flex;gap:3mm;margin-bottom:2mm;align-items:baseline;flex-wrap:wrap;}'
+    +'.cerfa-lbl{font-weight:700;min-width:40mm;}'
+    +'.cerfa-val{border-bottom:1px solid #333;flex:1;min-width:30mm;padding:0 1mm;}'
+    +'.cerfa-chk{margin-right:1mm;font-size:10pt;}'
+    +'.cerfa-tbl{width:100%;border-collapse:collapse;font-size:8pt;}'
+    +'.cerfa-tbl th{background:#e8e8e8;border:1px solid #333;padding:1.5mm 2mm;text-align:left;font-weight:700;font-size:7.5pt;}'
+    +'.cerfa-tbl td{border:1px solid #333;padding:1.5mm 2mm;}'
+    +'.cerfa-tbl td.r{text-align:right;}'
+    +'.cerfa-tbl td.b{font-weight:700;}'
+    +'.cerfa-tbl tr.total td{background:#e8e8e8;font-weight:900;}'
+    +'.cerfa-note{font-size:6.5pt;color:#444;line-height:1.4;margin-top:2mm;}'
+    +'.cerfa-sig{border:1px solid #333;padding:3mm;min-height:28mm;font-size:7.5pt;line-height:1.5;}'
+    +'.cerfa-legal{font-size:7pt;line-height:1.5;margin-top:3mm;}'
+    +'.cerfa-legal p{margin:0 0 1.5mm;}'
+    +'</style>';
 
-    // Lot labels
-    var lot2Label=t2==='101'?'BAR-EN-101 \u2014 Isolation combles perdus':t2==='103'?'BAR-EN-103 \u2014 Isolation plancher bas':'BAR-TH-148 \u2014 Chauffe-eau thermodynamique';
-    var lot3Label='';
-    if(hasLot3) lot3Label=t3==='101'?'BAR-EN-101 \u2014 Isolation combles perdus':t3==='103'?'BAR-EN-103 \u2014 Isolation plancher bas':'BAR-TH-148 \u2014 Chauffe-eau thermodynamique';
+    // ===== PAGE 1 =====
+    var pg1='<div class="ite-page cerfa">'+css;
 
-    var today=new Date();
-    var todayStr=today.toLocaleDateString('fr-FR');
-    var villeClean=vil.split(' ').slice(1).join(' ')||'_____';
-
-    // ===== PAGE 1: Descriptif =====
-    var pg1='<div class="ite-page">'+dv_logoHeader();
-    pg1+='<div class="ptz-title">\ud83c\udfdb\ufe0f \u00c9CO-PR\u00caT \u00c0 TAUX Z\u00c9RO &mdash; DESCRIPTIF DES TRAVAUX</div>';
-
-    // Entreprise info
-    pg1+='<div class="ptz-section"><div class="ptz-section-title">\ud83c\udfe2 Entreprise r\u00e9alisatrice</div>';
-    pg1+='<div class="ptz-grid">';
-    pg1+='<div class="ptz-label">Raison sociale</div><div class="ptz-val"><b>LES ARTISANS VERTS</b></div>';
-    pg1+='<div class="ptz-label">SIRET</div><div class="ptz-val">878 062 793 00038</div>';
-    pg1+='<div class="ptz-label">Qualification RGE</div><div class="ptz-val">QualiPAC N\u00b0 QPAC/69719 \u2014 Valid. 15/02/2027</div>';
-    pg1+='<div class="ptz-label">Adresse</div><div class="ptz-val">32 rue de Lisbonne, 75008 Paris</div>';
-    pg1+='<div class="ptz-label">T\u00e9l\u00e9phone</div><div class="ptz-val">01 86 90 84 36</div>';
-    pg1+='</div></div>';
-
-    // Client info
-    pg1+='<div class="ptz-section"><div class="ptz-section-title">\ud83d\udc64 Emprunteur</div>';
-    pg1+='<div class="ptz-grid">';
-    pg1+='<div class="ptz-label">Nom, Pr\u00e9nom</div><div class="ptz-val"><b>'+nomUpper+' '+prenomUpper+'</b></div>';
-    pg1+='<div class="ptz-label">Adresse travaux</div><div class="ptz-val">'+adr+'</div>';
-    pg1+='<div class="ptz-label">CP / Ville</div><div class="ptz-val">'+vil+'</div>';
-    pg1+='<div class="ptz-label">T\u00e9l\u00e9phone</div><div class="ptz-val">'+tel+'</div>';
-    pg1+='<div class="ptz-label">E-mail</div><div class="ptz-val">'+em+'</div>';
-    pg1+='<div class="ptz-label">Date de naissance</div><div class="ptz-val">'+dobDisplay+'</div>';
-    pg1+='<div class="ptz-label">N\u00b0 Dossier</div><div class="ptz-val">'+nc+'</div>';
-    pg1+='</div></div>';
-
-    // Logement
-    pg1+='<div class="ptz-section"><div class="ptz-section-title">\ud83c\udfe0 Logement</div>';
-    pg1+='<div class="ptz-grid">';
-    pg1+='<div class="ptz-label">Type</div><div class="ptz-val">Maison individuelle</div>';
-    pg1+='<div class="ptz-label">Anciennet\u00e9</div><div class="ptz-val">Plus de 2 ans (r\u00e9sidence principale)</div>';
-    pg1+='<div class="ptz-label">Zone climatique</div><div class="ptz-val">'+zn+'</div>';
-    pg1+='<div class="ptz-label">Chauffage actuel</div><div class="ptz-val">'+tch+'</div>';
-    pg1+='<div class="ptz-label">Profil m\u00e9nage</div><div class="ptz-val">'+profilLabel+' ('+profil+')</div>';
-    pg1+='</div></div>';
-
-    // Travaux
-    pg1+='<div class="ptz-section"><div class="ptz-section-title">\ud83d\udee0\ufe0f Description des travaux \u2014 '+nbLots+' gestes \u00e9nerg\u00e9tiques</div>';
-    pg1+='<table class="ptz-table">';
-    pg1+='<tr><th style="width:60px;">Lot</th><th>Nature des travaux</th><th style="width:80px;text-align:right;">Montant TTC</th></tr>';
-    pg1+='<tr><td><b>LOT 1</b></td><td>BAR-EN-102 \u2014 Isolation thermique des murs par l\'ext\u00e9rieur<br><span style="font-size:7pt;color:#666;">Surface : '+sITE.toFixed(2)+' m\u00b2 \u00b7 Isolant CELLOMUR ULTRA 120mm \u00b7 R=3,85 m\u00b2.K/W</span></td><td style="text-align:right;font-weight:700;">'+ite_fmt(totITE)+'</td></tr>';
-    pg1+='<tr><td><b>LOT 2</b></td><td>'+lot2Label+'</td><td style="text-align:right;font-weight:700;">'+ite_fmt(totLot2)+'</td></tr>';
-    if(hasLot3){
-        pg1+='<tr><td><b>LOT 3</b></td><td>'+lot3Label+'</td><td style="text-align:right;font-weight:700;">'+ite_fmt(totLot3)+'</td></tr>';
-    }
-    pg1+='<tr class="ptz-total"><td colspan="2"><b>TOTAL TTC des travaux</b></td><td style="text-align:right;">'+ite_fmt(ttc)+'</td></tr>';
-    pg1+='</table></div>';
-
-    // Aides
-    pg1+='<div class="ptz-section"><div class="ptz-section-title">\ud83d\udcb0 Aides d\u00e9duites</div>';
-    pg1+='<table class="ptz-table">';
-    pg1+='<tr><th>Aide</th><th style="text-align:right;">Montant</th></tr>';
-    pg1+='<tr><td>Prime CEE EDF (R2M / Valoren)</td><td style="text-align:right;font-weight:700;color:#16a34a;">- '+ite_fmt(primeCEE)+'</td></tr>';
-    if(mprCET>0){
-        pg1+='<tr><td>MaPrimeR\u00e9nov\' CET (indicatif, non d\u00e9duit du devis)</td><td style="text-align:right;color:#2563eb;">'+ite_fmt(mprCET)+' *</td></tr>';
-    }
-    pg1+='<tr class="ptz-total"><td><b>Reste \u00e0 financer</b></td><td style="text-align:right;">'+ite_fmt(reste)+'</td></tr>';
-    pg1+='</table></div>';
-
-    // PTZ Highlight
-    pg1+='<div class="ptz-highlight" style="text-align:center;">';
-    pg1+='<div style="font-size:8pt;font-weight:700;color:#1e40af;margin-bottom:2mm;">\ud83c\udfdb\ufe0f \u00c9CO-PR\u00caT \u00c0 TAUX Z\u00c9RO</div>';
-    pg1+='<div class="ptz-highlight-val">'+ite_fmtN(montantPTZ)+' \u20ac</div>';
-    pg1+='<div style="font-size:7.5pt;color:#64748b;margin-top:1mm;">Plafond PTZ : '+ite_fmtN(plafondPTZ)+' \u20ac \u00b7 '+nbLots+' gestes \u00e9nerg\u00e9tiques \u00b7 Taux : <b>0%</b></div>';
+    // Header band
+    pg1+='<div class="cerfa-hdr">';
+    pg1+='\u00ab FORMULAIRE TYPE EMPRUNTEUR \u00c9CO-PTZ INDIVIDUEL \u00bb';
+    pg1+='<div class="cerfa-hdr-sub">Annexe 1.1 \u2014 M\u00e9tropole / DOM \u2014 Applicable \u00e0 compter du 1er juillet 2025</div>';
     pg1+='</div>';
+    pg1+='<div class="cerfa-ref">R\u00e9f\u00e9rence dossier : '+nc+' \u00b7 Date : '+df+'</div>';
 
-    pg1+=ite_dvFT(1,2)+'</div>';
+    // === SECTION 1 : Identité emprunteur ===
+    pg1+='<div class="cerfa-section">';
+    pg1+='<div class="cerfa-section-hdr">1. IDENTIT\u00c9 DE L\'EMPRUNTEUR</div>';
+    pg1+='<div class="cerfa-section-body">';
+    pg1+='<div class="cerfa-row"><span class="cerfa-lbl">Nom :</span><span class="cerfa-val">'+nomUpper+'</span></div>';
+    pg1+='<div class="cerfa-row"><span class="cerfa-lbl">Pr\u00e9nom :</span><span class="cerfa-val">'+prenomUpper+'</span></div>';
+    pg1+='<div class="cerfa-row">';
+    pg1+='<span class="cerfa-lbl">Cat\u00e9gorie :</span>';
+    pg1+='<span class="cerfa-chk">\u2611</span> Particulier&nbsp;&nbsp;&nbsp;';
+    pg1+='<span class="cerfa-chk">\u2610</span> Soci\u00e9t\u00e9 civile';
+    pg1+='</div>';
+    pg1+='</div></div>';
 
-    // ===== PAGE 2: Conditions de financement =====
-    var pg2='<div class="ite-page">'+dv_logoHeader();
-    pg2+='<div class="ptz-title">\ud83c\udfdb\ufe0f \u00c9CO-PR\u00caT \u00c0 TAUX Z\u00c9RO &mdash; CONDITIONS DE FINANCEMENT</div>';
+    // === SECTION 2 : Adresse du logement ===
+    pg1+='<div class="cerfa-section">';
+    pg1+='<div class="cerfa-section-hdr">2. ADRESSE DU LOGEMENT FAISANT L\'OBJET DES TRAVAUX</div>';
+    pg1+='<div class="cerfa-section-body">';
+    pg1+='<div class="cerfa-row"><span class="cerfa-lbl">N\u00b0, Voie :</span><span class="cerfa-val">'+adr+'</span></div>';
+    pg1+='<div class="cerfa-row"><span class="cerfa-lbl">Code postal :</span><span class="cerfa-val" style="max-width:25mm;">'+cp+'</span>';
+    pg1+='<span class="cerfa-lbl" style="min-width:15mm;">Ville :</span><span class="cerfa-val">'+villeClean.toUpperCase()+'</span></div>';
+    pg1+='</div></div>';
 
-    pg2+='<div style="font-size:8pt;text-align:center;margin-bottom:4mm;color:#64748b;">R\u00e9f\u00e9rence dossier : <b>'+nc+'</b> \u00b7 Date : <b>'+df+'</b> \u00b7 Client : <b>'+nom+'</b></div>';
+    // === SECTION 3 : Nature du logement ===
+    pg1+='<div class="cerfa-section">';
+    pg1+='<div class="cerfa-section-hdr">3. NATURE DU LOGEMENT ET OCCUPATION</div>';
+    pg1+='<div class="cerfa-section-body">';
+    pg1+='<div class="cerfa-row">';
+    pg1+='<span class="cerfa-lbl">Nature du logement :</span>';
+    pg1+='<span class="cerfa-chk">\u2611</span> Maison individuelle&nbsp;&nbsp;&nbsp;';
+    pg1+='<span class="cerfa-chk">\u2610</span> Appartement';
+    pg1+='</div>';
+    pg1+='<div class="cerfa-row">';
+    pg1+='<span class="cerfa-lbl">Occupation :</span>';
+    pg1+='<span class="cerfa-chk">\u2611</span> Par le propri\u00e9taire (r\u00e9sidence principale)&nbsp;&nbsp;&nbsp;';
+    pg1+='<span class="cerfa-chk">\u2610</span> Location \u00e0 titre de r\u00e9sidence principale';
+    pg1+='</div>';
+    pg1+='</div></div>';
 
-    // Financing table
-    pg2+='<div class="ptz-section"><div class="ptz-section-title">\ud83d\udcb3 D\u00e9tail du financement Eco-PTZ</div>';
-    pg2+='<table class="ptz-table">';
-    pg2+='<tr><td style="width:55%;font-weight:700;">Montant emprunt\u00e9</td><td style="text-align:right;font-weight:900;font-size:10pt;color:#1e40af;">'+ite_fmt(montantPTZ)+'</td></tr>';
-    pg2+='<tr><td style="font-weight:700;">Taux d\u00e9biteur fixe</td><td style="text-align:right;font-weight:700;color:#16a34a;">0,00 %</td></tr>';
-    pg2+='<tr><td style="font-weight:700;">TAEG</td><td style="text-align:right;font-weight:700;color:#16a34a;">0,00 %</td></tr>';
-    pg2+='<tr><td style="font-weight:700;">Dur\u00e9e du pr\u00eat</td><td style="text-align:right;"><b>'+duree+' mois</b> ('+Math.round(duree/12*10)/10+' ans)</td></tr>';
-    pg2+='<tr><td style="font-weight:700;">Nombre d\'\u00e9ch\u00e9ances</td><td style="text-align:right;">'+duree+'</td></tr>';
-    pg2+='<tr><td style="font-weight:700;">Report de mensualit\u00e9</td><td style="text-align:right;">0 mois</td></tr>';
-    pg2+='<tr><td style="font-weight:700;">Mensualit\u00e9 hors assurance</td><td style="text-align:right;font-weight:700;">'+ite_fmt(mensHA)+'</td></tr>';
-    pg2+='<tr><td style="font-weight:700;">Co\u00fbt total hors assurance</td><td style="text-align:right;">'+ite_fmt(totalHA)+'</td></tr>';
-    pg2+='</table></div>';
+    // === SECTION 4 : Nature des travaux ===
+    pg1+='<div class="cerfa-section">';
+    pg1+='<div class="cerfa-section-hdr">4. NATURE DES TRAVAUX D\'AM\u00c9LIORATION DE LA PERFORMANCE \u00c9NERG\u00c9TIQUE</div>';
+    pg1+='<div class="cerfa-section-body">';
+    pg1+='<div style="font-weight:700;margin-bottom:2mm;">Type d\'\u00e9co-PTZ demand\u00e9 :</div>';
+    pg1+='<div class="cerfa-row">';
+    pg1+='<span class="cerfa-chk">\u2611</span> R\u00e9alisation d\'un bouquet de travaux ('+nbLots+' actions)&nbsp;&nbsp;&nbsp;';
+    pg1+='<span class="cerfa-chk">\u2610</span> Performance \u00e9nerg\u00e9tique globale&nbsp;&nbsp;&nbsp;';
+    pg1+='<span class="cerfa-chk">\u2610</span> Assainissement non collectif';
+    pg1+='</div>';
+    pg1+='<div style="font-weight:700;margin:3mm 0 2mm;">Actions de r\u00e9novation \u00e9nerg\u00e9tique retenues :</div>';
+    pg1+='<div style="margin-left:2mm;">';
+    pg1+='<div class="cerfa-row"><span class="cerfa-chk">'+ptz_chk(hasIsoToiture)+'</span> a) Isolation thermique performante de la toiture</div>';
+    pg1+='<div class="cerfa-row"><span class="cerfa-chk">'+ptz_chk(hasIsoMurs)+'</span> b) Isolation thermique performante d\'au moins la moiti\u00e9 des murs donnant sur l\'ext\u00e9rieur</div>';
+    pg1+='<div class="cerfa-row"><span class="cerfa-chk">\u2610</span> c) Isolation thermique performante d\'au moins la moiti\u00e9 des parois vitr\u00e9es</div>';
+    pg1+='<div class="cerfa-row"><span class="cerfa-chk">'+ptz_chk(hasIsoPlancher)+'</span> d) Isolation thermique performante des planchers bas</div>';
+    pg1+='<div class="cerfa-row"><span class="cerfa-chk">\u2610</span> e) Installation ou remplacement de syst\u00e8mes de chauffage performants</div>';
+    pg1+='<div class="cerfa-row"><span class="cerfa-chk">'+ptz_chk(hasCET)+'</span> f) Installation d\'\u00e9quipements de production d\'eau chaude sanitaire utilisant une source d\'\u00e9nergie renouvelable</div>';
+    pg1+='<div class="cerfa-row"><span class="cerfa-chk">\u2610</span> g) Installation d\'\u00e9quipements de chauffage utilisant une source d\'\u00e9nergie renouvelable</div>';
+    pg1+='</div>';
+    pg1+='</div></div>';
 
-    // Insurance section
-    pg2+='<div class="ptz-section"><div class="ptz-section-title">\ud83d\udee1\ufe0f Assurance emprunteur</div>';
-    pg2+='<table class="ptz-table">';
-    pg2+='<tr><td style="width:55%;font-weight:700;">Type de couverture</td><td style="text-align:right;">'+typeAss+'</td></tr>';
-    pg2+='<tr><td style="font-weight:700;">Mensualit\u00e9 avec assurance</td><td style="text-align:right;font-weight:700;">'+ite_fmt(mensAA)+'</td></tr>';
-    pg2+='<tr><td style="font-weight:700;">TAEA (Taux Annuel Effectif Assurance)</td><td style="text-align:right;">'+taeaText+'</td></tr>';
-    pg2+='<tr><td style="font-weight:700;">Co\u00fbt total avec assurance</td><td style="text-align:right;font-weight:900;">'+ite_fmt(totalAA)+'</td></tr>';
-    pg2+='</table></div>';
+    // === SECTION 5 : Eco-PTZ complémentaire ===
+    pg1+='<div class="cerfa-section">';
+    pg1+='<div class="cerfa-section-hdr">5. EN CAS D\'\u00c9CO-PTZ COMPL\u00c9MENTAIRE (le cas \u00e9ch\u00e9ant)</div>';
+    pg1+='<div class="cerfa-section-body">';
+    pg1+='<div class="cerfa-row"><span class="cerfa-lbl">Date d\'\u00e9mission de l\'offre initiale :</span><span class="cerfa-val">N/A</span></div>';
+    pg1+='<div class="cerfa-row"><span class="cerfa-lbl">Type de travaux financ\u00e9 par l\'\u00e9co-PTZ initial :</span><span class="cerfa-val">N/A</span></div>';
+    pg1+='</div></div>';
 
-    // Summary box
-    pg2+='<div class="ptz-highlight">';
-    pg2+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:3mm;text-align:center;">';
-    pg2+='<div><div style="font-size:7pt;color:#64748b;margin-bottom:1mm;">Montant emprunt\u00e9</div><div style="font-size:12pt;font-weight:900;color:#1e40af;">'+ite_fmtN(montantPTZ)+' \u20ac</div></div>';
-    pg2+='<div><div style="font-size:7pt;color:#64748b;margin-bottom:1mm;">Mensualit\u00e9</div><div style="font-size:12pt;font-weight:900;color:#1e40af;">'+ite_fmt(mensAA)+'</div></div>';
-    pg2+='<div><div style="font-size:7pt;color:#64748b;margin-bottom:1mm;">Dur\u00e9e</div><div style="font-size:12pt;font-weight:900;color:#1e40af;">'+duree+' mois</div></div>';
-    pg2+='</div></div>';
+    pg1+=ite_dvFT(1,3)+'</div>';
 
-    // Legal
-    pg2+='<div class="ptz-section"><div class="ptz-section-title">\u2696\ufe0f Mentions l\u00e9gales</div>';
-    pg2+='<div style="font-size:7pt;line-height:1.5;color:#374151;">';
-    pg2+='<p>\u2022 L\'\u00e9co-pr\u00eat \u00e0 taux z\u00e9ro (Eco-PTZ) est un pr\u00eat sans int\u00e9r\u00eat, accord\u00e9 sous conditions, pour financer des travaux de r\u00e9novation \u00e9nerg\u00e9tique dans les logements anciens.</p>';
-    pg2+='<p>\u2022 Le logement doit avoir \u00e9t\u00e9 construit depuis plus de 2 ans et constituer la r\u00e9sidence principale de l\'emprunteur.</p>';
-    pg2+='<p>\u2022 L\'obtention de l\'\u00e9co-PTZ est soumise \u00e0 l\'acceptation par l\'\u00e9tablissement bancaire partenaire. Ce document ne constitue pas une offre de pr\u00eat.</p>';
-    pg2+='<p>\u2022 Les travaux doivent \u00eatre r\u00e9alis\u00e9s par un professionnel RGE (Reconnu Garant de l\'Environnement).</p>';
-    pg2+='<p>\u2022 Plafond Eco-PTZ : 25 000 \u20ac pour 2 gestes, 30 000 \u20ac pour 3 gestes ou plus.</p>';
-    pg2+='<p>\u2022 Dur\u00e9e de remboursement maximale : 15 ans (180 mois).</p>';
-    if(mprCET>0){
-        pg2+='<p style="color:#2563eb;">* L\'aide MaPrimeR\u00e9nov\' CET ('+ite_fmt(mprCET)+') est indicative et n\'est pas d\u00e9duite du pr\u00e9sent document. Le client devra en faire la demande aupr\u00e8s de l\'ANAH.</p>';
-    }
-    pg2+='</div></div>';
+    // ===== PAGE 2 =====
+    var pg2='<div class="ite-page cerfa">'+css;
 
-    // Signatures
-    pg2+='<div style="margin-top:6mm;display:grid;grid-template-columns:1fr 1fr;gap:6mm;">';
-    pg2+='<div class="ptz-sig-block"><b>L\'emprunteur</b><br>Nom : '+nomUpper+' '+prenomUpper+'<br>Fait \u00e0 : '+villeClean.toUpperCase()+'<br>Le : ____/____/________<br>Mention \u00ab Lu et approuv\u00e9 \u00bb<br><div class="sig-canvas-area" data-sig="client"></div></div>';
-    pg2+='<div class="ptz-sig-block"><b>LES ARTISANS VERTS</b><br>Repr\u00e9sentant : '+con+'<br>Fait \u00e0 : COURBEVOIE<br>Le : ____/____/________<br><br><div class="sig-canvas-area" data-sig="rep"></div></div>';
+    pg2+='<div class="cerfa-hdr" style="padding:2mm 4mm;font-size:8pt;">';
+    pg2+='\u00ab FORMULAIRE TYPE EMPRUNTEUR \u00c9CO-PTZ INDIVIDUEL \u00bb \u2014 suite';
     pg2+='</div>';
 
-    pg2+=ite_dvFT(2,2)+'</div>';
+    // === SECTION 6 : Tableau récapitulatif ===
+    pg2+='<div class="cerfa-section">';
+    pg2+='<div class="cerfa-section-hdr">6. TABLEAU R\u00c9CAPITULATIF DES CO\u00dbTS ET MONTANT DEMAND\u00c9</div>';
+    pg2+='<div class="cerfa-section-body">';
+    pg2+='<table class="cerfa-tbl">';
+    pg2+='<tr><th style="width:60%;">Description</th><th style="width:40%;text-align:right;">Montant TTC (\u20ac)</th></tr>';
+    pg2+='<tr><td class="b">Action b) \u2014 Isolation thermique des murs ext\u00e9rieurs</td><td class="r b">'+ite_fmtN(Math.round(totITE))+'</td></tr>';
+    if(hasIsoToiture){
+        var montToiture=(t2==='101')?totLot2:totLot3;
+        pg2+='<tr><td class="b">Action a) \u2014 Isolation thermique de la toiture</td><td class="r b">'+ite_fmtN(Math.round(montToiture))+'</td></tr>';
+    }
+    if(hasIsoPlancher){
+        var montPlancher=(t2==='103')?totLot2:totLot3;
+        pg2+='<tr><td class="b">Action d) \u2014 Isolation thermique des planchers bas</td><td class="r b">'+ite_fmtN(Math.round(montPlancher))+'</td></tr>';
+    }
+    if(hasCET){
+        var montCET=(t2==='148')?totLot2:totLot3;
+        pg2+='<tr><td class="b">Action f) \u2014 Production d\'eau chaude sanitaire (CET)</td><td class="r b">'+ite_fmtN(Math.round(montCET))+'</td></tr>';
+    }
+    pg2+='<tr class="total"><td>Total des travaux d\'am\u00e9lioration de la performance \u00e9nerg\u00e9tique</td><td class="r">'+ite_fmtN(Math.round(ttc))+'</td></tr>';
+    pg2+='<tr><td>Total des frais \u00e9ligibles (maîtrise d\'\u0153uvre, \u00e9tudes, etc.)</td><td class="r">0</td></tr>';
+    pg2+='<tr class="total"><td style="font-size:9pt;">TOTAL G\u00c9N\u00c9RAL</td><td class="r" style="font-size:9pt;">'+ite_fmtN(Math.round(ttc))+'</td></tr>';
+    pg2+='</table>';
+
+    pg2+='<div style="margin-top:4mm;display:grid;grid-template-columns:1fr 1fr;gap:6mm;">';
+    pg2+='<div style="border:2px solid #003399;padding:3mm;border-radius:2px;"><div style="font-weight:700;font-size:7.5pt;color:#003399;margin-bottom:1mm;">Plafond total de l\'\u00e9co-PTZ (\u20ac)</div><div style="font-size:14pt;font-weight:900;color:#003399;">'+ite_fmtN(plafondPTZ)+' \u20ac</div><div style="font-size:6.5pt;color:#666;margin-top:1mm;">'+nbLots+' actions \u2192 plafond '+ite_fmtN(plafondPTZ)+' \u20ac</div></div>';
+    pg2+='<div style="border:2px solid #003399;padding:3mm;border-radius:2px;background:#f0f4ff;"><div style="font-weight:700;font-size:7.5pt;color:#003399;margin-bottom:1mm;">Montant de l\'\u00e9co-PTZ demand\u00e9 (\u20ac)</div><div style="font-size:14pt;font-weight:900;color:#003399;">'+ite_fmtN(Math.round(montantPTZ))+' \u20ac</div><div style="font-size:6.5pt;color:#666;margin-top:1mm;">Reste \u00e0 financer apr\u00e8s aides CEE</div></div>';
+    pg2+='</div>';
+
+    pg2+='<div style="margin-top:4mm;">';
+    pg2+='<div class="cerfa-row"><span class="cerfa-lbl">Dur\u00e9e de l\'\u00e9co-PTZ demand\u00e9 :</span><span class="cerfa-val" style="max-width:20mm;text-align:center;font-weight:700;">'+duree+'</span> mois (entre 36 et 240 mois)</div>';
+    pg2+='</div>';
+
+    pg2+='</div></div>';
+
+    // === SECTION 7 : Pièces justificatives ===
+    pg2+='<div class="cerfa-section">';
+    pg2+='<div class="cerfa-section-hdr">7. PI\u00c8CES JUSTIFICATIVES \u00c0 JOINDRE</div>';
+    pg2+='<div class="cerfa-section-body">';
+    pg2+='<div style="font-weight:700;margin-bottom:2mm;">Demande accompagn\u00e9e de :</div>';
+    pg2+='<div class="cerfa-row"><span class="cerfa-chk">\u2611</span> Devis pour les travaux d\'am\u00e9lioration de la performance \u00e9nerg\u00e9tique (incluant travaux induits)</div>';
+    pg2+='<div class="cerfa-row"><span class="cerfa-chk">\u2611</span> Formulaire(s) \u00ab Entreprise \u00bb correspondant(s)</div>';
+    pg2+='<div class="cerfa-row"><span class="cerfa-chk">\u2610</span> Audit \u00e9nerg\u00e9tique (uniquement pour \u00e9co-PTZ Performance \u00e9nerg\u00e9tique globale)</div>';
+    pg2+='<div class="cerfa-row"><span class="cerfa-chk">\u2610</span> Attestation de conformit\u00e9 du SPANC (uniquement pour \u00e9co-PTZ assainissement)</div>';
+    pg2+='</div></div>';
+
+    pg2+=ite_dvFT(2,3)+'</div>';
+
+    // ===== PAGE 3 : Engagements + Signature =====
+    var pg3='<div class="ite-page cerfa">'+css;
+
+    pg3+='<div class="cerfa-hdr" style="padding:2mm 4mm;font-size:8pt;">';
+    pg3+='\u00ab FORMULAIRE TYPE EMPRUNTEUR \u00c9CO-PTZ INDIVIDUEL \u00bb \u2014 engagements et signature';
+    pg3+='</div>';
+
+    // === SECTION 8 : Engagements ===
+    pg3+='<div class="cerfa-section">';
+    pg3+='<div class="cerfa-section-hdr">8. ENGAGEMENTS DE L\'EMPRUNTEUR</div>';
+    pg3+='<div class="cerfa-section-body">';
+    pg3+='<div class="cerfa-legal">';
+    pg3+='<p>En signant ce formulaire, je m\'engage \u00e0 :</p>';
+    pg3+='<p>\u2022 R\u00e9aliser effectivement les travaux d\u00e9crits dans le pr\u00e9sent formulaire et le(s) formulaire(s) \u00ab Entreprise \u00bb associ\u00e9(s).</p>';
+    pg3+='<p>\u2022 Transmettre \u00e0 l\'\u00e9tablissement pr\u00eateur les factures correspondant aux travaux r\u00e9alis\u00e9s, dans un d\u00e9lai de <b>3 ans</b> \u00e0 compter de la date d\'\u00e9mission de l\'offre de pr\u00eat.</p>';
+    pg3+='<p>\u2022 En cas de changement de la nature des travaux, du montant ou de l\'entreprise r\u00e9alisant les travaux, fournir un nouveau formulaire \u00ab Emprunteur \u00bb et les nouveaux formulaires \u00ab Entreprises \u00bb correspondants.</p>';
+    pg3+='<p>\u2022 Occuper le logement \u00e0 titre de r\u00e9sidence principale ou le donner en location \u00e0 titre de r\u00e9sidence principale dans un d\u00e9lai de <b>6 mois</b> suivant la fin des travaux.</p>';
+    pg3+='</div>';
+    pg3+='</div></div>';
+
+    // === SECTION 9 : Attestation sur l'honneur ===
+    pg3+='<div class="cerfa-section">';
+    pg3+='<div class="cerfa-section-hdr">9. ATTESTATION SUR L\'HONNEUR</div>';
+    pg3+='<div class="cerfa-section-body">';
+    pg3+='<div class="cerfa-legal">';
+    pg3+='<p>Je certifie sur l\'honneur que :</p>';
+    pg3+='<p>\u2022 Le logement objet des travaux a \u00e9t\u00e9 achev\u00e9 depuis plus de <b>2 ans</b>, ou sera achev\u00e9 depuis plus de 2 ans \u00e0 la date de d\u00e9but d\'ex\u00e9cution des travaux.</p>';
+    pg3+='<p>\u2022 Le logement est occup\u00e9 (ou sera occup\u00e9) \u00e0 titre de <b>r\u00e9sidence principale</b> par moi-m\u00eame ou par un locataire.</p>';
+    pg3+='<p>\u2022 Le logement n\'a pas d\u00e9j\u00e0 b\u00e9n\u00e9fici\u00e9 d\'un \u00e9co-PTZ (sauf en cas de demande d\'un \u00e9co-PTZ compl\u00e9mentaire).</p>';
+    pg3+='<p>\u2022 L\'ensemble des renseignements port\u00e9s sur le pr\u00e9sent formulaire est <b>exact</b>.</p>';
+    pg3+='</div>';
+    pg3+='</div></div>';
+
+    // === SECTION 10 : Signatures ===
+    pg3+='<div class="cerfa-section">';
+    pg3+='<div class="cerfa-section-hdr">10. DATE ET SIGNATURE</div>';
+    pg3+='<div class="cerfa-section-body">';
+    pg3+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:6mm;">';
+    pg3+='<div class="cerfa-sig" data-sig="client">';
+    pg3+='<b>L\'emprunteur</b><br>';
+    pg3+='Nom : '+nomUpper+' '+prenomUpper+'<br>';
+    pg3+='Fait \u00e0 : '+(villeClean||'_____________').toUpperCase()+'<br>';
+    pg3+='Le : '+df+'<br><br>';
+    pg3+='Mention manuscrite \u00ab Lu et approuv\u00e9 \u00bb<br>';
+    pg3+='<div class="sig-canvas-area" data-sig="client"></div>';
+    pg3+='</div>';
+    pg3+='<div class="cerfa-sig" data-sig="rep">';
+    pg3+='<b>L\'entreprise : LES ARTISANS VERTS</b><br>';
+    pg3+='Repr\u00e9sentant : '+(con||'_____________')+'<br>';
+    pg3+='Fait \u00e0 : COURBEVOIE<br>';
+    pg3+='Le : '+df+'<br><br>';
+    pg3+='Signature et cachet :<br>';
+    pg3+='<div class="sig-canvas-area" data-sig="rep"></div>';
+    pg3+='</div>';
+    pg3+='</div>';
+    pg3+='</div></div>';
+
+    // Note de bas de page
+    pg3+='<div class="cerfa-note" style="margin-top:4mm;">';
+    pg3+='<b>Note :</b> Ce document est une aide au remplissage du formulaire officiel CERFA \u00c9co-PTZ (Annexe 1.1). ';
+    pg3+='Le formulaire officiel est disponible sur <b>ecologie.gouv.fr</b>. ';
+    pg3+='Les informations ont \u00e9t\u00e9 pr\u00e9-remplies automatiquement \u00e0 partir du simulateur LES ARTISANS VERTS.<br>';
+    pg3+='Entreprise RGE : LES ARTISANS VERTS \u2014 SIRET 878 062 793 00038 \u2014 QualiPAC N\u00b0 QPAC/69719<br>';
+    pg3+='Dossier r\u00e9f. : '+nc+' \u2014 G\u00e9n\u00e9r\u00e9 le '+df;
+    pg3+='</div>';
+
+    pg3+=ite_dvFT(3,3)+'</div>';
 
     // Render
-    ite_$('itePtzArea').innerHTML=pg1+pg2;
+    ite_$('itePtzArea').innerHTML=pg1+pg2+pg3;
     ite_$('itePtzArea').style.display='block';
     downloadDevisPDF('itePtzArea','ECO-PTZ-'+num+'-'+nom.replace(/\s+/g,'_')+'.pdf');
 }
@@ -5919,39 +6000,39 @@ async function esign_applySignatures(){
     var now=new Date();
     var dateStr=now.toLocaleDateString('fr-FR');
     var timeStr=now.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+    var stampHtml='<div style="font-size:5.5pt;color:#666;margin-top:1mm;">Sign\u00e9 \u00e9lectroniquement le '+dateStr+' \u00e0 '+timeStr+'</div>';
 
-    // Inject signatures into devis
-    if(signDevis){
-        var devisArea=ite_$('iteDevisArea');
-        if(devisArea){
-            var sigBlocks=devisArea.querySelectorAll('.dv-sig');
-            sigBlocks.forEach(function(block){
-                var sigHtml='<div style="margin-top:3mm;">';
-                if(clientSig) sigHtml+='<img src="'+clientSig+'" style="height:15mm;width:auto;display:block;">';
-                sigHtml+='<div style="font-size:6pt;color:#666;margin-top:1mm;">Sign\u00e9 \u00e9lectroniquement le '+dateStr+' \u00e0 '+timeStr+'</div>';
-                sigHtml+='</div>';
-                block.innerHTML+=sigHtml;
-            });
-        }
+    // Universal function to inject signatures into any document area
+    function injectSignatures(areaId){
+        var area=ite_$(areaId);
+        if(!area)return;
+        // Target all .sig-canvas-area elements with data-sig attribute
+        var sigAreas=area.querySelectorAll('.sig-canvas-area[data-sig]');
+        sigAreas.forEach(function(el){
+            var sigType=el.getAttribute('data-sig');
+            var sigData=sigType==='client'?clientSig:repSig;
+            if(sigData){
+                el.style.border='none';
+                el.style.background='transparent';
+                el.innerHTML='<img src="'+sigData+'" style="height:14mm;width:auto;">'+stampHtml;
+            }
+        });
+        // Also handle .dv-sig blocks that DON'T have a nested .sig-canvas-area (legacy)
+        var dvSigs=area.querySelectorAll('.dv-sig');
+        dvSigs.forEach(function(block){
+            // Skip if already has a sig-canvas-area (handled above)
+            if(block.querySelector('.sig-canvas-area'))return;
+            var sigType=block.getAttribute('data-sig')||'client';
+            var sigData=sigType==='client'?clientSig:repSig;
+            if(sigData){
+                block.innerHTML+='<div style="margin-top:3mm;"><img src="'+sigData+'" style="height:14mm;width:auto;display:block;">'+stampHtml+'</div>';
+            }
+        });
     }
 
-    // Inject signatures into PTZ
-    if(signPTZ){
-        var ptzArea=ite_$('itePtzArea');
-        if(ptzArea){
-            var sigAreas=ptzArea.querySelectorAll('.sig-canvas-area');
-            sigAreas.forEach(function(area){
-                var sigType=area.getAttribute('data-sig');
-                var sigData=sigType==='client'?clientSig:repSig;
-                if(sigData){
-                    area.style.border='none';
-                    area.style.background='transparent';
-                    area.innerHTML='<img src="'+sigData+'" style="height:14mm;width:auto;">'
-                        +'<div style="font-size:5.5pt;color:#666;">Sign\u00e9 \u00e9lectroniquement le '+dateStr+' \u00e0 '+timeStr+'</div>';
-                }
-            });
-        }
-    }
+    // Apply signatures to selected documents
+    if(signDevis) injectSignatures('iteDevisArea');
+    if(signPTZ) injectSignatures('itePtzArea');
 
     // Generate signed PDFs
     try{
@@ -6235,7 +6316,7 @@ function pac_generateDevis(){
 
     // Signature + Totaux
     pg3+='<div class="dv-totaux">';
-    pg3+='<div class="dv-sig">Apposer signature précédée de la mention "Bon pour accord"<br>Le :<br><br>Ce devis est gratuit et valable 30 jours.<br>Mode de paiement : Chèque, Virement, Financement, Espèce</div>';
+    pg3+='<div class="dv-sig" data-sig="client">Apposer signature précédée de la mention "Bon pour accord"<br>Le :<br><div class="sig-canvas-area" data-sig="client"></div>Ce devis est gratuit et valable 30 jours.<br>Mode de paiement : Chèque, Virement, Financement, Espèce</div>';
     pg3+='<div><table class="dv-tt">';
     pg3+='<tr><td>Total H.T</td><td>'+ite_fmt(ht)+'</td></tr>';
     pg3+='<tr><td>Total TVA  '+tva.toFixed(1).replace('.',',')+'%</td><td>'+ite_fmt(tvam)+'</td></tr>';
