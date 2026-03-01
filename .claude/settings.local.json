@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git init)",
+      "Bash(git remote add origin https://github.com/770lab/simulateur-les-artisans-verts.git)",
+      "Bash(git branch -M main)",
+      "Bash(git add -A)",
+      "Bash(git commit:*)",
+      "Bash(git push -u origin main)",
+      "Bash(gh auth status)",
+      "Bash(git pull origin main --rebase)",
+      "Bash(git stash)"
+    ]
+  }
+}
