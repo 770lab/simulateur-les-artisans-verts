@@ -915,13 +915,12 @@
         @media (max-width: 1024px) {
             .main-content {
                 grid-template-columns: 1fr;
+                padding: 16px 10px;
             }
 
             .results-sidebar {
                 position: static;
             }
-
-
         }
 
         .note-small {
@@ -954,7 +953,7 @@
             .container { padding: 0 8px; }
             .header .container > div:first-child { margin-bottom: 4px; flex-wrap: wrap !important; gap: 8px !important; }
             .tab-buttons { order: 3; flex: 0 0 100%; justify-content: center; }
-            .main-content { grid-template-columns: 1fr !important; }
+            .main-content { grid-template-columns: 1fr !important; padding: 8px 4px !important; gap: 10px !important; }
             .user-bar { flex-wrap: wrap; gap: 5px; justify-content: center; }
             .user-bar .user-name { font-size: 11px; }
             .user-bar .user-role { font-size: 9px; padding: 1px 5px; }
@@ -965,8 +964,8 @@
             .guest-bar .btn-login-small { padding: 5px 10px; font-size: 11px; }
             .card { padding: 10px; margin-bottom: 10px; }
             .card-title { font-size: 13px; margin-bottom: 10px; }
-            .parameters-section { padding: 6px; }
-            .results-sidebar { padding: 6px; position: static; }
+            .parameters-section { padding: 4px; border-radius: 8px; min-width: 0; overflow-x: hidden; }
+            .results-sidebar { padding: 6px; position: static; border-radius: 8px; min-width: 0; }
             .grid-3col { grid-template-columns: 1fr 1fr 1fr !important; gap: 6px !important; }
             .form-group label { font-size: 11px; }
             .form-group input, .form-group select { padding: 7px 8px; font-size: 12px; }
@@ -1511,10 +1510,16 @@
     .ite-search-row { flex-direction: column; }
     .ite-btn-search { width: 100%; }
     .ite-qr-block { flex-direction: column; text-align: center; }
-    .ite-card { padding: 14px; margin-bottom: 12px; }
+    .ite-card { padding: 10px; margin-bottom: 10px; overflow: hidden; }
+    .ite-card-head { gap: 8px; margin-bottom: 10px; }
     .ite-card-head h3 { font-size: 13px; }
-    .ite-card-head .ite-tag { margin-left: 0; }
+    .ite-card-head .ite-tag { margin-left: 0; font-size: 8px; }
     .ite-cee-table { font-size: 11px; display: block; overflow-x: auto; }
+    .ite-fi input, .ite-fi select { font-size: 13px; padding: 8px 10px; }
+    .ite-fi label { font-size: 10px; }
+    .ite-alert { font-size: 11px; padding: 8px 10px; }
+    .shared-client-card { padding: 10px; }
+    .ttc-input-dark { width: 100% !important; font-size: 20px; }
 }
 
     </style>
