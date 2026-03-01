@@ -4193,6 +4193,7 @@ function doLogin(){
                 };
                 try{ localStorage.setItem('pac_user', JSON.stringify(currentUser)); localStorage.setItem('pac_api','1'); }catch(e){}
                 showApp();
+                logAction('Connexion', currentUser.name);
             } else {
                 errEl.textContent = d.error || 'Identifiants incorrects';
                 errEl.style.display = 'block';
@@ -4434,6 +4435,7 @@ function saveJournal(j){
         localStorage.setItem('pac_journal', JSON.stringify(j));
     }catch(e){}
 }
+var LOG_KEY_ACTIONS=['Connexion','Connexion (local)','Déconnexion','Devis ITE généré','Devis PAC généré','PTZ généré','Signature électronique','Dossier chargé','Dossier supprimé','Changement mot de passe','Export PDF','Export WhatsApp'];
 function logAction(action, detail){
     const entry = {
         date: new Date().toISOString(),
@@ -4442,13 +4444,13 @@ function logAction(action, detail){
         action: action,
         detail: detail || ''
     };
-    // Local journal
+    // Local journal (all actions)
     const j = getJournal();
     j.push(entry);
     saveJournal(j);
-    // API journal (fire and forget)
-    if(useAPI && API_URL){
-        apiCall({action:'log', user:entry.user, logAction:action, detail:detail||''}, function(){}, function(){});
+    // API journal: only key business actions
+    if(useAPI && API_URL && LOG_KEY_ACTIONS.indexOf(action)>=0){
+        apiCall({action:'log', user:entry.user, role:entry.role, logAction:action, detail:detail||''}, function(){}, function(){});
     }
 }
 function openHistory(){
@@ -5925,6 +5927,7 @@ function ite_generateDevis(){
     ite_$('iteDevisArea').style.display='block';
     downloadDevisPDF('iteDevisArea','DEVIS-ITE-'+num+'-'+nom.replace(/\s+/g,'_')+'.pdf');
     saveDossier('ITE', num, nom);
+    logAction('Devis ITE généré', num+' - '+nom);
 }
 
 // ============================================
@@ -6115,6 +6118,7 @@ async function ite_generatePTZ(){
         setTimeout(function(){URL.revokeObjectURL(url);},5000);
 
         if(btnEl){btnEl.disabled=false;btnEl.innerHTML='\ud83c\udfdb\ufe0f G\u00e9n\u00e9rer le document PTZ';}
+        logAction('PTZ généré', num+' - '+nom);
 
     }catch(err){
         console.error('Erreur g\u00e9n\u00e9ration PTZ:',err);
@@ -6309,6 +6313,10 @@ async function esign_applySignatures(){
         }
 
         statusEl.innerHTML='<div class="esign-status signed">\u2705 Documents sign\u00e9s et t\u00e9l\u00e9charg\u00e9s avec succ\u00e8s !</div>';
+        var signedDocs=[];
+        if(signPAC) signedDocs.push('PAC');
+        if(signDevis) signedDocs.push('ITE');
+        logAction('Signature électronique', signedDocs.join('+')+' - '+num+' - '+nom);
 
         setTimeout(function(){esign_close();},2000);
     }catch(e){
@@ -6625,6 +6633,7 @@ function pac_generateDevis(){
     document.getElementById('printArea').style.display='none';
     downloadDevisPDF('pacDevisArea','DEVIS-'+numDevis+'-'+nom.replace(/\s+/g,'_')+'.pdf');
     saveDossier('PAC', numDevis, nom);
+    logAction('Devis PAC généré', numDevis+' - '+nom);
     }catch(e){console.error('pac_generateDevis error:',e);alert('Erreur génération devis: '+e.message);}
 }
 
@@ -6791,17 +6800,22 @@ function loadDossier(id){
     try{ite_calc();}catch(e){}
     try{calc();}catch(e){}
     try{syncProfilPrecarite();}catch(e){}
+    logAction('Dossier chargé', d.numDevis+' - '+d.nomClient);
     document.getElementById('dossiersModal').classList.remove('active');
 }
 function deleteDossier(id){
     if(!confirm('Supprimer ce dossier ?'))return;
+    var dossiers=getLocalDossiers();
+    var del=null;
+    for(var i=0;i<dossiers.length;i++){if(dossiers[i].id===id){del=dossiers[i];break;}}
     // Remove locally
-    var dossiers=getLocalDossiers().filter(function(d){return d.id!==id;});
+    dossiers=dossiers.filter(function(d){return d.id!==id;});
     setLocalDossiers(dossiers);
     // Remove from API
     if(useAPI && API_URL){
         apiCall({action:'deleteDossier', id:id}, function(){}, function(){});
     }
+    if(del) logAction('Dossier supprimé', del.numDevis+' - '+del.nomClient);
     renderDossiers();
 }
 </script>
