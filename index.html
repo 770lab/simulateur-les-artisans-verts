@@ -1625,6 +1625,41 @@
     </div>
 </div>
 
+<!-- ADD USER MODAL (Admin) -->
+<div id="addUserModal" class="hist-overlay" onclick="if(event.target===this)this.classList.remove('active')">
+    <div class="hist-modal" style="max-width:400px;">
+        <div class="hist-modal-header">
+            <h3>&#128100; Cr&eacute;er un utilisateur</h3>
+            <button class="hist-modal-close" onclick="document.getElementById('addUserModal').classList.remove('active')">&times;</button>
+        </div>
+        <div class="hist-modal-body">
+            <div style="margin-bottom:14px;">
+                <label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:4px;">Identifiant (login)</label>
+                <input type="text" id="newUserLogin" placeholder="ex: julien" style="width:100%;padding:10px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box;" autocomplete="off">
+            </div>
+            <div style="margin-bottom:14px;">
+                <label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:4px;">Nom complet</label>
+                <input type="text" id="newUserName" placeholder="ex: DUPRES JULIEN" style="width:100%;padding:10px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box;" autocomplete="off">
+            </div>
+            <div style="margin-bottom:14px;">
+                <label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:4px;">Mot de passe</label>
+                <input type="text" id="newUserPass" placeholder="mot de passe" style="width:100%;padding:10px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box;" autocomplete="off">
+            </div>
+            <div style="margin-bottom:14px;">
+                <label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:4px;">R&ocirc;le</label>
+                <select id="newUserRole" style="width:100%;padding:10px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box;background:white;">
+                    <option value="commercial">Commercial</option>
+                    <option value="telepro">T&eacute;l&eacute;prospecteur</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
+            <button onclick="doCreateUser()" style="width:100%;padding:12px;background:linear-gradient(135deg,#1e40af,#3b82f6);color:white;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;">Cr&eacute;er l'utilisateur</button>
+            <p id="addUserError" style="color:#dc2626;text-align:center;margin-top:10px;font-size:13px;display:none;"></p>
+            <p id="addUserSuccess" style="color:#16a34a;text-align:center;margin-top:10px;font-size:13px;display:none;"></p>
+        </div>
+    </div>
+</div>
+
 <!-- DOSSIERS MODAL -->
 <div id="dossiersModal" class="hist-overlay" onclick="if(event.target===this)this.classList.remove('active')">
     <div class="hist-modal" style="max-width:600px;max-height:85vh;">
@@ -1672,6 +1707,7 @@
                 <button class="btn-hist" id="btnDossiers" onclick="openDossiers()" style="display:none;">&#128194;</button>
                 <button class="btn-hist" id="btnHistory" onclick="openHistory()" style="display:none;">&#128203;</button>
                 <button class="btn-hist" id="btnPwd" onclick="openPwdModal()" style="display:none;">&#128273;</button>
+                <button class="btn-hist" id="btnAddUser" onclick="openAddUserModal()" style="display:none;">&#128100;+</button>
                 <button class="btn-logout" onclick="doLogout()">&#8618;</button>
             </div>
         </div>
@@ -4332,6 +4368,7 @@ function showApp(){
         // Admin-only buttons
         document.getElementById('btnHistory').style.display = isAdmin ? '' : 'none';
         document.getElementById('btnPwd').style.display = isAdmin ? '' : 'none';
+        document.getElementById('btnAddUser').style.display = isAdmin ? '' : 'none';
         // Dossier button for all logged-in users
         document.getElementById('btnDossiers').style.display = '';
         
@@ -4424,6 +4461,66 @@ function doChangePassword(){
 }
 
 // ============================================
+// CREATE USER (Admin only)
+// ============================================
+function openAddUserModal(){
+    document.getElementById('newUserLogin').value='';
+    document.getElementById('newUserName').value='';
+    document.getElementById('newUserPass').value='';
+    document.getElementById('newUserRole').value='commercial';
+    document.getElementById('addUserError').style.display='none';
+    document.getElementById('addUserSuccess').style.display='none';
+    document.getElementById('addUserModal').classList.add('active');
+}
+function doCreateUser(){
+    var login=document.getElementById('newUserLogin').value.trim().toLowerCase();
+    var name=document.getElementById('newUserName').value.trim();
+    var pass=document.getElementById('newUserPass').value;
+    var role=document.getElementById('newUserRole').value;
+    var errEl=document.getElementById('addUserError');
+    var okEl=document.getElementById('addUserSuccess');
+    errEl.style.display='none'; okEl.style.display='none';
+
+    if(!login||!name||!pass){errEl.textContent='Tous les champs sont obligatoires';errEl.style.display='block';return;}
+    if(login.length<3){errEl.textContent='Identifiant trop court (min 3 caractères)';errEl.style.display='block';return;}
+    if(pass.length<4){errEl.textContent='Mot de passe trop court (min 4 caractères)';errEl.style.display='block';return;}
+
+    // Check if login already exists locally
+    if(FALLBACK_USERS[login]){errEl.textContent='Cet identifiant existe déjà';errEl.style.display='block';return;}
+
+    // Save locally
+    FALLBACK_USERS[login]={pass:pass, name:name, role:role};
+
+    // Sync to API (Sheet)
+    if(useAPI && API_URL){
+        errEl.textContent='Enregistrement...';errEl.style.color='#000';errEl.style.fontWeight='700';errEl.style.display='block';
+        apiPost({action:'createUser', login:login, name:name, pass:pass, role:role}, function(d){
+            errEl.style.display='none';errEl.style.color='#dc2626';errEl.style.fontWeight='400';
+            if(d.success){
+                okEl.textContent='\u2705 Utilisateur '+name+' créé avec succès';
+                okEl.style.display='block';
+                logAction('Utilisateur créé', login+' ('+role+') - '+name);
+                setTimeout(function(){document.getElementById('addUserModal').classList.remove('active');},2000);
+            } else {
+                errEl.textContent=d.error||'Erreur lors de la création';errEl.style.display='block';
+            }
+        }, function(err){
+            errEl.style.color='#dc2626';errEl.style.fontWeight='400';
+            // API failed but local is saved
+            okEl.textContent='\u2705 '+name+' ajouté localement (sync Sheet échouée)';
+            okEl.style.display='block';errEl.style.display='none';
+            logAction('Utilisateur créé (local)', login+' ('+role+') - '+name);
+            setTimeout(function(){document.getElementById('addUserModal').classList.remove('active');},2000);
+        });
+    } else {
+        okEl.textContent='\u2705 '+name+' ajouté (session locale uniquement)';
+        okEl.style.display='block';
+        logAction('Utilisateur créé (local)', login+' ('+role+') - '+name);
+        setTimeout(function(){document.getElementById('addUserModal').classList.remove('active');},2000);
+    }
+}
+
+// ============================================
 // JOURNAL DES MODIFICATIONS
 // ============================================
 function getJournal(){
@@ -4435,7 +4532,7 @@ function saveJournal(j){
         localStorage.setItem('pac_journal', JSON.stringify(j));
     }catch(e){}
 }
-var LOG_KEY_ACTIONS=['Connexion','Connexion (local)','Déconnexion','Devis ITE généré','Devis PAC généré','PTZ généré','Signature électronique','Dossier chargé','Dossier supprimé','Changement mot de passe','Export PDF','Export WhatsApp'];
+var LOG_KEY_ACTIONS=['Connexion','Connexion (local)','Déconnexion','Devis ITE généré','Devis PAC généré','PTZ généré','Signature électronique','Dossier chargé','Dossier supprimé','Changement mot de passe','Export PDF','Export WhatsApp','Utilisateur créé','Utilisateur créé (local)'];
 function logAction(action, detail){
     const entry = {
         date: new Date().toISOString(),
