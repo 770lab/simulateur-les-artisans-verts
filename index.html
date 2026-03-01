@@ -2698,7 +2698,10 @@
                 <button id="whatsappBtn" class="btn-dark-export whatsapp" onclick="sendWhatsApp()">
                     &#128172; Envoyer par WhatsApp
                 </button>
-            
+                <button onclick="esign_openModal('pac')" class="btn-dark-export" style="margin-top: 8px; background: rgba(255,255,255,0.08) !important; border: 1px solid rgba(255,255,255,0.15) !important;">
+                    &#9998; Signature &eacute;lectronique
+                </button>
+
             </div><!-- end tab-pac-content sidebar -->
 
             <!-- ITE SIDEBAR -->
@@ -5912,11 +5915,16 @@ function esign_openModal(docType){
 
     // Build doc list
     var docListEl=document.getElementById('esignDocList');
-    var hasDevis=ite_$('iteDevisArea')&&ite_$('iteDevisArea').innerHTML.trim().length>0;
+    var hasDevisITE=ite_$('iteDevisArea')&&ite_$('iteDevisArea').innerHTML.trim().length>0;
     var hasPtz=ite_$('itePtzArea')&&ite_$('itePtzArea').innerHTML.trim().length>0;
+    var hasDevisPAC=ite_$('pacDevisArea')&&ite_$('pacDevisArea').innerHTML.trim().length>0;
     var docHtml='<div style="margin-bottom:12px;">';
     docHtml+='<div style="font-size:12px;font-weight:700;color:#6b7280;margin-bottom:8px;">DOCUMENTS DISPONIBLES</div>';
-    if(hasDevis){
+    if(hasDevisPAC){
+        docHtml+='<label style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;cursor:pointer;margin-bottom:6px;">';
+        docHtml+='<input type="checkbox" id="esignDocPAC" checked> <span style="font-size:13px;font-weight:600;">Devis PAC</span></label>';
+    }
+    if(hasDevisITE){
         docHtml+='<label style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;margin-bottom:6px;">';
         docHtml+='<input type="checkbox" id="esignDocDevis" checked> <span style="font-size:13px;font-weight:600;">Devis ITE</span></label>';
     }
@@ -5924,9 +5932,9 @@ function esign_openModal(docType){
         docHtml+='<label style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;cursor:pointer;margin-bottom:6px;">';
         docHtml+='<input type="checkbox" id="esignDocPTZ" checked> <span style="font-size:13px;font-weight:600;">Document Eco-PTZ</span></label>';
     }
-    if(!hasDevis&&!hasPtz){
+    if(!hasDevisITE&&!hasPtz&&!hasDevisPAC){
         docHtml+='<div style="padding:14px;background:#fef3c7;border:1px solid #fcd34d;border-radius:8px;color:#92400e;font-size:13px;">';
-        docHtml+='\u26a0\ufe0f Aucun document g\u00e9n\u00e9r\u00e9. Veuillez d\'abord g\u00e9n\u00e9rer un Devis ITE ou un document PTZ.</div>';
+        docHtml+='\u26a0\ufe0f Aucun document g\u00e9n\u00e9r\u00e9. Veuillez d\'abord g\u00e9n\u00e9rer un Devis PAC, un Devis ITE ou un document PTZ.</div>';
     }
     docHtml+='</div>';
     docListEl.innerHTML=docHtml;
@@ -6031,6 +6039,7 @@ async function esign_applySignatures(){
 
     var signDevis=document.getElementById('esignDocDevis')&&document.getElementById('esignDocDevis').checked;
     var signPTZ=document.getElementById('esignDocPTZ')&&document.getElementById('esignDocPTZ').checked;
+    var signPAC=document.getElementById('esignDocPAC')&&document.getElementById('esignDocPAC').checked;
 
     var now=new Date();
     var dateStr=now.toLocaleDateString('fr-FR');
@@ -6066,6 +6075,7 @@ async function esign_applySignatures(){
     }
 
     // Apply signatures to selected documents
+    if(signPAC) injectSignatures('pacDevisArea');
     if(signDevis) injectSignatures('iteDevisArea');
     if(signPTZ) injectSignatures('itePtzArea');
 
@@ -6073,7 +6083,11 @@ async function esign_applySignatures(){
     try{
         var nom=(document.getElementById('prenom').value.trim()+' '+document.getElementById('nom').value.trim()).trim()||'CLIENT';
         var num=ite_V('iteNumDevis');
+        var numDevis=num.replace('AVR-','');
 
+        if(signPAC&&ite_$('pacDevisArea')&&ite_$('pacDevisArea').innerHTML.trim().length>0){
+            await downloadDevisPDF('pacDevisArea','DEVIS-PAC-SIGNE-'+numDevis+'-'+nom.replace(/\s+/g,'_')+'.pdf');
+        }
         if(signDevis&&ite_$('iteDevisArea')&&ite_$('iteDevisArea').innerHTML.trim().length>0){
             await downloadDevisPDF('iteDevisArea','DEVIS-ITE-SIGNE-'+num+'-'+nom.replace(/\s+/g,'_')+'.pdf');
         }
@@ -6352,6 +6366,7 @@ function pac_generateDevis(){
     // Signature + Totaux
     pg3+='<div class="dv-totaux">';
     pg3+='<div class="dv-sig" data-sig="client">Apposer signature précédée de la mention "Bon pour accord"<br>Le :<br><div class="sig-canvas-area" data-sig="client"></div>Ce devis est gratuit et valable 30 jours.<br>Mode de paiement : Chèque, Virement, Financement, Espèce</div>';
+    pg3+='<div class="dv-sig" data-sig="rep" style="margin-top:4mm;border:1px solid #999;padding:4mm;font-size:8pt;">Nom du représentant LES ARTISANS VERTS : <b>'+con+'</b><br>A : COURBEVOIE<br>Le :<br><br>Signature du représentant<div class="sig-canvas-area" data-sig="rep"></div></div>';
     pg3+='<div><table class="dv-tt">';
     pg3+='<tr><td>Total H.T</td><td>'+ite_fmt(ht)+'</td></tr>';
     pg3+='<tr><td>Total TVA  '+tva.toFixed(1).replace('.',',')+'%</td><td>'+ite_fmt(tvam)+'</td></tr>';
