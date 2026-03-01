@@ -4304,18 +4304,17 @@ function showApp(){
         else if(isTelepro) document.getElementById('userRoleDisplay').textContent = '\uD83D\uDCDE Téléprospecteur';
         else document.getElementById('userRoleDisplay').textContent = '\uD83D\uDCCA Commercial';
         
-        // Tab visibility: admin sees all 3, telepro sees Client+Telepro, commercial sees Client+Pro
+        // Tab visibility: admin sees all 3, telepro locked telepro, commercial locked pro
         const togT = document.getElementById('togTelepro');
         const togF = document.getElementById('togFournisseur');
+        const vt = document.getElementById('viewToggle');
         if(isAdmin){
+            if(vt) vt.style.display = '';
             if(togT) togT.style.display = '';
             togF.style.display = '';
-        } else if(isTelepro){
-            if(togT) togT.style.display = '';
-            togF.style.display = 'none';
         } else {
-            if(togT) togT.style.display = 'none';
-            togF.style.display = '';
+            // Commercial and telepro: hide toggle, locked in their view
+            if(vt) vt.style.display = 'none';
         }
         
         // Default view
