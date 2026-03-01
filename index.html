@@ -4180,7 +4180,7 @@ function doLogin(){
 
     if(API_URL) {
         // API mode
-        errEl.textContent = 'Connexion...'; errEl.style.display='block'; errEl.style.color='#6b7280';
+        errEl.textContent = 'CONNEXION EN COURS'; errEl.style.display='block'; errEl.style.color='#000'; errEl.style.fontWeight='700';
         apiCall({action:'login', user:u, pass:p}, function(d){
             errEl.style.color = '#dc2626';
             if(d.success){
@@ -4304,7 +4304,7 @@ function showApp(){
         else if(isTelepro) document.getElementById('userRoleDisplay').textContent = '\uD83D\uDCDE Téléprospecteur';
         else document.getElementById('userRoleDisplay').textContent = '\uD83D\uDCCA Commercial';
         
-        // Tab visibility: admin sees all 3, telepro locked telepro, commercial locked pro
+        // Tab visibility: admin sees all 3, telepro locked telepro, commercial sees Client+Pro
         const togT = document.getElementById('togTelepro');
         const togF = document.getElementById('togFournisseur');
         const vt = document.getElementById('viewToggle');
@@ -4312,9 +4312,13 @@ function showApp(){
             if(vt) vt.style.display = '';
             if(togT) togT.style.display = '';
             togF.style.display = '';
-        } else {
-            // Commercial and telepro: hide toggle, locked in their view
+        } else if(isTelepro){
             if(vt) vt.style.display = 'none';
+        } else {
+            // Commercial: show Client+Pro toggle, hide Telepro button
+            if(vt) vt.style.display = '';
+            if(togT) togT.style.display = 'none';
+            togF.style.display = '';
         }
         
         // Default view
@@ -6322,6 +6326,16 @@ function switchTab(tab){
     mc.classList.add('tab-'+tab+'-active');
     document.getElementById('tabPAC').classList.toggle('active',tab==='pac');
     document.getElementById('tabITE').classList.toggle('active',tab==='ite');
+    // Hide Client/Pro toggle in ITE for non-admin (commercial locked Pro)
+    var vt=document.getElementById('viewToggle');
+    if(vt && currentUser && currentUser.role!=='admin' && currentUser.role!=='guest'){
+        if(tab==='ite'){
+            vt.style.display='none';
+            switchView('fournisseur');
+        } else {
+            if(currentUser.role!=='telepro') vt.style.display='';
+        }
+    }
     if(tab==='pac'){try{calc();}catch(e){}}
     else{try{ite_calc();}catch(e){}}
 }
