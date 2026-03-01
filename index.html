@@ -2511,12 +2511,14 @@
                     <div class="ite-card-head"><div class="ite-card-icon">&#128179;</div><h3>Financement</h3></div>
                     <div class="ite-fg">
                         <div class="ite-fi"><label>Inclure ?</label><select id="iteIncludeFinancement" onchange="ite_calc()"><option value="oui">Oui</option><option value="non">Non</option></select></div>
-                        <div class="ite-fi"><label>Dur&eacute;e (mois)</label><input type="number" id="iteDureeMois" value="120" oninput="ite_calc()"></div>
-                        <div class="ite-fi"><label>Mensualit&eacute; hors ass. (&euro;)</label><input type="number" id="iteMensHorsAss" value="0" step="0.01"></div>
-                        <div class="ite-fi"><label>Mensualit&eacute; avec ass. (&euro;)</label><input type="number" id="iteMensAvecAss" value="0" step="0.01"></div>
-                        <div class="ite-fi"><label>Type assurance</label><input id="iteTypeAssurance" value="DIM"></div>
-                        <div class="ite-fi"><label>Total d&ucirc; hors ass. (&euro;)</label><input type="number" id="iteTotalDuHA" value="0" step="0.01"></div>
-                        <div class="ite-fi"><label>Total d&ucirc; avec ass. (&euro;)</label><input type="number" id="iteTotalDuAA" value="0" step="0.01"></div>
+                        <div class="ite-fi"><label>Dur&eacute;e (mois)</label><input type="number" id="iteDureeMois" value="120" oninput="ite_calcFinancement()"></div>
+                        <div class="ite-fi"><label>Date naissance emprunteur</label><input type="text" inputmode="numeric" id="iteDobEmprunteur" placeholder="JJMMAAAA" maxlength="10" oninput="ecoptz_formatDateInput(this)"></div>
+                        <div class="ite-fi"><label>Type assurance</label><select id="iteTypeAssurance" onchange="ite_calcFinancement()"><option value="DIM" selected>DIM</option><option value="D">D</option><option value="DIMC">DIMC</option><option value="Aucune">Aucune</option></select></div>
+                        <div class="ite-fi"><label>Mensualit&eacute; hors ass. (&euro;)</label><input type="number" id="iteMensHorsAss" value="0" step="0.01" readonly style="background:#f7f8fa;"></div>
+                        <div class="ite-fi"><label>Mensualit&eacute; avec ass. (&euro;)</label><input type="number" id="iteMensAvecAss" value="0" step="0.01" readonly style="background:#f7f8fa;"></div>
+                        <div class="ite-fi"><label>TAEA</label><span id="iteFinTAEA" style="font-weight:700;font-size:14px;color:#1a2744;">-</span></div>
+                        <div class="ite-fi"><label>Total d&ucirc; hors ass. (&euro;)</label><input type="number" id="iteTotalDuHA" value="0" step="0.01" readonly style="background:#f7f8fa;"></div>
+                        <div class="ite-fi"><label>Total d&ucirc; avec ass. (&euro;)</label><input type="number" id="iteTotalDuAA" value="0" step="0.01" readonly style="background:#f7f8fa;"></div>
                     </div>
                 </div>
 
@@ -4724,6 +4726,120 @@ const CEE_ITE_148={classique:150,modeste:200,grande:300};
 // MPR par geste pour BAR-TH-148 (CET) — barème 2026
 const MPR_CET={BLEU:1200,JAUNE:800,VIOLET:400,ROSE:0};
 
+// ============================================
+// ECO-PTZ CALCULATION ENGINE (auto-financement)
+// ============================================
+const ECOPTZ_BRACKETS=[
+    {maxD:36,rate:0.05391},
+    {maxD:60,rate:0.07020},
+    {maxD:72,rate:0.08210},
+    {maxD:Infinity,rate:0.09315}
+];
+function ecoptz_getBracketRate(d){for(var b of ECOPTZ_BRACKETS)if(d<=b.maxD)return b.rate;return ECOPTZ_BRACKETS[ECOPTZ_BRACKETS.length-1].rate;}
+const ECOPTZ_AGE_MULT=[
+    {max:25,m:1.00},{max:30,m:1.08},{max:35,m:1.25},{max:40,m:1.50},
+    {max:45,m:1.85},{max:50,m:2.30},{max:55,m:2.90},{max:60,m:3.60},
+    {max:65,m:4.50},{max:70,m:5.80},{max:99,m:7.50}
+];
+function ecoptz_getAgeMult(age){for(var a of ECOPTZ_AGE_MULT)if(age<=a.max)return a.m;return 7.50;}
+const ECOPTZ_COV_MULT={D:0.42,DIM:1.00,DIMC:1.38,Aucune:0};
+
+function ecoptz_getAge(ds){
+    if(!ds||ds.length!==8)return null;
+    var d=+ds.slice(0,2),m=+ds.slice(2,4),y=+ds.slice(4,8);
+    if(!d||!m||!y||d>31||m>12||y<1920||y>2008)return null;
+    var now=new Date(),age=now.getFullYear()-y;
+    if(now.getMonth()+1<m||(now.getMonth()+1===m&&now.getDate()<d))age--;
+    return age>=18&&age<=99?age:null;
+}
+
+function ecoptz_formatDateInput(el){
+    var raw=el.value.replace(/[^0-9]/g,'').slice(0,8);
+    var display=raw.slice(0,2);
+    if(raw.length>2)display+='-'+raw.slice(2,4);
+    if(raw.length>4)display+='-'+raw.slice(4,8);
+    el.value=display;
+    ite_calcFinancement();
+}
+
+function ecoptz_calcTAEA(M,N,mTot){
+    var base=M/N;
+    if(Math.abs(mTot-base)<0.005)return 0;
+    var r=0.02;
+    for(var i=0;i<200;i++){
+        var rm=r/12,pv=0,dpv=0;
+        for(var k=1;k<=N;k++){
+            var disc=Math.pow(1+rm,-k);
+            pv+=mTot*disc;
+            dpv+=mTot*(-k/12)*disc/(1+rm);
+        }
+        var f=pv-M;
+        if(Math.abs(f)<0.005)break;
+        r-=f/dpv;
+        if(r<0)r=0.0001;
+        if(r>2)r=0.5;
+    }
+    return Math.max(0,r);
+}
+
+function ite_calcFinancement(){
+    try{
+    // Get montant à financer from reste à payer
+    var ttc=ite_N('iteMontantTotalProjet');
+    var primeCEE=ite_N('itePrimeCEE');
+    var montant=ttc-primeCEE;
+    if(montant<=0){
+        ite_$('iteMensHorsAss').value='0';
+        ite_$('iteMensAvecAss').value='0';
+        ite_$('iteTotalDuHA').value='0';
+        ite_$('iteTotalDuAA').value='0';
+        ite_$('iteFinTAEA').textContent='-';
+        return;
+    }
+
+    var duree=parseInt(ite_V('iteDureeMois'))||120;
+    var dobRaw=(ite_V('iteDobEmprunteur')||'').replace(/[^0-9]/g,'');
+    var age=ecoptz_getAge(dobRaw);
+    var cov=ite_V('iteTypeAssurance')||'DIM';
+
+    // Mensualité hors assurance (taux 0%)
+    var mensHA=montant/duree;
+    // Arrondi au centime
+    mensHA=Math.round(mensHA*100)/100;
+
+    // Assurance
+    var mensAss=0,coutAss=0;
+    if(cov!=='Aucune'&&age!==null){
+        var bracketRate=ecoptz_getBracketRate(duree);
+        var ageMult=ecoptz_getAgeMult(age);
+        var covMult=ECOPTZ_COV_MULT[cov]||1;
+        var insRate=bracketRate*ageMult*covMult;
+        coutAss=montant*insRate;
+        mensAss=Math.round(coutAss/duree*100)/100;
+    }
+
+    var mensAA=Math.round((mensHA+mensAss)*100)/100;
+    var totalHA=Math.round(mensHA*duree*100)/100;
+    var totalAA=Math.round(mensAA*duree*100)/100;
+
+    ite_$('iteMensHorsAss').value=mensHA.toFixed(2);
+    ite_$('iteMensAvecAss').value=mensAA.toFixed(2);
+    ite_$('iteTotalDuHA').value=totalHA.toFixed(2);
+    ite_$('iteTotalDuAA').value=totalAA.toFixed(2);
+
+    // TAEA
+    var taeaEl=ite_$('iteFinTAEA');
+    if(taeaEl){
+        if(cov!=='Aucune'&&age!==null&&mensAA>0){
+            var taea=ecoptz_calcTAEA(montant,duree,mensAA)*100;
+            taeaEl.textContent=taea.toFixed(2).replace('.',',')+' %';
+        } else {
+            taeaEl.textContent='-';
+        }
+    }
+    }catch(e){console.error('ite_calcFinancement error:',e);}
+}
+
 function ite_switchLot2(){
     var t=ite_V('iteTypeLot2');
     ite_$('iteCard101').style.display=t==='101'?'block':'none';
@@ -4918,7 +5034,8 @@ function ite_calc(){
         +kpiMPR
         +'<div class="ite-kpi"><div class="ite-kpi-icon">\ud83d\udcb0</div><div class="ite-kpi-val">'+ite_fmtN(reste)+' \u20AC</div><div class="ite-kpi-label">Reste \u00e0 r\u00e9gler</div></div></div>';
 
-    // Financement : saisie manuelle (montants exacts du simulateur Domofinance)
+    // Financement : auto-calcul ECO-PTZ
+    ite_calcFinancement();
 
     // Sidebar update
     var sl1=ite_$('iteSidebarLot1');if(sl1)sl1.textContent=ite_fmtN(totITE)+' \u20AC';
@@ -5325,7 +5442,7 @@ function ite_generateDevis(){
         +'Mensualit\u00e9 hors assurance : '+ite_fmt(fMensHA)+'<br>'
         +'Mensualit\u00e9 avec assurance : '+ite_fmt(fMensAA)+'<br>'
         +'Report mensualit\u00e9 : 0 mois<br>'
-        +'Assurance : Oui<br>'
+        +'Assurance : '+(ite_V('iteTypeAssurance')==='Aucune'?'Non':'Oui')+'<br>'
         +'Type d\u2019assurance : '+ite_V('iteTypeAssurance')+'<br>'
         +'Technicien financier : -<br>'
         +'Montant total d\u00fb hors assurance : '+ite_fmt(fTotalHA)+'<br>'
