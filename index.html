@@ -1498,7 +1498,7 @@
 .ite-page .ptz-highlight { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 4px; padding: 3mm; margin: 2mm 0; }
 .ite-page .ptz-highlight-val { font-size: 14pt; font-weight: 900; color: #1e40af; }
 .ite-page .ptz-sig-block { border: 1px solid #999; padding: 4mm; min-height: 28mm; font-size: 7.5pt; line-height: 1.5; position: relative; }
-.ite-page .ptz-sig-block .sig-canvas-area { width: 100%; height: 18mm; border: 1px dashed #cbd5e1; border-radius: 4px; margin-top: 2mm; background: #fafafa; }
+.ite-page .sig-canvas-area { width: 100%; height: 18mm; border: 1px dashed #cbd5e1; border-radius: 4px; margin-top: 2mm; background: #fafafa; }
 
 /* E-Signature Modal */
 .esign-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 100000; display: flex; align-items: center; justify-content: center; animation: esignFadeIn 0.3s ease; }
@@ -5532,7 +5532,7 @@ function ite_generateDevis(){
     }
     pg2+='<div class="dv-cond"><b>Gestion des d\u00e9chets</b><br>Gestion, \u00e9vacuation et traitements des d\u00e9chets de chantier comprenant la main d\'\u0153uvre li\u00e9e \u00e0 la d\u00e9pose et au tri, le transport des d\u00e9chets de chantiers vers un ou plusieurs points de collecte et co\u00fbts de traitement.</div>';
     var mprRow=mprCET>0?'<tr><td>Estimation MaPrimeR\u00e9nov\' CET **</td><td style="color:#2563eb;">'+ite_fmt(mprCET)+' *</td></tr>':'';
-    pg2+='<div class="dv-totaux"><div class="dv-sig">Apposer signature pr\u00e9c\u00e9d\u00e9e de la mention "Bon pour accord"<br>Le :</div><div><table class="dv-tt"><tr><td>Total H.T</td><td>'+ite_fmt(ht)+'</td></tr><tr><td>Total TVA '+tva.toFixed(1).replace('.',',')+'%</td><td>'+ite_fmt(tvam)+'</td></tr><tr class="ttc"><td><b>Total TTC</b></td><td><b>'+ite_fmt(ttc)+'</b></td></tr><tr><td>Prime CEE *</td><td>- '+ite_fmt(primeCEE)+'</td></tr>'+mprRow+'<tr class="reste"><td><b>Reste \u00e0 payer</b></td><td><b>'+ite_fmt(reste)+'</b></td></tr></table></div></div>';
+    pg2+='<div class="dv-totaux"><div class="dv-sig" data-sig="client">Apposer signature pr\u00e9c\u00e9d\u00e9e de la mention "Bon pour accord"<br>Le :<br><div class="sig-canvas-area" data-sig="client"></div></div><div><table class="dv-tt"><tr><td>Total H.T</td><td>'+ite_fmt(ht)+'</td></tr><tr><td>Total TVA '+tva.toFixed(1).replace('.',',')+'%</td><td>'+ite_fmt(tvam)+'</td></tr><tr class="ttc"><td><b>Total TTC</b></td><td><b>'+ite_fmt(ttc)+'</b></td></tr><tr><td>Prime CEE *</td><td>- '+ite_fmt(primeCEE)+'</td></tr>'+mprRow+'<tr class="reste"><td><b>Reste \u00e0 payer</b></td><td><b>'+ite_fmt(reste)+'</b></td></tr></table></div></div>';
     pg2+='<div class="dv-legal" style="margin-top:6mm;">Ce devis est gratuit et valable 30 jours.'+(wFin?'<br>Paiement par cr\u00e9dit affect\u00e9 DOMOFINANCE.':'')+'<br>Mode de paiement : Ch\u00e8que, Virement, Financement, Esp\u00e8ce<br>M\u00e9diation : CM2C - 14 rue Saint Jean 75017 Paris \u00b7 0609204886 \u00b7 cm2c.net</div>';
     pg2+=ite_dvFT(2,tp)+'</div>';
 
@@ -5562,8 +5562,8 @@ function ite_generateDevis(){
         +'Montant total d\u00fb avec assurance : '+ite_fmt(fTotalAA)+''
         +'</div>'
         +'<div style="margin-top:12mm;display:flex;gap:20mm;font-size:9pt;line-height:1.8;">'
-        +'<div style="flex:1;">Fait \u00e0 : <b>'+villeClean.toUpperCase()+'</b><br>Le :<br><br>Signature du b\u00e9n\u00e9ficiaire :</div>'
-        +'<div style="flex:1;">Nom du repr\u00e9sentant LES ARTISANS VERTS : <b>'+con+'</b><br>A : COURBEVOIE<br>Le :<br><br>Signature du repr\u00e9sentant</div>'
+        +'<div class="dv-sig" data-sig="client" style="flex:1;border:1px solid #999;padding:4mm;">Fait \u00e0 : <b>'+villeClean.toUpperCase()+'</b><br>Le :<br><br>Signature du b\u00e9n\u00e9ficiaire :<div class="sig-canvas-area" data-sig="client"></div></div>'
+        +'<div class="dv-sig" data-sig="rep" style="flex:1;border:1px solid #999;padding:4mm;">Nom du repr\u00e9sentant LES ARTISANS VERTS : <b>'+con+'</b><br>A : COURBEVOIE<br>Le :<br><br>Signature du repr\u00e9sentant<div class="sig-canvas-area" data-sig="rep"></div></div>'
         +'</div>'
         +ite_dvFT(3,tp)+'</div>';
     }
@@ -5919,39 +5919,39 @@ async function esign_applySignatures(){
     var now=new Date();
     var dateStr=now.toLocaleDateString('fr-FR');
     var timeStr=now.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+    var stampHtml='<div style="font-size:5.5pt;color:#666;margin-top:1mm;">Sign\u00e9 \u00e9lectroniquement le '+dateStr+' \u00e0 '+timeStr+'</div>';
 
-    // Inject signatures into devis
-    if(signDevis){
-        var devisArea=ite_$('iteDevisArea');
-        if(devisArea){
-            var sigBlocks=devisArea.querySelectorAll('.dv-sig');
-            sigBlocks.forEach(function(block){
-                var sigHtml='<div style="margin-top:3mm;">';
-                if(clientSig) sigHtml+='<img src="'+clientSig+'" style="height:15mm;width:auto;display:block;">';
-                sigHtml+='<div style="font-size:6pt;color:#666;margin-top:1mm;">Sign\u00e9 \u00e9lectroniquement le '+dateStr+' \u00e0 '+timeStr+'</div>';
-                sigHtml+='</div>';
-                block.innerHTML+=sigHtml;
-            });
-        }
+    // Universal function to inject signatures into any document area
+    function injectSignatures(areaId){
+        var area=ite_$(areaId);
+        if(!area)return;
+        // Target all .sig-canvas-area elements with data-sig attribute
+        var sigAreas=area.querySelectorAll('.sig-canvas-area[data-sig]');
+        sigAreas.forEach(function(el){
+            var sigType=el.getAttribute('data-sig');
+            var sigData=sigType==='client'?clientSig:repSig;
+            if(sigData){
+                el.style.border='none';
+                el.style.background='transparent';
+                el.innerHTML='<img src="'+sigData+'" style="height:14mm;width:auto;">'+stampHtml;
+            }
+        });
+        // Also handle .dv-sig blocks that DON'T have a nested .sig-canvas-area (legacy)
+        var dvSigs=area.querySelectorAll('.dv-sig');
+        dvSigs.forEach(function(block){
+            // Skip if already has a sig-canvas-area (handled above)
+            if(block.querySelector('.sig-canvas-area'))return;
+            var sigType=block.getAttribute('data-sig')||'client';
+            var sigData=sigType==='client'?clientSig:repSig;
+            if(sigData){
+                block.innerHTML+='<div style="margin-top:3mm;"><img src="'+sigData+'" style="height:14mm;width:auto;display:block;">'+stampHtml+'</div>';
+            }
+        });
     }
 
-    // Inject signatures into PTZ
-    if(signPTZ){
-        var ptzArea=ite_$('itePtzArea');
-        if(ptzArea){
-            var sigAreas=ptzArea.querySelectorAll('.sig-canvas-area');
-            sigAreas.forEach(function(area){
-                var sigType=area.getAttribute('data-sig');
-                var sigData=sigType==='client'?clientSig:repSig;
-                if(sigData){
-                    area.style.border='none';
-                    area.style.background='transparent';
-                    area.innerHTML='<img src="'+sigData+'" style="height:14mm;width:auto;">'
-                        +'<div style="font-size:5.5pt;color:#666;">Sign\u00e9 \u00e9lectroniquement le '+dateStr+' \u00e0 '+timeStr+'</div>';
-                }
-            });
-        }
-    }
+    // Apply signatures to selected documents
+    if(signDevis) injectSignatures('iteDevisArea');
+    if(signPTZ) injectSignatures('itePtzArea');
 
     // Generate signed PDFs
     try{
@@ -6235,7 +6235,7 @@ function pac_generateDevis(){
 
     // Signature + Totaux
     pg3+='<div class="dv-totaux">';
-    pg3+='<div class="dv-sig">Apposer signature précédée de la mention "Bon pour accord"<br>Le :<br><br>Ce devis est gratuit et valable 30 jours.<br>Mode de paiement : Chèque, Virement, Financement, Espèce</div>';
+    pg3+='<div class="dv-sig" data-sig="client">Apposer signature précédée de la mention "Bon pour accord"<br>Le :<br><div class="sig-canvas-area" data-sig="client"></div>Ce devis est gratuit et valable 30 jours.<br>Mode de paiement : Chèque, Virement, Financement, Espèce</div>';
     pg3+='<div><table class="dv-tt">';
     pg3+='<tr><td>Total H.T</td><td>'+ite_fmt(ht)+'</td></tr>';
     pg3+='<tr><td>Total TVA  '+tva.toFixed(1).replace('.',',')+'%</td><td>'+ite_fmt(tvam)+'</td></tr>';
