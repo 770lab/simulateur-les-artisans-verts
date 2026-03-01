@@ -1607,6 +1607,21 @@
                 padding: 28px !important;
                 box-sizing: border-box;
             }
+
+            /* ITE form grids at tablet */
+            .ite-fg.c3 {
+                grid-template-columns: 1fr 1fr !important;
+            }
+
+            /* ITE KPI row at tablet */
+            .ite-kpi-row {
+                grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)) !important;
+            }
+
+            /* ITE search row */
+            .ite-search-row {
+                flex-wrap: wrap;
+            }
         }
 
         /* --- MOBILE (max 600px) --- additional overrides --- */
@@ -1779,6 +1794,91 @@
                 grid-template-columns: 1fr !important;
             }
 
+            /* ITE cards */
+            .ite-card {
+                padding: 14px;
+                margin-bottom: 12px;
+            }
+            .ite-card-head {
+                gap: 8px;
+                margin-bottom: 12px;
+            }
+            .ite-card-head h3 {
+                font-size: 13px;
+            }
+            .ite-card-head .ite-tag {
+                margin-left: 0;
+                font-size: 8px;
+            }
+
+            /* ITE KPI row: stack on mobile */
+            .ite-kpi-row {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 8px;
+            }
+            .ite-kpi {
+                padding: 10px;
+            }
+            .ite-kpi-val {
+                font-size: 14px;
+            }
+            .ite-kpi-label {
+                font-size: 9px;
+            }
+
+            /* ITE CEE table: smaller font, horizontal scroll */
+            .ite-cee-table {
+                font-size: 11px;
+                display: block;
+                overflow-x: auto;
+            }
+            .ite-cee-table th {
+                padding: 6px 8px;
+                font-size: 9px;
+                white-space: nowrap;
+            }
+            .ite-cee-table td {
+                padding: 6px 8px;
+                white-space: nowrap;
+            }
+
+            /* ITE alerts */
+            .ite-alert {
+                padding: 10px 12px;
+                font-size: 11px;
+            }
+
+            /* ITE search row: stack vertically */
+            .ite-search-row {
+                flex-direction: column;
+                gap: 8px;
+            }
+            .ite-btn-search {
+                width: 100%;
+            }
+
+            /* ITE QR block: stack vertically */
+            .ite-qr-block {
+                flex-direction: column;
+                text-align: center;
+                gap: 8px;
+                padding: 10px;
+            }
+
+            /* ITE inputs */
+            .ite-fi input, .ite-fi select {
+                font-size: 13px;
+                padding: 8px 10px;
+            }
+            .ite-fi label {
+                font-size: 10px;
+            }
+
+            /* ITE note */
+            .ite-note {
+                font-size: 10px;
+            }
+
             /* TTCinput dark */
             .ttc-input-dark {
                 font-size: 20px;
@@ -1819,6 +1919,21 @@
             /* Cost detail fully stacked */
             .fournisseur-only [style*="120px 1fr 80px 100px"] {
                 grid-template-columns: 1fr !important;
+            }
+
+            /* ITE KPI: single column on very small */
+            .ite-kpi-row {
+                grid-template-columns: 1fr !important;
+            }
+            .ite-card {
+                padding: 10px;
+            }
+            .ite-card-head h3 {
+                font-size: 12px;
+            }
+            .ite-fi input, .ite-fi select {
+                font-size: 12px;
+                padding: 7px 8px;
             }
         }
 
