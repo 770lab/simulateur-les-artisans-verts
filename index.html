@@ -1508,8 +1508,9 @@
 }
 
     </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -5110,6 +5111,55 @@ function dv_subHeader(num,df,nom){
 }
 
 // ============================================
+// PDF LIBS DYNAMIC LOADER
+// ============================================
+function loadScript(src){
+    return new Promise(function(resolve,reject){
+        var existing=document.querySelector('script[src="'+src+'"]');
+        if(existing){existing.remove();}
+        var s=document.createElement('script');
+        s.src=src;
+        s.crossOrigin='anonymous';
+        s.onload=resolve;
+        s.onerror=function(){reject(new Error('Impossible de charger: '+src));};
+        document.head.appendChild(s);
+    });
+}
+
+var JSPDF_CDNS=[
+    'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js',
+    'https://unpkg.com/jspdf@2.5.2/dist/jspdf.umd.min.js',
+    'https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js'
+];
+var H2C_CDNS=[
+    'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
+    'https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js',
+    'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js'
+];
+
+async function ensureJsPDF(){
+    if(window.jspdf && window.jspdf.jsPDF) return window.jspdf.jsPDF;
+    for(var i=0;i<JSPDF_CDNS.length;i++){
+        try{
+            await loadScript(JSPDF_CDNS[i]);
+            if(window.jspdf && window.jspdf.jsPDF) return window.jspdf.jsPDF;
+        }catch(e){console.warn('jsPDF CDN '+i+' failed:',e);}
+    }
+    throw new Error('Impossible de charger la biblioth\u00e8que jsPDF. V\u00e9rifiez votre connexion internet.');
+}
+
+async function ensureHtml2Canvas(){
+    if(typeof html2canvas==='function') return html2canvas;
+    for(var i=0;i<H2C_CDNS.length;i++){
+        try{
+            await loadScript(H2C_CDNS[i]);
+            if(typeof html2canvas==='function') return html2canvas;
+        }catch(e){console.warn('html2canvas CDN '+i+' failed:',e);}
+    }
+    throw new Error('Impossible de charger la biblioth\u00e8que html2canvas. V\u00e9rifiez votre connexion internet.');
+}
+
+// ============================================
 // PDF DOWNLOAD (remplace window.print)
 // ============================================
 async function downloadDevisPDF(containerId,filename){
@@ -5123,10 +5173,12 @@ async function downloadDevisPDF(containerId,filename){
     ov.innerHTML='<div style="background:#fff;padding:32px 48px;border-radius:16px;text-align:center;font-family:Arial,sans-serif;"><div style="font-size:18px;font-weight:700;margin-bottom:12px;">G\u00e9n\u00e9ration du PDF...</div><div style="font-size:14px;color:#666;">Veuillez patienter</div></div>';
     document.body.appendChild(ov);
     try{
-        var pdf=new window.jspdf.jsPDF('p','mm','a4');
+        var JsPDF=await ensureJsPDF();
+        var h2c=await ensureHtml2Canvas();
+        var pdf=new JsPDF('p','mm','a4');
         for(var i=0;i<pages.length;i++){
             if(i>0) pdf.addPage();
-            var canvas=await html2canvas(pages[i],{scale:2,useCORS:true,backgroundColor:'#ffffff',logging:false,width:pages[i].scrollWidth,height:pages[i].scrollHeight});
+            var canvas=await h2c(pages[i],{scale:2,useCORS:true,backgroundColor:'#ffffff',logging:false,width:pages[i].scrollWidth,height:pages[i].scrollHeight});
             var imgData=canvas.toDataURL('image/jpeg',0.95);
             pdf.addImage(imgData,'JPEG',0,0,210,297);
         }
