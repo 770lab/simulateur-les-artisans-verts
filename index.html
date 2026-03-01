@@ -1505,6 +1505,16 @@
 @media (max-width: 700px) {
     .ite-fg { grid-template-columns: 1fr; }
     .ite-fg.c3 { grid-template-columns: 1fr; }
+    .ite-kpi-row { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .ite-kpi { padding: 10px; }
+    .ite-kpi-val { font-size: 14px; }
+    .ite-search-row { flex-direction: column; }
+    .ite-btn-search { width: 100%; }
+    .ite-qr-block { flex-direction: column; text-align: center; }
+    .ite-card { padding: 14px; margin-bottom: 12px; }
+    .ite-card-head h3 { font-size: 13px; }
+    .ite-card-head .ite-tag { margin-left: 0; }
+    .ite-cee-table { font-size: 11px; display: block; overflow-x: auto; }
 }
 
     </style>
@@ -2667,6 +2677,8 @@
                     <div class="rrc-label">&#128220; Prime CEE EDF</div>
                     <div class="rrc-value green" id="iteSidebarCEE">&mdash;</div>
                 </div>
+
+                <div id="iteSidebarMPR" style="display: none;"></div>
 
                 <div class="glow-separator"></div>
 
@@ -4709,6 +4721,8 @@ const CEE_ITE_102={classique:{H1:11,H2:9,H3:6},modeste:{H1:16,H2:13,H3:9},grande
 const CEE_ITE_101={classique:{H1:14,H2:11,H3:8},modeste:{H1:20,H2:16,H3:11},grande:{H1:28,H2:22,H3:16}};
 const CEE_ITE_103={classique:{H1:9,H2:7,H3:5},modeste:{H1:13,H2:11,H3:7},grande:{H1:18,H2:15,H3:10}};
 const CEE_ITE_148={classique:150,modeste:200,grande:300};
+// MPR par geste pour BAR-TH-148 (CET) — barème 2026
+const MPR_CET={BLEU:1200,JAUNE:800,VIOLET:400,ROSE:0};
 
 function ite_switchLot2(){
     var t=ite_V('iteTypeLot2');
@@ -4841,6 +4855,11 @@ function ite_calc(){
     var nbLots=hasLot3?3:2;
     var plafondPTZ=hasLot3?30000:25000;
 
+    // MPR CET : indication uniquement si 148 en lot 2 ou 3
+    var cat=document.getElementById('categorie').value;
+    var has148=t2==='148'||(hasLot3&&ite_V('iteTypeLot3')==='148');
+    var mprCET=has148?(MPR_CET[cat]||0):0;
+
     // Lot2 alert
     ite_$('iteLot2Alert').innerHTML=lot2Ok
         ?'<div class="ite-alert ite-alert-ok">\u2705 LOT 2 : '+ite_fmtN(totLot2)+' \u20AC \u2014 Minimum 1 500 \u20AC respect\u00e9</div>'
@@ -4890,11 +4909,13 @@ function ite_calc(){
 
     // KPI summary
     var kpiLot3=hasLot3?'<div class="ite-kpi"><div class="ite-kpi-icon">\ud83d\udee0\ufe0f</div><div class="ite-kpi-val'+(lot3Ok?'':' red')+'">'+ite_fmtN(totLot3)+' \u20AC</div><div class="ite-kpi-label">LOT 3</div></div>':'';
+    var kpiMPR=mprCET>0?'<div class="ite-kpi" style="border-color:#bfdbfe;background:#eff6ff;"><div class="ite-kpi-icon">\ud83c\udfdb\ufe0f</div><div class="ite-kpi-val" style="color:#2563eb;">'+ite_fmtN(mprCET)+' \u20AC</div><div class="ite-kpi-label">MPR CET (indicatif)</div></div>':'';
     ite_$('iteAidesSummary').innerHTML='<div class="ite-kpi-row">'
         +'<div class="ite-kpi"><div class="ite-kpi-icon">\ud83e\uddf1</div><div class="ite-kpi-val">'+ite_fmtN(totITE)+' \u20AC</div><div class="ite-kpi-label">LOT 1 \u00b7 ITE</div></div>'
         +'<div class="ite-kpi"><div class="ite-kpi-icon">'+(t2==='101'?'\ud83c\udfe0':t2==='103'?'\ud83c\udfe0':'\ud83d\udebf')+'</div><div class="ite-kpi-val'+(lot2Ok?'':' red')+'">'+ite_fmtN(totLot2)+' \u20AC</div><div class="ite-kpi-label">LOT 2</div></div>'
         +kpiLot3
         +'<div class="ite-kpi"><div class="ite-kpi-icon">\ud83d\udcdc</div><div class="ite-kpi-val">'+ite_fmtN(primeCEE)+' \u20AC</div><div class="ite-kpi-label">CEE EDF</div></div>'
+        +kpiMPR
         +'<div class="ite-kpi"><div class="ite-kpi-icon">\ud83d\udcb0</div><div class="ite-kpi-val">'+ite_fmtN(reste)+' \u20AC</div><div class="ite-kpi-label">Reste \u00e0 r\u00e9gler</div></div></div>';
 
     // Financement : saisie manuelle (montants exacts du simulateur Domofinance)
@@ -4905,6 +4926,17 @@ function ite_calc(){
     var sl2t=ite_$('iteSidebarLot2Type');if(sl2t)sl2t.textContent=t2==='101'?'BAR-EN-101':t2==='103'?'BAR-EN-103':'BAR-TH-148';
     var sl2a=ite_$('iteSidebarLot2Alert');if(sl2a)sl2a.style.display=lot2Ok?'none':'block';
     var sc=ite_$('iteSidebarCEE');if(sc)sc.textContent=ite_fmtN(primeCEE)+' \u20AC';
+    // MPR CET sidebar
+    var smpr=ite_$('iteSidebarMPR');
+    if(smpr){
+        if(mprCET>0){
+            smpr.style.display='block';
+            smpr.innerHTML='<div class="result-row-card" style="background:rgba(59,130,246,0.08);border-color:rgba(59,130,246,0.15);"><div class="rrc-label">\ud83c\udfdb\ufe0f MPR CET (indicatif)</div><div class="rrc-value" style="color:#60a5fa;">'+ite_fmtN(mprCET)+' \u20AC</div></div>';
+        } else {
+            smpr.style.display='none';
+            smpr.innerHTML='';
+        }
+    }
     var st=ite_$('iteSidebarTTC');if(st)st.textContent=ite_fmtN(ttc)+' \u20AC';
     var sr=ite_$('iteSidebarReste');if(sr)sr.textContent=ite_fmtN(reste)+' \u20AC';
     var sp=ite_$('iteSidebarPTZ');if(sp)sp.innerHTML=ptzOk
@@ -5210,6 +5242,10 @@ function ite_generateDevis(){
     var sITE=ite_N('iteSurfaceITE'),totITE=ite_N('iteMontantLot1');
     var t2=ite_V('iteTypeLot2'),t3=hasLot3?ite_V('iteTypeLot3'):'',ttc=totITE+totLot2+totLot3,ht=ttc/(1+tva/100),tvam=ttc-ht;
     var primeCEE=ite_N('itePrimeCEE'),reste=ttc-primeCEE;
+    // MPR CET indicatif (non déduit)
+    var catMPR=document.getElementById('categorie').value;
+    var has148=(t2==='148')||(hasLot3&&t3==='148');
+    var mprCET=has148?(MPR_CET[catMPR]||0):0;
     var wFin=ite_V('iteIncludeFinancement')==='oui',tp=wFin?3:2;
     var precL={classique:'Classique',modeste:'Modeste',grande:'Grande pr\u00e9carit\u00e9'}[prec]||prec;
 
@@ -5261,8 +5297,12 @@ function ite_generateDevis(){
 
     var pg2='<div class="ite-page">'+dv_subHeader(num,df,nom);
     pg2+='<div class="dv-cond" style="margin-top:4mm;"><h4>Termes et conditions CEE</h4><p>Prime li\u00e9e \u00e0 la valorisation des certificats d\'\u00e9conomies d\'\u00e9nergie par R2M DISTRIBUTIONS (SIREN 978 036 937), repr\u00e9sent\u00e9 par VALOREN (SIREN 852 404 938) en sa qualit\u00e9 de mandataire, pour la somme de <b>'+ite_fmt(primeCEE)+'</b>.</p></div>';
+    if(mprCET>0){
+        pg2+='<div class="dv-cond"><h4>(**) Information MaPrimeR\u00e9nov\' \u2014 Chauffe-eau thermodynamique</h4><p>Le client peut b\u00e9n\u00e9ficier de l\'aide MaPrimeR\u00e9nov\' parcours par geste pour le chauffe-eau thermodynamique (BAR-TH-148), d\'un montant estimatif de <b>'+ite_fmt(mprCET)+'</b>. Cette aide n\'est pas d\u00e9duite du pr\u00e9sent devis. Le client devra en faire la demande directement aupr\u00e8s de l\'ANAH. L\'obtention est soumise \u00e0 l\'\u00e9ligibilit\u00e9 du dossier.</p></div>';
+    }
     pg2+='<div class="dv-cond"><b>Gestion des d\u00e9chets</b><br>Gestion, \u00e9vacuation et traitements des d\u00e9chets de chantier comprenant la main d\'\u0153uvre li\u00e9e \u00e0 la d\u00e9pose et au tri, le transport des d\u00e9chets de chantiers vers un ou plusieurs points de collecte et co\u00fbts de traitement.</div>';
-    pg2+='<div class="dv-totaux"><div class="dv-sig">Apposer signature pr\u00e9c\u00e9d\u00e9e de la mention "Bon pour accord"<br>Le :</div><div><table class="dv-tt"><tr><td>Total H.T</td><td>'+ite_fmt(ht)+'</td></tr><tr><td>Total TVA '+tva.toFixed(1).replace('.',',')+'%</td><td>'+ite_fmt(tvam)+'</td></tr><tr class="ttc"><td><b>Total TTC</b></td><td><b>'+ite_fmt(ttc)+'</b></td></tr><tr><td>Prime CEE *</td><td>- '+ite_fmt(primeCEE)+'</td></tr><tr class="reste"><td><b>Reste \u00e0 payer</b></td><td><b>'+ite_fmt(reste)+'</b></td></tr></table></div></div>';
+    var mprRow=mprCET>0?'<tr><td>Estimation MaPrimeR\u00e9nov\' CET **</td><td style="color:#2563eb;">'+ite_fmt(mprCET)+' *</td></tr>':'';
+    pg2+='<div class="dv-totaux"><div class="dv-sig">Apposer signature pr\u00e9c\u00e9d\u00e9e de la mention "Bon pour accord"<br>Le :</div><div><table class="dv-tt"><tr><td>Total H.T</td><td>'+ite_fmt(ht)+'</td></tr><tr><td>Total TVA '+tva.toFixed(1).replace('.',',')+'%</td><td>'+ite_fmt(tvam)+'</td></tr><tr class="ttc"><td><b>Total TTC</b></td><td><b>'+ite_fmt(ttc)+'</b></td></tr><tr><td>Prime CEE *</td><td>- '+ite_fmt(primeCEE)+'</td></tr>'+mprRow+'<tr class="reste"><td><b>Reste \u00e0 payer</b></td><td><b>'+ite_fmt(reste)+'</b></td></tr></table></div></div>';
     pg2+='<div class="dv-legal" style="margin-top:6mm;">Ce devis est gratuit et valable 30 jours.'+(wFin?'<br>Paiement par cr\u00e9dit affect\u00e9 DOMOFINANCE.':'')+'<br>Mode de paiement : Ch\u00e8que, Virement, Financement, Esp\u00e8ce<br>M\u00e9diation : CM2C - 14 rue Saint Jean 75017 Paris \u00b7 0609204886 \u00b7 cm2c.net</div>';
     pg2+=ite_dvFT(2,tp)+'</div>';
 
