@@ -1483,6 +1483,56 @@
 .ite-page .dv-legal { font-size: 6.5pt; line-height: 1.45; color: #333; margin-top: 4mm; }
 .ite-page .dv-finance { font-size: 8pt; line-height: 1.6; margin-top: 4mm; }
 
+/* PTZ Document Styles */
+.ite-page .ptz-title { text-align: center; font-size: 14pt; font-weight: 900; color: #1e40af; margin: 4mm 0; padding: 3mm; border: 2px solid #1e40af; border-radius: 4px; background: #eff6ff; }
+.ite-page .ptz-section { margin-bottom: 4mm; }
+.ite-page .ptz-section-title { font-size: 9pt; font-weight: 800; color: #1e40af; border-bottom: 1.5px solid #1e40af; padding-bottom: 1.5mm; margin-bottom: 2mm; }
+.ite-page .ptz-grid { display: grid; grid-template-columns: 140px 1fr; gap: 1mm 3mm; font-size: 8pt; line-height: 1.6; }
+.ite-page .ptz-grid .ptz-label { font-weight: 700; color: #374151; }
+.ite-page .ptz-grid .ptz-val { color: #111; }
+.ite-page .ptz-table { width: 100%; border-collapse: collapse; font-size: 8pt; margin-top: 2mm; }
+.ite-page .ptz-table th { background: #1e40af; color: white; padding: 2mm 3mm; text-align: left; font-weight: 700; font-size: 7.5pt; }
+.ite-page .ptz-table td { padding: 1.5mm 3mm; border-bottom: 0.5px solid #e5e7eb; }
+.ite-page .ptz-table tr:nth-child(even) td { background: #f8fafc; }
+.ite-page .ptz-table .ptz-total td { font-weight: 900; font-size: 9pt; border-top: 2px solid #1e40af; background: #eff6ff; }
+.ite-page .ptz-highlight { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 4px; padding: 3mm; margin: 2mm 0; }
+.ite-page .ptz-highlight-val { font-size: 14pt; font-weight: 900; color: #1e40af; }
+.ite-page .ptz-sig-block { border: 1px solid #999; padding: 4mm; min-height: 28mm; font-size: 7.5pt; line-height: 1.5; position: relative; }
+.ite-page .ptz-sig-block .sig-canvas-area { width: 100%; height: 18mm; border: 1px dashed #cbd5e1; border-radius: 4px; margin-top: 2mm; background: #fafafa; }
+
+/* E-Signature Modal */
+.esign-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 100000; display: flex; align-items: center; justify-content: center; animation: esignFadeIn 0.3s ease; }
+@keyframes esignFadeIn { from { opacity: 0; } to { opacity: 1; } }
+.esign-modal { background: white; border-radius: 16px; width: 95%; max-width: 540px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+.esign-header { padding: 20px 24px; border-bottom: 1px solid #e5e7eb; display: flex; align-items: center; justify-content: space-between; }
+.esign-header h3 { font-size: 18px; font-weight: 800; color: #111827; margin: 0; }
+.esign-close { width: 36px; height: 36px; border-radius: 50%; border: none; background: #f3f4f6; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; color: #6b7280; transition: all 0.2s; }
+.esign-close:hover { background: #e5e7eb; color: #111; }
+.esign-body { padding: 24px; }
+.esign-step { margin-bottom: 20px; }
+.esign-step-label { font-size: 12px; font-weight: 700; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.esign-step-title { font-size: 15px; font-weight: 700; color: #111827; margin-bottom: 12px; }
+.esign-canvas-wrap { border: 2px solid #d1d5db; border-radius: 12px; overflow: hidden; background: #fafafa; position: relative; }
+.esign-canvas-wrap.active { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.15); }
+.esign-canvas { width: 100%; height: 150px; cursor: crosshair; touch-action: none; }
+.esign-canvas-placeholder { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); color: #9ca3af; font-size: 14px; pointer-events: none; }
+.esign-clear-btn { margin-top: 8px; padding: 6px 14px; border-radius: 8px; border: 1px solid #d1d5db; background: white; color: #374151; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.esign-clear-btn:hover { background: #f9fafb; border-color: #9ca3af; }
+.esign-info { font-size: 12px; color: #6b7280; line-height: 1.5; margin-top: 6px; }
+.esign-footer { padding: 16px 24px; border-top: 1px solid #e5e7eb; display: flex; gap: 10px; justify-content: flex-end; }
+.esign-btn { padding: 10px 20px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s; border: none; }
+.esign-btn-cancel { background: #f3f4f6; color: #374151; }
+.esign-btn-cancel:hover { background: #e5e7eb; }
+.esign-btn-sign { background: linear-gradient(135deg, #1e40af, #3b82f6); color: white; box-shadow: 0 4px 12px rgba(59,130,246,0.3); }
+.esign-btn-sign:hover { box-shadow: 0 6px 16px rgba(59,130,246,0.4); transform: translateY(-1px); }
+.esign-btn-sign:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+.esign-status { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; margin-top: 12px; }
+.esign-status.pending { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+.esign-status.signed { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
+.esign-sent-badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+.esign-sent-badge.sent { background: #dbeafe; color: #1e40af; }
+.esign-sent-badge.signed { background: #d1fae5; color: #065f46; }
+
 /* Print: updated for tab system */
 @media print {
     .tab-pac-active #pacDevisArea { display: block !important; }
@@ -2534,6 +2584,16 @@
                         &#128196; G&eacute;n&eacute;rer le Devis ITE
                     </button>
                 </div>
+                <div style="margin-top: 8px;">
+                    <button onclick="ite_generatePTZ()" style="width: 100%; padding: 16px; border-radius: 12px; border: none; background: linear-gradient(135deg, #1e40af, #3b82f6); color: white; font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 20px rgba(30,64,175,0.25); transition: all 0.2s; font-family: inherit;">
+                        &#127963;&#65039; G&eacute;n&eacute;rer le document PTZ
+                    </button>
+                </div>
+                <div style="margin-top: 8px;">
+                    <button onclick="esign_openModal()" style="width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #d1d5db; background: white; color: #374151; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        <span style="font-size: 18px;">&#9998;</span> Signature &eacute;lectronique des documents
+                    </button>
+                </div>
             </div><!-- end tab-ite-content -->
 
         </div>
@@ -2704,6 +2764,12 @@
                 <button onclick="ite_generateDevis()" class="btn-dark-export pdf" style="margin-top: 14px;">
                     &#128196; G&eacute;n&eacute;rer le Devis ITE
                 </button>
+                <button onclick="ite_generatePTZ()" class="btn-dark-export pdf" style="margin-top: 8px; background: linear-gradient(135deg, #1e40af, #3b82f6) !important;">
+                    &#127963;&#65039; G&eacute;n&eacute;rer PTZ
+                </button>
+                <button onclick="esign_openModal()" class="btn-dark-export" style="margin-top: 8px; background: rgba(255,255,255,0.08) !important; border: 1px solid rgba(255,255,255,0.15) !important;">
+                    &#9998; Signature &eacute;lectronique
+                </button>
             </div>
             </div><!-- end tab-ite-content sidebar -->
 </div>
@@ -2820,6 +2886,48 @@
 
     <div id="pacDevisArea" style="display: none;"></div>
     <div id="iteDevisArea" style="display: none;"></div>
+    <div id="itePtzArea" style="display: none;"></div>
+
+    <!-- E-Signature Modal -->
+    <div id="esignOverlay" class="esign-overlay" style="display: none;">
+        <div class="esign-modal">
+            <div class="esign-header">
+                <h3>&#9998; Signature &eacute;lectronique</h3>
+                <button class="esign-close" onclick="esign_close()">&times;</button>
+            </div>
+            <div class="esign-body">
+                <div id="esignDocList" style="margin-bottom: 16px;">
+                    <!-- Liste des documents disponibles -->
+                </div>
+                <div class="esign-step">
+                    <div class="esign-step-label">&#128100; &Eacute;tape 1</div>
+                    <div class="esign-step-title">Signature du client</div>
+                    <div class="esign-canvas-wrap" id="esignClientWrap">
+                        <canvas class="esign-canvas" id="esignClientCanvas"></canvas>
+                        <div class="esign-canvas-placeholder" id="esignClientPlaceholder">Dessinez votre signature ici</div>
+                    </div>
+                    <button class="esign-clear-btn" onclick="esign_clearPad('client')">&#128260; Effacer</button>
+                    <div class="esign-info">Utilisez votre doigt ou stylet pour signer. La signature sera int&eacute;gr&eacute;e dans le document PDF.</div>
+                </div>
+                <div class="esign-step">
+                    <div class="esign-step-label">&#127970; &Eacute;tape 2</div>
+                    <div class="esign-step-title">Signature du repr&eacute;sentant LES ARTISANS VERTS</div>
+                    <div class="esign-canvas-wrap" id="esignRepWrap">
+                        <canvas class="esign-canvas" id="esignRepCanvas"></canvas>
+                        <div class="esign-canvas-placeholder" id="esignRepPlaceholder">Dessinez votre signature ici</div>
+                    </div>
+                    <button class="esign-clear-btn" onclick="esign_clearPad('rep')">&#128260; Effacer</button>
+                </div>
+                <div id="esignStatusMsg"></div>
+            </div>
+            <div class="esign-footer">
+                <button class="esign-btn esign-btn-cancel" onclick="esign_close()">Annuler</button>
+                <button class="esign-btn esign-btn-sign" id="esignSubmitBtn" onclick="esign_applySignatures()">
+                    &#10003; Signer et t&eacute;l&eacute;charger le PDF
+                </button>
+            </div>
+        </div>
+    </div>
 
 <script>
 // Debug helper
@@ -5463,6 +5571,407 @@ function ite_generateDevis(){
     ite_$('iteDevisArea').innerHTML=pg1+pg2+pg3;
     ite_$('iteDevisArea').style.display='block';
     downloadDevisPDF('iteDevisArea','DEVIS-ITE-'+num+'-'+nom.replace(/\s+/g,'_')+'.pdf');
+}
+
+// ============================================
+// PTZ DOCUMENT GENERATION
+// ============================================
+function ite_generatePTZ(){
+    // Gather data from calculator
+    var totLot2=ite_getLot2Total();
+    var totLot3=ite_getLot3Total();
+    var hasLot3=ite_V('iteIncludeLot3')==='oui'&&totLot3>0;
+    var totITE=ite_N('iteMontantLot1');
+    var sITE=ite_N('iteSurfaceITE');
+    var t2=ite_V('iteTypeLot2');
+    var t3=hasLot3?ite_V('iteTypeLot3'):'';
+    var nbLots=hasLot3?3:2;
+    var plafondPTZ=hasLot3?30000:25000;
+
+    // Check PTZ eligibility
+    var lot2Ok=totLot2>=1500;
+    var lot3Ok=!hasLot3||totLot3>=1500;
+    var ptzOk=lot2Ok&&lot3Ok&&totITE>0;
+    if(!ptzOk){
+        alert('Le projet n\'est pas \u00e9ligible au PTZ. V\u00e9rifiez :\n- LOT 1 (ITE) > 0 \u20ac\n- LOT 2 \u2265 1 500 \u20ac\n'+(hasLot3?'- LOT 3 \u2265 1 500 \u20ac':''));
+        return;
+    }
+
+    // Client info
+    var prenomVal=document.getElementById('prenom').value.trim();
+    var nomVal=document.getElementById('nom').value.trim();
+    var nom=(prenomVal+' '+nomVal).trim()||'CLIENT';
+    var nomUpper=nomVal.toUpperCase();
+    var prenomUpper=prenomVal.toUpperCase();
+    var num=ite_V('iteNumDevis'),nc=ite_V('iteNumClient')||num;
+    var dRaw=ite_V('iteDateDevis').split('-'),df=dRaw[2]+'/'+dRaw[1]+'/'+dRaw[0];
+    var adr=ite_V('iteAdresse'),vil=ite_V('iteVille'),tel=ite_V('iteTel'),em=ite_V('iteEmail');
+    var zn=document.getElementById('zone').value;
+    var con=ite_V('iteConseiller');
+    var tva=parseFloat(ite_$('iteTva')?.value)||5.5;
+    var tch=ite_V('iteTypeChauffage');
+    var prec=ite_V('itePrecarite');
+    var precL={classique:'Classique',modeste:'Modeste',grande:'Tr\u00e8s modeste'}[prec]||prec;
+    var profil=document.getElementById('categorie').value;
+    var profilLabel={BLEU:'Tr\u00e8s modeste',JAUNE:'Modeste',VIOLET:'Interm\u00e9diaire',ROSE:'Sup\u00e9rieur'}[profil]||profil;
+
+    // DOB
+    var dobRaw=(ite_V('iteDobEmprunteur')||'').replace(/[^0-9]/g,'');
+    var dobDisplay=dobRaw.length===8?(dobRaw.slice(0,2)+'/'+dobRaw.slice(2,4)+'/'+dobRaw.slice(4,8)):'__/__/____';
+
+    // Totals
+    var ttc=ite_N('iteMontantTotalProjet');
+    var primeCEE=ite_N('itePrimeCEE');
+    var reste=ttc-primeCEE;
+    var ht=ttc/(1+tva/100);
+    var montantPTZ=Math.min(reste,plafondPTZ);
+
+    // Financing data
+    var duree=parseInt(ite_V('iteDureeMois'))||120;
+    var mensHA=ite_N('iteMensHorsAss');
+    var mensAA=ite_N('iteMensAvecAss');
+    var totalHA=ite_N('iteTotalDuHA');
+    var totalAA=ite_N('iteTotalDuAA');
+    var typeAss=ite_V('iteTypeAssurance');
+    var taeaText=ite_$('iteFinTAEA')?ite_$('iteFinTAEA').textContent:'-';
+
+    // MPR CET
+    var has148=(t2==='148')||(hasLot3&&t3==='148');
+    var cat=document.getElementById('categorie').value;
+    var mprCET=has148?(MPR_CET[cat]||0):0;
+
+    // Lot labels
+    var lot2Label=t2==='101'?'BAR-EN-101 \u2014 Isolation combles perdus':t2==='103'?'BAR-EN-103 \u2014 Isolation plancher bas':'BAR-TH-148 \u2014 Chauffe-eau thermodynamique';
+    var lot3Label='';
+    if(hasLot3) lot3Label=t3==='101'?'BAR-EN-101 \u2014 Isolation combles perdus':t3==='103'?'BAR-EN-103 \u2014 Isolation plancher bas':'BAR-TH-148 \u2014 Chauffe-eau thermodynamique';
+
+    var today=new Date();
+    var todayStr=today.toLocaleDateString('fr-FR');
+    var villeClean=vil.split(' ').slice(1).join(' ')||'_____';
+
+    // ===== PAGE 1: Descriptif =====
+    var pg1='<div class="ite-page">'+dv_logoHeader();
+    pg1+='<div class="ptz-title">\ud83c\udfdb\ufe0f \u00c9CO-PR\u00caT \u00c0 TAUX Z\u00c9RO &mdash; DESCRIPTIF DES TRAVAUX</div>';
+
+    // Entreprise info
+    pg1+='<div class="ptz-section"><div class="ptz-section-title">\ud83c\udfe2 Entreprise r\u00e9alisatrice</div>';
+    pg1+='<div class="ptz-grid">';
+    pg1+='<div class="ptz-label">Raison sociale</div><div class="ptz-val"><b>LES ARTISANS VERTS</b></div>';
+    pg1+='<div class="ptz-label">SIRET</div><div class="ptz-val">878 062 793 00038</div>';
+    pg1+='<div class="ptz-label">Qualification RGE</div><div class="ptz-val">QualiPAC N\u00b0 QPAC/69719 \u2014 Valid. 15/02/2027</div>';
+    pg1+='<div class="ptz-label">Adresse</div><div class="ptz-val">32 rue de Lisbonne, 75008 Paris</div>';
+    pg1+='<div class="ptz-label">T\u00e9l\u00e9phone</div><div class="ptz-val">01 86 90 84 36</div>';
+    pg1+='</div></div>';
+
+    // Client info
+    pg1+='<div class="ptz-section"><div class="ptz-section-title">\ud83d\udc64 Emprunteur</div>';
+    pg1+='<div class="ptz-grid">';
+    pg1+='<div class="ptz-label">Nom, Pr\u00e9nom</div><div class="ptz-val"><b>'+nomUpper+' '+prenomUpper+'</b></div>';
+    pg1+='<div class="ptz-label">Adresse travaux</div><div class="ptz-val">'+adr+'</div>';
+    pg1+='<div class="ptz-label">CP / Ville</div><div class="ptz-val">'+vil+'</div>';
+    pg1+='<div class="ptz-label">T\u00e9l\u00e9phone</div><div class="ptz-val">'+tel+'</div>';
+    pg1+='<div class="ptz-label">E-mail</div><div class="ptz-val">'+em+'</div>';
+    pg1+='<div class="ptz-label">Date de naissance</div><div class="ptz-val">'+dobDisplay+'</div>';
+    pg1+='<div class="ptz-label">N\u00b0 Dossier</div><div class="ptz-val">'+nc+'</div>';
+    pg1+='</div></div>';
+
+    // Logement
+    pg1+='<div class="ptz-section"><div class="ptz-section-title">\ud83c\udfe0 Logement</div>';
+    pg1+='<div class="ptz-grid">';
+    pg1+='<div class="ptz-label">Type</div><div class="ptz-val">Maison individuelle</div>';
+    pg1+='<div class="ptz-label">Anciennet\u00e9</div><div class="ptz-val">Plus de 2 ans (r\u00e9sidence principale)</div>';
+    pg1+='<div class="ptz-label">Zone climatique</div><div class="ptz-val">'+zn+'</div>';
+    pg1+='<div class="ptz-label">Chauffage actuel</div><div class="ptz-val">'+tch+'</div>';
+    pg1+='<div class="ptz-label">Profil m\u00e9nage</div><div class="ptz-val">'+profilLabel+' ('+profil+')</div>';
+    pg1+='</div></div>';
+
+    // Travaux
+    pg1+='<div class="ptz-section"><div class="ptz-section-title">\ud83d\udee0\ufe0f Description des travaux \u2014 '+nbLots+' gestes \u00e9nerg\u00e9tiques</div>';
+    pg1+='<table class="ptz-table">';
+    pg1+='<tr><th style="width:60px;">Lot</th><th>Nature des travaux</th><th style="width:80px;text-align:right;">Montant TTC</th></tr>';
+    pg1+='<tr><td><b>LOT 1</b></td><td>BAR-EN-102 \u2014 Isolation thermique des murs par l\'ext\u00e9rieur<br><span style="font-size:7pt;color:#666;">Surface : '+sITE.toFixed(2)+' m\u00b2 \u00b7 Isolant CELLOMUR ULTRA 120mm \u00b7 R=3,85 m\u00b2.K/W</span></td><td style="text-align:right;font-weight:700;">'+ite_fmt(totITE)+'</td></tr>';
+    pg1+='<tr><td><b>LOT 2</b></td><td>'+lot2Label+'</td><td style="text-align:right;font-weight:700;">'+ite_fmt(totLot2)+'</td></tr>';
+    if(hasLot3){
+        pg1+='<tr><td><b>LOT 3</b></td><td>'+lot3Label+'</td><td style="text-align:right;font-weight:700;">'+ite_fmt(totLot3)+'</td></tr>';
+    }
+    pg1+='<tr class="ptz-total"><td colspan="2"><b>TOTAL TTC des travaux</b></td><td style="text-align:right;">'+ite_fmt(ttc)+'</td></tr>';
+    pg1+='</table></div>';
+
+    // Aides
+    pg1+='<div class="ptz-section"><div class="ptz-section-title">\ud83d\udcb0 Aides d\u00e9duites</div>';
+    pg1+='<table class="ptz-table">';
+    pg1+='<tr><th>Aide</th><th style="text-align:right;">Montant</th></tr>';
+    pg1+='<tr><td>Prime CEE EDF (R2M / Valoren)</td><td style="text-align:right;font-weight:700;color:#16a34a;">- '+ite_fmt(primeCEE)+'</td></tr>';
+    if(mprCET>0){
+        pg1+='<tr><td>MaPrimeR\u00e9nov\' CET (indicatif, non d\u00e9duit du devis)</td><td style="text-align:right;color:#2563eb;">'+ite_fmt(mprCET)+' *</td></tr>';
+    }
+    pg1+='<tr class="ptz-total"><td><b>Reste \u00e0 financer</b></td><td style="text-align:right;">'+ite_fmt(reste)+'</td></tr>';
+    pg1+='</table></div>';
+
+    // PTZ Highlight
+    pg1+='<div class="ptz-highlight" style="text-align:center;">';
+    pg1+='<div style="font-size:8pt;font-weight:700;color:#1e40af;margin-bottom:2mm;">\ud83c\udfdb\ufe0f \u00c9CO-PR\u00caT \u00c0 TAUX Z\u00c9RO</div>';
+    pg1+='<div class="ptz-highlight-val">'+ite_fmtN(montantPTZ)+' \u20ac</div>';
+    pg1+='<div style="font-size:7.5pt;color:#64748b;margin-top:1mm;">Plafond PTZ : '+ite_fmtN(plafondPTZ)+' \u20ac \u00b7 '+nbLots+' gestes \u00e9nerg\u00e9tiques \u00b7 Taux : <b>0%</b></div>';
+    pg1+='</div>';
+
+    pg1+=ite_dvFT(1,2)+'</div>';
+
+    // ===== PAGE 2: Conditions de financement =====
+    var pg2='<div class="ite-page">'+dv_logoHeader();
+    pg2+='<div class="ptz-title">\ud83c\udfdb\ufe0f \u00c9CO-PR\u00caT \u00c0 TAUX Z\u00c9RO &mdash; CONDITIONS DE FINANCEMENT</div>';
+
+    pg2+='<div style="font-size:8pt;text-align:center;margin-bottom:4mm;color:#64748b;">R\u00e9f\u00e9rence dossier : <b>'+nc+'</b> \u00b7 Date : <b>'+df+'</b> \u00b7 Client : <b>'+nom+'</b></div>';
+
+    // Financing table
+    pg2+='<div class="ptz-section"><div class="ptz-section-title">\ud83d\udcb3 D\u00e9tail du financement Eco-PTZ</div>';
+    pg2+='<table class="ptz-table">';
+    pg2+='<tr><td style="width:55%;font-weight:700;">Montant emprunt\u00e9</td><td style="text-align:right;font-weight:900;font-size:10pt;color:#1e40af;">'+ite_fmt(montantPTZ)+'</td></tr>';
+    pg2+='<tr><td style="font-weight:700;">Taux d\u00e9biteur fixe</td><td style="text-align:right;font-weight:700;color:#16a34a;">0,00 %</td></tr>';
+    pg2+='<tr><td style="font-weight:700;">TAEG</td><td style="text-align:right;font-weight:700;color:#16a34a;">0,00 %</td></tr>';
+    pg2+='<tr><td style="font-weight:700;">Dur\u00e9e du pr\u00eat</td><td style="text-align:right;"><b>'+duree+' mois</b> ('+Math.round(duree/12*10)/10+' ans)</td></tr>';
+    pg2+='<tr><td style="font-weight:700;">Nombre d\'\u00e9ch\u00e9ances</td><td style="text-align:right;">'+duree+'</td></tr>';
+    pg2+='<tr><td style="font-weight:700;">Report de mensualit\u00e9</td><td style="text-align:right;">0 mois</td></tr>';
+    pg2+='<tr><td style="font-weight:700;">Mensualit\u00e9 hors assurance</td><td style="text-align:right;font-weight:700;">'+ite_fmt(mensHA)+'</td></tr>';
+    pg2+='<tr><td style="font-weight:700;">Co\u00fbt total hors assurance</td><td style="text-align:right;">'+ite_fmt(totalHA)+'</td></tr>';
+    pg2+='</table></div>';
+
+    // Insurance section
+    pg2+='<div class="ptz-section"><div class="ptz-section-title">\ud83d\udee1\ufe0f Assurance emprunteur</div>';
+    pg2+='<table class="ptz-table">';
+    pg2+='<tr><td style="width:55%;font-weight:700;">Type de couverture</td><td style="text-align:right;">'+typeAss+'</td></tr>';
+    pg2+='<tr><td style="font-weight:700;">Mensualit\u00e9 avec assurance</td><td style="text-align:right;font-weight:700;">'+ite_fmt(mensAA)+'</td></tr>';
+    pg2+='<tr><td style="font-weight:700;">TAEA (Taux Annuel Effectif Assurance)</td><td style="text-align:right;">'+taeaText+'</td></tr>';
+    pg2+='<tr><td style="font-weight:700;">Co\u00fbt total avec assurance</td><td style="text-align:right;font-weight:900;">'+ite_fmt(totalAA)+'</td></tr>';
+    pg2+='</table></div>';
+
+    // Summary box
+    pg2+='<div class="ptz-highlight">';
+    pg2+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:3mm;text-align:center;">';
+    pg2+='<div><div style="font-size:7pt;color:#64748b;margin-bottom:1mm;">Montant emprunt\u00e9</div><div style="font-size:12pt;font-weight:900;color:#1e40af;">'+ite_fmtN(montantPTZ)+' \u20ac</div></div>';
+    pg2+='<div><div style="font-size:7pt;color:#64748b;margin-bottom:1mm;">Mensualit\u00e9</div><div style="font-size:12pt;font-weight:900;color:#1e40af;">'+ite_fmt(mensAA)+'</div></div>';
+    pg2+='<div><div style="font-size:7pt;color:#64748b;margin-bottom:1mm;">Dur\u00e9e</div><div style="font-size:12pt;font-weight:900;color:#1e40af;">'+duree+' mois</div></div>';
+    pg2+='</div></div>';
+
+    // Legal
+    pg2+='<div class="ptz-section"><div class="ptz-section-title">\u2696\ufe0f Mentions l\u00e9gales</div>';
+    pg2+='<div style="font-size:7pt;line-height:1.5;color:#374151;">';
+    pg2+='<p>\u2022 L\'\u00e9co-pr\u00eat \u00e0 taux z\u00e9ro (Eco-PTZ) est un pr\u00eat sans int\u00e9r\u00eat, accord\u00e9 sous conditions, pour financer des travaux de r\u00e9novation \u00e9nerg\u00e9tique dans les logements anciens.</p>';
+    pg2+='<p>\u2022 Le logement doit avoir \u00e9t\u00e9 construit depuis plus de 2 ans et constituer la r\u00e9sidence principale de l\'emprunteur.</p>';
+    pg2+='<p>\u2022 L\'obtention de l\'\u00e9co-PTZ est soumise \u00e0 l\'acceptation par l\'\u00e9tablissement bancaire partenaire. Ce document ne constitue pas une offre de pr\u00eat.</p>';
+    pg2+='<p>\u2022 Les travaux doivent \u00eatre r\u00e9alis\u00e9s par un professionnel RGE (Reconnu Garant de l\'Environnement).</p>';
+    pg2+='<p>\u2022 Plafond Eco-PTZ : 25 000 \u20ac pour 2 gestes, 30 000 \u20ac pour 3 gestes ou plus.</p>';
+    pg2+='<p>\u2022 Dur\u00e9e de remboursement maximale : 15 ans (180 mois).</p>';
+    if(mprCET>0){
+        pg2+='<p style="color:#2563eb;">* L\'aide MaPrimeR\u00e9nov\' CET ('+ite_fmt(mprCET)+') est indicative et n\'est pas d\u00e9duite du pr\u00e9sent document. Le client devra en faire la demande aupr\u00e8s de l\'ANAH.</p>';
+    }
+    pg2+='</div></div>';
+
+    // Signatures
+    pg2+='<div style="margin-top:6mm;display:grid;grid-template-columns:1fr 1fr;gap:6mm;">';
+    pg2+='<div class="ptz-sig-block"><b>L\'emprunteur</b><br>Nom : '+nomUpper+' '+prenomUpper+'<br>Fait \u00e0 : '+villeClean.toUpperCase()+'<br>Le : ____/____/________<br>Mention \u00ab Lu et approuv\u00e9 \u00bb<br><div class="sig-canvas-area" data-sig="client"></div></div>';
+    pg2+='<div class="ptz-sig-block"><b>LES ARTISANS VERTS</b><br>Repr\u00e9sentant : '+con+'<br>Fait \u00e0 : COURBEVOIE<br>Le : ____/____/________<br><br><div class="sig-canvas-area" data-sig="rep"></div></div>';
+    pg2+='</div>';
+
+    pg2+=ite_dvFT(2,2)+'</div>';
+
+    // Render
+    ite_$('itePtzArea').innerHTML=pg1+pg2;
+    ite_$('itePtzArea').style.display='block';
+    downloadDevisPDF('itePtzArea','ECO-PTZ-'+num+'-'+nom.replace(/\s+/g,'_')+'.pdf');
+}
+
+// ============================================
+// E-SIGNATURE SYSTEM
+// ============================================
+var esign_pads={client:null,rep:null};
+var esign_drawing={client:false,rep:false};
+var esign_hasData={client:false,rep:false};
+var esign_lastDoc=''; // 'devis' or 'ptz'
+
+function esign_openModal(docType){
+    esign_lastDoc=docType||'';
+    var overlay=document.getElementById('esignOverlay');
+    overlay.style.display='flex';
+
+    // Build doc list
+    var docListEl=document.getElementById('esignDocList');
+    var hasDevis=ite_$('iteDevisArea')&&ite_$('iteDevisArea').innerHTML.trim().length>0;
+    var hasPtz=ite_$('itePtzArea')&&ite_$('itePtzArea').innerHTML.trim().length>0;
+    var docHtml='<div style="margin-bottom:12px;">';
+    docHtml+='<div style="font-size:12px;font-weight:700;color:#6b7280;margin-bottom:8px;">DOCUMENTS DISPONIBLES</div>';
+    if(hasDevis){
+        docHtml+='<label style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;cursor:pointer;margin-bottom:6px;">';
+        docHtml+='<input type="checkbox" id="esignDocDevis" checked> <span style="font-size:13px;font-weight:600;">Devis ITE</span></label>';
+    }
+    if(hasPtz){
+        docHtml+='<label style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;cursor:pointer;margin-bottom:6px;">';
+        docHtml+='<input type="checkbox" id="esignDocPTZ" checked> <span style="font-size:13px;font-weight:600;">Document Eco-PTZ</span></label>';
+    }
+    if(!hasDevis&&!hasPtz){
+        docHtml+='<div style="padding:14px;background:#fef3c7;border:1px solid #fcd34d;border-radius:8px;color:#92400e;font-size:13px;">';
+        docHtml+='\u26a0\ufe0f Aucun document g\u00e9n\u00e9r\u00e9. Veuillez d\'abord g\u00e9n\u00e9rer un Devis ITE ou un document PTZ.</div>';
+    }
+    docHtml+='</div>';
+    docListEl.innerHTML=docHtml;
+
+    // Init signature pads
+    setTimeout(function(){
+        esign_initPad('client');
+        esign_initPad('rep');
+    },100);
+}
+
+function esign_close(){
+    document.getElementById('esignOverlay').style.display='none';
+}
+
+function esign_initPad(type){
+    var canvasId=type==='client'?'esignClientCanvas':'esignRepCanvas';
+    var canvas=document.getElementById(canvasId);
+    if(!canvas)return;
+    var rect=canvas.parentElement.getBoundingClientRect();
+    canvas.width=rect.width;
+    canvas.height=150;
+    var ctx=canvas.getContext('2d');
+    ctx.strokeStyle='#1a1a2e';
+    ctx.lineWidth=2.5;
+    ctx.lineCap='round';
+    ctx.lineJoin='round';
+
+    var isDown=false,lastX=0,lastY=0;
+
+    function getPos(e){
+        var r=canvas.getBoundingClientRect();
+        var t=e.touches?e.touches[0]:e;
+        return{x:t.clientX-r.left,y:t.clientY-r.top};
+    }
+
+    function start(e){
+        e.preventDefault();
+        isDown=true;
+        var p=getPos(e);
+        lastX=p.x;lastY=p.y;
+        ctx.beginPath();
+        ctx.moveTo(lastX,lastY);
+        esign_hasData[type]=true;
+        var ph=document.getElementById(type==='client'?'esignClientPlaceholder':'esignRepPlaceholder');
+        if(ph)ph.style.display='none';
+        var wrap=document.getElementById(type==='client'?'esignClientWrap':'esignRepWrap');
+        if(wrap)wrap.classList.add('active');
+    }
+    function move(e){
+        if(!isDown)return;
+        e.preventDefault();
+        var p=getPos(e);
+        ctx.lineTo(p.x,p.y);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(p.x,p.y);
+        lastX=p.x;lastY=p.y;
+    }
+    function end(){isDown=false;}
+
+    canvas.addEventListener('mousedown',start);
+    canvas.addEventListener('mousemove',move);
+    canvas.addEventListener('mouseup',end);
+    canvas.addEventListener('mouseleave',end);
+    canvas.addEventListener('touchstart',start,{passive:false});
+    canvas.addEventListener('touchmove',move,{passive:false});
+    canvas.addEventListener('touchend',end);
+
+    esign_pads[type]=canvas;
+}
+
+function esign_clearPad(type){
+    var canvas=esign_pads[type];
+    if(!canvas)return;
+    var ctx=canvas.getContext('2d');
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    esign_hasData[type]=false;
+    var ph=document.getElementById(type==='client'?'esignClientPlaceholder':'esignRepPlaceholder');
+    if(ph)ph.style.display='block';
+    var wrap=document.getElementById(type==='client'?'esignClientWrap':'esignRepWrap');
+    if(wrap)wrap.classList.remove('active');
+}
+
+function esign_getSignatureDataURL(type){
+    var canvas=esign_pads[type];
+    if(!canvas||!esign_hasData[type])return null;
+    return canvas.toDataURL('image/png');
+}
+
+async function esign_applySignatures(){
+    var clientSig=esign_getSignatureDataURL('client');
+    var repSig=esign_getSignatureDataURL('rep');
+
+    if(!clientSig&&!repSig){
+        alert('Veuillez dessiner au moins une signature avant de continuer.');
+        return;
+    }
+
+    var statusEl=document.getElementById('esignStatusMsg');
+    statusEl.innerHTML='<div class="esign-status pending">\u23f3 Application des signatures en cours...</div>';
+
+    var signDevis=document.getElementById('esignDocDevis')&&document.getElementById('esignDocDevis').checked;
+    var signPTZ=document.getElementById('esignDocPTZ')&&document.getElementById('esignDocPTZ').checked;
+
+    var now=new Date();
+    var dateStr=now.toLocaleDateString('fr-FR');
+    var timeStr=now.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+
+    // Inject signatures into devis
+    if(signDevis){
+        var devisArea=ite_$('iteDevisArea');
+        if(devisArea){
+            var sigBlocks=devisArea.querySelectorAll('.dv-sig');
+            sigBlocks.forEach(function(block){
+                var sigHtml='<div style="margin-top:3mm;">';
+                if(clientSig) sigHtml+='<img src="'+clientSig+'" style="height:15mm;width:auto;display:block;">';
+                sigHtml+='<div style="font-size:6pt;color:#666;margin-top:1mm;">Sign\u00e9 \u00e9lectroniquement le '+dateStr+' \u00e0 '+timeStr+'</div>';
+                sigHtml+='</div>';
+                block.innerHTML+=sigHtml;
+            });
+        }
+    }
+
+    // Inject signatures into PTZ
+    if(signPTZ){
+        var ptzArea=ite_$('itePtzArea');
+        if(ptzArea){
+            var sigAreas=ptzArea.querySelectorAll('.sig-canvas-area');
+            sigAreas.forEach(function(area){
+                var sigType=area.getAttribute('data-sig');
+                var sigData=sigType==='client'?clientSig:repSig;
+                if(sigData){
+                    area.style.border='none';
+                    area.style.background='transparent';
+                    area.innerHTML='<img src="'+sigData+'" style="height:14mm;width:auto;">'
+                        +'<div style="font-size:5.5pt;color:#666;">Sign\u00e9 \u00e9lectroniquement le '+dateStr+' \u00e0 '+timeStr+'</div>';
+                }
+            });
+        }
+    }
+
+    // Generate signed PDFs
+    try{
+        var nom=(document.getElementById('prenom').value.trim()+' '+document.getElementById('nom').value.trim()).trim()||'CLIENT';
+        var num=ite_V('iteNumDevis');
+
+        if(signDevis&&ite_$('iteDevisArea')&&ite_$('iteDevisArea').innerHTML.trim().length>0){
+            await downloadDevisPDF('iteDevisArea','DEVIS-ITE-SIGNE-'+num+'-'+nom.replace(/\s+/g,'_')+'.pdf');
+        }
+        if(signPTZ&&ite_$('itePtzArea')&&ite_$('itePtzArea').innerHTML.trim().length>0){
+            await downloadDevisPDF('itePtzArea','ECO-PTZ-SIGNE-'+num+'-'+nom.replace(/\s+/g,'_')+'.pdf');
+        }
+
+        statusEl.innerHTML='<div class="esign-status signed">\u2705 Documents sign\u00e9s et t\u00e9l\u00e9charg\u00e9s avec succ\u00e8s !</div>';
+
+        setTimeout(function(){esign_close();},2000);
+    }catch(e){
+        console.error('E-signature PDF error:',e);
+        statusEl.innerHTML='<div class="esign-status pending">\u274c Erreur : '+e.message+'</div>';
+    }
 }
 
 // ============================================
