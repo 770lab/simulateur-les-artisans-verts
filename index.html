@@ -5534,7 +5534,7 @@ function ite_generateDevis(){
     var has148=(t2==='148')||(hasLot3&&t3==='148');
     var mprCET=has148?(MPR_CET[catMPR]||0):0;
     var wFin=ite_V('iteIncludeFinancement')==='oui';
-    var tp=hasLot3?3:2; if(wFin)tp++;
+    var tp=hasLot3?4:3; if(wFin)tp++;
     var tvaStr=tva.toFixed(2).replace('.',',')+' %';
     // Isolant data
     var isolKey=ite_V('iteIsolantITE')||'CELLOMUR_120';
@@ -5900,16 +5900,22 @@ function ite_generateDevis(){
     // =========================================================
     var pn=2,allPages=pg1;
     if(hasLot3){
-        // pg2: LOT 2 desc+rows + LOT 3 description
-        var pg2='<div class="ite-page">'+dv_subHeader(num,df,nom)+lot2Desc+lot2Rows+lot3Desc+ite_dvFT(pn,tp)+'</div>';
+        // pg2: LOT 2 desc+rows
+        var pg2='<div class="ite-page">'+dv_subHeader(num,df,nom)+lot2Desc+lot2Rows+ite_dvFT(pn,tp)+'</div>';
         allPages+=pg2;pn++;
-        // pg3: LOT 3 rows + conditions + totals + legal
-        var pg3='<div class="ite-page">'+dv_subHeader(num,df,nom)+lot3Rows+condBlock+totauxBlock+legalBlock+ite_dvFT(pn,tp)+'</div>';
+        // pg3: LOT 3 desc+rows
+        var pg3='<div class="ite-page">'+dv_subHeader(num,df,nom)+lot3Desc+lot3Rows+ite_dvFT(pn,tp)+'</div>';
         allPages+=pg3;pn++;
+        // pg4: conditions + totals + legal
+        var pg4='<div class="ite-page">'+dv_subHeader(num,df,nom)+condBlock+totauxBlock+legalBlock+ite_dvFT(pn,tp)+'</div>';
+        allPages+=pg4;pn++;
     } else {
-        // pg2: LOT 2 desc+rows + conditions + totals + legal
-        var pg2='<div class="ite-page">'+dv_subHeader(num,df,nom)+lot2Desc+lot2Rows+condBlock+totauxBlock+legalBlock+ite_dvFT(pn,tp)+'</div>';
+        // pg2: LOT 2 desc+rows
+        var pg2='<div class="ite-page">'+dv_subHeader(num,df,nom)+lot2Desc+lot2Rows+ite_dvFT(pn,tp)+'</div>';
         allPages+=pg2;pn++;
+        // pg3: conditions + totals + legal
+        var pg3='<div class="ite-page">'+dv_subHeader(num,df,nom)+condBlock+totauxBlock+legalBlock+ite_dvFT(pn,tp)+'</div>';
+        allPages+=pg3;pn++;
     }
     if(wFin){
         var pgFin='<div class="ite-page">'+dv_subHeader(num,df,nom)+finBlock+ite_dvFT(pn,tp)+'</div>';
