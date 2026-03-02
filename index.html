@@ -1730,7 +1730,7 @@
 .ite-page .dv-row .r { text-align: right; font-weight: 600; }
 .ite-page .dv-row .c { text-align: center; }
 .ite-page .dv-specs { font-size: 7.5pt; line-height: 1.55; margin-bottom: 3mm; padding-left: 2mm; }
-.ite-page .dv-cond { font-size: 7.5pt; line-height: 1.45; margin-bottom: 3mm; padding: 3mm; border: 1px solid #999; }
+.ite-page .dv-cond { font-size: 7.5pt; line-height: 1.45; margin-bottom: 3mm; padding: 0; border: none; }
 .ite-page .dv-cond h4 { font-weight: 700; font-size: 8pt; margin: 2mm 0 1mm 0; }
 .ite-page .dv-cond h4:first-child { margin-top: 0; }
 .ite-page .dv-cond p { margin: 0.5mm 0; }
@@ -1741,7 +1741,7 @@
 .ite-page .dv-tt td { padding: 1.5px 4px; }
 .ite-page .dv-tt td:last-child { text-align: right; font-weight: 600; }
 .ite-page .dv-tt .ttc td { font-size: 10pt; font-weight: 900; border-top: 1px solid #333; padding-top: 3px; }
-.ite-page .dv-tt .reste td { color: #8b2252; font-size: 10pt; font-weight: 900; font-style: italic; border-top: 1px solid #8b2252; padding-top: 3px; }
+.ite-page .dv-tt .reste td { color: #16a34a; font-size: 10pt; font-weight: 900; font-style: italic; border-top: 1px solid #16a34a; padding-top: 3px; }
 .ite-page .dv-footer { position: absolute; bottom: 5mm; left: 12mm; right: 12mm; border-top: 1px solid #ccc; padding-top: 1.5mm; font-size: 5pt; color: #444; text-align: center; line-height: 1.4; }
 .ite-page .dv-pn { position: absolute; right: 0; bottom: 0; font-weight: 700; font-size: 9pt; }
 .ite-page .dv-legal { font-size: 7pt; line-height: 1.4; color: #333; margin-top: 4mm; }
@@ -2223,6 +2223,10 @@
                             </div>
                         </div>
                         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>Parcelle cadastrale</label>
+                                <input type="text" id="iteParcelle" placeholder="000 / 0E / 1185">
+                            </div>
                             <div class="form-group" style="margin-bottom:0;">
                                 <label>T&eacute;l&eacute;phone</label>
                                 <input type="text" id="iteTel" placeholder="06...">
@@ -7186,12 +7190,14 @@ function ite_generateDevis(){
     // =========================================================
     var pg1='<div class="ite-page">'+dv_logoHeader();
     pg1+='<div class="dv-title"><span>DEVIS : '+num+'</span><span>'+nom.toUpperCase()+'</span></div>';
+    var parcelle=ite_V('iteParcelle');
     pg1+='<div class="dv-info"><div class="dv-info-l">'
     +'Num\u00e9ro Client : <b>'+nc+'</b><br>'
     +'Date de devis : <b>'+df+'</b><br>'
     +'Date de visite pr\u00e9alable : <b>'+df+'</b><br>'
     +'Adresse des travaux : '+adr+'<br>'
     +vil+'<br>'
+    +(parcelle?'Parcelle cadastrale : <b>'+parcelle+'</b><br>':'')
     +'Conseiller : <b>'+con+'</b>'
     +'</div><div class="dv-info-r">'
     +nom+'<br>'+adr+'<br>'+vil+'<br>'
@@ -7489,6 +7495,7 @@ function ite_generateDevis(){
 
     var legalBlock='<div class="dv-legal">'
     +'Ce devis est gratuit et valable 30 jours.<br>'
+    +'Mode de paiement : Ch\u00e8que, Virement, Financement, Esp\u00e8ce.<br>'
     +(wFin?'Le paiement du prix est acquitt\u00e9, en tout ou partie, \u00e0 l\'aide d\'un cr\u00e9dit affect\u00e9. Sous r\u00e9serve d\'acceptation du pr\u00eat par DOMOFINANCE.<br>':'')
     +'Le client peut recourir \u00e0 la m\u00e9diation de la consommation en s\'adressant \u00e0 Toute r\u00e9clamation doit \u00eatre adress\u00e9e au Service Clients du Vendeur situ\u00e9 au 6 Passage Eug\u00e8ne Barbier - 92400 Courbevoie.<br>'
     +'Conform\u00e9ment aux dispositions de l\'article L.616-1 et R.616-1 du Code de la consommation relatives au processus de m\u00e9diation des litiges de la consommation, l\'Acheteur a le droit de recourir gratuitement au service de m\u00e9diation propos\u00e9 par Les ARTISANS VERTS.<br>'
