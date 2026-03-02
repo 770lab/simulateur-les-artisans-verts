@@ -6118,15 +6118,20 @@ function domoUpdateUI(r) {
     ite_$('iteTotalDuHA').value = totalHA.toFixed(2);
     ite_$('iteTotalDuAA').value = totalAA.toFixed(2);
 
+    // Detect Eco-PTZ (product 153) or any 0% product: if TAEG/TNC missing but mensualités OK
+    var isEcoPTZ = ite_V('iteDomoProduct') === '153';
+    var defaultRate = isEcoPTZ ? '0,00' : '-';
+    var defaultAmount = isEcoPTZ ? '0,00' : '-';
+
     // Spans
     var setSpan = function(id, val) { var el = document.getElementById(id); if(el) el.textContent = val; };
-    setSpan('iteFinTAEG', (r.teg_display || '-') + ' %');
-    setSpan('iteFinTNC', (r.tnc_display || '-') + ' %');
-    setSpan('iteFinCoutCredit', (r.cout_du_credit || '-') + ' \u20AC');
-    setSpan('iteFinFraisDossier', (r.frais_de_dossier || '-') + ' \u20AC');
-    setSpan('iteFinDureeContrat', (r.duree_du_contract_de_credit || '-') + ' mois');
-    setSpan('iteFinRetVendeur', (r.montant_retenue_vendeur || '-') + ' \u20AC');
-    setSpan('iteFinTAEA', (r.taea || '-') + ' %');
+    setSpan('iteFinTAEG', (r.teg_display || defaultRate) + ' %');
+    setSpan('iteFinTNC', (r.tnc_display || defaultRate) + ' %');
+    setSpan('iteFinCoutCredit', (r.cout_du_credit || defaultAmount) + ' \u20ac');
+    setSpan('iteFinFraisDossier', (r.frais_de_dossier || defaultAmount) + ' \u20ac');
+    setSpan('iteFinDureeContrat', (r.duree_du_contract_de_credit || dureeContrat) + ' mois');
+    setSpan('iteFinRetVendeur', (r.montant_retenue_vendeur || defaultAmount) + ' \u20ac');
+    setSpan('iteFinTAEA', (r.taea || (isEcoPTZ ? r.taea || '-' : '-')) + ' %');
 }
 
 // ============================================
