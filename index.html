@@ -6152,10 +6152,10 @@ async function ite_generatePTZ(){
 
         // Page 2 - Demande accompagnée
         setTxt('Nb formulaires','1');
-        setTxt('Nb devis',String(nbLots));
+        setTxt('Nb devis','1');
         setTxt('Nb frais','');
         setTxt('Nb copro','');
-        setTxt('Nb RP','');
+        setTxt('Nb RP','1');
 
         // Page 2 - Signature
         setTxt('Date',df);
@@ -6201,7 +6201,7 @@ async function ite_generatePTZ(){
         chk('X devis',true);
         chk('X frais',false);
         chk('X frais copro',false);
-        chk('X RP',false);
+        chk('X RP',true);
         chk('X audit',false);
         chk('X SPANC',false);
 
