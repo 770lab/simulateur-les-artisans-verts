@@ -55,12 +55,12 @@ function getSeuilsForPersonnes(region, nb) {
         base[2] + sup[2] * extra
     ];
 }
-const CEE_PRICE = { tm: 12.5, autres: 7.5 }; // €/MWhc
+const CEE_PRICE = { tm: 12, autres: 7.8 }; // €/MWhc — BAREME EDF 01/03/2026
 
-const BAR143 = { H1: 134800, H2: 121000, H3: 100500 };
+const BAR143 = { H1: 384600, H2: 384600, H3: 384600 }; // CDP cumacs 769200 / CDP×2
 
-// BAR-TH-148 v.A73.3 — Forfaits officiels (à compter du 01/11/2025)
-const BAR148 = { maison: 14700, appartement: 11800 };
+// BAR-TH-148 v27 — Forfaits officiels (à compter du 01/03/2026)
+const BAR148 = { maison: 15600, appartement: 11900 };
 
 const BAR171 = {
     maison: {
