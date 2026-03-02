@@ -50,6 +50,10 @@ function handleRequest(e) {
         result = doLogin(p.user, p.pass);
         break;
 
+      case 'checkSession':
+        result = doCheckSession(p.user, p.token);
+        break;
+
       case 'changePassword':
         result = doChangePassword(p.user, p.oldPass, p.newPass);
         break;
@@ -140,9 +144,13 @@ function doLogin(username, password) {
     const row = data[i];
     if (row[0].toString().toLowerCase() === username.toLowerCase()) {
       if (row[1].toString() === password) {
+        // Generate unique session token and store in column E
+        var token = Utilities.getUuid();
+        sheet.getRange(i + 1, 5).setValue(token);
         addJournalEntry(row[2] || username, 'Connexion', '');
         return {
           success: true,
+          sessionToken: token,
           user: {
             name: row[2] || username,
             role: row[3] || 'commercial',
@@ -155,6 +163,23 @@ function doLogin(username, password) {
     }
   }
   return { success: false, error: 'Utilisateur inconnu' };
+}
+
+// ============================================
+// VÉRIFICATION SESSION UNIQUE
+// ============================================
+function doCheckSession(username, token) {
+  if (!username || !token) return { valid: false };
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName('Users');
+  if (!sheet) return { valid: false };
+  const data = sheet.getDataRange().getValues();
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0].toString().toLowerCase() === username.toLowerCase()) {
+      return { valid: (data[i][4] || '').toString() === token };
+    }
+  }
+  return { valid: false };
 }
 
 // ============================================

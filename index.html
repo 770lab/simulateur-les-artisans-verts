@@ -4732,8 +4732,13 @@ function doLogin(){
                     name: usr.name || u,
                     role: usr.role || 'commercial'
                 };
-                try{ localStorage.setItem('pac_user', JSON.stringify(currentUser)); localStorage.setItem('pac_api','1'); }catch(e){}
+                try{
+                    localStorage.setItem('pac_user', JSON.stringify(currentUser));
+                    localStorage.setItem('pac_api','1');
+                    if(d.sessionToken) localStorage.setItem('pac_session_token', d.sessionToken);
+                }catch(e){}
                 showApp();
+                startSessionCheck();
                 logAction('Connexion', currentUser.name);
             } else {
                 errEl.textContent = d.error || 'Identifiants incorrects';
@@ -4768,15 +4773,43 @@ document.getElementById('loginUser').addEventListener('keydown', e=>{ if(e.key==
 function doLogout(){
     logAction('Déconnexion', currentUser ? currentUser.name : '');
     currentUser = null;
-    try{ localStorage.removeItem('pac_user'); localStorage.removeItem('pac_api'); }catch(e){}
+    stopSessionCheck();
+    try{ localStorage.removeItem('pac_user'); localStorage.removeItem('pac_api'); localStorage.removeItem('pac_session_token'); }catch(e){}
     location.reload();
 }
 
 function goToLogin(){
     currentUser = null;
-    try{ localStorage.removeItem('pac_user'); }catch(e){}
+    stopSessionCheck();
+    try{ localStorage.removeItem('pac_user'); localStorage.removeItem('pac_session_token'); }catch(e){}
     document.getElementById('appScreen').style.display = 'none';
     document.getElementById('loginScreen').style.display = 'flex';
+}
+
+// ============================================
+// SESSION UNIQUE — vérifie toutes les 30s
+// ============================================
+var _sessionCheckInterval = null;
+function startSessionCheck(){
+    stopSessionCheck();
+    if(!useAPI || !currentUser || currentUser.role==='guest') return;
+    _sessionCheckInterval = setInterval(function(){
+        var token = '';
+        try{ token = localStorage.getItem('pac_session_token')||''; }catch(e){}
+        if(!token || !currentUser) return;
+        apiCall({action:'checkSession', user:currentUser.id, token:token}, function(d){
+            if(d && d.valid===false){
+                stopSessionCheck();
+                alert('Votre session a été ouverte sur un autre appareil. Vous allez être déconnecté.');
+                currentUser = null;
+                try{ localStorage.removeItem('pac_user'); localStorage.removeItem('pac_api'); localStorage.removeItem('pac_session_token'); }catch(e){}
+                location.reload();
+            }
+        }, function(){});
+    }, 30000);
+}
+function stopSessionCheck(){
+    if(_sessionCheckInterval){ clearInterval(_sessionCheckInterval); _sessionCheckInterval=null; }
 }
 
 function doGuestLogin(){
@@ -4906,6 +4939,7 @@ function checkAutoLogin(){
                 if(localStorage.getItem('pac_api')) useAPI = true;
                 currentUser = data;
                 showApp();
+                startSessionCheck();
                 return true;
             }
         }
@@ -5654,8 +5688,10 @@ function domoOnProductChange() {
     if (!sel || !sel.value) return;
     var opt = sel.options[sel.selectedIndex];
     // Update modality dropdown based on product
-    var modalities = [];
-    try { modalities = JSON.parse(opt.dataset.modalities || '[]'); } catch(e){}
+    var rawMod = {};
+    try { rawMod = JSON.parse(opt.dataset.modalities || '{}'); } catch(e){}
+    // API returns object {"0":"normal","2":"gratuit"} or array — normalize to array of values
+    var modalities = Array.isArray(rawMod) ? rawMod : Object.values(rawMod);
     var modSel = document.getElementById('iteDomoModality');
     if (modSel) {
         modSel.innerHTML = '';
