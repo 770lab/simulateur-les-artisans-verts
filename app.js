@@ -679,18 +679,20 @@ function calcRAC(rb,ch,ta,taForMarge,tt){
     const icon=document.getElementById('statusIcon');
     const txt=document.getElementById('statusText');
     if(typeof dbg==='function') dbg('RAC: mg='+Math.round(mgForMarge)+' seuil='+seuilOK+' rbFM='+Math.round(rbForMarge)+' ch='+Math.round(ch));
+    var elAB=document.getElementById('actionButtons');
+    var elGC=document.getElementById('gesteCoSection');
     if(mgForMarge>=seuilOK){
         bd.className='status-badge ok';
         icon.textContent='✅';
         txt.textContent='Voulez-vous un devis ?';
-        document.getElementById('actionButtons').style.display='';
-        document.getElementById('gesteCoSection').style.display='';
+        if(elAB) elAB.style.display='';
+        if(elGC) elGC.style.display='';
     }else{
         bd.className='status-badge danger';
         icon.textContent='⚠️';
         txt.textContent='Aides insuffisantes — ajustez les paramètres';
-        document.getElementById('actionButtons').style.display='none';
-        document.getElementById('gesteCoSection').style.display='none';
+        if(elAB) elAB.style.display='none';
+        if(elGC) elGC.style.display='none';
     }
     // Update PAC financing block
     if(typeof updatePacFinanceBlock==='function') updatePacFinanceBlock(rc);
@@ -719,7 +721,7 @@ function shareDevis(){
             document.getElementById('statusText').textContent='✓ Copié !';
             setTimeout(()=>{ document.getElementById('statusText').textContent=oldTxt; }, 2000);
         }).catch(()=>{
-            window.open('https://api.whatsapp.com/send?text='+encodeURIComponent(text),'_blank');
+            alert('Impossible de copier dans le presse-papier.');
         });
     }
 }
@@ -868,45 +870,14 @@ function checkExport(){
     const nom=document.getElementById('nom').value.trim();
     const prenom=document.getElementById('prenom').value.trim();
     const btn=document.getElementById('exportBtn');
-    const wBtn=document.getElementById('whatsappBtn');
     const hint=document.getElementById('exportHint');
     if(nom&&prenom){
         if(btn){btn.disabled=false; btn.style.cursor='pointer'; btn.style.opacity='1';}
-        if(wBtn){wBtn.disabled=false; wBtn.style.cursor='pointer'; wBtn.style.opacity='1';}
         if(hint) hint.style.display='none';
     }else{
         if(btn){btn.disabled=true; btn.style.cursor='not-allowed'; btn.style.opacity='0.5';}
-        if(wBtn){wBtn.disabled=true; wBtn.style.cursor='not-allowed'; wBtn.style.opacity='0.5';}
         if(hint) hint.style.display='block';
     }
-}
-
-function sendWhatsApp(){
-    if(typeof logExport==='function') logExport('WhatsApp');
-    const nom=document.getElementById('nom').value.trim() || 'Client';
-    const prenom=document.getElementById('prenom').value.trim() || '';
-    const scenario=document.getElementById('scenario').options[document.getElementById('scenario').selectedIndex].text;
-    const categorie=document.getElementById('categorie').options[document.getElementById('categorie').selectedIndex].text;
-    const zone=document.getElementById('zone').options[document.getElementById('zone').selectedIndex].text;
-    const etas=document.getElementById('etas').options[document.getElementById('etas').selectedIndex].text;
-    const surface=getSurfaceLabel();
-    const ttc=document.getElementById('totalTTC').textContent;
-    const aidesMPR=document.getElementById('aidesMPR').textContent;
-    const aidesCEE=document.getElementById('aidesCEE').textContent;
-    const totalAides=document.getElementById('totalAides').textContent;
-    const racBrut=document.getElementById('resteCharge').textContent;
-    const racPct=parseInt(document.getElementById('racPourcent').value)||0;
-    const racOffert=parseInt(document.getElementById('racOffert').value)||0;
-
-    let racLines = `• Reste à charge brut : ${racBrut}`;
-    if(racPct > 0 || racOffert > 0){
-        racLines += `\n• Prise en charge : ${racPct}% soit ${racOffert.toLocaleString('fr-FR')} €`;
-        const racFinal = Math.max(0, parseInt(document.getElementById('resteCharge').textContent.replace(/[^\d]/g,'')) - racOffert);
-        racLines += `\n• *Reste à charge final : ${racFinal.toLocaleString('fr-FR')} €*`;
-    }
-
-    const text = `🏠 *Demande de devis - 770 Lab*\n\n👤 *Client :* ${prenom} ${nom}\n\n📋 *Configuration :*\n• Scénario : ${scenario}\n• ${categorie}\n• ${zone}\n• ${surface}\n• ${etas}\n\n💰 *Montants :*\n• Total TTC : ${ttc}\n• Aides MPR : ${aidesMPR}\n• Aides CEE : ${aidesCEE}\n• Total aides : ${totalAides}\n${racLines}\n\nJe souhaite obtenir un devis détaillé.`;
-    window.open('https://api.whatsapp.com/send?text='+encodeURIComponent(text), '_blank');
 }
 
 function sendMail(){

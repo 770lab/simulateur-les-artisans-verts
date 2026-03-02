@@ -876,7 +876,6 @@
             border-color: rgba(255,255,255,0.2);
         }
         .btn-dark-export.pdf { }
-        .btn-dark-export.whatsapp { }
 
         .summary-header {
             font-size: 12px;
@@ -2512,6 +2511,42 @@
                                 <option value="WOLF_FHA_14_17_230">WOLF 14kW Mono</option>
                                 <option value="WOLF_FHA_14_17_400">WOLF 14kW Tri</option>
                             </optgroup>
+                            <optgroup label="AUX Luccia R32 Mono">
+                                <option value="AUX_LUCCIA_08M">AUX Luccia 8kW Mono</option>
+                                <option value="AUX_LUCCIA_10M">AUX Luccia 10kW Mono</option>
+                                <option value="AUX_LUCCIA_12M">AUX Luccia 12kW Mono</option>
+                                <option value="AUX_LUCCIA_14M">AUX Luccia 14kW Mono</option>
+                                <option value="AUX_LUCCIA_16M">AUX Luccia 16kW Mono</option>
+                            </optgroup>
+                            <optgroup label="AUX Luccia R32 Tri">
+                                <option value="AUX_LUCCIA_12T">AUX Luccia 12kW Tri</option>
+                                <option value="AUX_LUCCIA_14T">AUX Luccia 14kW Tri</option>
+                                <option value="AUX_LUCCIA_16T">AUX Luccia 16kW Tri</option>
+                            </optgroup>
+                            <optgroup label="AUX Titan R290 Mono">
+                                <option value="AUX_TITAN_08M">AUX Titan 8kW Mono</option>
+                                <option value="AUX_TITAN_10M">AUX Titan 10kW Mono</option>
+                                <option value="AUX_TITAN_12M">AUX Titan 12kW Mono</option>
+                                <option value="AUX_TITAN_14M">AUX Titan 14kW Mono</option>
+                                <option value="AUX_TITAN_16M">AUX Titan 16kW Mono</option>
+                            </optgroup>
+                            <optgroup label="AUX Titan R290 Tri">
+                                <option value="AUX_TITAN_08T">AUX Titan 8kW Tri</option>
+                                <option value="AUX_TITAN_10T">AUX Titan 10kW Tri</option>
+                                <option value="AUX_TITAN_12T">AUX Titan 12kW Tri</option>
+                                <option value="AUX_TITAN_14T">AUX Titan 14kW Tri</option>
+                                <option value="AUX_TITAN_16T">AUX Titan 16kW Tri</option>
+                            </optgroup>
+                            <optgroup label="CLIVET Edge EVO Tri">
+                                <option value="CLIVET_EVO_22T">Clivet Edge EVO 22kW Tri</option>
+                                <option value="CLIVET_EVO_26T">Clivet Edge EVO 26kW Tri</option>
+                                <option value="CLIVET_EVO_30T">Clivet Edge EVO 30kW Tri</option>
+                            </optgroup>
+                            <optgroup label="FHE Inelio Tri">
+                                <option value="FHE_INELIO_22T">FHE Inelio 22kW Tri</option>
+                                <option value="FHE_INELIO_26T">FHE Inelio 26kW Tri</option>
+                                <option value="FHE_INELIO_30T">FHE Inelio 30kW Tri</option>
+                            </optgroup>
                         </select>
                     </div>
                     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:10px;">
@@ -3130,6 +3165,40 @@
                 </div>
 
 
+                <!-- Surplus PTZ Block -->
+                <div class="ite-card" id="iteSurplusPtzBlock" style="display:none;border:2px solid #f59e0b;background:#fffbeb;">
+                    <div class="ite-card-head">
+                        <div class="ite-card-icon">&#9888;&#65039;</div>
+                        <h3>Surplus hors PTZ</h3>
+                    </div>
+                    <div id="iteSurplusMsg" style="font-size:13px;color:#92400e;margin-bottom:10px;line-height:1.4;"></div>
+                    <div class="ite-fg">
+                        <div class="ite-fi">
+                            <label>Comment r&eacute;gler le surplus ?</label>
+                            <select id="iteSurplusMode" onchange="ite_onSurplusModeChange()">
+                                <option value="apport">Apport personnel</option>
+                                <option value="domofinance">Domofinance</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="iteSurplusDomoBlock" style="display:none;">
+                        <div class="ite-fg">
+                            <div class="ite-fi"><label>Produit Domofinance</label><select id="iteSurplusDomoProduct" onchange="iteSurplusDomoOnProductChange()"><option value="">Chargement&hellip;</option></select></div>
+                            <div class="ite-fi"><label>Modalit&eacute;</label><select id="iteSurplusDomoModality" onchange="iteSurplusDomoOnParamChange()"><option value="normal">Normal</option></select></div>
+                            <div class="ite-fi"><label>Report 180j</label><select id="iteSurplusDomoPostpone" onchange="iteSurplusDomoOnParamChange()"><option value="false">Sans</option><option value="true">Avec</option></select></div>
+                            <div class="ite-fi"><label>Dur&eacute;e (mois)</label><select id="iteSurplusDureeMois" onchange="iteSurplusDomoFetchResult()"><option value="120">120</option></select></div>
+                            <div style="border-top:1px solid #e2e8f0;margin:8px 0;padding-top:6px;"><span style="font-size:11px;font-weight:600;color:#475569;">R&eacute;sultats surplus</span></div>
+                            <div class="ite-fi"><label>Mensualit&eacute; H.A.</label><span id="iteSurplusMensHA" style="font-weight:700;font-size:14px;color:#1a2744;">-</span></div>
+                            <div class="ite-fi"><label>Mensualit&eacute; A.A.</label><span id="iteSurplusMensAA" style="font-weight:700;font-size:14px;color:#1a2744;">-</span></div>
+                            <div class="ite-fi"><label>TAEG</label><span id="iteSurplusTAEG" style="font-weight:700;font-size:14px;color:#1a2744;">-</span></div>
+                            <div class="ite-fi"><label>Co&ucirc;t du cr&eacute;dit</label><span id="iteSurplusCoutCredit" style="font-weight:700;font-size:14px;color:#1a2744;">-</span></div>
+                        </div>
+                    </div>
+                    <div id="iteSurplusApportBlock" style="padding:10px;border-radius:8px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);text-align:center;margin-top:8px;">
+                        <span style="font-size:13px;color:#166534;font-weight:600;" id="iteSurplusApportMsg">Le client r&egrave;gle le surplus par apport personnel</span>
+                    </div>
+                </div>
+
                 <!-- Generate button -->
                 <div style="margin-top: 10px;">
                     <button onclick="ite_generateDevis()" style="width: 100%; padding: 16px; border-radius: 12px; border: none; background: linear-gradient(135deg, #16a34a, #0d8a3a); color: white; font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 20px rgba(22,163,74,0.25); transition: all 0.2s; font-family: inherit;">
@@ -3355,9 +3424,6 @@
                     &#128196; G&eacute;n&eacute;rer le Devis PAC
                 </button>
                 
-                <button id="whatsappBtn" class="btn-dark-export whatsapp" onclick="sendWhatsApp()">
-                    &#128172; Envoyer par WhatsApp
-                </button>
                 <button onclick="esign_openModal('pac')" class="btn-dark-export" style="margin-top: 8px; background: rgba(255,255,255,0.08) !important; border: 1px solid rgba(255,255,255,0.15) !important;">
                     &#9998; Signature &eacute;lectronique
                 </button>
@@ -3828,12 +3894,19 @@ function updatePAC() {
     var ev = (p.etas || '').split('/').map(function(s){ return parseFloat(s.trim()); });
     var appType = (ev.length > 1 && ev[1] >= 100) ? 'Haute temp\u00e9rature' : 'Basse temp\u00e9rature';
     var etasHT = ev.length > 1 ? ev[1] : ev[0];
-    el.innerHTML = '<b>' + p.m + '</b> \u00b7 ' + p.cls + ' \u00b7 ETAS ' + p.etas + '% \u00b7 COP ' + p.cop35 + '/' + p.cop55 + ' \u00b7 ' + p.ref + ' \u00b7 ' + p.dim +
+    var prixTxt = p.prix ? ' \u00b7 <span style="color:#fbbf24;">' + p.prix.toLocaleString('fr-FR') + ' \u20AC HT</span>' : '';
+    el.innerHTML = '<b>' + p.m + '</b> \u00b7 ' + p.cls + ' \u00b7 ETAS ' + p.etas + '% \u00b7 COP ' + p.cop35 + '/' + p.cop55 + ' \u00b7 ' + p.ref + ' \u00b7 ' + p.dim + prixTxt +
         '<br><span style="color:#16a34a">\u2192 Application : <b>' + appType + '</b> \u00b7 ETAS HT : <b>' + etasHT + '%</b> (' + (etasHT >= 140 ? '\u2265 140%' : '111-140%') + ')</span>';
     var dm = document.getElementById('dimMarque');
     var dr = document.getElementById('dimReference');
     if (dm) dm.value = p.m;
     if (dr) dr.value = p.r;
+    // Auto-fill prix PAC TTC (prix HT * 1.055 for TVA 5.5%)
+    if (p.prix) {
+        var prixTTC = Math.round(p.prix * 1.055);
+        var prixEl = document.getElementById('prixPAC');
+        if (prixEl) prixEl.value = prixTTC;
+    }
 }
 
 function syncEtasFromPAC() {
@@ -4080,7 +4153,37 @@ const PAC_CATALOG = {
     WOLF_FHA_08_10_230:{m:'WOLF',n:'PAC WOLF FHA 08/10 8kW Mono ETAS 196%',r:'9148085',a:'220-240V/1Ph',cop35:'4,9',cop55:'2,9',cap35:'8,0kW',cap55:'8,0kW',cls:'A+++',etas:'196/133',scop:'4,9/2,9',db:'60,5dB(A)',dim:'1385x865x526mm',kg:'88+27Kg',ref:'R32',ch:'1,4kg',pr:'-',rg:'BM-2'},
     WOLF_FHA_11_14_230:{m:'WOLF',n:'PAC WOLF FHA 11/14 11kW Mono ETAS 174%',r:'9148086',a:'220-240V/1Ph',cop35:'5,1',cop55:'3,1',cap35:'11,0kW',cap55:'11,0kW',cls:'A++',etas:'174/126',scop:'5,1/3,1',db:'60,8dB(A)',dim:'1385x865x526mm',kg:'122+27Kg',ref:'R32',ch:'1,75kg',pr:'-',rg:'BM-2'},
     WOLF_FHA_14_17_230:{m:'WOLF',n:'PAC WOLF FHA 14/17 14kW Mono ETAS 178%',r:'9148087',a:'220-240V/1Ph',cop35:'5,0',cop55:'3,1',cap35:'13,0kW',cap55:'13,0kW',cls:'A+++',etas:'178/131',scop:'5,0/3,1',db:'66,4dB(A)',dim:'1385x865x526mm',kg:'122+27Kg',ref:'R32',ch:'1,75kg',pr:'-',rg:'BM-2'},
-    WOLF_FHA_14_17_400:{m:'WOLF',n:'PAC WOLF FHA 14/17 14kW Tri ETAS 173%',r:'9148089',a:'380-415V/3Ph',cop35:'5,1',cop55:'3,1',cap35:'14,0kW',cap55:'13,0kW',cls:'A++',etas:'173/129',scop:'5,1/3,1',db:'66,6dB(A)',dim:'1385x865x526mm',kg:'122+27Kg',ref:'R32',ch:'1,75kg',pr:'-',rg:'BM-2'}
+    WOLF_FHA_14_17_400:{m:'WOLF',n:'PAC WOLF FHA 14/17 14kW Tri ETAS 173%',r:'9148089',a:'380-415V/3Ph',cop35:'5,1',cop55:'3,1',cap35:'14,0kW',cap55:'13,0kW',cls:'A++',etas:'173/129',scop:'5,1/3,1',db:'66,6dB(A)',dim:'1385x865x526mm',kg:'122+27Kg',ref:'R32',ch:'1,75kg',pr:'-',rg:'BM-2'},
+    // AUX Luccia R32 Bi-Bloc Monophasé (2L Distribution)
+    AUX_LUCCIA_08M:{m:'AUX',n:'PAC AUX Luccia R32 8kW Mono Bi-Bloc',r:'ACHP-H08/4R3HB',a:'220-240V/1Ph',cop35:'4,50',cop55:'3,20',cap35:'8,0kW',cap55:'8,0kW',cls:'A+++',etas:'160/126',scop:'-',db:'-',dim:'-',kg:'-',ref:'R32',ch:'-',pr:'-',rg:'6',prix:2300},
+    AUX_LUCCIA_10M:{m:'AUX',n:'PAC AUX Luccia R32 10kW Mono Bi-Bloc',r:'ACHP-H10/4R3HB',a:'220-240V/1Ph',cop35:'4,50',cop55:'3,20',cap35:'10,0kW',cap55:'10,0kW',cls:'A+++',etas:'160/126',scop:'-',db:'-',dim:'-',kg:'-',ref:'R32',ch:'-',pr:'-',rg:'6',prix:2400},
+    AUX_LUCCIA_12M:{m:'AUX',n:'PAC AUX Luccia R32 12kW Mono Bi-Bloc',r:'ACHP-H12/4R3HB',a:'220-240V/1Ph',cop35:'4,50',cop55:'3,20',cap35:'12,0kW',cap55:'12,0kW',cls:'A+++',etas:'160/126',scop:'-',db:'-',dim:'-',kg:'-',ref:'R32',ch:'-',pr:'-',rg:'6',prix:2500},
+    AUX_LUCCIA_14M:{m:'AUX',n:'PAC AUX Luccia R32 14kW Mono Bi-Bloc',r:'ACHP-H14/4R3HB',a:'220-240V/1Ph',cop35:'4,50',cop55:'3,20',cap35:'14,0kW',cap55:'14,0kW',cls:'A+++',etas:'160/126',scop:'-',db:'-',dim:'-',kg:'-',ref:'R32',ch:'-',pr:'-',rg:'6',prix:2600},
+    AUX_LUCCIA_16M:{m:'AUX',n:'PAC AUX Luccia R32 16kW Mono Bi-Bloc',r:'ACHP-H16/4R3HB',a:'220-240V/1Ph',cop35:'4,50',cop55:'3,20',cap35:'16,0kW',cap55:'16,0kW',cls:'A+++',etas:'160/126',scop:'-',db:'-',dim:'-',kg:'-',ref:'R32',ch:'-',pr:'-',rg:'6',prix:2700},
+    // AUX Luccia R32 Bi-Bloc Triphasé (2L Distribution)
+    AUX_LUCCIA_12T:{m:'AUX',n:'PAC AUX Luccia R32 12kW Tri Bi-Bloc',r:'ACHP-H12/5R3HB',a:'380-415V/3Ph',cop35:'4,50',cop55:'3,20',cap35:'12,0kW',cap55:'12,0kW',cls:'A+++',etas:'160/126',scop:'-',db:'-',dim:'-',kg:'-',ref:'R32',ch:'-',pr:'-',rg:'6',prix:2600},
+    AUX_LUCCIA_14T:{m:'AUX',n:'PAC AUX Luccia R32 14kW Tri Bi-Bloc',r:'ACHP-H14/5R3HB',a:'380-415V/3Ph',cop35:'4,50',cop55:'3,20',cap35:'14,0kW',cap55:'14,0kW',cls:'A+++',etas:'160/126',scop:'-',db:'-',dim:'-',kg:'-',ref:'R32',ch:'-',pr:'-',rg:'6',prix:2700},
+    AUX_LUCCIA_16T:{m:'AUX',n:'PAC AUX Luccia R32 16kW Tri Bi-Bloc',r:'ACHP-H16/5R3HB',a:'380-415V/3Ph',cop35:'4,50',cop55:'3,20',cap35:'16,0kW',cap55:'16,0kW',cls:'A+++',etas:'160/126',scop:'-',db:'-',dim:'-',kg:'-',ref:'R32',ch:'-',pr:'-',rg:'6',prix:2800},
+    // AUX Titan R290 Monobloc Monophasé (2L Distribution)
+    AUX_TITAN_08M:{m:'AUX',n:'PAC AUX Titan R290 8kW Mono Monobloc',r:'ACHP-H8/4R2HA-M',a:'220-240V/1Ph',cop35:'4,80',cop55:'3,20',cap35:'8,0kW',cap55:'8,0kW',cls:'A+++',etas:'190/150',scop:'-',db:'-',dim:'-',kg:'-',ref:'R290',ch:'-',pr:'-',rg:'6',prix:2500},
+    AUX_TITAN_10M:{m:'AUX',n:'PAC AUX Titan R290 10kW Mono Monobloc',r:'ACHP-H10/4R2HA-M',a:'220-240V/1Ph',cop35:'4,80',cop55:'3,20',cap35:'10,0kW',cap55:'10,0kW',cls:'A+++',etas:'190/150',scop:'-',db:'-',dim:'-',kg:'-',ref:'R290',ch:'-',pr:'-',rg:'6',prix:2600},
+    AUX_TITAN_12M:{m:'AUX',n:'PAC AUX Titan R290 12kW Mono Monobloc',r:'ACHP-H12/4R2HA-M',a:'220-240V/1Ph',cop35:'4,80',cop55:'3,20',cap35:'12,0kW',cap55:'12,0kW',cls:'A+++',etas:'190/150',scop:'-',db:'-',dim:'-',kg:'-',ref:'R290',ch:'-',pr:'-',rg:'6',prix:2700},
+    AUX_TITAN_14M:{m:'AUX',n:'PAC AUX Titan R290 14kW Mono Monobloc',r:'ACHP-H14/4R2HA-M',a:'220-240V/1Ph',cop35:'4,80',cop55:'3,20',cap35:'14,0kW',cap55:'14,0kW',cls:'A+++',etas:'190/150',scop:'-',db:'-',dim:'-',kg:'-',ref:'R290',ch:'-',pr:'-',rg:'6',prix:2800},
+    AUX_TITAN_16M:{m:'AUX',n:'PAC AUX Titan R290 16kW Mono Monobloc',r:'ACHP-H16/4R2HA-M',a:'220-240V/1Ph',cop35:'4,80',cop55:'3,20',cap35:'16,0kW',cap55:'16,0kW',cls:'A+++',etas:'190/150',scop:'-',db:'-',dim:'-',kg:'-',ref:'R290',ch:'-',pr:'-',rg:'6',prix:2900},
+    // AUX Titan R290 Monobloc Triphasé (2L Distribution)
+    AUX_TITAN_08T:{m:'AUX',n:'PAC AUX Titan R290 8kW Tri Monobloc',r:'ACHP-H8/5R2HA-M',a:'380-415V/3Ph',cop35:'4,80',cop55:'3,20',cap35:'8,0kW',cap55:'8,0kW',cls:'A+++',etas:'190/150',scop:'-',db:'-',dim:'-',kg:'-',ref:'R290',ch:'-',pr:'-',rg:'6',prix:2700},
+    AUX_TITAN_10T:{m:'AUX',n:'PAC AUX Titan R290 10kW Tri Monobloc',r:'ACHP-H10/5R2HA-M',a:'380-415V/3Ph',cop35:'4,80',cop55:'3,20',cap35:'10,0kW',cap55:'10,0kW',cls:'A+++',etas:'190/150',scop:'-',db:'-',dim:'-',kg:'-',ref:'R290',ch:'-',pr:'-',rg:'6',prix:2800},
+    AUX_TITAN_12T:{m:'AUX',n:'PAC AUX Titan R290 12kW Tri Monobloc',r:'ACHP-H12/5R2HA-M',a:'380-415V/3Ph',cop35:'4,80',cop55:'3,20',cap35:'12,0kW',cap55:'12,0kW',cls:'A+++',etas:'190/150',scop:'-',db:'-',dim:'-',kg:'-',ref:'R290',ch:'-',pr:'-',rg:'6',prix:2900},
+    AUX_TITAN_14T:{m:'AUX',n:'PAC AUX Titan R290 14kW Tri Monobloc',r:'ACHP-H14/5R2HA-M',a:'380-415V/3Ph',cop35:'4,80',cop55:'3,20',cap35:'14,0kW',cap55:'14,0kW',cls:'A+++',etas:'190/150',scop:'-',db:'-',dim:'-',kg:'-',ref:'R290',ch:'-',pr:'-',rg:'6',prix:3000},
+    AUX_TITAN_16T:{m:'AUX',n:'PAC AUX Titan R290 16kW Tri Monobloc',r:'ACHP-H16/5R2HA-M',a:'380-415V/3Ph',cop35:'4,80',cop55:'3,20',cap35:'16,0kW',cap55:'16,0kW',cls:'A+++',etas:'190/150',scop:'-',db:'-',dim:'-',kg:'-',ref:'R290',ch:'-',pr:'-',rg:'6',prix:3100},
+    // Clivet Edge EVO R32 Monobloc Triphasé
+    CLIVET_EVO_22T:{m:'CLIVET',n:'PAC Clivet Edge EVO 22kW Tri',r:'CLIVEDGEEVO22',a:'380-415V/3Ph',cop35:'4,53',cop55:'3,23',cap35:'22,0kW',cap55:'22,0kW',cls:'A+++',etas:'178/126',scop:'-',db:'-',dim:'-',kg:'-',ref:'R32',ch:'-',pr:'-',rg:'6',prix:4490},
+    CLIVET_EVO_26T:{m:'CLIVET',n:'PAC Clivet Edge EVO 26kW Tri',r:'CLIVEDGEEVO26',a:'380-415V/3Ph',cop35:'4,50',cop55:'3,15',cap35:'26,0kW',cap55:'26,0kW',cls:'A+++',etas:'177/123',scop:'-',db:'-',dim:'-',kg:'-',ref:'R32',ch:'-',pr:'-',rg:'6',prix:4590},
+    CLIVET_EVO_30T:{m:'CLIVET',n:'PAC Clivet Edge EVO 30kW Tri',r:'CLIVEDGEEVO30',a:'380-415V/3Ph',cop35:'4,20',cop55:'3,15',cap35:'30,0kW',cap55:'30,0kW',cls:'A+++',etas:'165/123',scop:'-',db:'-',dim:'-',kg:'-',ref:'R32',ch:'-',pr:'-',rg:'6',prix:4690},
+    // FHE Inelio R32 Monobloc Triphasé
+    FHE_INELIO_22T:{m:'FHE',n:'PAC FHE Inelio 22kW Tri',r:'FHEAR20021',a:'380-415V/3Ph',cop35:'4,53',cop55:'3,23',cap35:'22,0kW',cap55:'22,0kW',cls:'A+++',etas:'178/126',scop:'-',db:'-',dim:'-',kg:'-',ref:'R32',ch:'-',pr:'-',rg:'6',prix:4490},
+    FHE_INELIO_26T:{m:'FHE',n:'PAC FHE Inelio 26kW Tri',r:'FHEAR20022',a:'380-415V/3Ph',cop35:'4,50',cop55:'3,15',cap35:'26,0kW',cap55:'26,0kW',cls:'A+++',etas:'177/123',scop:'-',db:'-',dim:'-',kg:'-',ref:'R32',ch:'-',pr:'-',rg:'6',prix:4590},
+    FHE_INELIO_30T:{m:'FHE',n:'PAC FHE Inelio 30kW Tri',r:'FHEAR20023',a:'380-415V/3Ph',cop35:'4,20',cop55:'3,15',cap35:'30,0kW',cap55:'30,0kW',cls:'A+++',etas:'165/123',scop:'-',db:'-',dim:'-',kg:'-',ref:'R32',ch:'-',pr:'-',rg:'6',prix:4690}
 };
 
 function getCEE(et, zn, cs, sf){
@@ -4496,7 +4599,7 @@ function shareDevis(){
             document.getElementById('statusText').textContent='\u2713 Copié !';
             setTimeout(()=>{ document.getElementById('statusText').textContent=oldTxt; }, 2000);
         }).catch(()=>{
-            window.open('https://api.whatsapp.com/send?text='+encodeURIComponent(text),'_blank');
+            alert('Impossible de copier dans le presse-papier.');
         });
     }
 }
@@ -4637,36 +4740,16 @@ function checkExport(){
     const nom=document.getElementById('nom').value.trim();
     const prenom=document.getElementById('prenom').value.trim();
     const btn=document.getElementById('exportBtn');
-    const wBtn=document.getElementById('whatsappBtn');
     const hint=document.getElementById('exportHint');
     if(nom&&prenom){
         btn.disabled=false; btn.style.cursor='pointer'; btn.style.opacity='1';
-        wBtn.disabled=false; wBtn.style.cursor='pointer'; wBtn.style.opacity='1';
         if(hint) hint.style.display='none';
     }else{
         btn.disabled=true; btn.style.cursor='not-allowed'; btn.style.opacity='0.5';
-        wBtn.disabled=true; wBtn.style.cursor='not-allowed'; wBtn.style.opacity='0.5';
         if(hint) hint.style.display='block';
     }
 }
 
-function sendWhatsApp(){
-    if(typeof logExport==='function') logExport('WhatsApp');
-    const nom=document.getElementById('nom').value.trim() || 'Client';
-    const prenom=document.getElementById('prenom').value.trim() || '';
-    const scenario=document.getElementById('scenario').options[document.getElementById('scenario').selectedIndex].text;
-    const categorie=document.getElementById('categorie').options[document.getElementById('categorie').selectedIndex].text;
-    const zone=document.getElementById('zone').options[document.getElementById('zone').selectedIndex].text;
-    const etas=document.getElementById('etas').options[document.getElementById('etas').selectedIndex].text;
-    const surface=getSurfaceLabel();
-    const ttc=document.getElementById('totalTTC').textContent;
-    const aidesMPR=document.getElementById('aidesMPR').textContent;
-    const aidesCEE=document.getElementById('aidesCEE').textContent;
-    const totalAides=document.getElementById('totalAides').textContent;
-    const rac=document.getElementById('resteCharge').textContent;
-    const message=`\uD83C\uDFE0 *Demande de devis - Les Artisans Verts*%0A%0A\uD83D\uDC64 *Client :* ${prenom} ${nom}%0A%0A\uD83D\uDCCB *Configuration :*%0A\u2022 Scénario : ${scenario}%0A\u2022 ${categorie}%0A\u2022 ${zone}%0A\u2022 ${surface}%0A\u2022 ${etas}%0A%0A\uD83D\uDCB0 *Montants :*%0A\u2022 Total TTC : ${ttc}%0A\u2022 Aides MPR : ${aidesMPR}%0A\u2022 Aides CEE : ${aidesCEE}%0A\u2022 Total aides : ${totalAides}%0A\u2022 Reste à charge : ${rac}%0A%0AJe souhaite obtenir un devis détaillé.`;
-    window.open(`https://api.whatsapp.com/send?text=${message}`, '_blank');
-}
 
 function exportPDF(){
     if(typeof logExport==='function') logExport('PDF');
@@ -5172,7 +5255,7 @@ function saveJournal(j){
         localStorage.setItem('pac_journal', JSON.stringify(j));
     }catch(e){}
 }
-var LOG_KEY_ACTIONS=['Connexion','Connexion (local)','Déconnexion','Devis ITE généré','Devis PAC généré','PTZ généré','Signature électronique','Dossier chargé','Dossier supprimé','Changement mot de passe','Export PDF','Export WhatsApp','Utilisateur créé','Utilisateur créé (local)'];
+var LOG_KEY_ACTIONS=['Connexion','Connexion (local)','Déconnexion','Devis ITE généré','Devis PAC généré','PTZ généré','Signature électronique','Dossier chargé','Dossier supprimé','Changement mot de passe','Export PDF','Utilisateur créé','Utilisateur créé (local)'];
 function logAction(action, detail){
     const entry = {
         date: new Date().toISOString(),
@@ -5471,38 +5554,33 @@ function calcBareme() {
 }
 
 function autoSelectPAC(targetKW) {
-    // Priority: Wolf Mono (with 2kW tolerance) > exact match > closest
+    // Auto-select: closest Mono model, prefer AUX Titan R290 > AUX Luccia > others
+    // For >16kW (large surfaces), also consider Tri models (Clivet/FHE)
     var models = [];
     for (var key in PAC_CATALOG) {
         var p = PAC_CATALOG[key];
         var cap = parseFloat((p.cap35 || '').replace(',', '.')) || 0;
         var brand = (p.m || '').toUpperCase();
         var isMono = key.indexOf('_T') === -1 && key.indexOf('_400') === -1;
-        models.push({key: key, brand: brand, kw: cap, mono: isMono});
+        models.push({key: key, brand: brand, kw: cap, mono: isMono, ref: p.ref || ''});
     }
-    // First pass: find best Wolf Mono within 2kW (round up preferred)
-    var bestWolf = null, bestWolfDiff = Infinity;
+    var best = null, bestScore = Infinity;
     for (var i = 0; i < models.length; i++) {
         var m = models[i];
-        if (!m.mono || m.brand !== 'WOLF') continue;
-        var diff = m.kw - targetKW; // positive = larger (good for comfort)
-        var absDiff = Math.abs(diff);
-        if (absDiff <= 2 && (absDiff < bestWolfDiff || (absDiff === bestWolfDiff && diff > 0))) {
-            bestWolf = m;
-            bestWolfDiff = absDiff;
-        }
-    }
-    // If Wolf found within tolerance, use it
-    var best = bestWolf;
-    // Otherwise fallback: closest Mono from any brand
-    if (!best) {
-        var bestDiff = Infinity;
-        for (var j = 0; j < models.length; j++) {
-            var m2 = models[j];
-            if (!m2.mono) continue;
-            var d = Math.abs(m2.kw - targetKW);
-            if (d < bestDiff) { best = m2; bestDiff = d; }
-        }
+        // Skip Tri for small targets, skip Mono for very large targets
+        if (targetKW <= 16 && !m.mono) continue;
+        if (targetKW > 16 && m.mono && m.kw < targetKW - 2) continue;
+        var diff = Math.abs(m.kw - targetKW);
+        // Prefer round-up (model >= target)
+        var score = diff * 10;
+        if (m.kw < targetKW) score += 5; // penalty for undersized
+        // Brand preference: AUX Titan > AUX Luccia > THALEOS > others
+        if (m.key.indexOf('AUX_TITAN') === 0) score -= 3;
+        else if (m.key.indexOf('AUX_LUCCIA') === 0) score -= 2;
+        else if (m.key.indexOf('THALEOS') === 0) score -= 1;
+        // Mono preference for small targets
+        if (targetKW <= 16 && m.mono) score -= 1;
+        if (score < bestScore) { best = m; bestScore = score; }
     }
     if (best) {
         var sel = document.getElementById('marquePAC');
@@ -6154,6 +6232,167 @@ function ite_calcFinancement(){
     } else {
         ite_calcFinancementLocal();
     }
+    // Check PTZ surplus
+    ite_checkSurplusPTZ();
+}
+
+// === ITE SURPLUS PTZ ===
+var ITE_SURPLUS_AMOUNT = 0;
+var _iteSurplusDebounce = null;
+
+function ite_checkSurplusPTZ() {
+    var block = document.getElementById('iteSurplusPtzBlock');
+    if (!block) return;
+    var nbLots = _iteNbLots || 2;
+    var plafondPTZ = nbLots >= 3 ? 30000 : nbLots >= 2 ? 25000 : 0;
+    var ttc = ite_N('iteMontantTotalProjet');
+    var primeCEE = ite_N('itePrimeCEE');
+    var reste = ttc - primeCEE;
+    var surplus = reste - plafondPTZ;
+    // Check PTZ eligibility
+    var t2 = ite_V('iteTypeLot2');
+    var hasLot3 = nbLots >= 3;
+    var totLot2 = (typeof ite_getLot2Total === 'function') ? ite_getLot2Total() : 0;
+    var totLot3 = hasLot3 && (typeof ite_getLot3Total === 'function') ? ite_getLot3Total() : 0;
+    var lot2Ok = totLot2 >= 1500;
+    var lot3Ok = !hasLot3 || totLot3 >= 1500;
+    var ptzOk = nbLots >= 2 && lot2Ok && lot3Ok && ttc > 0;
+
+    if (ptzOk && surplus > 0 && plafondPTZ > 0) {
+        ITE_SURPLUS_AMOUNT = Math.round(surplus);
+        block.style.display = '';
+        var msg = document.getElementById('iteSurplusMsg');
+        if (msg) msg.innerHTML = 'Le reste \u00e0 r\u00e9gler (<b>' + ite_fmtN(Math.round(reste)) + ' \u20AC</b>) d\u00e9passe le plafond PTZ de <b>' + ite_fmtN(plafondPTZ) + ' \u20AC</b>.<br>Surplus \u00e0 financer : <b style="color:#dc2626;font-size:16px;">' + ite_fmtN(ITE_SURPLUS_AMOUNT) + ' \u20AC</b>';
+        var apportMsg = document.getElementById('iteSurplusApportMsg');
+        if (apportMsg) apportMsg.textContent = 'Le client r\u00e8gle le surplus de ' + ite_fmtN(ITE_SURPLUS_AMOUNT) + ' \u20AC par apport personnel';
+        ite_onSurplusModeChange();
+    } else {
+        ITE_SURPLUS_AMOUNT = 0;
+        block.style.display = 'none';
+    }
+}
+
+function ite_onSurplusModeChange() {
+    var mode = ite_V('iteSurplusMode');
+    var domoBlock = document.getElementById('iteSurplusDomoBlock');
+    var apportBlock = document.getElementById('iteSurplusApportBlock');
+    if (mode === 'domofinance') {
+        if (domoBlock) domoBlock.style.display = '';
+        if (apportBlock) apportBlock.style.display = 'none';
+        iteSurplusDomoPopulate();
+    } else {
+        if (domoBlock) domoBlock.style.display = 'none';
+        if (apportBlock) apportBlock.style.display = '';
+    }
+}
+
+function iteSurplusDomoPopulate() {
+    var sel = document.getElementById('iteSurplusDomoProduct');
+    if (!sel || !DOMO_PRODUCTS || !DOMO_PRODUCTS.length) return;
+    if (sel.options.length > 1 && sel.options[0].value !== '') return;
+    sel.innerHTML = '';
+    DOMO_PRODUCTS.forEach(function(p) {
+        var opt = document.createElement('option');
+        opt.value = p.id;
+        opt.textContent = p.name;
+        opt.dataset.modalities = JSON.stringify(p.availableModalities || {});
+        opt.dataset.postpone = JSON.stringify(p.availablePostpone || {});
+        sel.appendChild(opt);
+    });
+    if (sel.options.length > 0) iteSurplusDomoOnProductChange();
+}
+
+function iteSurplusDomoOnProductChange() {
+    var sel = document.getElementById('iteSurplusDomoProduct');
+    if (!sel || !sel.selectedOptions.length) return;
+    var opt = sel.selectedOptions[0];
+    // Update modality
+    var rawMod = {}; try { rawMod = JSON.parse(opt.dataset.modalities || '{}'); } catch(e){}
+    var modalities = Array.isArray(rawMod) ? rawMod : Object.values(rawMod);
+    var modSel = document.getElementById('iteSurplusDomoModality');
+    if (modSel) {
+        modSel.innerHTML = '';
+        modalities.forEach(function(m) {
+            var o = document.createElement('option'); o.value = m; o.textContent = m; modSel.appendChild(o);
+        });
+    }
+    // Update postpone
+    var rawPost = {}; try { rawPost = JSON.parse(opt.dataset.postpone || '{}'); } catch(e){}
+    var postpones = Array.isArray(rawPost) ? rawPost : Object.values(rawPost);
+    var postSel = document.getElementById('iteSurplusDomoPostpone');
+    if (postSel) {
+        postSel.innerHTML = '';
+        postpones.forEach(function(p) {
+            var o = document.createElement('option'); o.value = p; o.textContent = p === 'true' ? 'Avec' : 'Sans'; postSel.appendChild(o);
+        });
+    }
+    iteSurplusDomoOnParamChange();
+}
+
+function iteSurplusDomoOnParamChange() {
+    clearTimeout(_iteSurplusDebounce);
+    _iteSurplusDebounce = setTimeout(function(){ iteSurplusDomoFetchDurations(); }, 500);
+}
+
+function iteSurplusDomoFetchDurations() {
+    if (!DOMO_API_OK || ITE_SURPLUS_AMOUNT <= 0) return;
+    var productId = ite_V('iteSurplusDomoProduct');
+    if (!productId) return;
+    var modality = ite_V('iteSurplusDomoModality') || 'normal';
+    var postpone = ite_V('iteSurplusDomoPostpone') || 'false';
+    // Reuse emprunteur DOB from main ITE form
+    var dob = (ite_V('iteDobEmprunteur') || '').replace(/[^0-9]/g, '');
+    if (dob.length < 8) return;
+    var qs = 'valueAmount=' + ITE_SURPLUS_AMOUNT + '&valueModality=' + modality + '&valuePostpone=' + postpone + '&valueAge=' + dob;
+    var cobDob = (ite_V('iteDobCoemprunteur') || '').replace(/[^0-9]/g, '');
+    if (cobDob.length >= 8) qs += '&valueAgeCoborrower=' + cobDob;
+    domoApiCall('simulation/' + productId, qs, function(data) {
+        var sel = document.getElementById('iteSurplusDureeMois');
+        if (!sel) return;
+        var prevVal = sel.value;
+        sel.innerHTML = '';
+        var keys = Object.keys(data).map(Number).sort(function(a,b){return a-b;});
+        keys.forEach(function(d) {
+            var o = document.createElement('option');
+            o.value = d; o.textContent = d + ' mois \u2014 ' + parseFloat(data[d]).toFixed(2).replace('.', ',') + ' \u20AC/mois HA';
+            sel.appendChild(o);
+        });
+        if (data[prevVal]) sel.value = prevVal;
+        else if (keys.length > 0) sel.value = keys[keys.length - 1];
+        iteSurplusDomoFetchResult();
+    }, function(err) { console.warn('Surplus domo durations error:', err); });
+}
+
+function iteSurplusDomoFetchResult() {
+    if (!DOMO_API_OK || ITE_SURPLUS_AMOUNT <= 0) return;
+    var productId = ite_V('iteSurplusDomoProduct');
+    var duration = ite_V('iteSurplusDureeMois');
+    if (!productId || !duration) return;
+    var modality = ite_V('iteSurplusDomoModality') || 'normal';
+    var postpone = ite_V('iteSurplusDomoPostpone') || 'false';
+    var dob = (ite_V('iteDobEmprunteur') || '').replace(/[^0-9]/g, '');
+    if (dob.length < 8) return;
+    var inActivity = ite_V('iteDomoEnActivite') || 'true';
+    var insurance = ite_V('iteTypeAssurance') || 'DIM';
+    var qs = 'valueAmount=' + ITE_SURPLUS_AMOUNT + '&valueModality=' + modality + '&valuePostpone=' + postpone
+        + '&valueAge=' + dob + '&valueInActivity=' + inActivity + '&valueInsurance=' + insurance
+        + '&valueDuration=' + duration;
+    var cobDob = (ite_V('iteDobCoemprunteur') || '').replace(/[^0-9]/g, '');
+    if (cobDob.length >= 8) {
+        qs += '&valueAgeCoborrower=' + cobDob;
+        qs += '&valueCobInActivity=' + (ite_V('iteDomoCobEnActivite') || 'true');
+        var cobIns = ite_V('iteDomoCobAssurance') || 'none';
+        if (cobIns !== 'none') qs += '&valueCobInsurance=' + cobIns;
+    }
+    domoApiCall('result/' + productId, qs, function(data) {
+        var set = function(id, val) { var el = document.getElementById(id); if(el) el.textContent = val; };
+        var mensHA = parseFloat((data.mensualite1 || '0').replace(/\s/g, '').replace(',', '.'));
+        var mensAA = parseFloat((data.mens1_ins_lin || '0').replace(/\s/g, '').replace(',', '.'));
+        set('iteSurplusMensHA', mensHA.toFixed(2) + ' \u20AC/mois');
+        set('iteSurplusMensAA', mensAA.toFixed(2) + ' \u20AC/mois');
+        set('iteSurplusTAEG', (data.teg_display || '-') + ' %');
+        set('iteSurplusCoutCredit', (data.cout_du_credit || '-') + ' \u20AC');
+    }, function(err) { console.warn('Surplus domo result error:', err); });
 }
 
 var _iteNbLots = 2; // default 2 lots
