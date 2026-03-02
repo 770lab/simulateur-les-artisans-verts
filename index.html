@@ -5586,6 +5586,7 @@ async function ensureHtml2Canvas(){
 async function downloadDevisPDF(containerId,filename){
     var container=document.getElementById(containerId);
     var pages=container.querySelectorAll('.ite-page');
+    if(!pages.length) pages=container.querySelectorAll('.pac-devis-page');
     if(!pages.length){alert('Aucune page \u00e0 g\u00e9n\u00e9rer');return;}
     // Loading overlay
     var ov=document.createElement('div');
@@ -5593,13 +5594,33 @@ async function downloadDevisPDF(containerId,filename){
     ov.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);z-index:99999;display:flex;align-items:center;justify-content:center;';
     ov.innerHTML='<div style="background:#fff;padding:32px 48px;border-radius:16px;text-align:center;font-family:Arial,sans-serif;"><div style="font-size:18px;font-weight:700;margin-bottom:12px;">G\u00e9n\u00e9ration du PDF...</div><div style="font-size:14px;color:#666;">Veuillez patienter</div></div>';
     document.body.appendChild(ov);
+    // iOS detection — viewport too narrow for A4 pages causes html2canvas compression
+    var isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
     try{
         var JsPDF=await ensureJsPDF();
         var h2c=await ensureHtml2Canvas();
         var pdf=new JsPDF('p','mm','a4');
         for(var i=0;i<pages.length;i++){
             if(i>0) pdf.addPage();
-            var canvas=await h2c(pages[i],{scale:2,useCORS:true,backgroundColor:'#ffffff',logging:false,width:pages[i].scrollWidth,height:pages[i].scrollHeight});
+            var pg=pages[i];
+            // Ensure element is visible and at full A4 width for capture
+            var prevStyles=pg.style.cssText;
+            pg.style.cssText+=';position:absolute;left:-9999px;top:0;display:block;width:210mm;min-height:297mm;overflow:visible;';
+            // Force layout recalc
+            var pgW=pg.scrollWidth;
+            var pgH=pg.scrollHeight;
+            // A4 in px at 96dpi: 210mm~794px, 297mm~1123px — use as floor
+            var captureW=Math.max(pgW,794);
+            var captureH=Math.max(pgH,1123);
+            var h2cOpts={scale:2,useCORS:true,backgroundColor:'#ffffff',logging:false,width:captureW,height:captureH};
+            // On iOS force windowWidth so html2canvas uses a wide virtual viewport
+            if(isIOS){
+                h2cOpts.windowWidth=captureW;
+                h2cOpts.windowHeight=captureH;
+            }
+            var canvas=await h2c(pg,h2cOpts);
+            // Restore original styles
+            pg.style.cssText=prevStyles;
             var imgData=canvas.toDataURL('image/jpeg',0.95);
             pdf.addImage(imgData,'JPEG',0,0,210,297);
         }
