@@ -3250,36 +3250,63 @@
 
 
                 <!-- Surplus PTZ Block -->
-                <div class="ite-card" id="iteSurplusPtzBlock" style="display:none;border:2px solid #f59e0b;background:#fffbeb;">
-                    <div class="ite-card-head">
-                        <div class="ite-card-icon">&#9888;&#65039;</div>
-                        <h3>Surplus hors PTZ</h3>
+                <div class="ite-card" id="iteSurplusPtzBlock" style="display:none;border:2px solid #f59e0b;background:linear-gradient(135deg,#fffbeb,#fef3c7);border-radius:14px;overflow:hidden;">
+                    <!-- Header orange gradient -->
+                    <div style="background:linear-gradient(135deg,#f59e0b,#d97706);padding:12px 16px;display:flex;align-items:center;gap:8px;">
+                        <span style="font-size:18px;">&#9888;&#65039;</span>
+                        <span style="color:white;font-weight:700;font-size:14px;letter-spacing:0.3px;">Surplus hors PTZ</span>
                     </div>
-                    <div id="iteSurplusMsg" style="font-size:13px;color:#92400e;margin-bottom:10px;line-height:1.4;"></div>
-                    <div class="ite-fg">
-                        <div class="ite-fi">
-                            <label>Comment r&eacute;gler le surplus ?</label>
-                            <select id="iteSurplusMode" onchange="ite_onSurplusModeChange()">
-                                <option value="apport">Apport personnel</option>
-                                <option value="domofinance">Domofinance</option>
-                            </select>
+                    <div style="padding:14px 16px;">
+                        <div id="iteSurplusMsg" style="font-size:13px;color:#92400e;margin-bottom:12px;line-height:1.5;background:rgba(245,158,11,0.1);border-radius:8px;padding:10px 12px;border:1px solid rgba(245,158,11,0.2);"></div>
+                        <div class="ite-fg" style="margin-bottom:10px;">
+                            <div class="ite-fi full">
+                                <label style="font-weight:700;color:#92400e;">Comment r&eacute;gler le surplus ?</label>
+                                <select id="iteSurplusMode" onchange="ite_onSurplusModeChange()" style="font-weight:600;border:2px solid #f59e0b;">
+                                    <option value="apport">Apport personnel</option>
+                                    <option value="domofinance">Domofinance</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div id="iteSurplusDomoBlock" style="display:none;">
-                        <div class="ite-fg">
-                            <div class="ite-fi"><label>Produit Domofinance</label><select id="iteSurplusDomoProduct" onchange="iteSurplusDomoOnProductChange()"><option value="">Chargement&hellip;</option></select></div>
-                            <div class="ite-fi"><label>Modalit&eacute;</label><select id="iteSurplusDomoModality" onchange="iteSurplusDomoOnParamChange()"><option value="normal">Normal</option></select></div>
-                            <div class="ite-fi"><label>Report 180j</label><select id="iteSurplusDomoPostpone" onchange="iteSurplusDomoOnParamChange()"><option value="false">Sans</option><option value="true">Avec</option></select></div>
-                            <div class="ite-fi"><label>Dur&eacute;e (mois)</label><select id="iteSurplusDureeMois" onchange="iteSurplusDomoFetchResult()"><option value="120">120</option></select></div>
-                            <div style="border-top:1px solid #e2e8f0;margin:8px 0;padding-top:6px;"><span style="font-size:11px;font-weight:600;color:#475569;">R&eacute;sultats surplus</span></div>
-                            <div class="ite-fi"><label>Mensualit&eacute; H.A.</label><span id="iteSurplusMensHA" style="font-weight:700;font-size:14px;color:#1a2744;">-</span></div>
-                            <div class="ite-fi"><label>Mensualit&eacute; A.A.</label><span id="iteSurplusMensAA" style="font-weight:700;font-size:14px;color:#1a2744;">-</span></div>
-                            <div class="ite-fi"><label>TAEG</label><span id="iteSurplusTAEG" style="font-weight:700;font-size:14px;color:#1a2744;">-</span></div>
-                            <div class="ite-fi"><label>Co&ucirc;t du cr&eacute;dit</label><span id="iteSurplusCoutCredit" style="font-weight:700;font-size:14px;color:#1a2744;">-</span></div>
+                        <div id="iteSurplusDomoBlock" style="display:none;">
+                            <!-- Param&egrave;tres produit -->
+                            <div style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1px solid #bfdbfe;border-radius:10px;padding:12px;margin-bottom:10px;">
+                                <div style="font-size:11px;font-weight:700;color:#1d4ed8;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Param&egrave;tres Domofinance</div>
+                                <div class="ite-fg" style="gap:8px;">
+                                    <div class="ite-fi full"><label>Produit</label><select id="iteSurplusDomoProduct" onchange="iteSurplusDomoOnProductChange()"><option value="">Chargement&hellip;</option></select></div>
+                                    <div class="ite-fi"><label>Modalit&eacute;</label><select id="iteSurplusDomoModality" onchange="iteSurplusDomoOnParamChange()"><option value="normal">Normal</option></select></div>
+                                    <div class="ite-fi"><label>Report 180j</label><select id="iteSurplusDomoPostpone" onchange="iteSurplusDomoOnParamChange()"><option value="false">Sans</option><option value="true">Avec</option></select></div>
+                                    <div class="ite-fi full"><label>Dur&eacute;e du pr&ecirc;t</label><select id="iteSurplusDureeMois" onchange="iteSurplusDomoFetchResult()" style="font-weight:600;"><option value="120">120 mois</option></select></div>
+                                </div>
+                            </div>
+                            <!-- R&eacute;sultats surplus -->
+                            <div style="background:linear-gradient(135deg,#0f172a,#1e293b);border-radius:10px;padding:14px;color:white;">
+                                <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#94a3b8;margin-bottom:10px;text-align:center;">R&eacute;sultats surplus</div>
+                                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+                                    <div style="background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.3);border-radius:8px;padding:10px;text-align:center;">
+                                        <div style="font-size:9px;color:#a5b4fc;text-transform:uppercase;margin-bottom:2px;">Mensualit&eacute; H.A.</div>
+                                        <span id="iteSurplusMensHA" style="font-weight:800;font-size:17px;color:#c7d2fe;">-</span>
+                                    </div>
+                                    <div style="background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.3);border-radius:8px;padding:10px;text-align:center;">
+                                        <div style="font-size:9px;color:#86efac;text-transform:uppercase;margin-bottom:2px;">Mensualit&eacute; A.A.</div>
+                                        <span id="iteSurplusMensAA" style="font-weight:800;font-size:17px;color:#bbf7d0;">-</span>
+                                    </div>
+                                </div>
+                                <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+                                    <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(255,255,255,0.05);border-radius:5px;">
+                                        <span style="font-size:10px;color:#94a3b8;">TAEG</span>
+                                        <span id="iteSurplusTAEG" style="font-weight:700;font-size:12px;color:#fbbf24;">-</span>
+                                    </div>
+                                    <div style="display:flex;justify-content:space-between;padding:5px 8px;background:rgba(255,255,255,0.05);border-radius:5px;">
+                                        <span style="font-size:10px;color:#94a3b8;">Co&ucirc;t cr&eacute;dit</span>
+                                        <span id="iteSurplusCoutCredit" style="font-weight:700;font-size:12px;color:white;">-</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div id="iteSurplusApportBlock" style="padding:10px;border-radius:8px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);text-align:center;margin-top:8px;">
-                        <span style="font-size:13px;color:#166534;font-weight:600;" id="iteSurplusApportMsg">Le client r&egrave;gle le surplus par apport personnel</span>
+                        <div id="iteSurplusApportBlock" style="padding:14px;border-radius:10px;background:linear-gradient(135deg,rgba(34,197,94,0.08),rgba(34,197,94,0.15));border:1px solid rgba(34,197,94,0.25);text-align:center;margin-top:8px;">
+                            <span style="font-size:20px;display:block;margin-bottom:4px;">&#128176;</span>
+                            <span style="font-size:13px;color:#166534;font-weight:600;" id="iteSurplusApportMsg">Le client r&egrave;gle le surplus par apport personnel</span>
+                        </div>
                     </div>
                 </div>
 
@@ -5969,6 +5996,8 @@ function domoOnProductChange() {
         var ppAvail = opt.dataset.postpone === 'true';
         ppSel.disabled = !ppAvail;
         if (!ppAvail) ppSel.value = 'false';
+        ppSel.title = ppAvail ? 'Report de 180 jours disponible pour ce produit' : 'Report non disponible pour ce produit Domofinance';
+        ppSel.style.opacity = ppAvail ? '1' : '0.5';
     }
     domoOnParamChange();
 }
@@ -6010,18 +6039,20 @@ function domoFetchDurations() {
         var prevVal = sel.value;
         sel.innerHTML = '';
         var keys = Object.keys(data).map(Number).sort(function(a,b){return a-b;});
+        // Filter out durations with mensualité <= 1€ (API markers/invalid)
+        keys = keys.filter(function(d) { return parseFloat(data[d]) > 1; });
         keys.forEach(function(d) {
             var o = document.createElement('option');
             o.value = d;
-            o.textContent = d + ' mois — ' + parseFloat(data[d]).toFixed(2).replace('.', ',') + ' €/mois HA';
+            o.textContent = d + ' mois \u2014 ' + parseFloat(data[d]).toFixed(2).replace('.', ',') + ' \u20ac/mois HA';
             sel.appendChild(o);
         });
         // Try to restore previous selection or pick longest
-        if (data[prevVal]) { sel.value = prevVal; }
+        if (data[prevVal] && parseFloat(data[prevVal]) > 1) { sel.value = prevVal; }
         else if (keys.length > 0) { sel.value = keys[keys.length - 1]; }
         domoOnDurationChange();
     }, function(err) {
-        domoShowStatus('Erreur durées: ' + err, true);
+        domoShowStatus('Erreur dur\u00e9es: ' + err, true);
         ite_calcFinancementLocal();
     });
 }
@@ -6195,10 +6226,12 @@ function pacDomoFetchDurations() {
         var sel = document.getElementById('pacDureeMois');
         if (sel && data) {
             var keys = Object.keys(data).filter(function(k){ return !isNaN(k); }).sort(function(a,b){ return parseInt(a)-parseInt(b); });
+            // Filter out durations with mensualit\u00e9 <= 1\u20ac (API markers/invalid)
+            keys = keys.filter(function(k) { return parseFloat(data[k]) > 1; });
             sel.innerHTML = '';
             keys.forEach(function(k) {
                 var o = document.createElement('option');
-                o.value = k; o.textContent = k + ' mois';
+                o.value = k; o.textContent = k + ' mois \u2014 ' + parseFloat(data[k]).toFixed(2).replace('.', ',') + ' \u20ac/mois HA';
                 sel.appendChild(o);
             });
             if (keys.length > 0) {
@@ -6378,9 +6411,11 @@ function iteSurplusDomoPopulate() {
     DOMO_PRODUCTS.forEach(function(p) {
         var opt = document.createElement('option');
         opt.value = p.id;
-        opt.textContent = p.name;
-        opt.dataset.modalities = JSON.stringify(p.availableModalities || {});
-        opt.dataset.postpone = JSON.stringify(p.availablePostpone || {});
+        opt.textContent = p.equipmentName;
+        opt.dataset.min = p.minAmount || 1000;
+        opt.dataset.max = p.maxAmount || 75000;
+        opt.dataset.modalities = JSON.stringify(p.availableModalities || []);
+        opt.dataset.postpone = p.postponeAvailable ? 'true' : 'false';
         sel.appendChild(opt);
     });
     if (sel.options.length > 0) iteSurplusDomoOnProductChange();
@@ -6391,24 +6426,23 @@ function iteSurplusDomoOnProductChange() {
     if (!sel || !sel.selectedOptions.length) return;
     var opt = sel.selectedOptions[0];
     // Update modality
-    var rawMod = {}; try { rawMod = JSON.parse(opt.dataset.modalities || '{}'); } catch(e){}
+    var rawMod = {};
+    try { rawMod = JSON.parse(opt.dataset.modalities || '[]'); } catch(e){}
     var modalities = Array.isArray(rawMod) ? rawMod : Object.values(rawMod);
     var modSel = document.getElementById('iteSurplusDomoModality');
     if (modSel) {
         modSel.innerHTML = '';
+        var labels = {normal:'Normal', gratuit:'Gratuit', compense:'Compensé'};
         modalities.forEach(function(m) {
-            var o = document.createElement('option'); o.value = m; o.textContent = m; modSel.appendChild(o);
+            var o = document.createElement('option'); o.value = m; o.textContent = labels[m] || m; modSel.appendChild(o);
         });
     }
-    // Update postpone
-    var rawPost = {}; try { rawPost = JSON.parse(opt.dataset.postpone || '{}'); } catch(e){}
-    var postpones = Array.isArray(rawPost) ? rawPost : Object.values(rawPost);
-    var postSel = document.getElementById('iteSurplusDomoPostpone');
-    if (postSel) {
-        postSel.innerHTML = '';
-        postpones.forEach(function(p) {
-            var o = document.createElement('option'); o.value = p; o.textContent = p === 'true' ? 'Avec' : 'Sans'; postSel.appendChild(o);
-        });
+    // Update postpone (stored as simple 'true'/'false' string)
+    var ppSel = document.getElementById('iteSurplusDomoPostpone');
+    if (ppSel) {
+        var ppAvail = opt.dataset.postpone === 'true';
+        ppSel.disabled = !ppAvail;
+        if (!ppAvail) ppSel.value = 'false';
     }
     iteSurplusDomoOnParamChange();
 }
@@ -6436,12 +6470,14 @@ function iteSurplusDomoFetchDurations() {
         var prevVal = sel.value;
         sel.innerHTML = '';
         var keys = Object.keys(data).map(Number).sort(function(a,b){return a-b;});
+        // Filter out durations with mensualit\u00e9 <= 1\u20ac (API markers/invalid)
+        keys = keys.filter(function(d) { return parseFloat(data[d]) > 1; });
         keys.forEach(function(d) {
             var o = document.createElement('option');
-            o.value = d; o.textContent = d + ' mois \u2014 ' + parseFloat(data[d]).toFixed(2).replace('.', ',') + ' \u20AC/mois HA';
+            o.value = d; o.textContent = d + ' mois \u2014 ' + parseFloat(data[d]).toFixed(2).replace('.', ',') + ' \u20ac/mois HA';
             sel.appendChild(o);
         });
-        if (data[prevVal]) sel.value = prevVal;
+        if (data[prevVal] && parseFloat(data[prevVal]) > 1) sel.value = prevVal;
         else if (keys.length > 0) sel.value = keys[keys.length - 1];
         iteSurplusDomoFetchResult();
     }, function(err) { console.warn('Surplus domo durations error:', err); });
@@ -6464,18 +6500,17 @@ function iteSurplusDomoFetchResult() {
     var cobDob = (ite_V('iteDobCoemprunteur') || '').replace(/[^0-9]/g, '');
     if (cobDob.length >= 8) {
         qs += '&valueAgeCoborrower=' + cobDob;
-        qs += '&valueCobInActivity=' + (ite_V('iteDomoCobEnActivite') || 'true');
-        var cobIns = ite_V('iteDomoCobAssurance') || 'none';
-        if (cobIns !== 'none') qs += '&valueCobInsurance=' + cobIns;
+        qs += '&valueInActivityCoborrower=' + (ite_V('iteDomoCobEnActivite') || 'true');
+        qs += '&valueInsuranceCoborrower=' + (ite_V('iteDomoCobAssurance') || 'none');
     }
-    domoApiCall('result/' + productId, qs, function(data) {
+    domoApiCall('simulation/resultat/' + productId, qs, function(data) {
         var set = function(id, val) { var el = document.getElementById(id); if(el) el.textContent = val; };
         var mensHA = parseFloat((data.mensualite1 || '0').replace(/\s/g, '').replace(',', '.'));
         var mensAA = parseFloat((data.mens1_ins_lin || '0').replace(/\s/g, '').replace(',', '.'));
-        set('iteSurplusMensHA', mensHA.toFixed(2) + ' \u20AC/mois');
-        set('iteSurplusMensAA', mensAA.toFixed(2) + ' \u20AC/mois');
+        set('iteSurplusMensHA', mensHA.toFixed(2) + ' \u20ac/mois');
+        set('iteSurplusMensAA', mensAA.toFixed(2) + ' \u20ac/mois');
         set('iteSurplusTAEG', (data.teg_display || '-') + ' %');
-        set('iteSurplusCoutCredit', (data.cout_du_credit || '-') + ' \u20AC');
+        set('iteSurplusCoutCredit', (data.cout_du_credit || '-') + ' \u20ac');
     }, function(err) { console.warn('Surplus domo result error:', err); });
 }
 
