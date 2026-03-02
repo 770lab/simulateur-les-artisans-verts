@@ -2493,6 +2493,13 @@
                 <div class="ite-card" id="iteCard101" style="display: none;">
                     <div class="ite-card-head"><div class="ite-card-icon">&#127968;</div><h3>BAR-EN-101 &mdash; Combles Perdus</h3></div>
                     <div class="ite-fg">
+                        <div class="ite-fi"><label>Technique</label>
+                            <select id="iteTech101" onchange="ite_calc()">
+                                <option value="souffle">Souffl&eacute;</option>
+                                <option value="deroule">D&eacute;roul&eacute;</option>
+                                <option value="rampant">Rampant</option>
+                            </select>
+                        </div>
                         <div class="ite-fi"><label>Surface (m&sup2;)</label><input type="number" id="iteSurface101" value="50" oninput="ite_calc()"></div>
                         <input type="hidden" id="itePrixMat101" value="0">
                         <input type="hidden" id="itePrixMo101" value="0">
@@ -2545,6 +2552,13 @@
                 <div class="ite-card" id="iteCard101L3" style="display: none;">
                     <div class="ite-card-head"><div class="ite-card-icon">&#127968;</div><h3>LOT 3 &mdash; BAR-EN-101 Combles Perdus</h3></div>
                     <div class="ite-fg">
+                        <div class="ite-fi"><label>Technique</label>
+                            <select id="iteTech101L3" onchange="ite_calc()">
+                                <option value="souffle">Souffl&eacute;</option>
+                                <option value="deroule">D&eacute;roul&eacute;</option>
+                                <option value="rampant">Rampant</option>
+                            </select>
+                        </div>
                         <div class="ite-fi"><label>Surface (m&sup2;)</label><input type="number" id="iteSurface101L3" value="50" oninput="ite_calc()"></div>
                         <input type="hidden" id="itePrixMat101L3" value="0">
                         <input type="hidden" id="itePrixMo101L3" value="0">
@@ -5760,23 +5774,27 @@ function ite_generateDevis(){
     } else if(t2==='101'){
         var s2=ite_N('iteSurface101'),pm2=ite_N('itePrixMat101'),pmo2=ite_N('itePrixMo101');
         var kwhc101=Math.round(s2*(KWHC_101[zn]||1200));
+        var tech101=ite_V('iteTech101')||'souffle';
+        var techLabel101={souffle:'soufflage',deroule:'d\u00e9roul\u00e9',rampant:'rampant'}[tech101]||'soufflage';
+        var techLabelCap101={souffle:'Souffl\u00e9',deroule:'D\u00e9roul\u00e9',rampant:'Rampant'}[tech101]||'Souffl\u00e9';
+        var techMO101={souffle:'Mise en \u0153uvre de l\'isolant par soufflage m\u00e9canique',deroule:'Mise en \u0153uvre de l\'isolant en rouleaux d\u00e9roul\u00e9s',rampant:'Mise en \u0153uvre de l\'isolant sous rampant'}[tech101]||'Mise en \u0153uvre de l\'isolant par soufflage m\u00e9canique';
         lot2Desc='<div class="dv-block">'
         +'<b>BAR-EN-101 : Mise en place d\'une isolation thermique des combles perdus</b>'
         +'Surface \u00e0 isoler : <b>'+s2.toFixed(2)+' m2</b><br>'
-        +'Produit <b>ISOLATION COMBLES</b>, Isolation par soufflage<br>'
+        +'Produit <b>ISOLATION COMBLES</b>, Isolation par '+techLabel101+'<br>'
         +'R\u00e9sistance thermique <b>R \u2265 7 m\u00b2.K/W</b><br><br>'
         +'- Kwh Cumac : <b>'+kwhc101.toLocaleString('fr-FR')+'</b><br><br>'
         +'Mat\u00e9riel(s) fourni(s) et mis en place par notre soci\u00e9t\u00e9 <b>LES ARTISANS VERTS</b>.<br>'
         +'repr\u00e9sent\u00e9e par <b>TORDJMAN BENJAMIN</b>, SIRET <b>87806279300038</b>, Certificat rge Num\u00e9ro <b>QPAC/69719</b> attribu\u00e9 le 15/02/2026 valable jusqu\'au 15/02/2027<br>'
         +'. Date de la visite technique : <b>'+df+'</b>'
         +'</div>';
-        lot2Rows='<div class="dv-row"><div class="n">Mise en \u0153uvre isolation combles par soufflage</div><div class="c">'+s2.toFixed(2)+' m\u00b2</div><div class="r">'+ite_fmt(pmo2)+'</div><div class="r">'+ite_fmt(s2*pmo2)+'</div><div class="r">'+tvaStr+'</div></div>'
+        lot2Rows='<div class="dv-row"><div class="n">Mise en \u0153uvre isolation combles par '+techLabel101+'</div><div class="c">'+s2.toFixed(2)+' m\u00b2</div><div class="r">'+ite_fmt(pmo2)+'</div><div class="r">'+ite_fmt(s2*pmo2)+'</div><div class="r">'+tvaStr+'</div></div>'
         +'<div class="dv-specs">'
-        +'Mise en \u0153uvre de l\'isolant par soufflage m\u00e9canique<br>'
+        +techMO101+'<br>'
         +'V\u00e9rification de l\'\u00e9tat du support<br>'
         +'Nettoyage du chantier'
         +'</div>'
-        +'<div class="dv-row"><div class="n">Isolation souffl\u00e9 combles mat\u00e9riel</div><div class="c">'+s2.toFixed(2)+' m\u00b2</div><div class="r">'+ite_fmt(pm2)+'</div><div class="r">'+ite_fmt(s2*pm2)+'</div><div class="r">'+tvaStr+'</div></div>'
+        +'<div class="dv-row"><div class="n">Isolation '+techLabelCap101+' combles mat\u00e9riel</div><div class="c">'+s2.toFixed(2)+' m\u00b2</div><div class="r">'+ite_fmt(pm2)+'</div><div class="r">'+ite_fmt(s2*pm2)+'</div><div class="r">'+tvaStr+'</div></div>'
         +'<div class="dv-specs">'
         +'Fourniture de l\'isolant pour l\'isolation des combles perdus<br>'
         +'R\u00e9sistance thermique : R \u2265 7 m\u00b2.K/W'
@@ -5868,23 +5886,27 @@ function ite_generateDevis(){
         } else if(t3==='101'){
             var s3=ite_N('iteSurface101L3'),pm3=ite_N('itePrixMat101L3'),pmo3=ite_N('itePrixMo101L3');
             var kwhc101L3=Math.round(s3*(KWHC_101[zn]||1200));
+            var tech101L3=ite_V('iteTech101L3')||'souffle';
+            var tL3={souffle:'soufflage',deroule:'d\u00e9roul\u00e9',rampant:'rampant'}[tech101L3]||'soufflage';
+            var tCapL3={souffle:'Souffl\u00e9',deroule:'D\u00e9roul\u00e9',rampant:'Rampant'}[tech101L3]||'Souffl\u00e9';
+            var tMOL3={souffle:'Mise en \u0153uvre de l\'isolant par soufflage m\u00e9canique',deroule:'Mise en \u0153uvre de l\'isolant en rouleaux d\u00e9roul\u00e9s',rampant:'Mise en \u0153uvre de l\'isolant sous rampant'}[tech101L3]||'Mise en \u0153uvre de l\'isolant par soufflage m\u00e9canique';
             lot3Desc='<div class="dv-block" style="margin-top:3mm;">'
             +'<b>BAR-EN-101 : Mise en place d\'une isolation thermique des combles perdus</b>'
             +'Surface \u00e0 isoler : <b>'+s3.toFixed(2)+' m2</b><br>'
-            +'Produit <b>ISOLATION COMBLES</b>, Isolation par soufflage<br>'
+            +'Produit <b>ISOLATION COMBLES</b>, Isolation par '+tL3+'<br>'
             +'R\u00e9sistance thermique <b>R \u2265 7 m\u00b2.K/W</b><br><br>'
             +'- Kwh Cumac : <b>'+kwhc101L3.toLocaleString('fr-FR')+'</b><br><br>'
             +'Mat\u00e9riel(s) fourni(s) et mis en place par notre soci\u00e9t\u00e9 <b>LES ARTISANS VERTS</b>.<br>'
             +'repr\u00e9sent\u00e9e par <b>TORDJMAN BENJAMIN</b>, SIRET <b>87806279300038</b>, Certificat rge Num\u00e9ro <b>QPAC/69719</b> attribu\u00e9 le 15/02/2026 valable jusqu\'au 15/02/2027<br>'
             +'. Date de la visite technique : <b>'+df+'</b>'
             +'</div>';
-            lot3Rows='<div class="dv-row"><div class="n">Mise en \u0153uvre isolation combles par soufflage</div><div class="c">'+s3.toFixed(2)+' m\u00b2</div><div class="r">'+ite_fmt(pmo3)+'</div><div class="r">'+ite_fmt(s3*pmo3)+'</div><div class="r">'+tvaStr+'</div></div>'
+            lot3Rows='<div class="dv-row"><div class="n">Mise en \u0153uvre isolation combles par '+tL3+'</div><div class="c">'+s3.toFixed(2)+' m\u00b2</div><div class="r">'+ite_fmt(pmo3)+'</div><div class="r">'+ite_fmt(s3*pmo3)+'</div><div class="r">'+tvaStr+'</div></div>'
             +'<div class="dv-specs">'
-            +'Mise en \u0153uvre de l\'isolant par soufflage m\u00e9canique<br>'
+            +tMOL3+'<br>'
             +'V\u00e9rification de l\'\u00e9tat du support<br>'
             +'Nettoyage du chantier'
             +'</div>'
-            +'<div class="dv-row"><div class="n">Isolation souffl\u00e9 combles mat\u00e9riel</div><div class="c">'+s3.toFixed(2)+' m\u00b2</div><div class="r">'+ite_fmt(pm3)+'</div><div class="r">'+ite_fmt(s3*pm3)+'</div><div class="r">'+tvaStr+'</div></div>'
+            +'<div class="dv-row"><div class="n">Isolation '+tCapL3+' combles mat\u00e9riel</div><div class="c">'+s3.toFixed(2)+' m\u00b2</div><div class="r">'+ite_fmt(pm3)+'</div><div class="r">'+ite_fmt(s3*pm3)+'</div><div class="r">'+tvaStr+'</div></div>'
             +'<div class="dv-specs">'
             +'Fourniture de l\'isolant pour l\'isolation des combles perdus<br>'
             +'R\u00e9sistance thermique : R \u2265 7 m\u00b2.K/W'
@@ -6764,11 +6786,11 @@ var DOSSIER_FIELDS = [
     'surfaceClient','zone','categorie',
     'iteSurfaceITE','iteMontantLot1','itePrixMatITE','itePrixMoITE','iteIsolantITE',
     'iteSousTraitITE','iteSiretSousTraitITE','iteRgeSousTraitITE','iteCouleurCrepi','iteEnduitITE',
-    'iteTypeLot2','iteSurface101','itePrixMat101','itePrixMo101',
+    'iteTypeLot2','iteTech101','iteSurface101','itePrixMat101','itePrixMo101',
     'iteSurface103','itePrixMat103','itePrixMo103',
     'itePrixCET','itePrixPoseCET','iteRefCET','iteCopCET',
     'iteIncludeLot3','iteTypeLot3',
-    'iteSurface101L3','itePrixMat101L3','itePrixMo101L3',
+    'iteTech101L3','iteSurface101L3','itePrixMat101L3','itePrixMo101L3',
     'iteSurface103L3','itePrixMat103L3','itePrixMo103L3',
     'itePrixCETL3','itePrixPoseCETL3','iteRefCETL3','iteCopCETL3',
     'iteIncludeFinancement','iteDureeMois','iteMensHorsAss','iteMensAvecAss',
