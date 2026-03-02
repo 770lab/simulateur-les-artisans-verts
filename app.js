@@ -692,6 +692,8 @@ function calcRAC(rb,ch,ta,taForMarge,tt){
         document.getElementById('actionButtons').style.display='none';
         document.getElementById('gesteCoSection').style.display='none';
     }
+    // Update PAC financing block
+    if(typeof updatePacFinanceBlock==='function') updatePacFinanceBlock(rc);
 }
 
 function shareDevis(){

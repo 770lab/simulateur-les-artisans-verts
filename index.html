@@ -2050,7 +2050,7 @@
                     <div class="tp-step-body">
                         <div class="tp-script-text">&Ecirc;tes-vous propri&eacute;taire d'une <b>maison</b> ou d'un <b>appartement</b> ? Quelle est la <b>surface</b> approximative ?</div>
                         <div class="tp-fields">
-                            <div class="tp-field"><label>Surface (m&sup2;)</label><input type="number" id="sSurface" oninput="syncScript('ceeSurface',this.value)" placeholder="100"></div>
+                            <div class="tp-field"><label>Surface (m&sup2;)</label><input type="number" id="sSurface" oninput="syncScript('ceeSurface',this.value);syncScript('surfaceClient',this.value)" placeholder="100"></div>
                         </div>
                     </div>
                 </div>
@@ -2063,7 +2063,7 @@
                     <div class="tp-step-body">
                         <div class="tp-script-text">Quel est votre <b>mode de chauffage actuel</b> ? (fioul, gaz, &eacute;lectrique, bois&hellip;)</div>
                         <div class="tp-fields">
-                            <div class="tp-field"><label>Notes chauffage</label><input type="text" id="sChauffage" placeholder="Gaz individuel"></div>
+                            <div class="tp-field"><label>Type chauffage</label><select id="sChauffage" onchange="syncScript('iteTypeChauffage',this.value)"><option value="Gaz">Gaz naturel</option><option value="Fioul">Fioul</option><option value="Électrique">Électrique</option><option value="Bois">Bois / Granulés</option><option value="PAC">Pompe à chaleur</option><option value="Autre">Autre</option></select></div>
                         </div>
                     </div>
                 </div>
@@ -2163,6 +2163,8 @@
                     <div class="tp-step-body">
                         <div class="tp-script-text">Quand seriez-vous disponible pour recevoir notre technicien ? Matin ou apr&egrave;s-midi ? Puis-je avoir votre <b>adresse</b> et un <b>e-mail</b> pour la confirmation ?</div>
                         <div class="tp-fields">
+                            <div class="tp-field"><label>Adresse</label><input type="text" id="sAdresse" oninput="syncScript('iteAdresse',this.value)" placeholder="123 rue..."></div>
+                            <div class="tp-field"><label>CP + Ville</label><input type="text" id="sVille" oninput="syncScript('iteVille',this.value)" placeholder="75000 Paris"></div>
                             <div class="tp-field"><label>T&eacute;l&eacute;phone</label><input type="tel" id="sTel" oninput="syncScript('iteTel',this.value)" placeholder="06 12 34 56 78"></div>
                             <div class="tp-field"><label>Email</label><input type="email" id="sEmail" oninput="syncScript('iteEmail',this.value)" placeholder="jean@mail.fr"></div>
                         </div>
@@ -3245,6 +3247,102 @@
                         Remise max : <strong id="maxPctValue">&mdash;</strong> pour rester en dossier vert
                     </div>
                     <div class="note-small" style="font-size: 11px; margin-bottom: 8px; color: rgba(255,255,255,0.3);">Appliqué sur le RAC brut. N'affecte pas le prix cumac.</div>
+                </div>
+
+                <!-- FINANCEMENT PAC (Domofinance) -->
+                <div id="pacFinanceBlock" style="margin-bottom:14px;border-radius:14px;padding:16px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);opacity:0.35;pointer-events:none;transition:all 0.3s;">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+                        <span style="font-size:18px;">&#128179;</span>
+                        <span style="font-size:13px;font-weight:700;color:#e2e8f0;">Financer le reste &agrave; charge</span>
+                        <span id="pacFinBadge" style="font-size:10px;padding:2px 8px;border-radius:20px;background:rgba(100,116,139,0.3);color:#94a3b8;font-weight:600;">Pas de RAC</span>
+                    </div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:11px;">
+                        <div>
+                            <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">Produit Domofinance</div>
+                            <select id="pacDomoProduct" onchange="pacDomoOnProductChange()" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#e2e8f0;font-size:11px;">
+                                <option value="">Chargement&hellip;</option>
+                            </select>
+                        </div>
+                        <div>
+                            <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">Modalit&eacute;</div>
+                            <select id="pacDomoModality" onchange="pacDomoOnParamChange()" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#e2e8f0;font-size:11px;">
+                                <option value="normal">Normal</option>
+                            </select>
+                        </div>
+                        <div>
+                            <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">Report 180j</div>
+                            <select id="pacDomoPostpone" onchange="pacDomoOnParamChange()" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#e2e8f0;font-size:11px;">
+                                <option value="false">Sans</option>
+                                <option value="true">Avec</option>
+                            </select>
+                        </div>
+                        <div>
+                            <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">Assurance</div>
+                            <select id="pacTypeAssurance" onchange="pacDomoOnParamChange()" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#e2e8f0;font-size:11px;">
+                                <option value="DIM">DIM</option>
+                                <option value="D">D</option>
+                                <option value="DIMC">DIMC</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="border-top:1px solid rgba(255,255,255,0.06);margin:10px 0;padding-top:8px;">
+                        <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.5);margin-bottom:6px;">Emprunteur</div>
+                    </div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:11px;">
+                        <div>
+                            <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">Date naissance</div>
+                            <input type="text" inputmode="numeric" id="pacDobEmprunteur" placeholder="JJMMAAAA" maxlength="10" oninput="ecoptz_formatDateInput(this);pacDomoOnParamChange()" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#e2e8f0;font-size:11px;">
+                        </div>
+                        <div>
+                            <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">En activit&eacute; ?</div>
+                            <select id="pacDomoEnActivite" onchange="pacDomoOnParamChange()" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#e2e8f0;font-size:11px;">
+                                <option value="true">Oui</option>
+                                <option value="false">Non</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="border-top:1px solid rgba(255,255,255,0.06);margin:10px 0;padding-top:8px;">
+                        <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.5);margin-bottom:6px;">Co-emprunteur <span style="font-weight:400;color:rgba(255,255,255,0.3);">(optionnel)</span></div>
+                    </div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:11px;margin-bottom:10px;">
+                        <div>
+                            <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">Date naissance</div>
+                            <input type="text" inputmode="numeric" id="pacDobCoemprunteur" placeholder="JJMMAAAA" maxlength="10" oninput="ecoptz_formatDateInput(this);pacDomoOnParamChange()" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#e2e8f0;font-size:11px;">
+                        </div>
+                        <div></div>
+                    </div>
+                    <div style="border-top:1px solid rgba(255,255,255,0.06);margin:10px 0;padding-top:8px;">
+                        <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.5);margin-bottom:6px;">Dur&eacute;e &amp; R&eacute;sultats</div>
+                    </div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:11px;">
+                        <div>
+                            <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">Dur&eacute;e (mois)</div>
+                            <select id="pacDureeMois" onchange="pacDomoOnDurationChange()" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#e2e8f0;font-size:11px;">
+                                <option value="120">120</option>
+                            </select>
+                        </div>
+                        <div>
+                            <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">Mensualit&eacute; H.A.</div>
+                            <div id="pacMensHA" style="font-weight:700;font-size:14px;color:#34d399;padding:4px 0;">&mdash;</div>
+                        </div>
+                        <div>
+                            <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">Mensualit&eacute; A.A.</div>
+                            <div id="pacMensAA" style="font-weight:700;font-size:14px;color:#e2e8f0;padding:4px 0;">&mdash;</div>
+                        </div>
+                        <div>
+                            <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">TAEG</div>
+                            <div id="pacFinTAEG" style="font-weight:700;font-size:14px;color:#e2e8f0;padding:4px 0;">&mdash;</div>
+                        </div>
+                        <div>
+                            <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">Co&ucirc;t du cr&eacute;dit</div>
+                            <div id="pacFinCoutCredit" style="font-weight:700;font-size:14px;color:#e2e8f0;padding:4px 0;">&mdash;</div>
+                        </div>
+                        <div>
+                            <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">Taux d&eacute;biteur</div>
+                            <div id="pacFinTNC" style="font-weight:700;font-size:14px;color:#e2e8f0;padding:4px 0;">&mdash;</div>
+                        </div>
+                    </div>
+                    <div id="pacDomoStatus" style="display:none;padding:6px 10px;border-radius:8px;font-size:11px;margin-top:8px;"></div>
                 </div>
 
                 <!-- Status + Actions -->
@@ -5836,6 +5934,159 @@ function domoUpdateUI(r) {
     setSpan('iteFinDureeContrat', (r.duree_du_contract_de_credit || '-') + ' mois');
     setSpan('iteFinRetVendeur', (r.montant_retenue_vendeur || '-') + ' \u20AC');
     setSpan('iteFinTAEA', (r.taea || '-') + ' %');
+}
+
+// ============================================
+// PAC DOMOFINANCE — Financer le reste à charge
+// ============================================
+var PAC_RAC_FINAL = 0;
+var PAC_DOMO_RESULT = null;
+var _pacDomoDebounce = null;
+
+function updatePacFinanceBlock(rc) {
+    PAC_RAC_FINAL = rc;
+    var block = document.getElementById('pacFinanceBlock');
+    var badge = document.getElementById('pacFinBadge');
+    if (!block) return;
+    if (rc > 1) {
+        block.style.opacity = '1';
+        block.style.pointerEvents = 'auto';
+        block.style.borderColor = 'rgba(52,211,153,0.25)';
+        if (badge) { badge.textContent = fmt(rc) + ' \u00e0 financer'; badge.style.background = 'rgba(52,211,153,0.2)'; badge.style.color = '#34d399'; }
+        pacDomoPopulateProducts();
+    } else {
+        block.style.opacity = '0.35';
+        block.style.pointerEvents = 'none';
+        block.style.borderColor = 'rgba(255,255,255,0.08)';
+        if (badge) { badge.textContent = 'Pas de RAC'; badge.style.background = 'rgba(100,116,139,0.3)'; badge.style.color = '#94a3b8'; }
+    }
+}
+
+function pacDomoPopulateProducts() {
+    var sel = document.getElementById('pacDomoProduct');
+    if (!sel || !DOMO_PRODUCTS || !DOMO_PRODUCTS.length) return;
+    if (sel.options.length > 1) return; // already populated
+    sel.innerHTML = '';
+    DOMO_PRODUCTS.forEach(function(p) {
+        var opt = document.createElement('option');
+        opt.value = p.id;
+        opt.textContent = p.equipmentName;
+        opt.dataset.min = p.minAmount || 1000;
+        opt.dataset.max = p.maxAmount || 75000;
+        opt.dataset.modalities = JSON.stringify(p.availableModalities || {});
+        opt.dataset.postpone = p.postponeAvailable ? 'true' : 'false';
+        sel.appendChild(opt);
+    });
+    pacDomoOnProductChange();
+}
+
+function pacDomoOnProductChange() {
+    var sel = document.getElementById('pacDomoProduct');
+    if (!sel || !sel.value) return;
+    var opt = sel.options[sel.selectedIndex];
+    var rawMod = {};
+    try { rawMod = JSON.parse(opt.dataset.modalities || '{}'); } catch(e){}
+    var modalities = Array.isArray(rawMod) ? rawMod : Object.values(rawMod);
+    var modSel = document.getElementById('pacDomoModality');
+    if (modSel) {
+        modSel.innerHTML = '';
+        var labels = {normal:'Normal', gratuit:'Gratuit', compense:'Compensé'};
+        modalities.forEach(function(m) {
+            var o = document.createElement('option');
+            o.value = m; o.textContent = labels[m] || m;
+            modSel.appendChild(o);
+        });
+    }
+    var ppSel = document.getElementById('pacDomoPostpone');
+    if (ppSel) {
+        var ppAvail = opt.dataset.postpone === 'true';
+        ppSel.disabled = !ppAvail;
+        if (!ppAvail) ppSel.value = 'false';
+    }
+    pacDomoOnParamChange();
+}
+
+function pacDomoOnParamChange() {
+    clearTimeout(_pacDomoDebounce);
+    _pacDomoDebounce = setTimeout(function(){ pacDomoFetchDurations(); }, 500);
+}
+
+function pacDomoGetMontant() {
+    return Math.max(0, Math.round(PAC_RAC_FINAL));
+}
+
+function pacDomoFetchDurations() {
+    if (!DOMO_API_OK) return;
+    var productId = document.getElementById('pacDomoProduct') ? document.getElementById('pacDomoProduct').value : '';
+    var montant = pacDomoGetMontant();
+    if (!productId || montant <= 0) return;
+    var modality = document.getElementById('pacDomoModality') ? document.getElementById('pacDomoModality').value : 'normal';
+    var postpone = document.getElementById('pacDomoPostpone') ? document.getElementById('pacDomoPostpone').value : 'false';
+    var dob = (document.getElementById('pacDobEmprunteur') ? document.getElementById('pacDobEmprunteur').value : '').replace(/[^0-9]/g, '');
+    if (dob.length < 8) return;
+    var qs = 'valueAmount=' + montant + '&valueModality=' + modality + '&valuePostpone=' + postpone + '&valueAge=' + dob;
+    var cobDob = (document.getElementById('pacDobCoemprunteur') ? document.getElementById('pacDobCoemprunteur').value : '').replace(/[^0-9]/g, '');
+    if (cobDob.length >= 8) qs += '&valueAgeCoborrower=' + cobDob;
+    domoApiCall('simulation/' + productId, qs, function(data) {
+        if (!data || typeof data !== 'object') return;
+        // Populate duration select
+        var sel = document.getElementById('pacDureeMois');
+        if (sel && data) {
+            var keys = Object.keys(data).filter(function(k){ return !isNaN(k); }).sort(function(a,b){ return parseInt(a)-parseInt(b); });
+            sel.innerHTML = '';
+            keys.forEach(function(k) {
+                var o = document.createElement('option');
+                o.value = k; o.textContent = k + ' mois';
+                sel.appendChild(o);
+            });
+            if (keys.length > 0) {
+                // Select longest duration by default
+                sel.value = keys[keys.length - 1];
+                pacDomoOnDurationChange();
+            }
+        }
+    }, function(err) {
+        console.warn('pacDomoFetchDurations error:', err);
+    });
+}
+
+function pacDomoOnDurationChange() {
+    pacDomoFetchResult();
+}
+
+function pacDomoFetchResult() {
+    if (!DOMO_API_OK) return;
+    var productId = document.getElementById('pacDomoProduct') ? document.getElementById('pacDomoProduct').value : '';
+    var montant = pacDomoGetMontant();
+    var duration = document.getElementById('pacDureeMois') ? document.getElementById('pacDureeMois').value : '';
+    if (!productId || montant <= 0 || !duration) return;
+    var modality = document.getElementById('pacDomoModality') ? document.getElementById('pacDomoModality').value : 'normal';
+    var postpone = document.getElementById('pacDomoPostpone') ? document.getElementById('pacDomoPostpone').value : 'false';
+    var dob = (document.getElementById('pacDobEmprunteur') ? document.getElementById('pacDobEmprunteur').value : '').replace(/[^0-9]/g, '');
+    if (dob.length < 8) return;
+    var inActivity = document.getElementById('pacDomoEnActivite') ? document.getElementById('pacDomoEnActivite').value : 'true';
+    var insurance = document.getElementById('pacTypeAssurance') ? document.getElementById('pacTypeAssurance').value : 'DIM';
+    var qs = 'valueAmount=' + montant + '&valueDuration=' + duration + '&valueModality=' + modality + '&valuePostpone=' + postpone + '&valueAge=' + dob + '&valueInActivity=' + inActivity + '&valueInsurance=' + insurance;
+    var cobDob = (document.getElementById('pacDobCoemprunteur') ? document.getElementById('pacDobCoemprunteur').value : '').replace(/[^0-9]/g, '');
+    if (cobDob.length >= 8) qs += '&valueAgeCoborrower=' + cobDob + '&valueInActivityCoborrower=false&valueInsuranceCoborrower=none';
+    domoApiCall('simulation/resultat/' + productId, qs, function(data) {
+        PAC_DOMO_RESULT = data;
+        pacDomoUpdateUI(data);
+    }, function(err) {
+        console.warn('pacDomoFetchResult error:', err);
+    });
+}
+
+function pacDomoUpdateUI(r) {
+    if (!r) return;
+    var set = function(id, val) { var el = document.getElementById(id); if(el) el.textContent = val; };
+    var mensHA = parseFloat((r.mensualite1 || '0').replace(/\s/g, '').replace(',', '.'));
+    var mensAA = parseFloat((r.mens1_ins_lin || '0').replace(/\s/g, '').replace(',', '.'));
+    set('pacMensHA', mensHA.toFixed(2) + ' \u20AC/mois');
+    set('pacMensAA', mensAA.toFixed(2) + ' \u20AC/mois');
+    set('pacFinTAEG', (r.teg_display || '-') + ' %');
+    set('pacFinTNC', (r.tnc_display || '-') + ' %');
+    set('pacFinCoutCredit', (r.cout_du_credit || '-') + ' \u20AC');
 }
 
 // === Local ECO-PTZ fallback ===
