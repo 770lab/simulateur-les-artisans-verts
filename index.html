@@ -1280,6 +1280,59 @@
 }
 
 /* ============ ITE CARDS (light theme) ============ */
+/* Lot selector bar */
+.ite-lot-selector {
+    background: linear-gradient(135deg, #0f172a 0%, #1a2e4a 50%, #0d3321 100%);
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.ite-lot-selector-label {
+    color: rgba(255,255,255,0.6);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-right: 4px;
+}
+.ite-lot-btn {
+    padding: 10px 22px;
+    border-radius: 10px;
+    border: 2px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.06);
+    color: rgba(255,255,255,0.5);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s;
+    font-family: inherit;
+    flex: 1;
+    text-align: center;
+    min-width: 80px;
+}
+.ite-lot-btn:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.3);
+    color: rgba(255,255,255,0.8);
+}
+.ite-lot-btn.active {
+    background: linear-gradient(135deg, #16a34a, #15803d);
+    border-color: #22c55e;
+    color: white;
+    box-shadow: 0 4px 16px rgba(22,163,74,0.4);
+}
+.ite-lot-btn .lot-sub {
+    display: block;
+    font-size: 10px;
+    font-weight: 500;
+    opacity: 0.7;
+    margin-top: 2px;
+}
+
 .ite-card {
     background: white;
     border-radius: 12px;
@@ -2856,6 +2909,14 @@
 
             <!-- ===== ITE CONTENT ===== -->
             <div class="tab-ite-content">
+                <!-- Sélecteur nombre de lots -->
+                <div class="ite-lot-selector">
+                    <div class="ite-lot-selector-label">Nombre de lots</div>
+                    <button class="ite-lot-btn" onclick="ite_setNbLots(1,this)">1 LOT<span class="lot-sub">ITE seul</span></button>
+                    <button class="ite-lot-btn active" onclick="ite_setNbLots(2,this)">2 LOTS<span class="lot-sub">ITE + geste</span></button>
+                    <button class="ite-lot-btn" onclick="ite_setNbLots(3,this)">3 LOTS<span class="lot-sub">PTZ 30 000 &euro;</span></button>
+                </div>
+
                 <!-- LOT 1 - BAR-EN-102 -->
                 <div class="ite-card">
                     <div class="ite-card-head">
@@ -2879,6 +2940,8 @@
                     </div>
                 </div>
 
+                <!-- LOT 2 wrapper -->
+                <div id="iteLot2Wrap">
                 <!-- LOT 2 -->
                 <div class="ite-card">
                     <div class="ite-card-head">
@@ -2936,18 +2999,21 @@
                         <div class="ite-fi"><label>COP</label><input id="iteCopCET" value="2,78"></div>
                     </div>
                 </div>
+                </div><!-- end iteLot2Wrap -->
 
-                <!-- LOT 3 (optionnel) -->
+                <!-- LOT 3 wrapper -->
+                <div id="iteLot3Wrap" style="display:none;">
+                <!-- LOT 3 -->
                 <div class="ite-card" style="border:1px dashed #94a3b8;">
                     <div class="ite-card-head">
                         <div class="ite-card-icon">&#128257;</div>
                         <h3>LOT 3 &mdash; 3&egrave;me Geste (optionnel)</h3>
                         <span class="ite-tag" style="background:#3b82f6;">Plafond PTZ 30 000 &euro;</span>
                     </div>
-                    <div class="ite-note">3&egrave;me geste optionnel : passe le plafond Eco-PTZ de 25 000 &euro; &agrave; <b style="color:#3b82f6;">30 000 &euro;</b>. <b style="color: #f97316;">Minimum factur&eacute; : 1 500 &euro;</b></div>
+                    <div class="ite-note">Plafond Eco-PTZ passe de 25 000 &euro; &agrave; <b style="color:#3b82f6;">30 000 &euro;</b>. <b style="color: #f97316;">Minimum factur&eacute; : 1 500 &euro;</b></div>
+                    <select id="iteIncludeLot3" style="display:none;"><option value="non">Non</option><option value="oui" selected>Oui</option></select>
                     <div class="ite-fg">
-                        <div class="ite-fi"><label>Inclure LOT 3 ?</label><select id="iteIncludeLot3" onchange="ite_switchLot3();ite_calc()"><option value="non">Non</option><option value="oui">Oui</option></select></div>
-                        <div class="ite-fi full" id="iteTypeLot3Wrap" style="display:none;"><label>Type</label>
+                        <div class="ite-fi full" id="iteTypeLot3Wrap"><label>Type</label>
                             <select id="iteTypeLot3" onchange="ite_switchLot3();ite_calc()">
                                 <option value="101">BAR-EN-101 &mdash; Isolation combles perdus</option>
                                 <option value="103">BAR-EN-103 &mdash; Isolation plancher bas</option>
@@ -2995,6 +3061,7 @@
                         <div class="ite-fi"><label>COP</label><input id="iteCopCETL3" value="2,78"></div>
                     </div>
                 </div>
+                </div><!-- end iteLot3Wrap -->
 
                 <!-- MONTANT TOTAL PROJET -->
                 <div class="ite-card" style="background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 2px solid #16a34a;">
@@ -5780,6 +5847,28 @@ function ite_calcFinancement(){
     }
 }
 
+var _iteNbLots = 2; // default 2 lots
+function ite_setNbLots(n, btn) {
+    _iteNbLots = n;
+    // Update button states
+    var btns = document.querySelectorAll('.ite-lot-btn');
+    btns.forEach(function(b){ b.classList.remove('active'); });
+    if(btn) btn.classList.add('active');
+    // Show/hide wrappers
+    var lot2 = document.getElementById('iteLot2Wrap');
+    var lot3 = document.getElementById('iteLot3Wrap');
+    if(lot2) lot2.style.display = n >= 2 ? '' : 'none';
+    if(lot3) lot3.style.display = n >= 3 ? '' : 'none';
+    // Sync hidden iteIncludeLot3 for calc compatibility
+    var sel = document.getElementById('iteIncludeLot3');
+    if(sel) sel.value = n >= 3 ? 'oui' : 'non';
+    // Show sub-cards
+    if(n >= 2) ite_switchLot2();
+    if(n >= 3) ite_switchLot3();
+    // Recalculate
+    ite_calc();
+}
+
 function ite_switchLot2(){
     var t=ite_V('iteTypeLot2');
     ite_$('iteCard101').style.display=t==='101'?'block':'none';
@@ -5813,8 +5902,7 @@ function ite_getLot2Total(){
 }
 
 function ite_switchLot3(){
-    var inc=ite_V('iteIncludeLot3')==='oui';
-    ite_$('iteTypeLot3Wrap').style.display=inc?'block':'none';
+    var inc = _iteNbLots >= 3;
     ite_$('iteCard101L3').style.display='none';
     ite_$('iteCard103L3').style.display='none';
     ite_$('iteCard148L3').style.display='none';
@@ -5827,7 +5915,7 @@ function ite_switchLot3(){
 }
 
 function ite_getLot3Total(){
-    if(ite_V('iteIncludeLot3')!=='oui')return 0;
+    if(_iteNbLots < 3)return 0;
     var t=ite_V('iteTypeLot3');
     if(t==='101'){
         var s=ite_N('iteSurface101L3');
@@ -5858,12 +5946,14 @@ function ite_getCEE(){
     var c102=(CEE_ITE_102[p]||CEE_ITE_102.classique)[z]||0;
     var p1=s*c102;
     var p2=0,u101=0,u103=0,u148=0;
+    if(_iteNbLots>=2){
     if(t2==='101'){u101=(CEE_ITE_101[p]||CEE_ITE_101.classique)[z]||0;p2=ite_N('iteSurface101')*u101;}
     else if(t2==='103'){u103=(CEE_ITE_103[p]||CEE_ITE_103.classique)[z]||0;p2=ite_N('iteSurface103')*u103;}
     else{u148=CEE_ITE_148[p]||150;p2=u148;}
+    }
     // LOT 3
     var p3=0,u101L3=0,u103L3=0,u148L3=0;
-    if(ite_V('iteIncludeLot3')==='oui'){
+    if(_iteNbLots>=3){
         var t3=ite_V('iteTypeLot3');
         if(t3==='101'){u101L3=(CEE_ITE_101[p]||CEE_ITE_101.classique)[z]||0;p3=ite_N('iteSurface101L3')*u101L3;}
         else if(t3==='103'){u103L3=(CEE_ITE_103[p]||CEE_ITE_103.classique)[z]||0;p3=ite_N('iteSurface103L3')*u103L3;}
@@ -5874,13 +5964,14 @@ function ite_getCEE(){
 
 function ite_onMontantTotal(){
     var ttc=ite_N('iteMontantTotalProjet');
-    var totLot2=ite_getLot2Total();
+    var totLot2=_iteNbLots>=2?ite_getLot2Total():0;
     var totLot3=ite_getLot3Total();
     var totLot1=Math.max(ttc-totLot2-totLot3,0);
     ite_$('iteMontantLot1').value=totLot1;
     var det=ite_$('iteMontantDetail');
-    var detTxt='LOT 1 : <b>'+ite_fmtN(totLot1)+' \u20AC</b> + LOT 2 : <b>'+ite_fmtN(totLot2)+' \u20AC</b>';
-    if(totLot3>0)detTxt+=' + LOT 3 : <b>'+ite_fmtN(totLot3)+' \u20AC</b>';
+    var detTxt='LOT 1 : <b>'+ite_fmtN(totLot1)+' \u20AC</b>';
+    if(_iteNbLots>=2) detTxt+=' + LOT 2 : <b>'+ite_fmtN(totLot2)+' \u20AC</b>';
+    if(_iteNbLots>=3&&totLot3>0) detTxt+=' + LOT 3 : <b>'+ite_fmtN(totLot3)+' \u20AC</b>';
     detTxt+=' = <b>'+ite_fmtN(ttc)+' \u20AC TTC</b>';
     if(det) det.innerHTML=detTxt;
     ite_calc();
@@ -5889,15 +5980,16 @@ function ite_onMontantTotal(){
 function ite_calc(){
     try{
     var sITE=ite_N('iteSurfaceITE');
-    var totLot2=ite_getLot2Total();
+    var totLot2=_iteNbLots>=2?ite_getLot2Total():0;
     var totLot3=ite_getLot3Total();
-    var hasLot3=ite_V('iteIncludeLot3')==='oui'&&totLot3>0;
+    var hasLot3=_iteNbLots>=3&&totLot3>0;
     var ttc=ite_N('iteMontantTotalProjet');
     var totITE=Math.max(ttc-totLot2-totLot3,0);
     ite_$('iteMontantLot1').value=totITE;
     var det=ite_$('iteMontantDetail');
-    var detTxt='LOT 1 : <b>'+ite_fmtN(totITE)+' \u20AC</b> + LOT 2 : <b>'+ite_fmtN(totLot2)+' \u20AC</b>';
-    if(hasLot3)detTxt+=' + LOT 3 : <b>'+ite_fmtN(totLot3)+' \u20AC</b>';
+    var detTxt='LOT 1 : <b>'+ite_fmtN(totITE)+' \u20AC</b>';
+    if(_iteNbLots>=2) detTxt+=' + LOT 2 : <b>'+ite_fmtN(totLot2)+' \u20AC</b>';
+    if(hasLot3) detTxt+=' + LOT 3 : <b>'+ite_fmtN(totLot3)+' \u20AC</b>';
     detTxt+=' = <b>'+ite_fmtN(ttc)+' \u20AC TTC</b>';
     if(det) det.innerHTML=detTxt;
     var tva=parseFloat(ite_$('iteTva')?.value)||5.5,ht=ttc/(1+tva/100);
@@ -5908,8 +6000,8 @@ function ite_calc(){
     var lot3Ok=!hasLot3||totLot3>=1500;
     var z=document.getElementById('zone').value;
     var p=ite_V('itePrecarite');
-    var nbLots=hasLot3?3:2;
-    var plafondPTZ=hasLot3?30000:25000;
+    var nbLots=_iteNbLots;
+    var plafondPTZ=nbLots>=3?30000:nbLots>=2?25000:0;
 
     // MPR CET : indication uniquement si 148 en lot 2 ou 3
     var cat=document.getElementById('categorie').value;
@@ -5917,9 +6009,13 @@ function ite_calc(){
     var mprCET=has148?(MPR_CET[cat]||0):0;
 
     // Lot2 alert
-    ite_$('iteLot2Alert').innerHTML=lot2Ok
-        ?'<div class="ite-alert ite-alert-ok">\u2705 LOT 2 : '+ite_fmtN(totLot2)+' \u20AC \u2014 Minimum 1 500 \u20AC respect\u00e9</div>'
-        :'<div class="ite-alert ite-alert-warn">\ud83d\udea8 LOT 2 : <b style="font-size:16px;">'+ite_fmtN(totLot2)+' \u20AC</b> \u2014 EN DESSOUS DU MINIMUM 1 500 \u20AC !</div>';
+    if(_iteNbLots>=2){
+        ite_$('iteLot2Alert').innerHTML=lot2Ok
+            ?'<div class="ite-alert ite-alert-ok">\u2705 LOT 2 : '+ite_fmtN(totLot2)+' \u20AC \u2014 Minimum 1 500 \u20AC respect\u00e9</div>'
+            :'<div class="ite-alert ite-alert-warn">\ud83d\udea8 LOT 2 : <b style="font-size:16px;">'+ite_fmtN(totLot2)+' \u20AC</b> \u2014 EN DESSOUS DU MINIMUM 1 500 \u20AC !</div>';
+    } else {
+        ite_$('iteLot2Alert').innerHTML='';
+    }
 
     // Lot3 alert
     var l3a=ite_$('iteLot3Alert');
@@ -5930,11 +6026,13 @@ function ite_calc(){
             :'<div class="ite-alert ite-alert-warn">\ud83d\udea8 LOT 3 : <b style="font-size:16px;">'+ite_fmtN(totLot3)+' \u20AC</b> \u2014 EN DESSOUS DU MINIMUM 1 500 \u20AC !</div>';
     }
 
-    // PTZ
-    var ptzOk=lot2Ok&&lot3Ok&&totITE>0;
+    // PTZ (requires at least 2 lots)
+    var ptzOk=_iteNbLots>=2&&lot2Ok&&lot3Ok&&totITE>0;
     var lot2Label=t2==='101'?'101':t2==='103'?'103':'148';
     var ptzMsg='';
-    if(ptzOk){
+    if(_iteNbLots<2){
+        ptzMsg='\u2139\ufe0f PTZ n\u00e9cessite au moins 2 lots';
+    } else if(ptzOk){
         ptzMsg='\ud83c\udfdb\ufe0f <b>\u00c9LIGIBLE PTZ</b> \u2014 '+nbLots+' lots \u00b7 Plafond <b>'+ite_fmtN(plafondPTZ)+' \u20AC</b>';
     } else {
         var reasons=[];
@@ -5982,9 +6080,13 @@ function ite_calc(){
 
     // Sidebar update
     var sl1=ite_$('iteSidebarLot1');if(sl1)sl1.textContent=ite_fmtN(totITE)+' \u20AC';
-    var sl2=ite_$('iteSidebarLot2');if(sl2){sl2.textContent=ite_fmtN(totLot2)+' \u20AC';sl2.className='rrc-value '+(lot2Ok?'':'red');}
+    // LOT 2 sidebar — hide when 1 lot
+    var sl2=ite_$('iteSidebarLot2');if(sl2){
+        sl2.parentElement.style.display=_iteNbLots>=2?'':'none';
+        sl2.textContent=ite_fmtN(totLot2)+' \u20AC';sl2.className='rrc-value '+(lot2Ok?'':'red');
+    }
     var sl2t=ite_$('iteSidebarLot2Type');if(sl2t)sl2t.textContent=t2==='101'?'BAR-EN-101':t2==='103'?'BAR-EN-103':'BAR-TH-148';
-    var sl2a=ite_$('iteSidebarLot2Alert');if(sl2a)sl2a.style.display=lot2Ok?'none':'block';
+    var sl2a=ite_$('iteSidebarLot2Alert');if(sl2a)sl2a.style.display=(_iteNbLots>=2&&!lot2Ok)?'block':'none';
     var sc=ite_$('iteSidebarCEE');if(sc)sc.textContent=ite_fmtN(primeCEE)+' \u20AC';
     // MPR color sidebar
     var smpr=ite_$('iteSidebarMPR');
@@ -6309,9 +6411,9 @@ async function downloadDevisPDF(containerId,filename){
 }
 
 function ite_generateDevis(){
-    var totLot2=ite_getLot2Total();
+    var totLot2=_iteNbLots>=2?ite_getLot2Total():0;
     var totLot3=ite_getLot3Total();
-    var hasLot3=ite_V('iteIncludeLot3')==='oui'&&totLot3>0;
+    var hasLot3=_iteNbLots>=3&&totLot3>0;
     if(totLot2<1500&&!confirm('\u26a0\ufe0f LOT 2 < 1500\u20ac ('+ite_fmtN(totLot2)+'\u20ac). Continuer ?'))return;
     if(hasLot3&&totLot3<1500&&!confirm('\u26a0\ufe0f LOT 3 < 1500\u20ac ('+ite_fmtN(totLot3)+'\u20ac). Continuer ?'))return;
     var nom=(document.getElementById('prenom').value.trim()+' '+document.getElementById('nom').value.trim()).trim()||'CLIENT';
@@ -6753,15 +6855,15 @@ function ptz_dots(val,w){ return '<span style="display:inline-block;min-width:'+
 
 async function ite_generatePTZ(){
     // Gather data from calculator
-    var totLot2=ite_getLot2Total();
+    var totLot2=_iteNbLots>=2?ite_getLot2Total():0;
     var totLot3=ite_getLot3Total();
-    var hasLot3=ite_V('iteIncludeLot3')==='oui'&&totLot3>0;
+    var hasLot3=_iteNbLots>=3&&totLot3>0;
     var totITE=ite_N('iteMontantLot1');
     var sITE=ite_N('iteSurfaceITE');
-    var t2=ite_V('iteTypeLot2');
+    var t2=_iteNbLots>=2?ite_V('iteTypeLot2'):'';
     var t3=hasLot3?ite_V('iteTypeLot3'):'';
-    var nbLots=hasLot3?3:2;
-    var plafondPTZ=nbLots>=3?30000:25000;
+    var nbLots=_iteNbLots;
+    var plafondPTZ=nbLots>=3?30000:nbLots>=2?25000:0;
 
     // Check PTZ eligibility
     var lot2Ok=totLot2>=1500;
