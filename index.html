@@ -3262,8 +3262,8 @@
                             <div class="ite-fi full">
                                 <label style="font-weight:700;color:#92400e;">Comment r&eacute;gler le surplus ?</label>
                                 <select id="iteSurplusMode" onchange="ite_onSurplusModeChange()" style="font-weight:600;border:2px solid #f59e0b;">
-                                    <option value="apport">Apport personnel</option>
                                     <option value="domofinance">Domofinance</option>
+                                    <option value="apport">Apport personnel</option>
                                 </select>
                             </div>
                         </div>
@@ -5965,8 +5965,11 @@ function domoFetchProducts() {
             opt.dataset.postpone = p.postponeAvailable ? 'true' : 'false';
             sel.appendChild(opt);
         });
+        // S\u00e9lectionner Eco-PTZ (153) par d\u00e9faut
+        var ecoPtzOpt = sel.querySelector('option[value="153"]');
+        if (ecoPtzOpt) sel.value = '153';
         domoOnProductChange();
-        domoShowStatus('Produits Domofinance chargés', false);
+        domoShowStatus('Produits Domofinance charg\u00e9s', false);
     }, function(err) {
         if (done) return; done = true; clearTimeout(safetyTimer);
         if (spinner) spinner.style.display = 'none';
@@ -6456,6 +6459,9 @@ function iteSurplusDomoPopulate() {
         opt.dataset.postpone = p.postponeAvailable ? 'true' : 'false';
         sel.appendChild(opt);
     });
+    // Surplus: s\u00e9lectionner "Autres travaux de r\u00e9novation" (176) par d\u00e9faut
+    var autresOpt = sel.querySelector('option[value="176"]');
+    if (autresOpt) sel.value = '176';
     if (sel.options.length > 0) iteSurplusDomoOnProductChange();
 }
 
