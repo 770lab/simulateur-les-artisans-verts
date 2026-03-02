@@ -4964,15 +4964,15 @@ const ite_N=id=>{const el=ite_$(id);return el?parseFloat(el.value)||0:0;};
 const ite_fmt=n=>parseFloat(n).toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+' \u20AC';
 const ite_fmtN=n=>Math.round(n).toLocaleString('fr-FR');
 
-// CEE EDF baremes — BAREME EDF 01/03/2026
-const CEE_ITE_102={classique:{H1:12.48,H2:10.14,H3:6.864},modeste:{H1:12.48,H2:10.14,H3:6.864},grande:{H1:19.2,H2:15.6,H3:10.56}};
-const CEE_ITE_101={classique:{H1:13.26,H2:10.92,H3:7.176},modeste:{H1:13.26,H2:10.92,H3:7.176},grande:{H1:20.4,H2:16.8,H3:11.04}};
-const CEE_ITE_103={classique:{H1:8.58,H2:6.942,H3:4.602},modeste:{H1:8.58,H2:6.942,H3:4.602},grande:{H1:13.2,H2:10.68,H3:7.08}};
-const CEE_ITE_148={classique:121.68,modeste:121.68,grande:187.2};
-const KWHC_102={H1:1600,H2:1300,H3:880};
-const KWHC_101={H1:1700,H2:1400,H3:920};
-const KWHC_103={H1:1100,H2:890,H3:590};
-const KWHC_148=15600;
+// CEE EDF baremes
+const CEE_ITE_102={classique:{H1:11,H2:9,H3:6},modeste:{H1:16,H2:13,H3:9},grande:{H1:22,H2:18,H3:12}};
+const CEE_ITE_101={classique:{H1:14,H2:11,H3:8},modeste:{H1:20,H2:16,H3:11},grande:{H1:28,H2:22,H3:16}};
+const CEE_ITE_103={classique:{H1:9,H2:7,H3:5},modeste:{H1:13,H2:11,H3:7},grande:{H1:18,H2:15,H3:10}};
+const CEE_ITE_148={classique:150,modeste:200,grande:300};
+const KWHC_102={H1:1600,H2:1300,H3:1000};
+const KWHC_101={H1:1500,H2:1200,H3:900};
+const KWHC_103={H1:1100,H2:890,H3:600};
+const KWHC_148=14700;
 const ITE_ISOLANT={
     CELLOMUR_120:{ref:'*ISOLATION MURS EXTERIEURS HIRSCH CELLOMUR ULTRA 120 mm',brand:'HIRSCH ISOLATION',thickness:'120',R:'3,85',acermi:'12/081/795'},
     CELLOMUR_140:{ref:'*ISOLATION MURS EXTERIEURS HIRSCH CELLOMUR ULTRA 140 mm',brand:'HIRSCH ISOLATION',thickness:'140',R:'4,50',acermi:'12/081/795'}
@@ -6557,8 +6557,8 @@ function pac_generateDevis(){
     var totalAides=ad+ce,reste=ttc-totalAides;
 
     // kWhc ballon (BAR-TH-148 v27)
-    var kwhcBallon=wBallon?15600:0;
-    var primeCEEBallon=wBallon?(kwhcBallon/1000*(ite_N('prixCumac')||7.8)):0;
+    var kwhcBallon=wBallon?14700:0;
+    var primeCEEBallon=wBallon?(kwhcBallon/1000*(ite_N('prixCumac')||7)):0;
 
     // Prime CEE totale du devis
     var primeCEETotale=ce;
