@@ -5665,8 +5665,7 @@ function calcBareme() {
 }
 
 function autoSelectPAC(targetKW) {
-    // Auto-select: closest Mono model, prefer AUX Titan R290 > AUX Luccia > others
-    // For >16kW (large surfaces), also consider Tri models (Clivet/FHE)
+    // Auto-select: Wolf par d\u00e9faut pour \u2264 16kW, Clivet pour > 16kW
     var models = [];
     for (var key in PAC_CATALOG) {
         var p = PAC_CATALOG[key];
@@ -5678,17 +5677,26 @@ function autoSelectPAC(targetKW) {
     var best = null, bestScore = Infinity;
     for (var i = 0; i < models.length; i++) {
         var m = models[i];
-        // Skip Tri for small targets, skip Mono for very large targets
+        // Skip Tri for small targets (\u2264 16kW use Mono)
         if (targetKW <= 16 && !m.mono) continue;
+        // For > 16kW prefer Tri models
         if (targetKW > 16 && m.mono && m.kw < targetKW - 2) continue;
         var diff = Math.abs(m.kw - targetKW);
         // Prefer round-up (model >= target)
         var score = diff * 10;
         if (m.kw < targetKW) score += 5; // penalty for undersized
-        // Brand preference: AUX Titan > AUX Luccia > THALEOS > others
-        if (m.key.indexOf('AUX_TITAN') === 0) score -= 3;
-        else if (m.key.indexOf('AUX_LUCCIA') === 0) score -= 2;
-        else if (m.key.indexOf('THALEOS') === 0) score -= 1;
+        // Brand preference: WOLF > Clivet > FHE > others
+        if (targetKW <= 16) {
+            // \u2264 16kW : Wolf prioritaire
+            if (m.key.indexOf('WOLF') === 0) score -= 4;
+            else if (m.key.indexOf('THALEOS') === 0) score -= 1;
+            else score += 2;
+        } else {
+            // > 16kW : Clivet prioritaire (22-30kW Tri)
+            if (m.key.indexOf('CLIVET') === 0) score -= 4;
+            else if (m.key.indexOf('FHE_INELIO') === 0) score -= 3;
+            else if (m.key.indexOf('WOLF') === 0) score -= 1;
+        }
         // Mono preference for small targets
         if (targetKW <= 16 && m.mono) score -= 1;
         if (score < bestScore) { best = m; bestScore = score; }
@@ -5990,14 +5998,12 @@ function domoOnProductChange() {
             modSel.appendChild(o);
         });
     }
-    // Update postpone
+    // Update postpone — toujours activ\u00e9, l'API g\u00e8re la validation
     var ppSel = document.getElementById('iteDomoPostpone');
     if (ppSel) {
-        var ppAvail = opt.dataset.postpone === 'true';
-        ppSel.disabled = !ppAvail;
-        if (!ppAvail) ppSel.value = 'false';
-        ppSel.title = ppAvail ? 'Report de 180 jours disponible pour ce produit' : 'Report non disponible pour ce produit Domofinance';
-        ppSel.style.opacity = ppAvail ? '1' : '0.5';
+        ppSel.disabled = false;
+        ppSel.style.opacity = '1';
+        ppSel.title = '';
     }
     domoOnParamChange();
 }
@@ -6013,6 +6019,32 @@ function domoGetMontant() {
     return Math.round(ttc - primeCEE);
 }
 
+function _domoPopulateDurations(data) {
+    DOMO_DURATIONS = data;
+    var sel = document.getElementById('iteDureeMois');
+    if (!sel) return;
+    var prevVal = sel.value;
+    sel.innerHTML = '';
+    var keys = Object.keys(data).map(Number).sort(function(a,b){return a-b;});
+    var validKeys = [];
+    keys.forEach(function(d) {
+        var mens = parseFloat(data[d]);
+        var o = document.createElement('option');
+        o.value = d;
+        if (mens <= 1) {
+            o.textContent = d + ' mois \u2014 non disponible';
+            o.disabled = true;
+        } else {
+            o.textContent = d + ' mois \u2014 ' + mens.toFixed(2).replace('.', ',') + ' \u20ac/mois HA';
+            validKeys.push(d);
+        }
+        sel.appendChild(o);
+    });
+    if (data[prevVal] && parseFloat(data[prevVal]) > 1) { sel.value = prevVal; }
+    else if (validKeys.length > 0) { sel.value = validKeys[validKeys.length - 1]; }
+    domoOnDurationChange();
+}
+
 function domoFetchDurations() {
     if (!DOMO_API_OK) { ite_calcFinancementLocal(); return; }
     var productId = ite_V('iteDomoProduct');
@@ -6021,39 +6053,35 @@ function domoFetchDurations() {
     var modality = ite_V('iteDomoModality') || 'normal';
     var postpone = ite_V('iteDomoPostpone') || 'false';
     var dob = (ite_V('iteDobEmprunteur') || '').replace(/[^0-9]/g, '');
-    if (dob.length < 8) return; // need full DOB
+    if (dob.length < 8) return;
 
     var qs = 'valueAmount=' + montant
         + '&valueModality=' + modality
         + '&valuePostpone=' + postpone
         + '&valueAge=' + dob;
 
-    // Add co-borrower DOB if present
     var cobDob = (ite_V('iteDobCoemprunteur') || '').replace(/[^0-9]/g, '');
     if (cobDob.length >= 8) qs += '&valueAgeCoborrower=' + cobDob;
 
     domoApiCall('simulation/' + productId, qs, function(data) {
-        DOMO_DURATIONS = data;
-        var sel = document.getElementById('iteDureeMois');
-        if (!sel) return;
-        var prevVal = sel.value;
-        sel.innerHTML = '';
-        var keys = Object.keys(data).map(Number).sort(function(a,b){return a-b;});
-        // Filter out durations with mensualité <= 1€ (API markers/invalid)
-        keys = keys.filter(function(d) { return parseFloat(data[d]) > 1; });
-        keys.forEach(function(d) {
-            var o = document.createElement('option');
-            o.value = d;
-            o.textContent = d + ' mois \u2014 ' + parseFloat(data[d]).toFixed(2).replace('.', ',') + ' \u20ac/mois HA';
-            sel.appendChild(o);
-        });
-        // Try to restore previous selection or pick longest
-        if (data[prevVal] && parseFloat(data[prevVal]) > 1) { sel.value = prevVal; }
-        else if (keys.length > 0) { sel.value = keys[keys.length - 1]; }
-        domoOnDurationChange();
+        _domoPopulateDurations(data);
     }, function(err) {
-        domoShowStatus('Erreur dur\u00e9es: ' + err, true);
-        ite_calcFinancementLocal();
+        // Si erreur avec report=true, retenter sans report
+        if (postpone === 'true') {
+            var qsFallback = qs.replace('valuePostpone=true', 'valuePostpone=false');
+            domoShowStatus('Report non disponible pour ce produit, simulation sans report...', false);
+            var ppSel = document.getElementById('iteDomoPostpone');
+            if (ppSel) ppSel.value = 'false';
+            domoApiCall('simulation/' + productId, qsFallback, function(data2) {
+                _domoPopulateDurations(data2);
+            }, function(err2) {
+                domoShowStatus('Erreur dur\u00e9es: ' + err2, true);
+                ite_calcFinancementLocal();
+            });
+        } else {
+            domoShowStatus('Erreur dur\u00e9es: ' + err, true);
+            ite_calcFinancementLocal();
+        }
     });
 }
 
@@ -6197,9 +6225,8 @@ function pacDomoOnProductChange() {
     }
     var ppSel = document.getElementById('pacDomoPostpone');
     if (ppSel) {
-        var ppAvail = opt.dataset.postpone === 'true';
-        ppSel.disabled = !ppAvail;
-        if (!ppAvail) ppSel.value = 'false';
+        ppSel.disabled = false;
+        ppSel.style.opacity = '1';
     }
     pacDomoOnParamChange();
 }
@@ -6231,17 +6258,23 @@ function pacDomoFetchDurations() {
         var sel = document.getElementById('pacDureeMois');
         if (sel && data) {
             var keys = Object.keys(data).filter(function(k){ return !isNaN(k); }).sort(function(a,b){ return parseInt(a)-parseInt(b); });
-            // Filter out durations with mensualit\u00e9 <= 1\u20ac (API markers/invalid)
-            keys = keys.filter(function(k) { return parseFloat(data[k]) > 1; });
+            var validKeys = [];
             sel.innerHTML = '';
             keys.forEach(function(k) {
+                var mens = parseFloat(data[k]);
                 var o = document.createElement('option');
-                o.value = k; o.textContent = k + ' mois \u2014 ' + parseFloat(data[k]).toFixed(2).replace('.', ',') + ' \u20ac/mois HA';
+                o.value = k;
+                if (mens <= 1) {
+                    o.textContent = k + ' mois \u2014 non disponible';
+                    o.disabled = true;
+                } else {
+                    o.textContent = k + ' mois \u2014 ' + mens.toFixed(2).replace('.', ',') + ' \u20ac/mois HA';
+                    validKeys.push(k);
+                }
                 sel.appendChild(o);
             });
-            if (keys.length > 0) {
-                // Select longest duration by default
-                sel.value = keys[keys.length - 1];
+            if (validKeys.length > 0) {
+                sel.value = validKeys[validKeys.length - 1];
                 pacDomoOnDurationChange();
             }
         }
@@ -6442,12 +6475,11 @@ function iteSurplusDomoOnProductChange() {
             var o = document.createElement('option'); o.value = m; o.textContent = labels[m] || m; modSel.appendChild(o);
         });
     }
-    // Update postpone (stored as simple 'true'/'false' string)
+    // Update postpone — toujours activ\u00e9
     var ppSel = document.getElementById('iteSurplusDomoPostpone');
     if (ppSel) {
-        var ppAvail = opt.dataset.postpone === 'true';
-        ppSel.disabled = !ppAvail;
-        if (!ppAvail) ppSel.value = 'false';
+        ppSel.disabled = false;
+        ppSel.style.opacity = '1';
     }
     iteSurplusDomoOnParamChange();
 }
@@ -6469,23 +6501,44 @@ function iteSurplusDomoFetchDurations() {
     var qs = 'valueAmount=' + ITE_SURPLUS_AMOUNT + '&valueModality=' + modality + '&valuePostpone=' + postpone + '&valueAge=' + dob;
     var cobDob = (ite_V('iteDobCoemprunteur') || '').replace(/[^0-9]/g, '');
     if (cobDob.length >= 8) qs += '&valueAgeCoborrower=' + cobDob;
-    domoApiCall('simulation/' + productId, qs, function(data) {
+    function _surplusPopulateDurations(d2) {
         var sel = document.getElementById('iteSurplusDureeMois');
         if (!sel) return;
         var prevVal = sel.value;
         sel.innerHTML = '';
-        var keys = Object.keys(data).map(Number).sort(function(a,b){return a-b;});
-        // Filter out durations with mensualit\u00e9 <= 1\u20ac (API markers/invalid)
-        keys = keys.filter(function(d) { return parseFloat(data[d]) > 1; });
+        var keys = Object.keys(d2).map(Number).sort(function(a,b){return a-b;});
+        var validKeys = [];
         keys.forEach(function(d) {
+            var mens = parseFloat(d2[d]);
             var o = document.createElement('option');
-            o.value = d; o.textContent = d + ' mois \u2014 ' + parseFloat(data[d]).toFixed(2).replace('.', ',') + ' \u20ac/mois HA';
+            o.value = d;
+            if (mens <= 1) {
+                o.textContent = d + ' mois \u2014 non disponible';
+                o.disabled = true;
+            } else {
+                o.textContent = d + ' mois \u2014 ' + mens.toFixed(2).replace('.', ',') + ' \u20ac/mois HA';
+                validKeys.push(d);
+            }
             sel.appendChild(o);
         });
-        if (data[prevVal] && parseFloat(data[prevVal]) > 1) sel.value = prevVal;
-        else if (keys.length > 0) sel.value = keys[keys.length - 1];
+        if (d2[prevVal] && parseFloat(d2[prevVal]) > 1) sel.value = prevVal;
+        else if (validKeys.length > 0) sel.value = validKeys[validKeys.length - 1];
         iteSurplusDomoFetchResult();
-    }, function(err) { console.warn('Surplus domo durations error:', err); });
+    }
+    domoApiCall('simulation/' + productId, qs, function(data) {
+        _surplusPopulateDurations(data);
+    }, function(err) {
+        if (postpone === 'true') {
+            var qsFB = qs.replace('valuePostpone=true', 'valuePostpone=false');
+            var ppSel = document.getElementById('iteSurplusDomoPostpone');
+            if (ppSel) ppSel.value = 'false';
+            domoApiCall('simulation/' + productId, qsFB, function(data2) {
+                _surplusPopulateDurations(data2);
+            }, function(err2) { console.warn('Surplus domo durations error:', err2); });
+        } else {
+            console.warn('Surplus domo durations error:', err);
+        }
+    });
 }
 
 function iteSurplusDomoFetchResult() {
