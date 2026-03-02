@@ -5620,12 +5620,13 @@ function domoFetchProducts() {
             console.warn('domoFetchProducts: expected array, got', data);
             return;
         }
-        DOMO_PRODUCTS = data;
+        var DOMO_ALLOWED_IDS = ['168','2','188','176','153']; // Coup de pouce PAC, Pompe à chaleur, Isolation des murs, Autres travaux de rénovation, Eco-PTZ
+        DOMO_PRODUCTS = data.filter(function(p){ return DOMO_ALLOWED_IDS.indexOf(p.id)>=0; });
         DOMO_API_OK = true;
         var sel = document.getElementById('iteDomoProduct');
         if (!sel) return;
         sel.innerHTML = '';
-        data.forEach(function(p) {
+        DOMO_PRODUCTS.forEach(function(p) {
             var opt = document.createElement('option');
             opt.value = p.id;
             opt.textContent = p.equipmentName;
