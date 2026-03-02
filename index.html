@@ -2945,23 +2945,13 @@
                     <!-- Liste des documents disponibles -->
                 </div>
                 <div class="esign-step">
-                    <div class="esign-step-label">&#128100; &Eacute;tape 1</div>
-                    <div class="esign-step-title">Signature du client</div>
+                    <div class="esign-step-label">&#128100; Signature du client</div>
                     <div class="esign-canvas-wrap" id="esignClientWrap">
                         <canvas class="esign-canvas" id="esignClientCanvas"></canvas>
                         <div class="esign-canvas-placeholder" id="esignClientPlaceholder">Dessinez votre signature ici</div>
                     </div>
                     <button class="esign-clear-btn" onclick="esign_clearPad('client')">&#128260; Effacer</button>
                     <div class="esign-info">Utilisez votre doigt ou stylet pour signer. La signature sera int&eacute;gr&eacute;e dans le document PDF.</div>
-                </div>
-                <div class="esign-step">
-                    <div class="esign-step-label">&#127970; &Eacute;tape 2</div>
-                    <div class="esign-step-title">Signature du repr&eacute;sentant LES ARTISANS VERTS</div>
-                    <div class="esign-canvas-wrap" id="esignRepWrap">
-                        <canvas class="esign-canvas" id="esignRepCanvas"></canvas>
-                        <div class="esign-canvas-placeholder" id="esignRepPlaceholder">Dessinez votre signature ici</div>
-                    </div>
-                    <button class="esign-clear-btn" onclick="esign_clearPad('rep')">&#128260; Effacer</button>
                 </div>
                 <div id="esignStatusMsg"></div>
             </div>
@@ -6248,9 +6238,9 @@ async function ite_generatePTZ(){
 // ============================================
 // E-SIGNATURE SYSTEM
 // ============================================
-var esign_pads={client:null,rep:null};
-var esign_drawing={client:false,rep:false};
-var esign_hasData={client:false,rep:false};
+var esign_pads={client:null};
+var esign_drawing={client:false};
+var esign_hasData={client:false};
 var esign_lastDoc='';
 
 function esign_openModal(docType){
@@ -6279,11 +6269,12 @@ function esign_openModal(docType){
     docHtml+='</div>';
     docListEl.innerHTML=docHtml;
 
-    // Init signature pads
-    setTimeout(function(){
-        esign_initPad('client');
-        esign_initPad('rep');
-    },100);
+    // Init signature pad (use rAF to ensure modal is laid out before measuring)
+    requestAnimationFrame(function(){
+        requestAnimationFrame(function(){
+            esign_initPad('client');
+        });
+    });
 }
 
 function esign_close(){
@@ -6291,10 +6282,11 @@ function esign_close(){
 }
 
 function esign_initPad(type){
-    var canvasId=type==='client'?'esignClientCanvas':'esignRepCanvas';
-    var canvas=document.getElementById(canvasId);
+    var canvas=document.getElementById('esignClientCanvas');
     if(!canvas)return;
     var rect=canvas.parentElement.getBoundingClientRect();
+    // Ensure canvas has real dimensions (modal must be visible)
+    if(rect.width<10) return;
     canvas.width=rect.width;
     canvas.height=150;
     var ctx=canvas.getContext('2d');
@@ -6302,6 +6294,9 @@ function esign_initPad(type){
     ctx.lineWidth=2.5;
     ctx.lineCap='round';
     ctx.lineJoin='round';
+
+    // Only bind event listeners once
+    if(esign_pads[type]){return;}
 
     var isDown=false,lastX=0,lastY=0;
 
@@ -6316,22 +6311,25 @@ function esign_initPad(type){
         isDown=true;
         var p=getPos(e);
         lastX=p.x;lastY=p.y;
-        ctx.beginPath();
-        ctx.moveTo(lastX,lastY);
+        var c=canvas.getContext('2d');
+        c.strokeStyle='#1a1a2e';c.lineWidth=2.5;c.lineCap='round';c.lineJoin='round';
+        c.beginPath();
+        c.moveTo(lastX,lastY);
         esign_hasData[type]=true;
-        var ph=document.getElementById(type==='client'?'esignClientPlaceholder':'esignRepPlaceholder');
+        var ph=document.getElementById('esignClientPlaceholder');
         if(ph)ph.style.display='none';
-        var wrap=document.getElementById(type==='client'?'esignClientWrap':'esignRepWrap');
+        var wrap=document.getElementById('esignClientWrap');
         if(wrap)wrap.classList.add('active');
     }
     function move(e){
         if(!isDown)return;
         e.preventDefault();
         var p=getPos(e);
-        ctx.lineTo(p.x,p.y);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(p.x,p.y);
+        var c=canvas.getContext('2d');
+        c.lineTo(p.x,p.y);
+        c.stroke();
+        c.beginPath();
+        c.moveTo(p.x,p.y);
         lastX=p.x;lastY=p.y;
     }
     function end(){isDown=false;}
@@ -6353,9 +6351,9 @@ function esign_clearPad(type){
     var ctx=canvas.getContext('2d');
     ctx.clearRect(0,0,canvas.width,canvas.height);
     esign_hasData[type]=false;
-    var ph=document.getElementById(type==='client'?'esignClientPlaceholder':'esignRepPlaceholder');
+    var ph=document.getElementById('esignClientPlaceholder');
     if(ph)ph.style.display='block';
-    var wrap=document.getElementById(type==='client'?'esignClientWrap':'esignRepWrap');
+    var wrap=document.getElementById('esignClientWrap');
     if(wrap)wrap.classList.remove('active');
 }
 
@@ -6367,10 +6365,9 @@ function esign_getSignatureDataURL(type){
 
 async function esign_applySignatures(){
     var clientSig=esign_getSignatureDataURL('client');
-    var repSig=esign_getSignatureDataURL('rep');
 
-    if(!clientSig&&!repSig){
-        alert('Veuillez dessiner au moins une signature avant de continuer.');
+    if(!clientSig){
+        alert('Veuillez dessiner votre signature avant de continuer.');
         return;
     }
 
@@ -6385,31 +6382,22 @@ async function esign_applySignatures(){
     var timeStr=now.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
     var stampHtml='<div style="font-size:5.5pt;color:#666;margin-top:1mm;">Sign\u00e9 \u00e9lectroniquement le '+dateStr+' \u00e0 '+timeStr+'</div>';
 
-    // Universal function to inject signatures into any document area
+    // Inject client signature into document area
     function injectSignatures(areaId){
         var area=ite_$(areaId);
         if(!area)return;
-        // Target all .sig-canvas-area elements with data-sig attribute
-        var sigAreas=area.querySelectorAll('.sig-canvas-area[data-sig]');
+        // Target .sig-canvas-area elements with data-sig="client"
+        var sigAreas=area.querySelectorAll('.sig-canvas-area[data-sig="client"]');
         sigAreas.forEach(function(el){
-            var sigType=el.getAttribute('data-sig');
-            var sigData=sigType==='client'?clientSig:repSig;
-            if(sigData){
-                el.style.border='none';
-                el.style.background='transparent';
-                el.innerHTML='<img src="'+sigData+'" style="height:14mm;width:auto;">'+stampHtml;
-            }
+            el.style.border='none';
+            el.style.background='transparent';
+            el.innerHTML='<img src="'+clientSig+'" style="height:14mm;width:auto;">'+stampHtml;
         });
-        // Also handle .dv-sig blocks that DON'T have a nested .sig-canvas-area (legacy)
-        var dvSigs=area.querySelectorAll('.dv-sig');
+        // Also handle .dv-sig[data-sig="client"] blocks without nested .sig-canvas-area (legacy)
+        var dvSigs=area.querySelectorAll('.dv-sig[data-sig="client"]');
         dvSigs.forEach(function(block){
-            // Skip if already has a sig-canvas-area (handled above)
             if(block.querySelector('.sig-canvas-area'))return;
-            var sigType=block.getAttribute('data-sig')||'client';
-            var sigData=sigType==='client'?clientSig:repSig;
-            if(sigData){
-                block.innerHTML+='<div style="margin-top:3mm;"><img src="'+sigData+'" style="height:14mm;width:auto;display:block;">'+stampHtml+'</div>';
-            }
+            block.innerHTML+='<div style="margin-top:3mm;"><img src="'+clientSig+'" style="height:14mm;width:auto;display:block;">'+stampHtml+'</div>';
         });
     }
 
