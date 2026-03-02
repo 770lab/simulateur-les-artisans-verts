@@ -5597,9 +5597,29 @@ function domoShowStatus(msg, isError) {
 function domoFetchProducts() {
     var spinner = document.getElementById('domoProductSpinner');
     if (spinner) spinner.style.display = 'inline';
-    domoApiCall('materiels', '', function(data) {
+    var done = false;
+    // Safety timeout: if API doesn't respond within 10s, show fallback
+    var safetyTimer = setTimeout(function(){
+        if (done) return;
+        done = true;
         if (spinner) spinner.style.display = 'none';
-        if (!Array.isArray(data)) { domoShowStatus('Erreur: réponse produits invalide', true); return; }
+        DOMO_API_OK = false;
+        var sel = document.getElementById('iteDomoProduct');
+        if (sel) sel.innerHTML = '<option value="">API indisponible — calcul local</option>';
+        domoShowStatus('Timeout: API Domofinance indisponible', true);
+        console.warn('domoFetchProducts: timeout after 10s');
+    }, 10000);
+    domoApiCall('materiels', '', function(data) {
+        if (done) return; done = true; clearTimeout(safetyTimer);
+        if (spinner) spinner.style.display = 'none';
+        if (!Array.isArray(data)) {
+            DOMO_API_OK = false;
+            var sel2 = document.getElementById('iteDomoProduct');
+            if (sel2) sel2.innerHTML = '<option value="">API indisponible — calcul local</option>';
+            domoShowStatus('Erreur: réponse produits invalide', true);
+            console.warn('domoFetchProducts: expected array, got', data);
+            return;
+        }
         DOMO_PRODUCTS = data;
         DOMO_API_OK = true;
         var sel = document.getElementById('iteDomoProduct');
@@ -5618,6 +5638,7 @@ function domoFetchProducts() {
         domoOnProductChange();
         domoShowStatus('Produits Domofinance chargés', false);
     }, function(err) {
+        if (done) return; done = true; clearTimeout(safetyTimer);
         if (spinner) spinner.style.display = 'none';
         DOMO_API_OK = false;
         var sel = document.getElementById('iteDomoProduct');
