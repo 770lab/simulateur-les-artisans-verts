@@ -257,7 +257,7 @@ function calcCEEDetail() {
 
     // === BAR-TH-148 ===
     if (fiches.includes('148')) {
-        const kwhc148 = BAR148[tl] || 15600;
+        const kwhc148 = BAR148[tl] || 14700;
         totalKwhc += kwhc148;
         details.push(`148: ${fmtIntCEE(kwhc148)}`);
         const typeLabel = tl === 'maison' ? 'Maison' : 'Appart';
@@ -348,7 +348,7 @@ function toggleLockCumac(){
     if(locked){
         // Re-sync from ménage category
         var menageVal = document.getElementById('menageCEE').value;
-        input.value = (menageVal === 'tm') ? 12 : 7.8;
+        input.value = (menageVal === 'tm') ? 12.5 : 7.5;
         input.readOnly = true;
         input.style.opacity = '0.6';
     } else {
@@ -551,7 +551,7 @@ function calc(){
         var lockCumac = document.getElementById('lockCumac');
         if(lockCumac && lockCumac.checked){
             var menageVal = document.getElementById('menageCEE').value;
-            var pxAuto = (menageVal === 'tm') ? 12 : 7.8;
+            var pxAuto = (menageVal === 'tm') ? 12.5 : 7.5;
             document.getElementById('prixCumac').value = pxAuto;
         }
         document.getElementById('kwhCumac').value=Math.round(lastCEEDetailKwhc).toLocaleString('fr-FR');
@@ -857,7 +857,7 @@ function reset(){
     document.getElementById('racPourcent').value=0;
     document.getElementById('racOffert').value=0;
     if(mode){
-        document.getElementById('prixCumac').value=12;
+        document.getElementById('prixCumac').value=12.5;
     }
     calc();
 }
