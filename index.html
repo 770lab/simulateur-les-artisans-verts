@@ -7130,6 +7130,15 @@ async function esign_applySignatures(){
         if(signDevis) signedDocs.push('ITE');
         logAction('Signature électronique', signedDocs.join('+')+' - '+num+' - '+nom);
 
+        // Auto-update dossier status to 'signe'
+        var localDossiers = getLocalDossiers();
+        for(var di=0; di<localDossiers.length; di++){
+            if(localDossiers[di].numDevis === num){
+                updateDossierStatus(localDossiers[di].id, 'signe');
+                break;
+            }
+        }
+
         setTimeout(function(){esign_close();},2000);
     }catch(e){
         console.error('E-signature PDF error:',e);
@@ -7510,10 +7519,15 @@ function _dashFilterByPeriod(items, period, dateKey) {
 
 function renderDashboard(dossiers, journal, period) {
     var filtered = _dashFilterByPeriod(dossiers, period, 'dateISO');
+    var filteredJournal = _dashFilterByPeriod(journal, period, 'date');
     var total = filtered.length;
     var envoyes = filtered.filter(function(d){ return d.status === 'envoye' || d.status === 'signe'; }).length;
-    var signes = filtered.filter(function(d){ return d.status === 'signe'; }).length;
+    var signesStatus = filtered.filter(function(d){ return d.status === 'signe'; }).length;
+    var signesJournal = filteredJournal.filter(function(e){ return e.action === 'Signature \u00e9lectronique'; }).length;
+    var signes = Math.max(signesStatus, signesJournal);
     var perdus = filtered.filter(function(d){ return d.status === 'perdu'; }).length;
+    // Envoyés = au moins les signés (un dossier signé a forcément été envoyé)
+    if(envoyes < signes) envoyes = signes;
     var conversion = envoyes > 0 ? Math.round(signes / envoyes * 100) : 0;
 
     var html = '';
@@ -7603,18 +7617,14 @@ function renderDashboard(dossiers, journal, period) {
     }
     html += '</div>';
 
-    // Activité récente (journal)
-    var filteredJournal = _dashFilterByPeriod(journal, period, 'date');
+    // Activité récente (journal — filteredJournal déjà calculé en haut)
     var devisGen = filteredJournal.filter(function(e){ return e.action === 'Devis PAC g\u00e9n\u00e9r\u00e9' || e.action === 'Devis ITE g\u00e9n\u00e9r\u00e9'; }).length;
-    var signatures = filteredJournal.filter(function(e){ return e.action === 'Signature \u00e9lectronique'; }).length;
-    var connexions = filteredJournal.filter(function(e){ return e.action === 'Connexion' || e.action === 'Connexion (local)'; }).length;
 
     html += '<div class="dash-section">';
     html += '<div class="dash-section-title">\u26A1 Activit\u00e9 r\u00e9cente</div>';
     html += '<div style="display:flex;gap:16px;flex-wrap:wrap;font-size:13px;">';
     html += '<div>\uD83D\uDCDD <b>' + devisGen + '</b> devis g\u00e9n\u00e9r\u00e9s</div>';
-    html += '<div>\u270D\uFE0F <b>' + signatures + '</b> signatures</div>';
-    html += '<div>\uD83D\uDD11 <b>' + connexions + '</b> connexions</div>';
+    html += '<div>\u270D\uFE0F <b>' + signes + '</b> sign\u00e9s</div>';
     html += '<div>\u274C <b>' + perdus + '</b> perdus</div>';
     html += '</div></div>';
 
