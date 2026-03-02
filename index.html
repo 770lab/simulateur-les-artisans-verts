@@ -3132,36 +3132,120 @@
                 <!-- Partenaires (masqué) -->
 
                 <!-- Financement Domofinance -->
-                <div class="ite-card">
-                    <div class="ite-card-head"><div class="ite-card-icon">&#128179;</div><h3>Financement</h3></div>
-                    <div class="ite-fg">
-                        <div class="ite-fi"><label>Inclure ?</label><select id="iteIncludeFinancement" onchange="ite_calc()"><option value="oui">Oui</option><option value="non">Non</option></select></div>
-                        <div class="ite-fi"><label>Produit Domofinance</label><select id="iteDomoProduct" onchange="domoOnProductChange()"><option value="">Chargement&hellip;</option></select><span id="domoProductSpinner" style="display:none;font-size:11px;color:#64748b;">&#9203; Chargement&hellip;</span></div>
-                        <div class="ite-fi"><label>Modalit&eacute;</label><select id="iteDomoModality" onchange="domoOnParamChange()"><option value="normal">Normal</option><option value="gratuit">Gratuit</option><option value="compense">Compens&eacute;</option></select></div>
-                        <div class="ite-fi"><label>Report 180j</label><select id="iteDomoPostpone" onchange="domoOnParamChange()"><option value="false">Sans</option><option value="true">Avec</option></select></div>
-                        <div style="border-top:1px solid #e2e8f0;margin:8px 0;padding-top:6px;"><span style="font-size:11px;font-weight:600;color:#475569;">Emprunteur</span></div>
-                        <div class="ite-fi"><label>Date naissance</label><input type="text" inputmode="numeric" id="iteDobEmprunteur" placeholder="JJMMAAAA" maxlength="10" oninput="ecoptz_formatDateInput(this); domoOnParamChange()"></div>
-                        <div class="ite-fi"><label>En activit&eacute; ?</label><select id="iteDomoEnActivite" onchange="domoOnParamChange()"><option value="true">Oui</option><option value="false">Non</option></select></div>
-                        <div class="ite-fi"><label>Assurance</label><select id="iteTypeAssurance" onchange="domoOnParamChange()"><option value="DIM" selected>DIM</option><option value="D">D</option><option value="DIMC">DIMC</option></select></div>
-                        <div style="border-top:1px solid #e2e8f0;margin:8px 0;padding-top:6px;"><span style="font-size:11px;font-weight:600;color:#475569;">Co-emprunteur <span style="font-weight:400;color:#94a3b8;">(optionnel)</span></span></div>
-                        <div class="ite-fi"><label>Date naissance</label><input type="text" inputmode="numeric" id="iteDobCoemprunteur" placeholder="JJMMAAAA" maxlength="10" oninput="ecoptz_formatDateInput(this); domoOnParamChange()"></div>
-                        <div class="ite-fi"><label>En activit&eacute; ?</label><select id="iteDomoCobEnActivite" onchange="domoOnParamChange()"><option value="true">Oui</option><option value="false">Non</option></select></div>
-                        <div class="ite-fi"><label>Assurance co-empr.</label><select id="iteDomoCobAssurance" onchange="domoOnParamChange()"><option value="none">Aucune</option><option value="D">D</option><option value="DIM">DIM</option><option value="DIMC">DIMC</option></select></div>
-                        <div style="border-top:1px solid #e2e8f0;margin:8px 0;padding-top:6px;"><span style="font-size:11px;font-weight:600;color:#475569;">Dur&eacute;e &amp; R&eacute;sultats</span></div>
-                        <div class="ite-fi"><label>Dur&eacute;e (mois)</label><select id="iteDureeMois" onchange="domoOnDurationChange()"><option value="120">120</option></select></div>
-                        <div class="ite-fi"><label>Mensualit&eacute; hors ass.</label><input type="number" id="iteMensHorsAss" value="0" step="0.01" readonly style="background:#f7f8fa;"></div>
-                        <div class="ite-fi"><label>Mensualit&eacute; avec ass.</label><input type="number" id="iteMensAvecAss" value="0" step="0.01" readonly style="background:#f7f8fa;"></div>
-                        <div class="ite-fi"><label>TAEG</label><span id="iteFinTAEG" style="font-weight:700;font-size:14px;color:#1a2744;">-</span></div>
-                        <div class="ite-fi"><label>Taux d&eacute;biteur</label><span id="iteFinTNC" style="font-weight:700;font-size:14px;color:#1a2744;">-</span></div>
-                        <div class="ite-fi"><label>Co&ucirc;t du cr&eacute;dit</label><span id="iteFinCoutCredit" style="font-weight:700;font-size:14px;color:#1a2744;">-</span></div>
-                        <div class="ite-fi"><label>Frais de dossier</label><span id="iteFinFraisDossier" style="font-weight:700;font-size:14px;color:#1a2744;">-</span></div>
-                        <div class="ite-fi"><label>Dur&eacute;e contrat</label><span id="iteFinDureeContrat" style="font-weight:700;font-size:14px;color:#1a2744;">-</span></div>
-                        <div class="ite-fi"><label>Retenue vendeur</label><span id="iteFinRetVendeur" style="font-weight:700;font-size:14px;color:#1a2744;">-</span></div>
-                        <div class="ite-fi"><label>TAEA</label><span id="iteFinTAEA" style="font-weight:700;font-size:14px;color:#1a2744;">-</span></div>
-                        <div class="ite-fi"><label>Total d&ucirc; hors ass.</label><input type="number" id="iteTotalDuHA" value="0" step="0.01" readonly style="background:#f7f8fa;"></div>
-                        <div class="ite-fi"><label>Total d&ucirc; avec ass.</label><input type="number" id="iteTotalDuAA" value="0" step="0.01" readonly style="background:#f7f8fa;"></div>
-                        <div id="domoApiStatus" style="display:none;padding:6px 10px;border-radius:8px;font-size:11px;margin-top:4px;"></div>
+                <div class="ite-card" style="border:2px solid #6366f1;overflow:hidden;">
+                    <!-- Header gradient -->
+                    <div style="background:linear-gradient(135deg,#4f46e5,#6366f1);margin:-20px -20px 16px -20px;padding:16px 20px;display:flex;align-items:center;gap:10px;">
+                        <div style="width:36px;height:36px;background:rgba(255,255,255,0.2);border-radius:10px;display:grid;place-items:center;font-size:18px;">&#128179;</div>
+                        <h3 style="color:white;font-size:15px;font-weight:700;margin:0;">Financement Domofinance</h3>
+                        <select id="iteIncludeFinancement" onchange="ite_calc()" style="margin-left:auto;padding:4px 10px;border-radius:6px;border:1px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.15);color:white;font-size:11px;font-weight:600;cursor:pointer;">
+                            <option value="oui" style="color:#1d1d1f;">Oui</option>
+                            <option value="non" style="color:#1d1d1f;">Non</option>
+                        </select>
                     </div>
+
+                    <!-- Produit -->
+                    <div style="margin-bottom:14px;">
+                        <div class="ite-fg">
+                            <div class="ite-fi full"><label>Produit</label><select id="iteDomoProduct" onchange="domoOnProductChange()"><option value="">Chargement&hellip;</option></select><span id="domoProductSpinner" style="display:none;font-size:11px;color:#64748b;">&#9203; Chargement&hellip;</span></div>
+                            <div class="ite-fi"><label>Modalit&eacute;</label><select id="iteDomoModality" onchange="domoOnParamChange()"><option value="normal">Normal</option><option value="gratuit">Gratuit</option><option value="compense">Compens&eacute;</option></select></div>
+                            <div class="ite-fi"><label>Report 180j</label><select id="iteDomoPostpone" onchange="domoOnParamChange()"><option value="false">Sans</option><option value="true">Avec</option></select></div>
+                        </div>
+                    </div>
+
+                    <!-- Emprunteur -->
+                    <div style="background:linear-gradient(135deg,#eff6ff,#e0f2fe);border:1px solid #bfdbfe;border-radius:10px;padding:14px;margin-bottom:12px;">
+                        <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;">
+                            <span style="font-size:16px;">&#128100;</span>
+                            <span style="font-size:12px;font-weight:700;color:#1e40af;text-transform:uppercase;letter-spacing:0.5px;">Emprunteur</span>
+                        </div>
+                        <div class="ite-fg" style="gap:10px;">
+                            <div class="ite-fi"><label>Date naissance</label><input type="text" inputmode="numeric" id="iteDobEmprunteur" placeholder="JJ/MM/AAAA" maxlength="10" oninput="ecoptz_formatDateInput(this); domoOnParamChange()"></div>
+                            <div class="ite-fi"><label>En activit&eacute; ?</label><select id="iteDomoEnActivite" onchange="domoOnParamChange()"><option value="true">Oui</option><option value="false">Non</option></select></div>
+                            <div class="ite-fi"><label>Assurance</label><select id="iteTypeAssurance" onchange="domoOnParamChange()"><option value="DIM" selected>DIM</option><option value="D">D</option><option value="DIMC">DIMC</option></select></div>
+                        </div>
+                    </div>
+
+                    <!-- Co-emprunteur -->
+                    <div style="background:linear-gradient(135deg,#fdf4ff,#fae8ff);border:1px solid #e9d5ff;border-radius:10px;padding:14px;margin-bottom:14px;">
+                        <div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;">
+                            <span style="font-size:16px;">&#128101;</span>
+                            <span style="font-size:12px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:0.5px;">Co-emprunteur</span>
+                            <span style="font-size:10px;color:#a78bfa;font-weight:400;">(optionnel)</span>
+                        </div>
+                        <div class="ite-fg" style="gap:10px;">
+                            <div class="ite-fi"><label>Date naissance</label><input type="text" inputmode="numeric" id="iteDobCoemprunteur" placeholder="JJ/MM/AAAA" maxlength="10" oninput="ecoptz_formatDateInput(this); domoOnParamChange()"></div>
+                            <div class="ite-fi"><label>En activit&eacute; ?</label><select id="iteDomoCobEnActivite" onchange="domoOnParamChange()"><option value="true">Oui</option><option value="false">Non</option></select></div>
+                            <div class="ite-fi"><label>Assurance</label><select id="iteDomoCobAssurance" onchange="domoOnParamChange()"><option value="none">Aucune</option><option value="D">D</option><option value="DIM">DIM</option><option value="DIMC">DIMC</option></select></div>
+                        </div>
+                    </div>
+
+                    <!-- Durée -->
+                    <div style="margin-bottom:14px;">
+                        <div class="ite-fg">
+                            <div class="ite-fi full"><label>Dur&eacute;e du pr&ecirc;t</label><select id="iteDureeMois" onchange="domoOnDurationChange()" style="font-weight:600;"><option value="120">120 mois</option></select></div>
+                        </div>
+                    </div>
+
+                    <!-- Résultats -->
+                    <div style="background:linear-gradient(135deg,#0f172a,#1e293b);border-radius:12px;padding:16px;color:white;">
+                        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#94a3b8;margin-bottom:12px;text-align:center;">R&eacute;sultats de la simulation</div>
+                        <!-- Mensualités highlight -->
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+                            <div style="background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.3);border-radius:10px;padding:12px;text-align:center;">
+                                <div style="font-size:10px;color:#a5b4fc;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Mensualit&eacute; H.A.</div>
+                                <input type="number" id="iteMensHorsAss" value="0" step="0.01" readonly style="background:transparent;border:none;color:#c7d2fe;font-size:20px;font-weight:800;text-align:center;width:100%;padding:0;">
+                                <div style="font-size:9px;color:#818cf8;">&euro;/mois</div>
+                            </div>
+                            <div style="background:rgba(34,197,94,0.15);border:1px solid rgba(34,197,94,0.3);border-radius:10px;padding:12px;text-align:center;">
+                                <div style="font-size:10px;color:#86efac;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;">Mensualit&eacute; A.A.</div>
+                                <input type="number" id="iteMensAvecAss" value="0" step="0.01" readonly style="background:transparent;border:none;color:#bbf7d0;font-size:20px;font-weight:800;text-align:center;width:100%;padding:0;">
+                                <div style="font-size:9px;color:#4ade80;">&euro;/mois</div>
+                            </div>
+                        </div>
+                        <!-- Grid détails -->
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:rgba(255,255,255,0.05);border-radius:6px;">
+                                <span style="font-size:10px;color:#94a3b8;">TAEG</span>
+                                <span id="iteFinTAEG" style="font-weight:700;font-size:13px;color:#fbbf24;">-</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:rgba(255,255,255,0.05);border-radius:6px;">
+                                <span style="font-size:10px;color:#94a3b8;">Taux d&eacute;biteur</span>
+                                <span id="iteFinTNC" style="font-weight:700;font-size:13px;color:#fbbf24;">-</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:rgba(255,255,255,0.05);border-radius:6px;">
+                                <span style="font-size:10px;color:#94a3b8;">Co&ucirc;t cr&eacute;dit</span>
+                                <span id="iteFinCoutCredit" style="font-weight:700;font-size:13px;color:white;">-</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:rgba(255,255,255,0.05);border-radius:6px;">
+                                <span style="font-size:10px;color:#94a3b8;">Frais dossier</span>
+                                <span id="iteFinFraisDossier" style="font-weight:700;font-size:13px;color:white;">-</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:rgba(255,255,255,0.05);border-radius:6px;">
+                                <span style="font-size:10px;color:#94a3b8;">Dur&eacute;e contrat</span>
+                                <span id="iteFinDureeContrat" style="font-weight:700;font-size:13px;color:white;">-</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:rgba(255,255,255,0.05);border-radius:6px;">
+                                <span style="font-size:10px;color:#94a3b8;">Retenue vendeur</span>
+                                <span id="iteFinRetVendeur" style="font-weight:700;font-size:13px;color:white;">-</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:rgba(255,255,255,0.05);border-radius:6px;">
+                                <span style="font-size:10px;color:#94a3b8;">TAEA</span>
+                                <span id="iteFinTAEA" style="font-weight:700;font-size:13px;color:white;">-</span>
+                            </div>
+                        </div>
+                        <!-- Totaux -->
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.1);">
+                            <div style="text-align:center;">
+                                <div style="font-size:9px;color:#94a3b8;text-transform:uppercase;margin-bottom:2px;">Total d&ucirc; H.A.</div>
+                                <input type="number" id="iteTotalDuHA" value="0" step="0.01" readonly style="background:transparent;border:none;color:#e2e8f0;font-size:16px;font-weight:700;text-align:center;width:100%;padding:0;">
+                            </div>
+                            <div style="text-align:center;">
+                                <div style="font-size:9px;color:#94a3b8;text-transform:uppercase;margin-bottom:2px;">Total d&ucirc; A.A.</div>
+                                <input type="number" id="iteTotalDuAA" value="0" step="0.01" readonly style="background:transparent;border:none;color:#e2e8f0;font-size:16px;font-weight:700;text-align:center;width:100%;padding:0;">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="domoApiStatus" style="display:none;padding:6px 10px;border-radius:8px;font-size:11px;margin-top:8px;"></div>
                 </div>
 
 
