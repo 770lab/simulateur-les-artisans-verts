@@ -623,6 +623,62 @@
             margin-top: 6px;
         }
 
+        /* ===== DASHBOARD ADMIN ===== */
+        .dash-kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 18px; }
+        .dash-kpi {
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 14px 12px;
+            text-align: center;
+        }
+        .dash-kpi-icon { font-size: 22px; margin-bottom: 4px; }
+        .dash-kpi-value { font-size: 26px; font-weight: 900; color: #0f172a; line-height: 1.1; }
+        .dash-kpi-label { font-size: 11px; color: #64748b; font-weight: 600; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .dash-kpi.blue { border-bottom: 3px solid #3b82f6; }
+        .dash-kpi.green { border-bottom: 3px solid #22c55e; }
+        .dash-kpi.orange { border-bottom: 3px solid #f59e0b; }
+        .dash-kpi.purple { border-bottom: 3px solid #8b5cf6; }
+
+        .dash-section { margin-bottom: 18px; }
+        .dash-section-title { font-size: 13px; font-weight: 800; color: #334155; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+
+        .dash-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+        .dash-table th { text-align: left; padding: 8px 10px; background: #f8fafc; color: #64748b; font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #e2e8f0; }
+        .dash-table td { padding: 8px 10px; border-bottom: 1px solid #f1f5f9; color: #1e293b; }
+        .dash-table tr:hover td { background: #f8fafc; }
+        .dash-table .td-name { font-weight: 700; }
+        .dash-table .td-bar { width: 40%; }
+        .dash-table .td-num { text-align: center; font-weight: 600; }
+        .dash-table .td-pct { text-align: center; font-weight: 800; }
+
+        .dash-bar-wrap { background: #e2e8f0; border-radius: 4px; height: 18px; overflow: hidden; position: relative; }
+        .dash-bar-fill { height: 100%; border-radius: 4px; transition: width 0.4s ease; }
+        .dash-bar-fill.green { background: linear-gradient(90deg, #22c55e, #16a34a); }
+        .dash-bar-fill.blue { background: linear-gradient(90deg, #3b82f6, #2563eb); }
+        .dash-bar-fill.orange { background: linear-gradient(90deg, #f59e0b, #d97706); }
+        .dash-bar-label { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); font-size: 10px; font-weight: 700; color: #475569; }
+
+        .dash-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+        .dash-row-label { width: 50px; font-size: 12px; font-weight: 700; color: #475569; text-align: right; }
+        .dash-row-bar { flex: 1; }
+        .dash-row-val { width: 36px; font-size: 12px; font-weight: 700; color: #1e293b; }
+
+        .dash-filter { display: flex; gap: 4px; }
+        .dash-filter button { padding: 4px 10px; font-size: 11px; font-weight: 600; border: 1px solid #d1d5db; border-radius: 6px; background: white; color: #64748b; cursor: pointer; }
+        .dash-filter button.active { background: #0f172a; color: white; border-color: #0f172a; }
+
+        .dossier-status-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 700; }
+        .dossier-status-badge.brouillon { background: #fef3c7; color: #92400e; }
+        .dossier-status-badge.envoye { background: #dbeafe; color: #1e40af; }
+        .dossier-status-badge.signe { background: #d1fae5; color: #065f46; }
+        .dossier-status-badge.perdu { background: #fee2e2; color: #991b1b; }
+        .dossier-status-select {
+            padding: 3px 6px; font-size: 11px; border: 1px solid #d1d5db; border-radius: 6px;
+            background: white; cursor: pointer; font-weight: 600; color: #334155;
+        }
+        @media (max-width: 600px) { .dash-kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+
         .results-sidebar {
             position: sticky;
             top: 100px;
@@ -1828,6 +1884,25 @@
     </div>
 </div>
 
+<!-- DASHBOARD MODAL -->
+<div id="dashboardModal" class="hist-overlay" onclick="if(event.target===this)this.classList.remove('active')">
+    <div class="hist-modal" style="max-width:720px;max-height:90vh;">
+        <div class="hist-modal-header">
+            <h3>&#128202; Dashboard</h3>
+            <div style="display:flex;align-items:center;gap:10px;">
+                <div class="dash-filter" id="dashFilterBtns">
+                    <button class="active" onclick="setDashPeriod('mois',this)">Ce mois</button>
+                    <button onclick="setDashPeriod('semaine',this)">Semaine</button>
+                    <button onclick="setDashPeriod('trimestre',this)">Trimestre</button>
+                    <button onclick="setDashPeriod('tout',this)">Tout</button>
+                </div>
+                <button class="hist-modal-close" onclick="document.getElementById('dashboardModal').classList.remove('active')">&times;</button>
+            </div>
+        </div>
+        <div class="hist-modal-body" id="dashboardBody" style="max-height:72vh;overflow-y:auto;"></div>
+    </div>
+</div>
+
 <!-- APP (hidden until login) -->
 <div id="appScreen" style="display:none;">
     <div class="header">
@@ -1862,6 +1937,7 @@
                 <button class="btn-hist" id="btnHistory" onclick="openHistory()" style="display:none;">&#128203;</button>
                 <button class="btn-hist" id="btnPwd" onclick="openPwdModal()" style="display:none;">&#128273;</button>
                 <button class="btn-hist" id="btnAddUser" onclick="openAddUserModal()" style="display:none;">&#128100;+</button>
+                <button class="btn-hist" id="btnDashboard" onclick="openDashboard()" style="display:none;">&#128202;</button>
                 <button class="btn-logout" onclick="doLogout()">&#8618;</button>
             </div>
         </div>
@@ -4731,6 +4807,7 @@ function showApp(){
         document.getElementById('btnHistory').style.display = isAdmin ? '' : 'none';
         document.getElementById('btnPwd').style.display = isAdmin ? '' : 'none';
         document.getElementById('btnAddUser').style.display = isAdmin ? '' : 'none';
+        document.getElementById('btnDashboard').style.display = isAdmin ? '' : 'none';
         // Dossier button for all logged-in users
         document.getElementById('btnDossiers').style.display = '';
         
@@ -7385,6 +7462,187 @@ function pac_generateDevis(){
 })();
 
 // ============================================
+// DASHBOARD ADMIN + STATUT DOSSIERS
+// ============================================
+var _dashPeriod = 'mois';
+
+function setDashPeriod(p, btn) {
+    _dashPeriod = p;
+    var btns = document.querySelectorAll('#dashFilterBtns button');
+    btns.forEach(function(b){ b.classList.remove('active'); });
+    if(btn) btn.classList.add('active');
+    _dashRefresh();
+}
+
+function openDashboard() {
+    document.getElementById('dashboardBody').innerHTML = '<div style="text-align:center;padding:30px;color:#9ca3af;">Chargement...</div>';
+    document.getElementById('dashboardModal').classList.add('active');
+    // Try API first for fresh data
+    if(useAPI && API_URL) {
+        apiCall({action:'getDossiers'}, function(d){
+            if(d.success && d.dossiers) setLocalDossiers(d.dossiers);
+            _dashRefresh();
+        }, function(){ _dashRefresh(); });
+    } else {
+        _dashRefresh();
+    }
+}
+
+function _dashRefresh() {
+    var dossiers = getLocalDossiers();
+    var journal = getJournal();
+    renderDashboard(dossiers, journal, _dashPeriod);
+}
+
+function _dashFilterByPeriod(items, period, dateKey) {
+    if(period === 'tout') return items;
+    var now = new Date();
+    var cutoff;
+    if(period === 'semaine') { cutoff = new Date(now); cutoff.setDate(cutoff.getDate() - 7); }
+    else if(period === 'mois') { cutoff = new Date(now.getFullYear(), now.getMonth(), 1); }
+    else if(period === 'trimestre') { cutoff = new Date(now); cutoff.setMonth(cutoff.getMonth() - 3); }
+    else { return items; }
+    return items.filter(function(item) {
+        var d = item[dateKey] ? new Date(item[dateKey]) : null;
+        return d && d >= cutoff;
+    });
+}
+
+function renderDashboard(dossiers, journal, period) {
+    var filtered = _dashFilterByPeriod(dossiers, period, 'dateISO');
+    var total = filtered.length;
+    var envoyes = filtered.filter(function(d){ return d.status === 'envoye' || d.status === 'signe'; }).length;
+    var signes = filtered.filter(function(d){ return d.status === 'signe'; }).length;
+    var perdus = filtered.filter(function(d){ return d.status === 'perdu'; }).length;
+    var conversion = envoyes > 0 ? Math.round(signes / envoyes * 100) : 0;
+
+    var html = '';
+
+    // KPI cards
+    html += '<div class="dash-kpi-grid">';
+    html += '<div class="dash-kpi blue"><div class="dash-kpi-icon">\uD83D\uDCCB</div><div class="dash-kpi-value">' + total + '</div><div class="dash-kpi-label">Total devis</div></div>';
+    html += '<div class="dash-kpi orange"><div class="dash-kpi-icon">\uD83D\uDCE4</div><div class="dash-kpi-value">' + envoyes + '</div><div class="dash-kpi-label">Envoy\u00e9s</div></div>';
+    html += '<div class="dash-kpi green"><div class="dash-kpi-icon">\u2705</div><div class="dash-kpi-value">' + signes + '</div><div class="dash-kpi-label">Sign\u00e9s</div></div>';
+    html += '<div class="dash-kpi purple"><div class="dash-kpi-icon">\uD83D\uDCC8</div><div class="dash-kpi-value">' + conversion + '%</div><div class="dash-kpi-label">Conversion</div></div>';
+    html += '</div>';
+
+    // Par commercial
+    var byComm = {};
+    filtered.forEach(function(d) {
+        var key = d.commercial || 'Inconnu';
+        if(!byComm[key]) byComm[key] = { nom: key, total: 0, envoyes: 0, signes: 0, perdus: 0 };
+        byComm[key].total++;
+        if(d.status === 'envoye' || d.status === 'signe') byComm[key].envoyes++;
+        if(d.status === 'signe') byComm[key].signes++;
+        if(d.status === 'perdu') byComm[key].perdus++;
+    });
+    var commList = Object.values(byComm).sort(function(a,b){ return b.signes - a.signes; });
+    var maxTotal = Math.max.apply(null, commList.map(function(c){ return c.total; }).concat([1]));
+    var bestPct = -1, bestIdx = -1;
+    commList.forEach(function(c, i) {
+        var pct = c.envoyes > 0 ? Math.round(c.signes / c.envoyes * 100) : 0;
+        if(pct > bestPct && c.envoyes >= 2) { bestPct = pct; bestIdx = i; }
+    });
+
+    html += '<div class="dash-section">';
+    html += '<div class="dash-section-title">\uD83D\uDC65 Par commercial</div>';
+    if(commList.length === 0) {
+        html += '<div style="color:#9ca3af;font-size:13px;text-align:center;padding:12px;">Aucun dossier</div>';
+    } else {
+        html += '<table class="dash-table"><thead><tr><th>Commercial</th><th>Cr\u00e9\u00e9s</th><th>Envoy\u00e9s</th><th>Sign\u00e9s</th><th>Conv.</th><th style="width:30%;">Progression</th></tr></thead><tbody>';
+        commList.forEach(function(c, i) {
+            var pct = c.envoyes > 0 ? Math.round(c.signes / c.envoyes * 100) : 0;
+            var barW = Math.round(c.total / maxTotal * 100);
+            var trophy = (i === bestIdx && bestPct > 0) ? ' \uD83C\uDFC6' : '';
+            html += '<tr>'
+                + '<td class="td-name">' + c.nom + trophy + '</td>'
+                + '<td class="td-num">' + c.total + '</td>'
+                + '<td class="td-num">' + c.envoyes + '</td>'
+                + '<td class="td-num" style="color:#16a34a;font-weight:800;">' + c.signes + '</td>'
+                + '<td class="td-pct" style="color:' + (pct >= 50 ? '#16a34a' : pct >= 25 ? '#d97706' : '#dc2626') + ';">' + pct + '%</td>'
+                + '<td class="td-bar"><div class="dash-bar-wrap"><div class="dash-bar-fill green" style="width:' + (c.envoyes > 0 ? Math.round(c.signes/c.total*100) : 0) + '%;"></div><div class="dash-bar-fill blue" style="width:' + barW + '%;opacity:0.2;position:absolute;top:0;left:0;"></div></div></td>'
+                + '</tr>';
+        });
+        html += '</tbody></table>';
+    }
+    html += '</div>';
+
+    // Par type
+    var pacCount = filtered.filter(function(d){ return d.type === 'PAC'; }).length;
+    var iteCount = filtered.filter(function(d){ return d.type === 'ITE'; }).length;
+    var maxType = Math.max(pacCount, iteCount, 1);
+    html += '<div class="dash-section">';
+    html += '<div class="dash-section-title">\uD83D\uDCCA Par type de devis</div>';
+    html += '<div class="dash-row"><div class="dash-row-label">PAC</div><div class="dash-row-bar"><div class="dash-bar-wrap"><div class="dash-bar-fill blue" style="width:' + Math.round(pacCount/maxType*100) + '%;"></div><div class="dash-bar-label">' + pacCount + '</div></div></div></div>';
+    html += '<div class="dash-row"><div class="dash-row-label">ITE</div><div class="dash-row-bar"><div class="dash-bar-wrap"><div class="dash-bar-fill green" style="width:' + Math.round(iteCount/maxType*100) + '%;"></div><div class="dash-bar-label">' + iteCount + '</div></div></div></div>';
+    html += '</div>';
+
+    // Évolution mensuelle (6 derniers mois)
+    var months = {};
+    var mNames = ['Jan','F\u00e9v','Mar','Avr','Mai','Juin','Juil','Ao\u00fbt','Sep','Oct','Nov','D\u00e9c'];
+    dossiers.forEach(function(d) {
+        if(!d.dateISO) return;
+        var dt = new Date(d.dateISO);
+        var key = dt.getFullYear() + '-' + String(dt.getMonth()+1).padStart(2,'0');
+        var label = mNames[dt.getMonth()] + ' ' + dt.getFullYear();
+        if(!months[key]) months[key] = { label: label, count: 0 };
+        months[key].count++;
+    });
+    var monthKeys = Object.keys(months).sort().slice(-6);
+    var maxMonth = Math.max.apply(null, monthKeys.map(function(k){ return months[k].count; }).concat([1]));
+
+    html += '<div class="dash-section">';
+    html += '<div class="dash-section-title">\uD83D\uDCC5 \u00C9volution mensuelle</div>';
+    if(monthKeys.length === 0) {
+        html += '<div style="color:#9ca3af;font-size:13px;text-align:center;padding:12px;">Aucune donn\u00e9e</div>';
+    } else {
+        monthKeys.forEach(function(k) {
+            var m = months[k];
+            html += '<div class="dash-row"><div class="dash-row-label">' + m.label + '</div><div class="dash-row-bar"><div class="dash-bar-wrap"><div class="dash-bar-fill orange" style="width:' + Math.round(m.count/maxMonth*100) + '%;"></div><div class="dash-bar-label">' + m.count + '</div></div></div></div>';
+        });
+    }
+    html += '</div>';
+
+    // Activité récente (journal)
+    var filteredJournal = _dashFilterByPeriod(journal, period, 'date');
+    var devisGen = filteredJournal.filter(function(e){ return e.action === 'Devis PAC g\u00e9n\u00e9r\u00e9' || e.action === 'Devis ITE g\u00e9n\u00e9r\u00e9'; }).length;
+    var signatures = filteredJournal.filter(function(e){ return e.action === 'Signature \u00e9lectronique'; }).length;
+    var connexions = filteredJournal.filter(function(e){ return e.action === 'Connexion' || e.action === 'Connexion (local)'; }).length;
+
+    html += '<div class="dash-section">';
+    html += '<div class="dash-section-title">\u26A1 Activit\u00e9 r\u00e9cente</div>';
+    html += '<div style="display:flex;gap:16px;flex-wrap:wrap;font-size:13px;">';
+    html += '<div>\uD83D\uDCDD <b>' + devisGen + '</b> devis g\u00e9n\u00e9r\u00e9s</div>';
+    html += '<div>\u270D\uFE0F <b>' + signatures + '</b> signatures</div>';
+    html += '<div>\uD83D\uDD11 <b>' + connexions + '</b> connexions</div>';
+    html += '<div>\u274C <b>' + perdus + '</b> perdus</div>';
+    html += '</div></div>';
+
+    document.getElementById('dashboardBody').innerHTML = html;
+}
+
+// Update dossier status
+function updateDossierStatus(id, status) {
+    var dossiers = getLocalDossiers();
+    var found = null;
+    for(var i = 0; i < dossiers.length; i++) {
+        if(dossiers[i].id === id || dossiers[i].id.toString() === id.toString()) {
+            dossiers[i].status = status;
+            found = dossiers[i];
+            break;
+        }
+    }
+    if(!found) return;
+    setLocalDossiers(dossiers);
+    // Sync to API
+    if(useAPI && API_URL) {
+        apiCall({action:'updateDossierStatus', id:id, status:status}, function(){}, function(){});
+    }
+    logAction('Statut dossier', status + ' \u2014 ' + (found.nomClient || ''));
+    renderDossiers();
+}
+
+// ============================================
 // DOSSIER MANAGEMENT — API Google Sheet + fallback localStorage
 // ============================================
 var DOSSIER_KEY = 'lav_dossiers';
@@ -7458,6 +7716,7 @@ function saveDossier(type,numDevis,nomClient){
         commercial:currentUser.name, commercialId:currentUser.id,
         date:new Date().toLocaleDateString('fr-FR'),
         dateISO:new Date().toISOString(),
+        status:existIdx>=0?(localDossiers[existIdx].status||'brouillon'):'brouillon',
         fields:fields
     };
     // Save to localStorage immediately
@@ -7502,7 +7761,7 @@ function renderDossiers(){
     var filtered=dossiers.filter(function(d){
         if(!isAdmin&&d.commercialId!==currentUser.id)return false;
         if(search){
-            var h=(d.nomClient+' '+d.numDevis+' '+d.commercial+' '+d.type+' '+d.date).toLowerCase();
+            var h=(d.nomClient+' '+d.numDevis+' '+d.commercial+' '+d.type+' '+d.date+' '+(d.status||'')).toLowerCase();
             return h.indexOf(search)>=0;
         }
         return true;
@@ -7513,11 +7772,26 @@ function renderDossiers(){
             +(search?'Aucun r\u00e9sultat pour "'+search+'"':'Aucun dossier enregistr\u00e9')+'</div>';
         return;
     }
-    var html='<div style="display:flex;flex-direction:column;gap:8px;padding:8px 0;">';
+    // Stats summary
+    var nEnv=filtered.filter(function(d){return d.status==='envoye'||d.status==='signe';}).length;
+    var nSig=filtered.filter(function(d){return d.status==='signe';}).length;
+    var html='<div style="padding:8px 0 4px;font-size:12px;color:#64748b;display:flex;gap:12px;flex-wrap:wrap;">'
+        +'<span>\uD83D\uDCCB <b>'+filtered.length+'</b> dossiers</span>'
+        +'<span>\uD83D\uDCE4 <b>'+nEnv+'</b> envoy\u00e9s</span>'
+        +'<span>\u2705 <b>'+nSig+'</b> sign\u00e9s</span>'
+        +'</div>';
+    html+='<div style="display:flex;flex-direction:column;gap:8px;padding:8px 0;">';
+    var STATUS_LABELS={'brouillon':'\uD83D\uDFE1 Brouillon','envoye':'\uD83D\uDD35 Envoy\u00e9','signe':'\uD83D\uDFE2 Sign\u00e9','perdu':'\uD83D\uDD34 Perdu'};
     filtered.forEach(function(d){
         var badge=d.type==='ITE'
             ?'<span style="background:#059669;color:white;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;">ITE</span>'
             :'<span style="background:#2563eb;color:white;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;">PAC</span>';
+        var st=d.status||'brouillon';
+        var statusSelect='<select class="dossier-status-select" onclick="event.stopPropagation()" onchange="updateDossierStatus(\''+d.id+'\',this.value)">';
+        ['brouillon','envoye','signe','perdu'].forEach(function(s){
+            statusSelect+='<option value="'+s+'"'+(s===st?' selected':'')+'>'+STATUS_LABELS[s]+'</option>';
+        });
+        statusSelect+='</select>';
         html+='<div style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;cursor:pointer;transition:all 0.15s;" '
             +'onmouseover="this.style.borderColor=\'#16a34a\';this.style.background=\'#f0fdf4\'" '
             +'onmouseout="this.style.borderColor=\'#e5e7eb\';this.style.background=\'#f9fafb\'">'
@@ -7528,6 +7802,7 @@ function renderDossiers(){
             +d.numDevis+' \u00b7 '+d.date
             +(isAdmin?' \u00b7 \ud83d\udc64 '+d.commercial:'')
             +'</div></div>'
+            +statusSelect
             +'<button onclick="event.stopPropagation();deleteDossier(\''+d.id+'\')" style="background:none;border:none;cursor:pointer;font-size:16px;color:#dc2626;padding:6px;" title="Supprimer">\ud83d\uddd1\ufe0f</button>'
             +'</div>';
     });
