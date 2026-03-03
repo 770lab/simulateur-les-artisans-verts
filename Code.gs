@@ -18,6 +18,11 @@
 // ============================================
 
 const SUPER_ADMIN = 'ishay';
+const SHEET_ID = '1EV_fG9g0UE3yZuWzOwH6E0r2xCnhpVgOmvbKFZnO6Ww';
+
+function getSpreadsheet() {
+  return SpreadsheetApp.openById(SHEET_ID);
+}
 
 function doGet(e) { return handleRequest(e); }
 
@@ -135,7 +140,7 @@ function isSuperAdmin(username) {
 function doLogin(username, password) {
   if (!username) return { success: false, error: 'Identifiant requis' };
 
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const ss = getSpreadsheet();
   const sheet = ss.getSheetByName('Users');
   if (!sheet) return { success: false, error: 'Onglet Users introuvable' };
 
@@ -170,7 +175,7 @@ function doLogin(username, password) {
 // ============================================
 function doCheckSession(username, token) {
   if (!username || !token) return { valid: false };
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const ss = getSpreadsheet();
   const sheet = ss.getSheetByName('Users');
   if (!sheet) return { valid: false };
   const data = sheet.getDataRange().getValues();
@@ -193,7 +198,7 @@ function doChangePassword(username, oldPass, newPass) {
     return { success: false, error: 'Le nouveau mot de passe doit faire au moins 4 caractères' };
   }
 
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const ss = getSpreadsheet();
   const sheet = ss.getSheetByName('Users');
   if (!sheet) return { success: false, error: 'Onglet Users introuvable' };
 
@@ -219,7 +224,7 @@ function doListUsers(adminUser) {
     return { success: false, error: 'Accès refusé' };
   }
 
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const ss = getSpreadsheet();
   const sheet = ss.getSheetByName('Users');
   if (!sheet) return { success: false, error: 'Onglet Users introuvable' };
 
@@ -250,7 +255,7 @@ function doCreateUser(adminUser, username, name, password, role) {
     return { success: false, error: 'Mot de passe trop court (min 4)' };
   }
 
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const ss = getSpreadsheet();
   const sheet = ss.getSheetByName('Users');
   if (!sheet) return { success: false, error: 'Onglet Users introuvable' };
 
@@ -287,7 +292,7 @@ function doDeleteUser(adminUser, username) {
     return { success: false, error: 'Impossible de supprimer le super admin' };
   }
 
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const ss = getSpreadsheet();
   const sheet = ss.getSheetByName('Users');
   if (!sheet) return { success: false, error: 'Onglet Users introuvable' };
 
@@ -307,7 +312,7 @@ function doDeleteUser(adminUser, username) {
 // ============================================
 function addJournalEntry(user, action, detail) {
   try {
-    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const ss = getSpreadsheet();
     let sheet = ss.getSheetByName('Journal');
     if (!sheet) {
       sheet = ss.insertSheet('Journal');
@@ -326,7 +331,7 @@ function doLog(user, action, detail) {
 }
 
 function doGetJournal(limit) {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const ss = getSpreadsheet();
   const sheet = ss.getSheetByName('Journal');
   if (!sheet) return { success: true, journal: [] };
 
@@ -349,7 +354,7 @@ function doGetJournal(limit) {
 // DOSSIERS — Sauvegarde permanente
 // ============================================
 function getSheetDossiers() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var ss = getSpreadsheet();
   var sheet = ss.getSheetByName('Dossiers');
   if (!sheet) {
     sheet = ss.insertSheet('Dossiers');
