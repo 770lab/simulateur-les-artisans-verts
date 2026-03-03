@@ -6885,7 +6885,7 @@ function ite_getCEE(){
 function ite_onMontantTotal(){
     var ttcBase=ite_N('iteMontantTotalProjet');
     var optTotal=iteOptGetTotal();
-    var ttc=ttcBase+optTotal;
+    var ttc=ttcBase;
     var totLot2=_iteNbLots>=2?ite_getLot2Total():0;
     var totLot3=ite_getLot3Total();
     var totLot1=Math.max(ttc-totLot2-totLot3,0);
@@ -6908,7 +6908,7 @@ function ite_calc(){
     var hasLot3=_iteNbLots>=3&&totLot3>0;
     var ttcBase=ite_N('iteMontantTotalProjet');
     var optTotal=iteOptGetTotal();
-    var ttc=ttcBase+optTotal;
+    var ttc=ttcBase;
     var totITE=Math.max(ttc-totLot2-totLot3,0);
     ite_$('iteMontantLot1').value=totITE;
     var det=ite_$('iteMontantDetail');
