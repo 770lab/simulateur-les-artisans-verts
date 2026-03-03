@@ -5968,7 +5968,20 @@ function domoFetchProducts() {
     domoApiCall('materiels', '', function(data) {
         if (done) return; done = true; clearTimeout(safetyTimer);
         if (spinner) spinner.style.display = 'none';
-        if (!Array.isArray(data)) {
+        // API may return array directly or wrapped in object (e.g. {data:[...], materiels:[...], results:[...]})
+        var items = data;
+        if (!Array.isArray(items) && data && typeof data === 'object') {
+            console.log('domoFetchProducts: response object keys:', Object.keys(data));
+            items = data.data || data.materiels || data.results || data.equipments || data.products;
+            // Fallback: find first array property
+            if (!Array.isArray(items)) {
+                var keys = Object.keys(data);
+                for (var ki = 0; ki < keys.length; ki++) {
+                    if (Array.isArray(data[keys[ki]])) { items = data[keys[ki]]; break; }
+                }
+            }
+        }
+        if (!Array.isArray(items)) {
             DOMO_API_OK = false;
             var sel2 = document.getElementById('iteDomoProduct');
             if (sel2) sel2.innerHTML = '<option value="">API indisponible — calcul local</option>';
@@ -5976,6 +5989,7 @@ function domoFetchProducts() {
             console.warn('domoFetchProducts: expected array, got', data);
             return;
         }
+        data = items;
         var DOMO_ALLOWED_IDS = ['168','2','188','176','153']; // Coup de pouce PAC, Pompe à chaleur, Isolation des murs, Autres travaux de rénovation, Eco-PTZ
         DOMO_PRODUCTS = data.filter(function(p){ return DOMO_ALLOWED_IDS.indexOf(p.id)>=0; });
         DOMO_API_OK = true;
