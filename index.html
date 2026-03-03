@@ -2971,6 +2971,7 @@
                         <div class="ite-fi" style="display:none;"><label>Prix mat&eacute;riel (&euro;/m&sup2;)</label><input type="number" id="itePrixMatITE" value="0" oninput="ite_calc()"></div>
                         <div class="ite-fi" style="display:none;"><label>Prix MO (&euro;/m&sup2;)</label><input type="number" id="itePrixMoITE" value="0" oninput="ite_calc()"></div>
                         <div class="ite-fi"><label>Isolant</label><select id="iteIsolantITE"><option value="CELLOMUR_120">HIRSCH CELLOMUR ULTRA 120mm &mdash; R=3,85</option><option value="CELLOMUR_140">HIRSCH CELLOMUR ULTRA 140mm &mdash; R=4,50</option></select></div>
+                        <div class="ite-fi"><label>Code couleur cr&eacute;pis</label><input id="iteCodeCouleurCrepi" value="" placeholder="Ex : T2.05.80" oninput="ite_calc()"></div>
                     </div>
                     <div class="ite-fg" style="margin-top: 10px; display:none;">
                         <div class="ite-fi full"><label>Sous-traitance</label><input id="iteSousTraitITE" value="RL CONSEILS, 2 RUE LOUIS PERGAUD 94700 MAISONS-ALFORT"></div>
@@ -7442,7 +7443,7 @@ function ite_generateDevis(){
     +'Livraison , montage et d\u00e9montage<br>'
     +'Protection des sols par b\u00e2che<br>'
     +'-Mise en place d\'une peinture de couleur :<br>'
-    +'Ton pierre Protection en t\u00eate d\'ITE avec mise en place d\'une \u00e9paisseur suffisante du produit de finition afin de prot\u00e9ger contre les intemp\u00e9ries et les rayonnements solaires<br>'
+    +''+(ite_V('iteCouleurCrepi')||'Ton pierre')+(ite_V('iteCodeCouleurCrepi')?' (Code : '+ite_V('iteCodeCouleurCrepi')+')':'')+' Protection en t\u00eate d\'ITE avec mise en place d\'une \u00e9paisseur suffisante du produit de finition afin de prot\u00e9ger contre les intemp\u00e9ries et les rayonnements solaires<br>'
     +'Rail de d\u00e9part'
     +'</div>';
     // --- Options / Prestations complémentaires ---
@@ -8796,7 +8797,7 @@ var DOSSIER_FIELDS = [
     'nom','prenom','iteAdresse','iteVille','iteTel','iteEmail',
     'iteNumDevis','iteDateDevis','iteConseiller','iteTypeChauffage','itePrecarite',
     'surfaceClient','zone','categorie',
-    'iteSurfaceITE','iteMontantLot1','itePrixMatITE','itePrixMoITE','iteIsolantITE',
+    'iteSurfaceITE','iteMontantLot1','itePrixMatITE','itePrixMoITE','iteIsolantITE','iteCodeCouleurCrepi',
     'iteSousTraitITE','iteSiretSousTraitITE','iteRgeSousTraitITE','iteCouleurCrepi','iteEnduitITE',
     'iteTypeLot2','iteTech101','iteSurface101','itePrixMat101','itePrixMo101',
     'iteSurface103','itePrixMat103','itePrixMo103',
