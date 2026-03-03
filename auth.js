@@ -3,7 +3,7 @@
 // 770 Lab © 2026
 // ============================================
 
-const API_URL = https://script.google.com/macros/s/AKfycbxe0jja's/AKfycbxe0jjaJ/bhzi0fsnZTR030hfC_0YgNsymYhRyLDNc2Sxy7Q3Zkd0JUeaBEBvbEP2N1/exec');
+const API_URL = https://script.google.com/macros/s/AKfycbxe0jjaJ/bhzi0fsNZTR030hfC_0YgNsymYhRyLDNc2Sxy7Q3Zkd0JUeaBEBvbEP2N1/execYhRyLDNc2Sxy7Q3Zkd0JUeaBEBvbEP2N1/exec');
 const FALLBACK_USERS = {
     'ishay':   { pass:'dd856a9e1874db2190766dd537671f2c79c56d9bb975e5ac3c7db5a4f7d108ee', name:'Ishay', role:'admin' },
     'yoann':   { pass:'1cf674b0d4b3038b008530bdd26fae2f205dd912ee86c0ae31981d218d1336db', name:'Yoann', role:'admin' },
