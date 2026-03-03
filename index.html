@@ -2983,7 +2983,10 @@
                     <div style="margin-top:12px;border-top:1px dashed #cbd5e1;padding-top:12px;">
                         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
                             <span style="font-size:13px;font-weight:700;color:#334155;">&#9881; Options / Prestations</span>
-                            <button type="button" onclick="iteOptAdd()" style="padding:4px 12px;border-radius:6px;border:1px solid #6366f1;background:#eef2ff;color:#4f46e5;font-size:11px;font-weight:600;cursor:pointer;">+ Ajouter</button>
+                            <div style="position:relative;display:inline-block;" id="iteOptDropdownWrap">
+                                <button type="button" id="iteOptDropdownBtn" onclick="iteOptToggleDropdown()" style="padding:4px 14px;border-radius:6px;border:1px solid #6366f1;background:#eef2ff;color:#4f46e5;font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;">+ Ajouter <span style="font-size:9px;">&#9660;</span></button>
+                                <div id="iteOptDropdownMenu" style="display:none;position:absolute;right:0;top:100%;margin-top:4px;background:#fff;border:1px solid #c7d2fe;border-radius:8px;box-shadow:0 4px 16px rgba(99,102,241,0.15);z-index:50;min-width:180px;overflow:hidden;"></div>
+                            </div>
                         </div>
                         <div id="iteOptionsContainer"></div>
                         <div id="iteOptionsTotalRow" style="display:none;text-align:right;font-size:12px;font-weight:600;color:#4f46e5;margin-top:6px;padding-top:6px;border-top:1px solid #e2e8f0;">Total options : <span id="iteOptionsTotal">0,00 &euro;</span></div>
@@ -6617,6 +6620,43 @@ var ITE_OPT_PRESETS = [
     {label:'Cr\u00e9pis',unit:'m\u00b2',qty:'',pu:''},
     {label:'Gonds',unit:'U',qty:'',pu:''}
 ];
+// --- Dropdown menu logic ---
+function iteOptToggleDropdown(){
+    var menu=document.getElementById('iteOptDropdownMenu');
+    if(!menu)return;
+    if(menu.style.display==='none'||!menu.style.display){
+        // Build menu items from presets + custom
+        var html='';
+        for(var i=0;i<ITE_OPT_PRESETS.length;i++){
+            html+='<div class="iteOptDropItem" onclick="iteOptSelectPreset('+i+')" style="padding:8px 14px;font-size:12px;color:#334155;cursor:pointer;border-bottom:1px solid #f1f5f9;transition:background .15s;"'
+                +' onmouseenter="this.style.background=\'#eef2ff\'" onmouseleave="this.style.background=\'#fff\'">'
+                +ITE_OPT_PRESETS[i].label+' <span style="color:#94a3b8;font-size:11px;">('+ITE_OPT_PRESETS[i].unit+')</span></div>';
+        }
+        html+='<div class="iteOptDropItem" onclick="iteOptSelectPreset(-1)" style="padding:8px 14px;font-size:12px;color:#6366f1;font-weight:600;cursor:pointer;transition:background .15s;"'
+            +' onmouseenter="this.style.background=\'#eef2ff\'" onmouseleave="this.style.background=\'#fff\'">+ Personnalis\u00e9</div>';
+        menu.innerHTML=html;
+        menu.style.display='block';
+        // close dropdown on outside click
+        setTimeout(function(){document.addEventListener('click',iteOptCloseDropdown,{once:true,capture:true});},0);
+    } else {
+        menu.style.display='none';
+    }
+}
+function iteOptCloseDropdown(e){
+    var wrap=document.getElementById('iteOptDropdownWrap');
+    var menu=document.getElementById('iteOptDropdownMenu');
+    if(wrap&&!wrap.contains(e.target)&&menu) menu.style.display='none';
+}
+function iteOptSelectPreset(idx){
+    var menu=document.getElementById('iteOptDropdownMenu');
+    if(menu) menu.style.display='none';
+    if(idx>=0&&idx<ITE_OPT_PRESETS.length){
+        iteOptAdd(ITE_OPT_PRESETS[idx]);
+    } else {
+        iteOptAdd();
+    }
+}
+// --- End dropdown menu logic ---
 function iteOptAdd(preset){
     var c=document.getElementById('iteOptionsContainer');if(!c)return;
     var id=_iteOptCounter++;
