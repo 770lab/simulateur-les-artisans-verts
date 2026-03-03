@@ -2979,6 +2979,15 @@
                         <div class="ite-fi"><label>Couleur cr&eacute;pi</label><input id="iteCouleurCrepi" value="Ton pierre"></div>
                         <div class="ite-fi"><label>Enduit</label><input id="iteEnduitITE" value="Enduit AFC 1.5 base Soltherm"></div>
                     </div>
+                    <!-- Options / Prestations complémentaires -->
+                    <div style="margin-top:12px;border-top:1px dashed #cbd5e1;padding-top:12px;">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+                            <span style="font-size:13px;font-weight:700;color:#334155;">&#9881; Options / Prestations</span>
+                            <button type="button" onclick="iteOptAdd()" style="padding:4px 12px;border-radius:6px;border:1px solid #6366f1;background:#eef2ff;color:#4f46e5;font-size:11px;font-weight:600;cursor:pointer;">+ Ajouter</button>
+                        </div>
+                        <div id="iteOptionsContainer"></div>
+                        <div id="iteOptionsTotalRow" style="display:none;text-align:right;font-size:12px;font-weight:600;color:#4f46e5;margin-top:6px;padding-top:6px;border-top:1px solid #e2e8f0;">Total options : <span id="iteOptionsTotal">0,00 &euro;</span></div>
+                    </div>
                 </div>
 
                 <!-- LOT 2 wrapper -->
@@ -6036,7 +6045,7 @@ function domoOnParamChange() {
 }
 
 function domoGetMontant() {
-    var ttc = ite_N('iteMontantTotalProjet');
+    var ttc = ite_N('iteMontantTotalProjet') + iteOptGetTotal();
     var primeCEE = ite_N('itePrimeCEE');
     var deduire = ite_V('iteDeduireCee') !== 'non';
     return Math.round(deduire ? ttc - primeCEE : ttc);
@@ -6348,7 +6357,7 @@ function pacDomoUpdateUI(r) {
 // === Local ECO-PTZ fallback ===
 function ite_calcFinancementLocal(){
     try{
-    var ttc=ite_N('iteMontantTotalProjet');
+    var ttc=ite_N('iteMontantTotalProjet')+iteOptGetTotal();
     var primeCEE=ite_N('itePrimeCEE');
     var deduire=ite_V('iteDeduireCee')!=='non';
     var montant=deduire?ttc-primeCEE:ttc;
@@ -6424,7 +6433,7 @@ function ite_checkSurplusPTZ() {
     if (!block) return;
     var nbLots = _iteNbLots || 2;
     var plafondPTZ = nbLots >= 3 ? 30000 : nbLots >= 2 ? 25000 : 0;
-    var ttc = ite_N('iteMontantTotalProjet');
+    var ttc = ite_N('iteMontantTotalProjet') + iteOptGetTotal();
     var primeCEE = ite_N('itePrimeCEE');
     var deduireCee = ite_V('iteDeduireCee') !== 'non';
     var reste = deduireCee ? ttc - primeCEE : ttc;
@@ -6600,6 +6609,77 @@ function iteSurplusDomoFetchResult() {
     }, function(err) { console.warn('Surplus domo result error:', err); });
 }
 
+// ============================================
+// OPTIONS ITE — Prestations complémentaires
+// ============================================
+var _iteOptCounter = 0;
+var ITE_OPT_PRESETS = [
+    {label:'Cr\u00e9pis',unit:'m\u00b2',qty:'',pu:''},
+    {label:'Gonds',unit:'U',qty:'',pu:''}
+];
+function iteOptAdd(preset){
+    var c=document.getElementById('iteOptionsContainer');if(!c)return;
+    var id=_iteOptCounter++;
+    var p=preset||{label:'',unit:'U',qty:'',pu:''};
+    var row=document.createElement('div');
+    row.id='iteOpt_'+id;
+    row.className='ite-fg';
+    row.style.cssText='margin-bottom:6px;align-items:center;gap:6px;';
+    row.innerHTML=''
+        +'<div class="ite-fi" style="flex:2;min-width:120px;"><label>D\u00e9signation</label><input type="text" data-field="label" value="'+p.label+'" placeholder="Ex: Cr\u00e9pis"></div>'
+        +'<div class="ite-fi" style="flex:0.7;min-width:60px;"><label>Unit\u00e9</label><select data-field="unit"><option value="m\u00b2"'+(p.unit==='m\u00b2'?' selected':'')+'>m\u00b2</option><option value="U"'+(p.unit==='U'?' selected':'')+'>U</option><option value="ml"'+(p.unit==='ml'?' selected':'')+'>ml</option><option value="forfait"'+(p.unit==='forfait'?' selected':'')+'>Forfait</option></select></div>'
+        +'<div class="ite-fi" style="flex:0.7;min-width:60px;"><label>Qt\u00e9</label><input type="number" data-field="qty" value="'+p.qty+'" step="0.01" min="0" oninput="iteOptCalc()"></div>'
+        +'<div class="ite-fi" style="flex:1;min-width:80px;"><label>P.U TTC (\u20ac)</label><input type="number" data-field="pu" value="'+p.pu+'" step="0.01" min="0" oninput="iteOptCalc()"></div>'
+        +'<div class="ite-fi" style="flex:0.8;min-width:70px;"><label>Total</label><span data-field="total" style="font-weight:600;font-size:12px;color:#334155;">0,00 \u20ac</span></div>'
+        +'<button type="button" onclick="iteOptRemove('+id+')" style="margin-top:18px;padding:2px 8px;border-radius:4px;border:1px solid #ef4444;background:#fef2f2;color:#dc2626;font-size:11px;cursor:pointer;" title="Supprimer">\u2716</button>';
+    c.appendChild(row);
+    iteOptCalc();
+}
+function iteOptRemove(id){
+    var el=document.getElementById('iteOpt_'+id);
+    if(el) el.remove();
+    iteOptCalc();
+}
+function iteOptCalc(){
+    var c=document.getElementById('iteOptionsContainer');if(!c)return 0;
+    var rows=c.children,total=0;
+    for(var i=0;i<rows.length;i++){
+        var qty=parseFloat(rows[i].querySelector('[data-field="qty"]').value)||0;
+        var pu=parseFloat(rows[i].querySelector('[data-field="pu"]').value)||0;
+        var t=Math.round(qty*pu*100)/100;
+        rows[i].querySelector('[data-field="total"]').textContent=t.toLocaleString('fr-FR',{minimumFractionDigits:2})+' \u20ac';
+        total+=t;
+    }
+    var totEl=document.getElementById('iteOptionsTotal');
+    var totRow=document.getElementById('iteOptionsTotalRow');
+    if(totEl) totEl.textContent=total.toLocaleString('fr-FR',{minimumFractionDigits:2})+' \u20ac';
+    if(totRow) totRow.style.display=total>0?'':'none';
+    ite_calc();
+    return total;
+}
+function iteOptGetTotal(){
+    var c=document.getElementById('iteOptionsContainer');if(!c)return 0;
+    var rows=c.children,total=0;
+    for(var i=0;i<rows.length;i++){
+        var qty=parseFloat(rows[i].querySelector('[data-field="qty"]').value)||0;
+        var pu=parseFloat(rows[i].querySelector('[data-field="pu"]').value)||0;
+        total+=Math.round(qty*pu*100)/100;
+    }
+    return total;
+}
+function iteOptGetList(){
+    var c=document.getElementById('iteOptionsContainer');if(!c)return[];
+    var rows=c.children,list=[];
+    for(var i=0;i<rows.length;i++){
+        var label=rows[i].querySelector('[data-field="label"]').value||'Option';
+        var unit=rows[i].querySelector('[data-field="unit"]').value||'U';
+        var qty=parseFloat(rows[i].querySelector('[data-field="qty"]').value)||0;
+        var pu=parseFloat(rows[i].querySelector('[data-field="pu"]').value)||0;
+        if(qty>0&&pu>0) list.push({label:label,unit:unit,qty:qty,pu:pu,total:Math.round(qty*pu*100)/100});
+    }
+    return list;
+}
+
 var _iteNbLots = 2; // default 2 lots
 function ite_setNbLots(n, btn) {
     _iteNbLots = n;
@@ -6733,13 +6813,16 @@ function ite_getCEE(){
 }
 
 function ite_onMontantTotal(){
-    var ttc=ite_N('iteMontantTotalProjet');
+    var ttcBase=ite_N('iteMontantTotalProjet');
+    var optTotal=iteOptGetTotal();
+    var ttc=ttcBase+optTotal;
     var totLot2=_iteNbLots>=2?ite_getLot2Total():0;
     var totLot3=ite_getLot3Total();
     var totLot1=Math.max(ttc-totLot2-totLot3,0);
     ite_$('iteMontantLot1').value=totLot1;
     var det=ite_$('iteMontantDetail');
     var detTxt='LOT 1 : <b>'+ite_fmtN(totLot1)+' \u20AC</b>';
+    if(optTotal>0) detTxt+=' (dont options : '+ite_fmtN(optTotal)+' \u20AC)';
     if(_iteNbLots>=2) detTxt+=' + LOT 2 : <b>'+ite_fmtN(totLot2)+' \u20AC</b>';
     if(_iteNbLots>=3&&totLot3>0) detTxt+=' + LOT 3 : <b>'+ite_fmtN(totLot3)+' \u20AC</b>';
     detTxt+=' = <b>'+ite_fmtN(ttc)+' \u20AC TTC</b>';
@@ -6753,11 +6836,14 @@ function ite_calc(){
     var totLot2=_iteNbLots>=2?ite_getLot2Total():0;
     var totLot3=ite_getLot3Total();
     var hasLot3=_iteNbLots>=3&&totLot3>0;
-    var ttc=ite_N('iteMontantTotalProjet');
+    var ttcBase=ite_N('iteMontantTotalProjet');
+    var optTotal=iteOptGetTotal();
+    var ttc=ttcBase+optTotal;
     var totITE=Math.max(ttc-totLot2-totLot3,0);
     ite_$('iteMontantLot1').value=totITE;
     var det=ite_$('iteMontantDetail');
     var detTxt='LOT 1 : <b>'+ite_fmtN(totITE)+' \u20AC</b>';
+    if(optTotal>0) detTxt+=' (dont options : '+ite_fmtN(optTotal)+' \u20AC)';
     if(_iteNbLots>=2) detTxt+=' + LOT 2 : <b>'+ite_fmtN(totLot2)+' \u20AC</b>';
     if(hasLot3) detTxt+=' + LOT 3 : <b>'+ite_fmtN(totLot3)+' \u20AC</b>';
     detTxt+=' = <b>'+ite_fmtN(ttc)+' \u20AC TTC</b>';
@@ -7220,10 +7306,12 @@ function ite_generateDevis(){
     // Isolant data
     var isolKey=ite_V('iteIsolantITE')||'CELLOMUR_120';
     var isol=ITE_ISOLANT[isolKey]||ITE_ISOLANT.CELLOMUR_120;
-    // ITE Material / MO split
+    // ITE Material / MO split (hors options)
+    var dvOptTotal=iteOptGetTotal();
+    var totITEBase=Math.max(totITE-dvOptTotal,0);
     var pmITE=ite_N('itePrixMatITE'),pmoITE=ite_N('itePrixMoITE');
-    if(pmITE<=0||pmoITE<=0){var ipp=sITE>0?totITE/sITE:0;pmITE=Math.round(ipp*0.59*100)/100;pmoITE=sITE>0?Math.round((totITE-pmITE*sITE)/sITE*100)/100:0;}
-    var matITE=Math.round(sITE*pmITE*100)/100,moITE=totITE-matITE;
+    if(pmITE<=0||pmoITE<=0){var ipp=sITE>0?totITEBase/sITE:0;pmITE=Math.round(ipp*0.59*100)/100;pmoITE=sITE>0?Math.round((totITEBase-pmITE*sITE)/sITE*100)/100:0;}
+    var matITE=Math.round(sITE*pmITE*100)/100,moITE=totITEBase-matITE;
     // kWh Cumac
     var kwhc102=Math.round(sITE*(KWHC_102[zn]||1300));
 
@@ -7287,6 +7375,12 @@ function ite_generateDevis(){
     +'Ton pierre Protection en t\u00eate d\'ITE avec mise en place d\'une \u00e9paisseur suffisante du produit de finition afin de prot\u00e9ger contre les intemp\u00e9ries et les rayonnements solaires<br>'
     +'Rail de d\u00e9part'
     +'</div>';
+    // --- Options / Prestations complémentaires ---
+    var dvOpts=iteOptGetList();
+    for(var oi=0;oi<dvOpts.length;oi++){
+        var op=dvOpts[oi];
+        pg1+='<div class="dv-row"><div class="n">'+op.label+'</div><div class="c">'+(op.unit==='forfait'?'1,00 Forfait':op.qty.toFixed(2)+' '+op.unit)+'</div><div class="r">'+ite_fmt(op.pu)+'</div><div class="r">'+ite_fmt(op.total)+'</div><div class="r">'+tvaStr+'</div></div>';
+    }
     // pg1 footer added in ASSEMBLE PAGES section (after lot2Desc injection)
 
     // =========================================================
@@ -7757,7 +7851,7 @@ async function ite_generatePTZ(){
     var duree=parseInt(ite_V('iteDureeMois'))||120;
 
     // Totals
-    var ttc=ite_N('iteMontantTotalProjet');
+    var ttc=ite_N('iteMontantTotalProjet')+iteOptGetTotal();
     var primeCEE=ite_N('itePrimeCEE');
     var deduireCeePTZ=ite_V('iteDeduireCee')!=='non';
     var reste=deduireCeePTZ?ttc-primeCEE:ttc;
