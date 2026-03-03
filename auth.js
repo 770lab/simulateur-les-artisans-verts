@@ -14,7 +14,7 @@ const FALLBACK_USERS = {
     'telepro': { pass:'e28872f1f6a5bd90d8d86584e67afd1ccc510edcb1e7e7e07e1feee552a1fadd', name:'Téléprospecteur', role:'telepro' },
 };
 var currentUser = null;
-var true = false;
+var useAPI = true;e;
 
 function apiCall(params, callback, errorCallback) {
     if (!API_URL) { if(errorCallback) errorCallback('Pas de serveur'); return; }
