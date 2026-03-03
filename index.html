@@ -3152,7 +3152,7 @@
                         <div class="ite-fg">
                             <div class="ite-fi full"><label>Produit</label><select id="iteDomoProduct" onchange="domoOnProductChange()"><option value="">Chargement&hellip;</option></select><span id="domoProductSpinner" style="display:none;font-size:11px;color:#64748b;">&#9203; Chargement&hellip;</span></div>
                             <div class="ite-fi"><label>Modalit&eacute;</label><select id="iteDomoModality" onchange="domoOnParamChange()"><option value="normal">Normal</option><option value="gratuit">Gratuit</option><option value="compense">Compens&eacute;</option></select></div>
-                            <div class="ite-fi"><label>Report 180j</label><select id="iteDomoPostpone" onchange="domoOnParamChange()"><option value="false">Sans</option><option value="true">Avec</option></select></div>
+                            <div class="ite-fi" id="iteDomoPostponeWrap"><label>Report 180j</label><select id="iteDomoPostpone" onchange="domoOnParamChange()"><option value="false">Sans</option><option value="true">Avec</option></select></div>
                         </div>
                     </div>
 
@@ -6005,9 +6005,15 @@ function domoOnProductChange() {
             modSel.appendChild(o);
         });
     }
-    // Update postpone — toujours activ\u00e9, l'API g\u00e8re la validation
+    // Update postpone — masquer pour Eco-PTZ (pas de report)
     var ppSel = document.getElementById('iteDomoPostpone');
+    var ppWrap = document.getElementById('iteDomoPostponeWrap');
+    var isEcoPTZ = opt.textContent && opt.textContent.toLowerCase().indexOf('eco-ptz') >= 0;
+    if (ppWrap) ppWrap.style.display = isEcoPTZ ? 'none' : '';
     if (ppSel) {
+        if (isEcoPTZ) {
+            ppSel.value = 'false';
+        }
         ppSel.disabled = false;
         ppSel.style.opacity = '1';
         ppSel.title = '';
@@ -7561,7 +7567,7 @@ function ite_generateDevis(){
             +'Remboursement en : '+fDuree+' mois<br>'
             +'Mensualit\u00e9 hors assurance : '+ite_fmt(ptzMensHA)+'<br>'
             +'Mensualit\u00e9 avec assurance : '+ite_fmt(fMensAA)+'<br>'
-            +'Report mensualit\u00e9 : '+finReport+'<br>'
+            +'Report mensualit\u00e9 : 0 mois<br>'
             +'Assurance : '+(ite_V('iteTypeAssurance')==='Aucune'?'Non':'Oui')+'<br>'
             +'Type d\u2019assurance : '+ite_V('iteTypeAssurance')+'<br>'
             +'Retenue vendeur : '+finRetVendeur+'<br>'
