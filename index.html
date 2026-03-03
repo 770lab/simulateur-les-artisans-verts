@@ -6606,6 +6606,18 @@ function ite_setNbLots(n, btn) {
     // Show sub-cards
     if(n >= 2) ite_switchLot2();
     if(n >= 3) ite_switchLot3();
+    // Sync Domofinance product based on lot count
+    var domoSel = document.getElementById('iteDomoProduct');
+    if(domoSel && domoSel.options.length > 1) {
+        if(n === 1) {
+            // 1 lot: PTZ interdit → Isolation des murs (ID 188)
+            if(domoSel.querySelector('option[value="188"]')) domoSel.value = '188';
+        } else {
+            // 2+ lots: Eco-PTZ (ID 153) par défaut
+            if(domoSel.querySelector('option[value="153"]')) domoSel.value = '153';
+        }
+        domoOnProductChange();
+    }
     // Recalculate
     ite_calc();
 }
@@ -7155,9 +7167,9 @@ async function downloadDevisPDF(containerId,filename){
 
 function ite_generateDevis(){
     var totLot2=_iteNbLots>=2?ite_getLot2Total():0;
-    var totLot3=ite_getLot3Total();
+    var totLot3=_iteNbLots>=3?ite_getLot3Total():0;
     var hasLot3=_iteNbLots>=3&&totLot3>0;
-    if(totLot2<1500&&!confirm('\u26a0\ufe0f LOT 2 < 1500\u20ac ('+ite_fmtN(totLot2)+'\u20ac). Continuer ?'))return;
+    if(_iteNbLots>=2&&totLot2<1500&&!confirm('\u26a0\ufe0f LOT 2 < 1500\u20ac ('+ite_fmtN(totLot2)+'\u20ac). Continuer ?'))return;
     if(hasLot3&&totLot3<1500&&!confirm('\u26a0\ufe0f LOT 3 < 1500\u20ac ('+ite_fmtN(totLot3)+'\u20ac). Continuer ?'))return;
     var nom=(document.getElementById('prenom').value.trim()+' '+document.getElementById('nom').value.trim()).trim()||'CLIENT';
     var num=ite_V('iteNumDevis'),nc=ite_V('iteNumClient')||num;
@@ -7171,18 +7183,18 @@ function ite_generateDevis(){
     var tva=parseFloat(ite_$('iteTva')?.value)||5.5;
     var precL={classique:'Classique',modeste:'Modeste',grande:'Tr\u00e8s modeste'}[prec]||prec;
     var sITE=ite_N('iteSurfaceITE'),totITE=ite_N('iteMontantLot1');
-    var t2=ite_V('iteTypeLot2'),t3=hasLot3?ite_V('iteTypeLot3'):'';
+    var t2=_iteNbLots>=2?ite_V('iteTypeLot2'):'',t3=hasLot3?ite_V('iteTypeLot3'):'';
     var ttc=totITE+totLot2+totLot3,ht=ttc/(1+tva/100),tvam=ttc-ht;
     var primeCEE=ite_N('itePrimeCEE');
     var catMPR=document.getElementById('categorie').value;
-    var has148=(t2==='148')||(hasLot3&&t3==='148');
+    var has148=(_iteNbLots>=2&&t2==='148')||(hasLot3&&t3==='148');
     var mprCET=has148?(MPR_CET[catMPR]||0):0;
     var reste=ttc-primeCEE-mprCET;
     var wFin=ite_V('iteIncludeFinancement')==='oui';
-    var _nbLotsTP=hasLot3?3:2;
+    var _nbLotsTP=_iteNbLots>=3?3:_iteNbLots>=2?2:1;
     var _plafondTP=_nbLotsTP>=3?30000:_nbLotsTP>=2?25000:0;
     var _hasSurplusTP=ITE_SURPLUS_AMOUNT>0&&_plafondTP>0&&ite_V('iteSurplusMode')==='domofinance';
-    var tp=hasLot3?4:3; if(wFin){tp++; if(_hasSurplusTP) tp++;}
+    var tp=_nbLotsTP===1?2:hasLot3?4:3; if(wFin){tp++; if(_hasSurplusTP) tp++;}
     var tvaStr=tva.toFixed(2).replace('.',',')+' %';
     // Isolant data
     var isolKey=ite_V('iteIsolantITE')||'CELLOMUR_120';
@@ -7526,7 +7538,7 @@ function ite_generateDevis(){
         var fDuree=ite_V('iteDureeMois');
         var villeClean=vil.split(' ').slice(1).join(' ')||'_____';
         // Surplus PTZ: compute plafond
-        var _nbLots=hasLot3?3:2;
+        var _nbLots=_nbLotsTP;
         var _plafondPTZ=_nbLots>=3?30000:_nbLots>=2?25000:0;
         var _surplusAmount=ITE_SURPLUS_AMOUNT||0;
         var _surplusMode=ite_V('iteSurplusMode')||'apport';
@@ -7635,23 +7647,32 @@ function ite_generateDevis(){
     // =========================================================
     // ASSEMBLE PAGES (flowing layout like target Margeot devis)
     // =========================================================
-    // pg1 gets lot2Desc at the bottom (description flows onto page 1)
-    pg1+=lot2Desc+ite_dvFT(1,tp)+'</div>';
-    var pn=2,allPages=pg1;
-    if(hasLot3){
-        // pg2: LOT 2 rows + LOT 3 desc+rows
-        var pg2='<div class="ite-page">'+dv_subHeader(num,df,nom)+lot2Rows+lot3Desc+lot3Rows+ite_dvFT(pn,tp)+'</div>';
+    if(_nbLotsTP===1){
+        // 1 LOT: ITE seul — pas de lot2/lot3
+        pg1+=ite_dvFT(1,tp)+'</div>';
+        var pn=2,allPages=pg1;
+        // pg2: conditions + totals + legal
+        var pg2='<div class="ite-page">'+dv_subHeaderLight(num,df,nom)+condBlock+totauxBlock+legalBlock+ite_dvFT(pn,tp)+'</div>';
         allPages+=pg2;pn++;
-        // pg3: conditions + totals + legal (no table header needed)
-        var pg3='<div class="ite-page">'+dv_subHeaderLight(num,df,nom)+condBlock+totauxBlock+legalBlock+ite_dvFT(pn,tp)+'</div>';
-        allPages+=pg3;pn++;
     } else {
-        // pg2: LOT 2 rows only
-        var pg2='<div class="ite-page">'+dv_subHeader(num,df,nom)+lot2Rows+ite_dvFT(pn,tp)+'</div>';
-        allPages+=pg2;pn++;
-        // pg3: conditions + totals + legal (no table header needed)
-        var pg3='<div class="ite-page">'+dv_subHeaderLight(num,df,nom)+condBlock+totauxBlock+legalBlock+ite_dvFT(pn,tp)+'</div>';
-        allPages+=pg3;pn++;
+        // pg1 gets lot2Desc at the bottom (description flows onto page 1)
+        pg1+=lot2Desc+ite_dvFT(1,tp)+'</div>';
+        var pn=2,allPages=pg1;
+        if(hasLot3){
+            // pg2: LOT 2 rows + LOT 3 desc+rows
+            var pg2='<div class="ite-page">'+dv_subHeader(num,df,nom)+lot2Rows+lot3Desc+lot3Rows+ite_dvFT(pn,tp)+'</div>';
+            allPages+=pg2;pn++;
+            // pg3: conditions + totals + legal (no table header needed)
+            var pg3='<div class="ite-page">'+dv_subHeaderLight(num,df,nom)+condBlock+totauxBlock+legalBlock+ite_dvFT(pn,tp)+'</div>';
+            allPages+=pg3;pn++;
+        } else {
+            // pg2: LOT 2 rows only
+            var pg2='<div class="ite-page">'+dv_subHeader(num,df,nom)+lot2Rows+ite_dvFT(pn,tp)+'</div>';
+            allPages+=pg2;pn++;
+            // pg3: conditions + totals + legal (no table header needed)
+            var pg3='<div class="ite-page">'+dv_subHeaderLight(num,df,nom)+condBlock+totauxBlock+legalBlock+ite_dvFT(pn,tp)+'</div>';
+            allPages+=pg3;pn++;
+        }
     }
     if(wFin){
         var pgFin='<div class="ite-page">'+dv_subHeaderLight(num,df,nom)+finBlock+ite_dvFT(pn,tp)+'</div>';
