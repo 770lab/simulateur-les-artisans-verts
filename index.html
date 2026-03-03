@@ -6621,35 +6621,27 @@ var _iteOptCounter = 0;
 var ITE_LOT1_CATALOG = [
     {
         id:'finition_crepis',
-        label:'Finition Cr\u00e9pis',
-        unit:'m\u00b2',
+        label:'Finition Cr\u00e9pis en m\u00b2',
         qty:'',
-        pu:'',
-        desc:'Nettoyage de la fa\u00e7ade avant l\u2019intervention\nMontage et D\u00e9montage d\u2019\u00e9chafaudage\nMise en \u0153uvre d\u2019un rev\u00eatement de finition'
+        pu:''
     },
     {
         id:'contour_fenetre',
-        label:'Contour de fen\u00eatre',
-        unit:'U',
+        label:'Contour de fen\u00eatre en U',
         qty:'',
-        pu:'',
-        desc:'Plus-value finition cr\u00e9pis teinte diff\u00e9rente \u2013 contour de fen\u00eatre'
+        pu:''
     },
     {
         id:'accessoires_volet',
-        label:'Accessoires de volet',
-        unit:'U',
+        label:'Accessoires de volet en U',
         qty:'',
-        pu:'',
-        desc:'Gonds de volets\nMains-d\u2019\u0153uvre gonds de volet\nBut\u00e9es de volet\nMains-d\u2019\u0153uvre but\u00e9es de volet\nArr\u00eats de volet\nMains-d\u2019\u0153uvre arr\u00eats de volet'
+        pu:''
     },
     {
         id:'isolation_non_eligible',
-        label:'Isolation des parties non \u00e9ligibles',
-        unit:'m\u00b2',
+        label:'Isolation des parties non \u00e9ligibles en m\u00b2',
         qty:'',
-        pu:'',
-        desc:'ISOLATION MURS EXTERIEURS HIRSCH CELLOMUR ULTRA 120 mm\nIsolant : Marque : Hirsch \u2013 Ref. : Cellomur Ultra 120\n\u00c9paisseur : 120mm \u2013 R\u00e9sistance thermique : 3,85 m\u00b2.K/W\nACERMI : 12-081-795\nAccessoire : Visserie, Menuiserie, Ossature m\u00e9tallique, Colle et mortier, Enduit, Finition\nMain d\u2019\u0153uvre pour travaux isolation des murs par l\u2019ext\u00e9rieur\nMise en place de 5 chevilles par plaque d\u2019isolant\nEnduit qui recouvre et prot\u00e8ge l\u2019isolant\nGestion de l\u2019\u00e9tanch\u00e9it\u00e9 au niveau des jonctions\nHarpage, joints d\u00e9cal\u00e9s, rebouchage au mortier des espaces entre panneaux\nMise en place de Cr\u00e9pi \u2013 Enduit AFC 1.5 base Soltherm\nMise en place d\u2019un \u00e9chafaudage \u2013 Livraison, montage et d\u00e9montage\nProtection des sols par b\u00e2che\nMise en place d\u2019une peinture de couleur : Ton pierre\nProtection en t\u00eate d\u2019ITE\nRail de d\u00e9part'
+        pu:''
     }
 ];
 function iteOptInitCatalog(){
@@ -6658,7 +6650,7 @@ function iteOptInitCatalog(){
     sel.innerHTML='<option value="">-- Catalogue --</option>';
     for(var i=0;i<ITE_LOT1_CATALOG.length;i++){
         var o=ITE_LOT1_CATALOG[i];
-        sel.innerHTML+='<option value="'+o.id+'">'+o.label+' ('+o.unit+')</option>';
+        sel.innerHTML+='<option value="'+o.id+'">'+o.label+'</option>';
     }
     sel.innerHTML+='<option value="_custom">Autre (personnalis\u00e9)</option>';
 }
@@ -6666,34 +6658,31 @@ function iteOptAddFromCatalog(){
     var sel=document.getElementById('iteCatalogSelect');
     var val=sel?sel.value:'';
     if(val==='_custom'||val===''){
-        iteOptAdd({label:'',unit:'U',qty:'',pu:'',desc:''});
+        iteOptAdd({label:'',qty:'',pu:''});
     } else {
         var cat=null;
         for(var i=0;i<ITE_LOT1_CATALOG.length;i++){
             if(ITE_LOT1_CATALOG[i].id===val){cat=ITE_LOT1_CATALOG[i];break;}
         }
-        if(cat) iteOptAdd({label:cat.label,unit:cat.unit,qty:cat.qty||'',pu:cat.pu||'',desc:cat.desc||''});
-        else iteOptAdd({label:'',unit:'U',qty:'',pu:'',desc:''});
+        if(cat) iteOptAdd({label:cat.label,qty:cat.qty||'',pu:cat.pu||''});
+        else iteOptAdd({label:'',qty:'',pu:''});
     }
     if(sel) sel.value='';
 }
 function iteOptAdd(preset){
     var c=document.getElementById('iteOptionsContainer');if(!c)return;
     var id=_iteOptCounter++;
-    var p=preset||{label:'',unit:'U',qty:'',pu:'',desc:''};
-    var descVal=(p.desc||'').replace(/"/g,'&quot;');
+    var p=preset||{label:'',qty:'',pu:''};
     var row=document.createElement('div');
     row.id='iteOpt_'+id;
     row.className='ite-fg';
-    row.style.cssText='margin-bottom:6px;align-items:center;gap:6px;flex-wrap:wrap;';
+    row.style.cssText='margin-bottom:6px;align-items:center;gap:6px;';
     row.innerHTML=''
-        +'<div class="ite-fi" style="flex:2;min-width:120px;"><label>D\u00e9signation</label><input type="text" data-field="label" value="'+p.label+'" placeholder="Ex: Cr\u00e9pis"></div>'
-        +'<div class="ite-fi" style="flex:0.7;min-width:60px;"><label>Unit\u00e9</label><select data-field="unit"><option value="m\u00b2"'+(p.unit==='m\u00b2'?' selected':'')+'>m\u00b2</option><option value="U"'+(p.unit==='U'?' selected':'')+'>U</option><option value="ml"'+(p.unit==='ml'?' selected':'')+'>ml</option><option value="forfait"'+(p.unit==='forfait'?' selected':'')+'>Forfait</option></select></div>'
+        +'<div class="ite-fi" style="flex:2;min-width:120px;"><label>D\u00e9signation</label><input type="text" data-field="label" value="'+p.label+'" placeholder="Ex: Finition Cr\u00e9pis en m\u00b2"></div>'
         +'<div class="ite-fi" style="flex:0.7;min-width:60px;"><label>Qt\u00e9</label><input type="number" data-field="qty" value="'+p.qty+'" step="0.01" min="0" oninput="iteOptCalc()"></div>'
         +'<div class="ite-fi" style="flex:1;min-width:80px;"><label>P.U TTC (\u20ac)</label><input type="number" data-field="pu" value="'+p.pu+'" step="0.01" min="0" oninput="iteOptCalc()"></div>'
         +'<div class="ite-fi" style="flex:0.8;min-width:70px;"><label>Total</label><span data-field="total" style="font-weight:600;font-size:12px;color:#334155;">0,00 \u20ac</span></div>'
-        +'<button type="button" onclick="iteOptRemove('+id+')" style="margin-top:18px;padding:2px 8px;border-radius:4px;border:1px solid #ef4444;background:#fef2f2;color:#dc2626;font-size:11px;cursor:pointer;" title="Supprimer">\u2716</button>'
-        +'<div class="ite-fi" style="flex-basis:100%;min-width:100%;"><label>Description (devis)</label><textarea data-field="desc" rows="2" style="width:100%;font-size:11px;border:1px solid #d1d5db;border-radius:6px;padding:6px 8px;resize:vertical;font-family:inherit;" placeholder="Description d\u00e9taill\u00e9e pour le devis">'+descVal.replace(/&quot;/g,'"')+'</textarea></div>';
+        +'<button type="button" onclick="iteOptRemove('+id+')" style="margin-top:18px;padding:2px 8px;border-radius:4px;border:1px solid #ef4444;background:#fef2f2;color:#dc2626;font-size:11px;cursor:pointer;" title="Supprimer">\u2716</button>';
     c.appendChild(row);
     iteOptCalc();
 }
@@ -6734,12 +6723,9 @@ function iteOptGetList(){
     var rows=c.children,list=[];
     for(var i=0;i<rows.length;i++){
         var label=rows[i].querySelector('[data-field="label"]').value||'Option';
-        var unit=rows[i].querySelector('[data-field="unit"]').value||'U';
         var qty=parseFloat(rows[i].querySelector('[data-field="qty"]').value)||0;
         var pu=parseFloat(rows[i].querySelector('[data-field="pu"]').value)||0;
-        var descEl=rows[i].querySelector('[data-field="desc"]');
-        var desc=descEl?descEl.value:'';
-        if(qty>0&&pu>0) list.push({label:label,unit:unit,qty:qty,pu:pu,total:Math.round(qty*pu*100)/100,desc:desc});
+        if(qty>0&&pu>0) list.push({label:label,qty:qty,pu:pu,total:Math.round(qty*pu*100)/100});
     }
     return list;
 }
@@ -7449,8 +7435,7 @@ function ite_generateDevis(){
     var dvOpts=iteOptGetList();
     for(var oi=0;oi<dvOpts.length;oi++){
         var op=dvOpts[oi];
-        pg1+='<div class="dv-row"><div class="n">'+op.label+'</div><div class="c">'+(op.unit==='forfait'?'1,00 Forfait':op.qty.toFixed(2)+' '+op.unit)+'</div><div class="r">'+ite_fmt(op.pu)+'</div><div class="r">'+ite_fmt(op.total)+'</div><div class="r">'+tvaStr+'</div></div>';
-        if(op.desc){pg1+='<div class="dv-specs">'+op.desc.replace(/\n/g,'<br>')+'</div>';}
+        pg1+='<div class="dv-row"><div class="n">'+op.label+'</div><div class="c">'+op.qty.toFixed(2)+'</div><div class="r">'+ite_fmt(op.pu)+'</div><div class="r">'+ite_fmt(op.total)+'</div><div class="r">'+tvaStr+'</div></div>';
     }
     // pg1 footer added in ASSEMBLE PAGES section (after lot2Desc injection)
 
