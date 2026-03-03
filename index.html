@@ -7173,7 +7173,10 @@ function ite_generateDevis(){
     var mprCET=has148?(MPR_CET[catMPR]||0):0;
     var reste=ttc-primeCEE-mprCET;
     var wFin=ite_V('iteIncludeFinancement')==='oui';
-    var tp=hasLot3?4:3; if(wFin)tp++;
+    var _nbLotsTP=hasLot3?3:2;
+    var _plafondTP=_nbLotsTP>=3?30000:_nbLotsTP>=2?25000:0;
+    var _hasSurplusTP=ITE_SURPLUS_AMOUNT>0&&_plafondTP>0&&ite_V('iteSurplusMode')==='domofinance';
+    var tp=hasLot3?4:3; if(wFin){tp++; if(_hasSurplusTP) tp++;}
     var tvaStr=tva.toFixed(2).replace('.',',')+' %';
     // Isolant data
     var isolKey=ite_V('iteIsolantITE')||'CELLOMUR_120';
@@ -7539,8 +7542,9 @@ function ite_generateDevis(){
         +'<div style="flex:1;border:1px solid #999;padding:4mm;">Nom du repr\u00e9sentant LES ARTISANS VERTS : <b>'+con+'</b><br>A : COURBEVOIE<br>Le :<br><br>Signature du repr\u00e9sentant'+tamponSVG+'</div>'
         +'</div>';
 
+        var finBlock2='';
         if(_hasSurplus && _surplusMode==='domofinance'){
-            // ---- BLOCK 1: ECO-PTZ for plafond amount ----
+            // ---- PAGE 1: ECO-PTZ for plafond amount ----
             var ptzAmount=_plafondPTZ;
             var ptzMensHA=Math.round(ptzAmount/parseFloat(fDuree)*100)/100;
             var ptzTotalHA=Math.round(ptzMensHA*parseFloat(fDuree)*100)/100;
@@ -7564,11 +7568,8 @@ function ite_generateDevis(){
             +'Montant total d\u00fb hors assurance : '+ite_fmt(ptzTotalHA)+'<br>'
             +'Montant total d\u00fb avec assurance : '+ite_fmt(fTotalAA)
             +'</div>'
-            // ---- BLOCK 2: Surplus Domofinance ----
-            +'<div style="font-size:9pt;line-height:1.7;margin-top:8mm;padding-top:4mm;border-top:1px solid #ccc;">'
-            +'<b style="font-size:10pt;text-decoration:underline;">Conditions de paiement \u2014 Pr\u00eat 2 : Surplus hors PTZ</b><br>'
-            +'Mode de r\u00e8glement : Financement<br>'
-            +'Montant \u00e0 financer : '+ite_fmt(_surplusAmount)+'<br>';
+            +sigBlock;
+            // ---- PAGE 2: Surplus Domofinance ----
             // Read surplus Domofinance UI results
             var sProd=(document.getElementById('iteSurplusDomoProduct')||{});
             var sProdName=(sProd.options&&sProd.selectedIndex>=0)?sProd.options[sProd.selectedIndex].textContent:'Autres travaux de r\u00e9novation';
@@ -7583,7 +7584,11 @@ function ite_generateDevis(){
             var sDureeNum=parseFloat(sDuree)||120;
             var sTotalHA=Math.round(sMensHANum*sDureeNum*100)/100;
             var sTotalAA=Math.round(sMensAANum*sDureeNum*100)/100;
-            finBlock+='Organisme financier : DOMOFINANCE \u2014 Produit : '+sProdName+'<br>'
+            finBlock2='<div style="font-size:9pt;line-height:1.7;margin-top:4mm;">'
+            +'<b style="font-size:10pt;text-decoration:underline;">Conditions de paiement \u2014 Pr\u00eat 2 : Surplus hors PTZ</b><br>'
+            +'Mode de r\u00e8glement : Financement<br>'
+            +'Montant \u00e0 financer : '+ite_fmt(_surplusAmount)+'<br>'
+            +'Organisme financier : DOMOFINANCE \u2014 Produit : '+sProdName+'<br>'
             +'TAEG : '+sTAEG+'<br>'
             +'Taux d\u00e9biteur : -<br>'
             +'Co\u00fbt du cr\u00e9dit : '+sCout+'<br>'
@@ -7644,7 +7649,11 @@ function ite_generateDevis(){
     }
     if(wFin){
         var pgFin='<div class="ite-page">'+dv_subHeaderLight(num,df,nom)+finBlock+ite_dvFT(pn,tp)+'</div>';
-        allPages+=pgFin;
+        allPages+=pgFin;pn++;
+        if(finBlock2){
+            var pgFin2='<div class="ite-page">'+dv_subHeaderLight(num,df,nom)+finBlock2+ite_dvFT(pn,tp)+'</div>';
+            allPages+=pgFin2;
+        }
     }
 
     ite_$('iteDevisArea').innerHTML=allPages;
