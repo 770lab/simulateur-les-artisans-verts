@@ -7211,15 +7211,15 @@ function ite_generateDevis(){
     pg1+=ite_dvTH();
     // --- BAR-EN-102 description ---
     pg1+='<div class="dv-block">'
-    +'<b>BAR-EN-102 : Mise en place d\'une isolation thermique des murs par l\'ext\u00e9rieur</b>'
-    +'Surface \u00e0 isoler : <b>'+sITE.toFixed(2)+' m2</b><br>'
-    +'Produit <b>*ISOLATION MURS EXTERIEURS</b>, Marque <b>'+isol.brand+'</b>, R\u00e9f\u00e9rence<br><b>'+isol.ref+'</b>, Epaisseur <b>'+isol.thickness+' mm</b><br>'
-    +'R\u00e9sistance thermique <b>'+isol.R+' m\u00b2.K/W</b> \u00e9valu\u00e9e selon la norme '+isol.acermi+' .<br>'
-    +'Certification Acermi <b>'+isol.acermi+'</b><br><br>'
-    +'- Kwh Cumac : <b>'+kwhc102.toLocaleString('fr-FR')+'</b><br><br>'
-    +'Travaux sous-trait\u00e9s aupr\u00e8s de l\'entreprise <b>RL CONSEILS</b>, 2 RUE LOUIS PERGAUD<br>94700 MAISONS-ALFORT<br>'
-    +'repr\u00e9sent\u00e9e par <b>GUERGOUZ ABDALLAH</b>, SIRET <b>85320240600049</b>, Certificat rge<br>Num\u00e9ro <b>E-E 184700</b> attribu\u00e9 le 02/07/2024 valable jusqu\'au 01/07/2026<br>'
-    +'. Date de la visite technique : <b>'+df+'</b>'
+    +'BAR-EN-102 : Mise en place d\'une isolation thermique des murs par l\'ext\u00e9rieur'
+    +'Surface \u00e0 isoler : '+sITE.toFixed(2)+' m2<br>'
+    +'Produit *ISOLATION MURS EXTERIEURS, Marque '+isol.brand+', R\u00e9f\u00e9rence<br>'+isol.ref+', Epaisseur '+isol.thickness+' mm<br>'
+    +'R\u00e9sistance thermique '+isol.R+' m\u00b2.K/W \u00e9valu\u00e9e selon la norme '+isol.acermi+' .<br>'
+    +'Certification Acermi '+isol.acermi+'<br><br>'
+    +'- Kwh Cumac : '+kwhc102.toLocaleString('fr-FR')+'<br><br>'
+    +'Travaux sous-trait\u00e9s aupr\u00e8s de l\'entreprise RL CONSEILS, 2 RUE LOUIS PERGAUD<br>94700 MAISONS-ALFORT<br>'
+    +'repr\u00e9sent\u00e9e par GUERGOUZ ABDALLAH, SIRET 85320240600049, Certificat rge<br>Num\u00e9ro E-E 184700 attribu\u00e9 le 02/07/2024 valable jusqu\'au 01/07/2026<br>'
+    +'. Date de la visite technique : '+df+''
     +'</div>';
     // --- Material row ---
     pg1+='<div class="dv-row"><div class="n">'+isol.ref+'</div><div class="c">'+sITE.toFixed(2)+' m\u00b2</div><div class="r">'+ite_fmt(pmITE)+'</div><div class="r">'+ite_fmt(matITE)+'</div><div class="r">'+tvaStr+'</div></div>';
@@ -7255,16 +7255,16 @@ function ite_generateDevis(){
         var s2=ite_N('iteSurface103'),pm2=ite_N('itePrixMat103'),pmo2=ite_N('itePrixMo103');
         var kwhc103=Math.round(s2*(KWHC_103[zn]||890));
         lot2Desc='<div class="dv-block">'
-        +'<b>BAR-EN-103 : Mise en place d\'une isolation thermique en Plancher bas</b>'
-        +'Surface \u00e0 isoler : <b>'+s2.toFixed(2)+' m2</b><br>'
-        +'Produit <b>ISOLATION PLANCHER BAS</b>, Marque <b>ACTIS</b>, R\u00e9f\u00e9rence <b>ISOLATION - TETRIS SUPER 8</b>, Epaisseur <b>80 mm</b><br>'
-        +'R\u00e9sistance thermique <b>3,8 m\u00b2.K/W</b> \u00e9valu\u00e9e selon la norme NF EN 12664, la norme NF EN 12667 ou la norme NF EN 12939 pour les isolants non r\u00e9fl\u00e9chissants et selon la norme NF EN ISO 22097 pour les isolants r\u00e9fl\u00e9chissants.<br><br>'
+        +'BAR-EN-103 : Mise en place d\'une isolation thermique en Plancher bas'
+        +'Surface \u00e0 isoler : '+s2.toFixed(2)+' m2<br>'
+        +'Produit ISOLATION PLANCHER BAS, Marque ACTIS, R\u00e9f\u00e9rence ISOLATION - TETRIS SUPER 8, Epaisseur 80 mm<br>'
+        +'R\u00e9sistance thermique 3,8 m\u00b2.K/W \u00e9valu\u00e9e selon la norme NF EN 12664, la norme NF EN 12667 ou la norme NF EN 12939 pour les isolants non r\u00e9fl\u00e9chissants et selon la norme NF EN ISO 22097 pour les isolants r\u00e9fl\u00e9chissants.<br><br>'
         +'- Aucun am\u00e9nagement n\'a \u00e9t\u00e9 n\u00e9cessaire (caches spot, pare-vapeur, \u00e9cart au feu, contour de trappe, pige de rep\u00e9rage)<br><br>'
-        +'- Kwh Cumac : <b>'+kwhc103.toLocaleString('fr-FR')+'</b><br><br>'
-        +'Travaux sous-trait\u00e9s aupr\u00e8s de l\'entreprise <b>ENEFFY</b>, 8 RUE DE LA RICHARDIERE<br>'
+        +'- Kwh Cumac : '+kwhc103.toLocaleString('fr-FR')+'<br><br>'
+        +'Travaux sous-trait\u00e9s aupr\u00e8s de l\'entreprise ENEFFY, 8 RUE DE LA RICHARDIERE<br>'
         +'35530 NOYAL-SUR-VILAINE<br>'
-        +'repr\u00e9sent\u00e9e par <b>LEMOIGN IWAN</b>, SIRET <b>92238972100023</b>, Certificat rge Num\u00e9ro <b>E-E205719</b> attribu\u00e9 le 08/11/2024 valable jusqu\'au 07/11/2026<br>'
-        +'. Date de la visite technique : <b>'+df+'</b>'
+        +'repr\u00e9sent\u00e9e par LEMOIGN IWAN, SIRET 92238972100023, Certificat rge Num\u00e9ro E-E205719 attribu\u00e9 le 08/11/2024 valable jusqu\'au 07/11/2026<br>'
+        +'. Date de la visite technique : '+df+''
         +'</div>';
         lot2Rows='<div class="dv-row"><div class="n">Mise en \u0153uvre d\'une solution d\'isolation pour planchers bas</div><div class="c">'+s2.toFixed(2)+' m\u00b2</div><div class="r">'+ite_fmt(pmo2)+'</div><div class="r">'+ite_fmt(s2*pmo2)+'</div><div class="r">'+tvaStr+'</div></div>'
         +'<div class="dv-specs">'
@@ -7291,14 +7291,14 @@ function ite_generateDevis(){
         var techLabelCap101={souffle:'Souffl\u00e9',deroule:'D\u00e9roul\u00e9',rampant:'Rampant'}[tech101]||'Souffl\u00e9';
         var techMO101={souffle:'Mise en \u0153uvre de l\'isolant par soufflage m\u00e9canique',deroule:'Mise en \u0153uvre de l\'isolant en rouleaux d\u00e9roul\u00e9s',rampant:'Mise en \u0153uvre de l\'isolant sous rampant'}[tech101]||'Mise en \u0153uvre de l\'isolant par soufflage m\u00e9canique';
         lot2Desc='<div class="dv-block">'
-        +'<b>BAR-EN-101 : Mise en place d\'une isolation thermique des combles perdus</b>'
-        +'Surface \u00e0 isoler : <b>'+s2.toFixed(2)+' m2</b><br>'
-        +'Produit <b>ISOLATION COMBLES</b>, Isolation par '+techLabel101+'<br>'
-        +'R\u00e9sistance thermique <b>R \u2265 7 m\u00b2.K/W</b><br><br>'
-        +'- Kwh Cumac : <b>'+kwhc101.toLocaleString('fr-FR')+'</b><br><br>'
-        +'Mat\u00e9riel(s) fourni(s) et mis en place par notre soci\u00e9t\u00e9 <b>LES ARTISANS VERTS</b>.<br>'
-        +'repr\u00e9sent\u00e9e par <b>TORDJMAN BENJAMIN</b>, SIRET <b>87806279300038</b>, Certificat rge Num\u00e9ro <b>QPAC/69719</b> attribu\u00e9 le 15/02/2026 valable jusqu\'au 15/02/2027<br>'
-        +'. Date de la visite technique : <b>'+df+'</b>'
+        +'BAR-EN-101 : Mise en place d\'une isolation thermique des combles perdus'
+        +'Surface \u00e0 isoler : '+s2.toFixed(2)+' m2<br>'
+        +'Produit ISOLATION COMBLES, Isolation par '+techLabel101+'<br>'
+        +'R\u00e9sistance thermique R \u2265 7 m\u00b2.K/W<br><br>'
+        +'- Kwh Cumac : '+kwhc101.toLocaleString('fr-FR')+'<br><br>'
+        +'Mat\u00e9riel(s) fourni(s) et mis en place par notre soci\u00e9t\u00e9 LES ARTISANS VERTS.<br>'
+        +'repr\u00e9sent\u00e9e par TORDJMAN BENJAMIN, SIRET 87806279300038, Certificat rge Num\u00e9ro QPAC/69719 attribu\u00e9 le 15/02/2026 valable jusqu\'au 15/02/2027<br>'
+        +'. Date de la visite technique : '+df+''
         +'</div>';
         lot2Rows='<div class="dv-row"><div class="n">Mise en \u0153uvre isolation combles par '+techLabel101+'</div><div class="c">'+s2.toFixed(2)+' m\u00b2</div><div class="r">'+ite_fmt(pmo2)+'</div><div class="r">'+ite_fmt(s2*pmo2)+'</div><div class="r">'+tvaStr+'</div></div>'
         +'<div class="dv-specs">'
@@ -7317,15 +7317,15 @@ function ite_generateDevis(){
         var cs2=ITE_CET_SPECS[vol2]||ITE_CET_SPECS['200'];
         var cn2='Chauffe-eau thermodynamique THALEOS '+cs2.model+' - '+cs2.vol+'L - '+cs2.ref;
         lot2Desc='<div class="dv-block">'
-        +'<b>BAR-TH-148 : Mise en place d\'un chauffe-eau thermodynamique \u00e0 accumulation.</b><br>'
-        +'Type d\'installation : <b>Sur air extrait</b><br>'
-        +'Le COP du materiel install\u00e9 est de : <b>'+cop2+'</b> mesur\u00e9 selon les conditions de la norme EN 16147.<br>'
-        +'Marque : <b>THALEOS</b><br>'
-        +'R\u00e9f : <b>** '+cn2+'</b><br><br>'
-        +'- Kwh Cumac : <b>'+KWHC_148.toLocaleString('fr-FR')+'</b><br><br>'
-        +'Mat\u00e9riel(s) fourni(s) et mis en place par notre soci\u00e9t\u00e9 <b>LES ARTISANS VERTS</b>.<br>'
-        +'repr\u00e9sent\u00e9e par <b>TORDJMAN BENJAMIN</b>, SIRET <b>87806279300038</b>, Certificat rge Num\u00e9ro <b>QPAC/69719</b> attribu\u00e9 le 15/02/2026 valable jusqu\'au 15/02/2027<br>'
-        +'. Date de la visite technique : <b>'+df+'</b>'
+        +'BAR-TH-148 : Mise en place d\'un chauffe-eau thermodynamique \u00e0 accumulation.<br>'
+        +'Type d\'installation : Sur air extrait<br>'
+        +'Le COP du materiel install\u00e9 est de : '+cop2+' mesur\u00e9 selon les conditions de la norme EN 16147.<br>'
+        +'Marque : THALEOS<br>'
+        +'R\u00e9f : ** '+cn2+'<br><br>'
+        +'- Kwh Cumac : '+KWHC_148.toLocaleString('fr-FR')+'<br><br>'
+        +'Mat\u00e9riel(s) fourni(s) et mis en place par notre soci\u00e9t\u00e9 LES ARTISANS VERTS.<br>'
+        +'repr\u00e9sent\u00e9e par TORDJMAN BENJAMIN, SIRET 87806279300038, Certificat rge Num\u00e9ro QPAC/69719 attribu\u00e9 le 15/02/2026 valable jusqu\'au 15/02/2027<br>'
+        +'. Date de la visite technique : '+df+''
         +'</div>';
         lot2Rows='<div class="dv-row"><div class="n">** '+cn2+'</div><div class="c">1,00 U</div><div class="r">'+ite_fmt(p2)+'</div><div class="r">'+ite_fmt(p2)+'</div><div class="r">'+tvaStr+'</div></div>'
         +'<div class="dv-specs">'
@@ -7367,16 +7367,16 @@ function ite_generateDevis(){
             var s3=ite_N('iteSurface103L3'),pm3=ite_N('itePrixMat103L3'),pmo3=ite_N('itePrixMo103L3');
             var kwhc103L3=Math.round(s3*(KWHC_103[zn]||890));
             lot3Desc='<div class="dv-block" style="margin-top:3mm;">'
-            +'<b>BAR-EN-103 : Mise en place d\'une isolation thermique en Plancher bas</b>'
-            +'Surface \u00e0 isoler : <b>'+s3.toFixed(2)+' m2</b><br>'
-            +'Produit <b>ISOLATION PLANCHER BAS</b>, Marque <b>ACTIS</b>, R\u00e9f\u00e9rence <b>ISOLATION - TETRIS SUPER 8</b>, Epaisseur <b>80 mm</b><br>'
-            +'R\u00e9sistance thermique <b>3,8 m\u00b2.K/W</b> \u00e9valu\u00e9e selon la norme NF EN 12664, la norme NF EN 12667 ou la norme NF EN 12939 pour les isolants non r\u00e9fl\u00e9chissants et selon la norme NF EN ISO 22097 pour les isolants r\u00e9fl\u00e9chissants.<br><br>'
+            +'BAR-EN-103 : Mise en place d\'une isolation thermique en Plancher bas'
+            +'Surface \u00e0 isoler : '+s3.toFixed(2)+' m2<br>'
+            +'Produit ISOLATION PLANCHER BAS, Marque ACTIS, R\u00e9f\u00e9rence ISOLATION - TETRIS SUPER 8, Epaisseur 80 mm<br>'
+            +'R\u00e9sistance thermique 3,8 m\u00b2.K/W \u00e9valu\u00e9e selon la norme NF EN 12664, la norme NF EN 12667 ou la norme NF EN 12939 pour les isolants non r\u00e9fl\u00e9chissants et selon la norme NF EN ISO 22097 pour les isolants r\u00e9fl\u00e9chissants.<br><br>'
             +'- Aucun am\u00e9nagement n\'a \u00e9t\u00e9 n\u00e9cessaire (caches spot, pare-vapeur, \u00e9cart au feu, contour de trappe, pige de rep\u00e9rage)<br><br>'
-            +'- Kwh Cumac : <b>'+kwhc103L3.toLocaleString('fr-FR')+'</b><br><br>'
-            +'Travaux sous-trait\u00e9s aupr\u00e8s de l\'entreprise <b>ENEFFY</b>, 8 RUE DE LA RICHARDIERE<br>'
+            +'- Kwh Cumac : '+kwhc103L3.toLocaleString('fr-FR')+'<br><br>'
+            +'Travaux sous-trait\u00e9s aupr\u00e8s de l\'entreprise ENEFFY, 8 RUE DE LA RICHARDIERE<br>'
             +'35530 NOYAL-SUR-VILAINE<br>'
-            +'repr\u00e9sent\u00e9e par <b>LEMOIGN IWAN</b>, SIRET <b>92238972100023</b>, Certificat rge Num\u00e9ro <b>E-E205719</b> attribu\u00e9 le 08/11/2024 valable jusqu\'au 07/11/2026<br>'
-            +'. Date de la visite technique : <b>'+df+'</b>'
+            +'repr\u00e9sent\u00e9e par LEMOIGN IWAN, SIRET 92238972100023, Certificat rge Num\u00e9ro E-E205719 attribu\u00e9 le 08/11/2024 valable jusqu\'au 07/11/2026<br>'
+            +'. Date de la visite technique : '+df+''
             +'</div>';
             lot3Rows='<div class="dv-row"><div class="n">Mise en \u0153uvre d\'une solution d\'isolation pour planchers bas</div><div class="c">'+s3.toFixed(2)+' m\u00b2</div><div class="r">'+ite_fmt(pmo3)+'</div><div class="r">'+ite_fmt(s3*pmo3)+'</div><div class="r">'+tvaStr+'</div></div>'
             +'<div class="dv-specs">'
@@ -7403,14 +7403,14 @@ function ite_generateDevis(){
             var tCapL3={souffle:'Souffl\u00e9',deroule:'D\u00e9roul\u00e9',rampant:'Rampant'}[tech101L3]||'Souffl\u00e9';
             var tMOL3={souffle:'Mise en \u0153uvre de l\'isolant par soufflage m\u00e9canique',deroule:'Mise en \u0153uvre de l\'isolant en rouleaux d\u00e9roul\u00e9s',rampant:'Mise en \u0153uvre de l\'isolant sous rampant'}[tech101L3]||'Mise en \u0153uvre de l\'isolant par soufflage m\u00e9canique';
             lot3Desc='<div class="dv-block" style="margin-top:3mm;">'
-            +'<b>BAR-EN-101 : Mise en place d\'une isolation thermique des combles perdus</b>'
-            +'Surface \u00e0 isoler : <b>'+s3.toFixed(2)+' m2</b><br>'
-            +'Produit <b>ISOLATION COMBLES</b>, Isolation par '+tL3+'<br>'
-            +'R\u00e9sistance thermique <b>R \u2265 7 m\u00b2.K/W</b><br><br>'
-            +'- Kwh Cumac : <b>'+kwhc101L3.toLocaleString('fr-FR')+'</b><br><br>'
-            +'Mat\u00e9riel(s) fourni(s) et mis en place par notre soci\u00e9t\u00e9 <b>LES ARTISANS VERTS</b>.<br>'
-            +'repr\u00e9sent\u00e9e par <b>TORDJMAN BENJAMIN</b>, SIRET <b>87806279300038</b>, Certificat rge Num\u00e9ro <b>QPAC/69719</b> attribu\u00e9 le 15/02/2026 valable jusqu\'au 15/02/2027<br>'
-            +'. Date de la visite technique : <b>'+df+'</b>'
+            +'BAR-EN-101 : Mise en place d\'une isolation thermique des combles perdus'
+            +'Surface \u00e0 isoler : '+s3.toFixed(2)+' m2<br>'
+            +'Produit ISOLATION COMBLES, Isolation par '+tL3+'<br>'
+            +'R\u00e9sistance thermique R \u2265 7 m\u00b2.K/W<br><br>'
+            +'- Kwh Cumac : '+kwhc101L3.toLocaleString('fr-FR')+'<br><br>'
+            +'Mat\u00e9riel(s) fourni(s) et mis en place par notre soci\u00e9t\u00e9 LES ARTISANS VERTS.<br>'
+            +'repr\u00e9sent\u00e9e par TORDJMAN BENJAMIN, SIRET 87806279300038, Certificat rge Num\u00e9ro QPAC/69719 attribu\u00e9 le 15/02/2026 valable jusqu\'au 15/02/2027<br>'
+            +'. Date de la visite technique : '+df+''
             +'</div>';
             lot3Rows='<div class="dv-row"><div class="n">Mise en \u0153uvre isolation combles par '+tL3+'</div><div class="c">'+s3.toFixed(2)+' m\u00b2</div><div class="r">'+ite_fmt(pmo3)+'</div><div class="r">'+ite_fmt(s3*pmo3)+'</div><div class="r">'+tvaStr+'</div></div>'
             +'<div class="dv-specs">'
@@ -7429,15 +7429,15 @@ function ite_generateDevis(){
             var cs3=ITE_CET_SPECS[vol3]||ITE_CET_SPECS['200'];
             var cn3='Chauffe-eau thermodynamique THALEOS '+cs3.model+' - '+cs3.vol+'L - '+cs3.ref;
             lot3Desc='<div class="dv-block" style="margin-top:3mm;">'
-            +'<b>BAR-TH-148 : Mise en place d\'un chauffe-eau thermodynamique \u00e0 accumulation.</b><br>'
-            +'Type d\'installation : <b>Sur air extrait</b><br>'
-            +'Le COP du materiel install\u00e9 est de : <b>'+cop3+'</b> mesur\u00e9 selon les conditions de la norme EN 16147.<br>'
-            +'Marque : <b>THALEOS</b><br>'
-            +'R\u00e9f : <b>** '+cn3+'</b><br><br>'
-            +'- Kwh Cumac : <b>'+KWHC_148.toLocaleString('fr-FR')+'</b><br><br>'
-            +'Mat\u00e9riel(s) fourni(s) et mis en place par notre soci\u00e9t\u00e9 <b>LES ARTISANS VERTS</b>.<br>'
-            +'repr\u00e9sent\u00e9e par <b>TORDJMAN BENJAMIN</b>, SIRET <b>87806279300038</b>, Certificat rge Num\u00e9ro <b>QPAC/69719</b> attribu\u00e9 le 15/02/2026 valable jusqu\'au 15/02/2027<br>'
-            +'. Date de la visite technique : <b>'+df+'</b>'
+            +'BAR-TH-148 : Mise en place d\'un chauffe-eau thermodynamique \u00e0 accumulation.<br>'
+            +'Type d\'installation : Sur air extrait<br>'
+            +'Le COP du materiel install\u00e9 est de : '+cop3+' mesur\u00e9 selon les conditions de la norme EN 16147.<br>'
+            +'Marque : THALEOS<br>'
+            +'R\u00e9f : ** '+cn3+'<br><br>'
+            +'- Kwh Cumac : '+KWHC_148.toLocaleString('fr-FR')+'<br><br>'
+            +'Mat\u00e9riel(s) fourni(s) et mis en place par notre soci\u00e9t\u00e9 LES ARTISANS VERTS.<br>'
+            +'repr\u00e9sent\u00e9e par TORDJMAN BENJAMIN, SIRET 87806279300038, Certificat rge Num\u00e9ro QPAC/69719 attribu\u00e9 le 15/02/2026 valable jusqu\'au 15/02/2027<br>'
+            +'. Date de la visite technique : '+df+''
             +'</div>';
             lot3Rows='<div class="dv-row"><div class="n">** '+cn3+'</div><div class="c">1,00 U</div><div class="r">'+ite_fmt(p3)+'</div><div class="r">'+ite_fmt(p3)+'</div><div class="r">'+tvaStr+'</div></div>'
             +'<div class="dv-specs">'
@@ -7481,8 +7481,8 @@ function ite_generateDevis(){
         +'<p>Dans le cas o\u00f9 l\'aide notifi\u00e9e au client est inf\u00e9rieure au montant de l\'aide pr\u00e9visionnelle, l\'usager n\'est pas li\u00e9 par le devis et l\'entreprise s\'engage \u00e0 proposer un devis rectificatif. Le client conserve alors un droit de r\u00e9tractation d\'une dur\u00e9e de quatorze jours \u00e0 partir de la date de pr\u00e9sentation du devis rectificatif.</p>'
         +'<p>L\'aide MaPrimeR\u00e9nov\' est conditionnelle et soumise \u00e0 la conformit\u00e9 des pi\u00e8ces justificatives et informations d\u00e9clar\u00e9es par le b\u00e9n\u00e9ficiaire. En cas de fausse d\u00e9claration, de man\u0153uvre frauduleuse ou de changement du projet de travaux subventionn\u00e9, le b\u00e9n\u00e9ficiaire s\'expose au retrait et reversement de tout ou partie de l\'aide. Les services de l\'Anah pourront faire proc\u00e9der \u00e0 tout contr\u00f4le des engagements et sanctionner le b\u00e9n\u00e9ficiaire et son mandataire \u00e9ventuel des manquements constat\u00e9s.</p>';
     }
-    condBlock+='<h4>Termes et conditions CEE</h4>'
-    +'<p>Tout ou partie des travaux relatifs \u00e0 ce devis ou bon de commande sont \u00e9ligibles \u00e0 une prime d\'un montant de <b>'+ite_fmt(primeCEE)+'</b> euros dont EDF (SIREN 552 081 317) est \u00e0 l\'origine dans le cadre du dispositif des Certificats d\'Economies d\'Energie. Le montant de cette prime ne pourra \u00eatre r\u00e9vis\u00e9 \u00e0 la baisse qu\'en cas de modification du volume de Certificats d\'Economies d\'Energie attach\u00e9 \u00e0 l\'op\u00e9ration ou aux op\u00e9rations d\'\u00e9conomies d\'\u00e9nergie ou de la situation de pr\u00e9carit\u00e9 \u00e9nerg\u00e9tique et ce, de mani\u00e8re proportionnelle. Dans le cadre de la r\u00e9glementation un contr\u00f4le qualit\u00e9 des travaux sur site ou par contact pourra \u00eatre demand\u00e9. Un refus de ce contr\u00f4le sur site ou par contact via EDF ou un prestataire d\'EDF conduira au refus de cette prime par EDF.</p>';
+    condBlock+='<h4 style="text-decoration:underline">Termes et conditions CEE</h4>'
+    +'<p>Tout ou partie des travaux relatifs \u00e0 ce devis ou bon de commande sont \u00e9ligibles \u00e0 une prime d\'un montant de '+ite_fmt(primeCEE)+' euros dont EDF (SIREN 552 081 317) est \u00e0 l\'origine dans le cadre du dispositif des Certificats d\'Economies d\'Energie. Le montant de cette prime ne pourra \u00eatre r\u00e9vis\u00e9 \u00e0 la baisse qu\'en cas de modification du volume de Certificats d\'Economies d\'Energie attach\u00e9 \u00e0 l\'op\u00e9ration ou aux op\u00e9rations d\'\u00e9conomies d\'\u00e9nergie ou de la situation de pr\u00e9carit\u00e9 \u00e9nerg\u00e9tique et ce, de mani\u00e8re proportionnelle. Dans le cadre de la r\u00e9glementation un contr\u00f4le qualit\u00e9 des travaux sur site ou par contact pourra \u00eatre demand\u00e9. Un refus de ce contr\u00f4le sur site ou par contact via EDF ou un prestataire d\'EDF conduira au refus de cette prime par EDF.</p>';
     condBlock+='<h4>Gestion des d\u00e9chets</h4>'
     +'<p>Gestion, \u00e9vacuation et traitements des d\u00e9chets de chantier comprenant la main d\'\u0153uvre li\u00e9e \u00e0 la d\u00e9pose et au tri, le transport des d\u00e9chets de chantiers vers un ou plusieurs points de collecte et co\u00fbts de traitement.</p>';
     condBlock+='</div>';
@@ -7500,7 +7500,7 @@ function ite_generateDevis(){
     +'Le client peut recourir \u00e0 la m\u00e9diation de la consommation en s\'adressant \u00e0 Toute r\u00e9clamation doit \u00eatre adress\u00e9e au Service Clients du Vendeur situ\u00e9 au 6 Passage Eug\u00e8ne Barbier - 92400 Courbevoie.<br>'
     +'Conform\u00e9ment aux dispositions de l\'article L.616-1 et R.616-1 du Code de la consommation relatives au processus de m\u00e9diation des litiges de la consommation, l\'Acheteur a le droit de recourir gratuitement au service de m\u00e9diation propos\u00e9 par Les ARTISANS VERTS.<br>'
     +'Le m\u00e9diateur de la consommation ainsi propos\u00e9 est :<br>'
-    +'<b>Centre de la M\u00e9diation de la Consommation des Conciliateurs de justice</b><br>'
+    +'Centre de la M\u00e9diation de la Consommation des Conciliateurs de justice<br>'
     +'Saisine par courrier : CM2C - 14 rue Saint Jean - 75017 Paris<br>'
     +'Par t\u00e9l\u00e9phone : 06 09 20 48 86<br>'
     +'Par mail via le site : https://www.cm2c.net/declarer-un-litige.php<br>'
@@ -8141,7 +8141,7 @@ function pac_generateDevis(){
 
     // === CET (Ballon) en premier si présent (comme le modèle PDF) ===
     if(wBallon && cetSpecs){
-        pg1+='<div class="dv-block"><b>BAR-TH-148 : Mise en place d\'un chauffe-eau thermodynamique à accumulation.</b><br>';
+        pg1+='<div class="dv-block">BAR-TH-148 : Mise en place d\'un chauffe-eau thermodynamique à accumulation.<br>';
         pg1+='Type d\'installation : Sur air extrait<br>';
         pg1+='Le COP du materiel installé est de : '+copB+' mesuré selon les conditions de la norme EN 16147.<br>';
         pg1+='Marque : THALEOS<br>';
@@ -8174,7 +8174,7 @@ function pac_generateDevis(){
     }
 
     // === PAC (BAR-TH-171) — Description ===
-    pg1+='<div class="dv-block" style="margin-top:3mm;"><b>BAR-TH-171 : Mise en place d\'une pompe à chaleur (PAC) de type air/eau</b><br>';
+    pg1+='<div class="dv-block" style="margin-top:3mm;">BAR-TH-171 : Mise en place d\'une pompe à chaleur (PAC) de type air/eau<br>';
     pg1+='La PAC est installée pour une application '+appType+'<br>';
     pg1+='Marque : '+p.m+'<br>';
     pg1+='Référence : ** PAC '+p.m+' '+p.n.replace('PAC '+p.m+' ','').replace('ETAS ','').replace(/%/g,'')+'kw '+appType+' '+phaseShort+' - ETAS '+etasHT+'%<br>';
@@ -8234,7 +8234,7 @@ function pac_generateDevis(){
 
     // SSC si présent
     if(wSSC){
-        pg2+='<div class="dv-block" style="margin-top:3mm;"><b>Système Solaire Combiné</b><br>'+sscRef+'<br>LES ARTISANS VERTS · SIRET 87806279300038 · RGE QPAC/69719</div>';
+        pg2+='<div class="dv-block" style="margin-top:3mm;">Système Solaire Combiné<br>'+sscRef+'<br>LES ARTISANS VERTS · SIRET 87806279300038 · RGE QPAC/69719</div>';
         pg2+='<div class="dv-row"><div class="n">SSC '+sscRef+'</div><div class="c">1,00 U</div><div class="r">'+ite_fmt(pSSC)+'</div><div class="r">'+ite_fmt(pSSC)+'</div><div class="r">'+tvaStr+'</div></div>';
         pg2+='<div class="dv-row"><div class="n">Forfait pose SSC</div><div class="c">1,00 U</div><div class="r">'+ite_fmt(pPoseSSC)+'</div><div class="r">'+ite_fmt(pPoseSSC)+'</div><div class="r">'+tvaStr+'</div></div>';
     }
@@ -8256,8 +8256,8 @@ function pac_generateDevis(){
     }
 
     // Conditions CEE
-    pg3+='<h4>Termes et conditions CEE</h4>';
-    pg3+='<p>Tout ou partie des travaux relatifs \u00e0 ce devis ou bon de commande sont \u00e9ligibles \u00e0 une prime d\'un montant de <b>'+ite_fmt(ce)+'</b> euros dont EDF (SIREN 552 081 317) est \u00e0 l\'origine dans le cadre du dispositif des Certificats d\'Economies d\'Energie. Le montant de cette prime ne pourra \u00eatre r\u00e9vis\u00e9 \u00e0 la baisse qu\'en cas de modification du volume de Certificats d\'Economies d\'Energie attach\u00e9 \u00e0 l\'op\u00e9ration ou aux op\u00e9rations d\'\u00e9conomies d\'\u00e9nergie ou de la situation de pr\u00e9carit\u00e9 \u00e9nerg\u00e9tique et ce, de mani\u00e8re proportionnelle. Dans le cadre de la r\u00e9glementation un contr\u00f4le qualit\u00e9 des travaux sur site ou par contact pourra \u00eatre demand\u00e9. Un refus de ce contr\u00f4le sur site ou par contact via EDF ou un prestataire d\'EDF conduira au refus de cette prime par EDF.</p>';
+    pg3+='<h4 style="text-decoration:underline">Termes et conditions CEE</h4>';
+    pg3+='<p>Tout ou partie des travaux relatifs \u00e0 ce devis ou bon de commande sont \u00e9ligibles \u00e0 une prime d\'un montant de '+ite_fmt(ce)+' euros dont EDF (SIREN 552 081 317) est \u00e0 l\'origine dans le cadre du dispositif des Certificats d\'Economies d\'Energie. Le montant de cette prime ne pourra \u00eatre r\u00e9vis\u00e9 \u00e0 la baisse qu\'en cas de modification du volume de Certificats d\'Economies d\'Energie attach\u00e9 \u00e0 l\'op\u00e9ration ou aux op\u00e9rations d\'\u00e9conomies d\'\u00e9nergie ou de la situation de pr\u00e9carit\u00e9 \u00e9nerg\u00e9tique et ce, de mani\u00e8re proportionnelle. Dans le cadre de la r\u00e9glementation un contr\u00f4le qualit\u00e9 des travaux sur site ou par contact pourra \u00eatre demand\u00e9. Un refus de ce contr\u00f4le sur site ou par contact via EDF ou un prestataire d\'EDF conduira au refus de cette prime par EDF.</p>';
 
     // Gestion déchets
     pg3+='<b>Gestion des déchets</b><br>';
