@@ -3127,6 +3127,15 @@
                     <div id="itePtzStatus"></div>
                     <div id="iteAidesSummary"></div>
                     <div id="iteCeeTableContainer"></div>
+                    <div id="iteDeduireCeeWrap" style="display:none;margin-top:10px;padding:10px 14px;background:#fef3c7;border:1px solid #f59e0b;border-radius:8px;">
+                        <label style="font-size:12px;font-weight:600;color:#92400e;display:flex;align-items:center;gap:8px;cursor:pointer;">
+                            <select id="iteDeduireCee" onchange="ite_calc()" style="padding:3px 8px;border-radius:6px;border:1px solid #d97706;background:white;font-size:11px;font-weight:600;cursor:pointer;">
+                                <option value="oui">Oui</option>
+                                <option value="non">Non</option>
+                            </select>
+                            D&eacute;duire la prime CEE du reste &agrave; r&eacute;gler
+                        </label>
+                    </div>
                     <div style="display:none;">
                         <input type="number" id="iteTva" value="5.5" step="0.1">
                         <input type="number" id="itePrimeCEE" step="0.01">
@@ -6029,7 +6038,8 @@ function domoOnParamChange() {
 function domoGetMontant() {
     var ttc = ite_N('iteMontantTotalProjet');
     var primeCEE = ite_N('itePrimeCEE');
-    return Math.round(ttc - primeCEE);
+    var deduire = ite_V('iteDeduireCee') !== 'non';
+    return Math.round(deduire ? ttc - primeCEE : ttc);
 }
 
 function _domoPopulateDurations(data) {
@@ -6340,7 +6350,8 @@ function ite_calcFinancementLocal(){
     try{
     var ttc=ite_N('iteMontantTotalProjet');
     var primeCEE=ite_N('itePrimeCEE');
-    var montant=ttc-primeCEE;
+    var deduire=ite_V('iteDeduireCee')!=='non';
+    var montant=deduire?ttc-primeCEE:ttc;
     if(montant<=0){
         ite_$('iteMensHorsAss').value='0';
         ite_$('iteMensAvecAss').value='0';
@@ -6415,7 +6426,8 @@ function ite_checkSurplusPTZ() {
     var plafondPTZ = nbLots >= 3 ? 30000 : nbLots >= 2 ? 25000 : 0;
     var ttc = ite_N('iteMontantTotalProjet');
     var primeCEE = ite_N('itePrimeCEE');
-    var reste = ttc - primeCEE;
+    var deduireCee = ite_V('iteDeduireCee') !== 'non';
+    var reste = deduireCee ? ttc - primeCEE : ttc;
     var surplus = reste - plafondPTZ;
     // Check PTZ eligibility
     var t2 = ite_V('iteTypeLot2');
@@ -6606,6 +6618,11 @@ function ite_setNbLots(n, btn) {
     // Show sub-cards
     if(n >= 2) ite_switchLot2();
     if(n >= 3) ite_switchLot3();
+    // Show/hide "Déduire CEE" toggle (only for 1 lot)
+    var ceeWrap = document.getElementById('iteDeduireCeeWrap');
+    if(ceeWrap) ceeWrap.style.display = n === 1 ? '' : 'none';
+    // Reset to "oui" when switching back to multi-lots
+    if(n >= 2) { var cSel = document.getElementById('iteDeduireCee'); if(cSel) cSel.value = 'oui'; }
     // Sync Domofinance product based on lot count
     var domoSel = document.getElementById('iteDomoProduct');
     if(domoSel && domoSel.options.length > 1) {
@@ -6748,7 +6765,8 @@ function ite_calc(){
     var tva=parseFloat(ite_$('iteTva')?.value)||5.5,ht=ttc/(1+tva/100);
     var cee=ite_getCEE();
     ite_$('itePrimeCEE').value=cee.total.toFixed(2);
-    var primeCEE=cee.total,reste=ttc-primeCEE;
+    var _deduireCee=ite_V('iteDeduireCee')!=='non';
+    var primeCEE=cee.total,reste=_deduireCee?ttc-primeCEE:ttc;
     var lot2Ok=totLot2>=1500,t2=ite_V('iteTypeLot2');
     var lot3Ok=!hasLot3||totLot3>=1500;
     var z=document.getElementById('zone').value;
@@ -6820,11 +6838,13 @@ function ite_calc(){
     var catColors={BLEU:'#3b82f6',JAUNE:'#eab308',VIOLET:'#8b5cf6',ROSE:'#ec4899'};
     var catLabels={BLEU:'Bleu',JAUNE:'Jaune',VIOLET:'Violet',ROSE:'Rose'};
     if(cat){kpiMPR='<div class="ite-kpi" style="border-color:'+(catColors[cat]||'#999')+';background:'+(catColors[cat]||'#999')+'18;"><div class="ite-kpi-icon">\ud83c\udfdb\ufe0f</div><div class="ite-kpi-val" style="color:'+(catColors[cat]||'#999')+';">'+(catLabels[cat]||cat)+'</div><div class="ite-kpi-label">Profil MPR</div></div>';}
+    var kpiLot2=_iteNbLots>=2?'<div class="ite-kpi"><div class="ite-kpi-icon">'+(t2==='101'?'\ud83c\udfe0':t2==='103'?'\ud83c\udfe0':'\ud83d\udebf')+'</div><div class="ite-kpi-val'+(lot2Ok?'':' red')+'">'+ite_fmtN(totLot2)+' \u20AC</div><div class="ite-kpi-label">LOT 2</div></div>':'';
+    var kpiCEE=_deduireCee?'<div class="ite-kpi"><div class="ite-kpi-icon">\ud83d\udcdc</div><div class="ite-kpi-val">'+ite_fmtN(primeCEE)+' \u20AC</div><div class="ite-kpi-label">CEE EDF</div></div>':'<div class="ite-kpi"><div class="ite-kpi-icon">\ud83d\udcdc</div><div class="ite-kpi-val" style="text-decoration:line-through;opacity:0.5;">'+ite_fmtN(primeCEE)+' \u20AC</div><div class="ite-kpi-label">CEE non d\u00e9duit</div></div>';
     ite_$('iteAidesSummary').innerHTML='<div class="ite-kpi-row">'
         +'<div class="ite-kpi"><div class="ite-kpi-icon">\ud83e\uddf1</div><div class="ite-kpi-val">'+ite_fmtN(totITE)+' \u20AC</div><div class="ite-kpi-label">LOT 1 \u00b7 ITE</div></div>'
-        +'<div class="ite-kpi"><div class="ite-kpi-icon">'+(t2==='101'?'\ud83c\udfe0':t2==='103'?'\ud83c\udfe0':'\ud83d\udebf')+'</div><div class="ite-kpi-val'+(lot2Ok?'':' red')+'">'+ite_fmtN(totLot2)+' \u20AC</div><div class="ite-kpi-label">LOT 2</div></div>'
+        +kpiLot2
         +kpiLot3
-        +'<div class="ite-kpi"><div class="ite-kpi-icon">\ud83d\udcdc</div><div class="ite-kpi-val">'+ite_fmtN(primeCEE)+' \u20AC</div><div class="ite-kpi-label">CEE EDF</div></div>'
+        +kpiCEE
         +kpiMPR
         +'<div class="ite-kpi"><div class="ite-kpi-icon">\ud83d\udcb0</div><div class="ite-kpi-val">'+ite_fmtN(reste)+' \u20AC</div><div class="ite-kpi-label">Reste \u00e0 r\u00e9gler</div></div></div>';
 
@@ -7186,10 +7206,11 @@ function ite_generateDevis(){
     var t2=_iteNbLots>=2?ite_V('iteTypeLot2'):'',t3=hasLot3?ite_V('iteTypeLot3'):'';
     var ttc=totITE+totLot2+totLot3,ht=ttc/(1+tva/100),tvam=ttc-ht;
     var primeCEE=ite_N('itePrimeCEE');
+    var _dvDeduireCee=ite_V('iteDeduireCee')!=='non';
     var catMPR=document.getElementById('categorie').value;
     var has148=(_iteNbLots>=2&&t2==='148')||(hasLot3&&t3==='148');
     var mprCET=has148?(MPR_CET[catMPR]||0):0;
-    var reste=ttc-primeCEE-mprCET;
+    var reste=ttc-(_dvDeduireCee?primeCEE:0)-mprCET;
     var wFin=ite_V('iteIncludeFinancement')==='oui';
     var _nbLotsTP=_iteNbLots>=3?3:_iteNbLots>=2?2:1;
     var _plafondTP=_nbLotsTP>=3?30000:_nbLotsTP>=2?25000:0;
@@ -7512,7 +7533,8 @@ function ite_generateDevis(){
     // TOTALS + LEGAL
     // =========================================================
     var mprRow=mprCET>0?'<tr><td>Estimation MaPrimeR\u00e9nov\' (**)</td><td>- '+ite_fmt(mprCET)+'</td></tr>':'';
-    var totauxBlock='<div class="dv-totaux"><div class="dv-sig" data-sig="client">Apposer signature pr\u00e9c\u00e9d\u00e9e de la mention "Bon pour accord"<br>Le :<br><div class="sig-canvas-area" data-sig="client"></div></div><div><table class="dv-tt"><tr><td>Total H.T</td><td>'+ite_fmt(ht)+'</td></tr><tr><td>Total TVA '+tva.toFixed(1).replace('.',',')+' %</td><td>'+ite_fmt(tvam)+'</td></tr><tr class="ttc"><td><b>Total TTC</b></td><td><b>'+ite_fmt(ttc)+'</b></td></tr><tr><td>Prime CEE EDF (SIREN 552 081 317)</td><td>- '+ite_fmt(primeCEE)+'</td></tr>'+mprRow+'<tr class="reste"><td><b>Reste \u00e0 r\u00e9gler</b></td><td><b>'+ite_fmt(reste)+'</b></td></tr></table></div></div>';
+    var ceeRow=_dvDeduireCee?'<tr><td>Prime CEE EDF (SIREN 552 081 317)</td><td>- '+ite_fmt(primeCEE)+'</td></tr>':'';
+    var totauxBlock='<div class="dv-totaux"><div class="dv-sig" data-sig="client">Apposer signature pr\u00e9c\u00e9d\u00e9e de la mention "Bon pour accord"<br>Le :<br><div class="sig-canvas-area" data-sig="client"></div></div><div><table class="dv-tt"><tr><td>Total H.T</td><td>'+ite_fmt(ht)+'</td></tr><tr><td>Total TVA '+tva.toFixed(1).replace('.',',')+' %</td><td>'+ite_fmt(tvam)+'</td></tr><tr class="ttc"><td><b>Total TTC</b></td><td><b>'+ite_fmt(ttc)+'</b></td></tr>'+ceeRow+mprRow+'<tr class="reste"><td><b>Reste \u00e0 r\u00e9gler</b></td><td><b>'+ite_fmt(reste)+'</b></td></tr></table></div></div>';
 
     var legalBlock='<div class="dv-legal">'
     +'Ce devis est gratuit et valable 30 jours.<br>'
@@ -7737,7 +7759,8 @@ async function ite_generatePTZ(){
     // Totals
     var ttc=ite_N('iteMontantTotalProjet');
     var primeCEE=ite_N('itePrimeCEE');
-    var reste=ttc-primeCEE;
+    var deduireCeePTZ=ite_V('iteDeduireCee')!=='non';
+    var reste=deduireCeePTZ?ttc-primeCEE:ttc;
     var montantPTZ=Math.min(reste,plafondPTZ);
 
     // Action detection
