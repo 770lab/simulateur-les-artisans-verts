@@ -4149,6 +4149,19 @@ let _calcRunning = false;
 let lastCEEDetailPrime = 0;
 let lastCEEDetailKwhc = 0;
 
+// TTC depuis les prix manuels PAC/Pose/Ballon/SSC
+function getPacManualTTC(){
+    var p=parseFloat(document.getElementById('prixPAC').value)||0;
+    var pp=parseFloat(document.getElementById('prixPose').value)||0;
+    var wb=ite_V('includeBallon')==='oui';
+    var pb=wb?(parseFloat(document.getElementById('prixBallon').value)||0):0;
+    var ppb=wb?(parseFloat(document.getElementById('prixPoseBallon').value)||0):0;
+    var ws=ite_V('includeSSC')==='oui';
+    var ps=ws?(parseFloat(document.getElementById('prixSSC').value)||0):0;
+    var pps=ws?(parseFloat(document.getElementById('prixPoseSSC').value)||0):0;
+    return p+pp+pb+ppb+ps+pps;
+}
+
 function toggleCEE() {
     const body = document.getElementById('ceeBody');
     const arrow = document.getElementById('ceeToggleArrow');
@@ -4515,7 +4528,7 @@ function calc(){
             tt=parseFloat(document.getElementById('totalTTCInput').value)||0;
         }
     }else{
-        tt=D.TTC[sc]||0;
+        tt=getPacManualTTC();
     }
     
     const ad=(D.MPR[sc]&&D.MPR[sc][ct])?D.MPR[sc][ct]:0;
@@ -4754,6 +4767,9 @@ function calcRAC(rb,ch,ta,taForMarge,tt,proRB){
         icon.textContent='\u274C';
         txt.textContent='Dossier refusé';
     }
+
+    // Activer/désactiver le bloc financement avec le RAC
+    updatePacFinanceBlock(rc);
 }
 
 function shareDevis(){
@@ -4797,11 +4813,11 @@ function updatePct(){
         const lockTTC=document.getElementById('lockTTC').checked;
         tt = lockTTC ? (D.TTC[sc] || 0) : (parseFloat(document.getElementById('totalTTCInput').value)||0);
     }else{
-        tt=D.TTC[sc]||0;
+        tt=getPacManualTTC();
     }
-    
+
     const ad=(D.MPR[sc]&&D.MPR[sc][ct])?D.MPR[sc][ct]:0;
-    
+
     let ch;
     if(mode){
         const lockCoutHT=document.getElementById('lockCoutHT').checked;
@@ -4823,21 +4839,21 @@ function updatePct(){
             if(document.getElementById('checkPrevisite').checked) ch += parseFloat(document.getElementById('coutPrevisite').value)||0;
         }
     }else{ ch=getCoutFromDetail(sc, ad); }
-    
+
     let ce = lastCEEDetailPrime;
     let ceForMarge = ce;
     let taForMarge = ad + ceForMarge;
-    
+
     const chForMarge = ch - getPassThrough();
     const ta=ad+ce;
     const rb=tt-ta;
-    
+
     let po=parseFloat(document.getElementById('racPourcent').value)||0;
     if(po>100)po=100; if(po<0)po=0;
     document.getElementById('racPourcent').value=Math.round(po);
     const mo=Math.round(rb*(po/100));
     document.getElementById('racOffert').value=mo;
-    
+
     calcRAC(rb,chForMarge,ta,taForMarge,tt);
 }
 
@@ -4853,7 +4869,7 @@ function updateAmt(){
     if(mode){
         const lockTTC=document.getElementById('lockTTC').checked;
         tt = lockTTC ? (D.TTC[sc] || 0) : (parseFloat(document.getElementById('totalTTCInput').value)||0);
-    }else{ tt=D.TTC[sc]||0; }
+    }else{ tt=getPacManualTTC(); }
     
     const ad=(D.MPR[sc]&&D.MPR[sc][ct])?D.MPR[sc][ct]:0;
     
@@ -8549,7 +8565,9 @@ function pac_generateDevis(){
 
     var numDevis=num.replace('AVR-','');
 
-    var tp=3; // 3 pages
+    // Financement PAC (même logique que ITE)
+    var wPacFin=PAC_RAC_FINAL>1&&PAC_DOMO_RESULT;
+    var tp=wPacFin?4:3;
 
     // RGE info
     var rgeInfo='Matériel(s) fourni(s) et mis en place par notre société LES ARTISANS VERTS.<br>représentée par TORDJMAN BENJAMIN, SIRET 87806279300038, Certificat rge<br>Numéro QPAC/69719 attribué le 15/02/2026 valable jusqu\'au 15/02/2027';
@@ -8730,7 +8748,55 @@ function pac_generateDevis(){
 
     pg3+=ite_dvFT(3,tp)+'</div>';
 
-    document.getElementById('pacDevisArea').innerHTML=pg1+pg2+pg3;
+    // ===== PAGE 4 (optionnelle) : Financement Domofinance =====
+    var pg4='';
+    if(wPacFin){
+        var pdr=PAC_DOMO_RESULT;
+        var pfMensHA=parseFloat((pdr.mensualite1||'0').replace(/\s/g,'').replace(',','.'))||0;
+        var pfMensAA=parseFloat((pdr.mens1_ins_lin||'0').replace(/\s/g,'').replace(',','.'))||0;
+        var pfDuree=document.getElementById('pacDureeMois')?document.getElementById('pacDureeMois').value:'120';
+        var pfTAEG=(pdr.teg_display||'-')+'%';
+        var pfTNC=(pdr.tnc_display||'-')+'%';
+        var pfCout=(pdr.cout_du_credit||'-')+' \u20AC';
+        var pfFrais=(pdr.frais_de_dossier||'-')+' \u20AC';
+        var pfDureeContrat=pdr.duree_du_contract_de_credit||pfDuree;
+        var pfReport=pdr.postpone?(parseInt(pfDureeContrat)-parseInt(pfDuree)+1)+' mois':'0 mois';
+        var pfProduit=pdr.equipment_name||'Domofinance';
+        var pfMontant=Math.round(PAC_RAC_FINAL);
+        var pfTotalHA=Math.round(pfMensHA*parseFloat(pfDuree)*100)/100;
+        var pfTotalAA=Math.round(pfMensAA*parseFloat(pfDuree)*100)/100;
+        var pfAssurance=document.getElementById('pacTypeAssurance')?document.getElementById('pacTypeAssurance').value:'DIM';
+        var villeClean=vil.split(' ').slice(1).join(' ')||'_____';
+
+        pg4='<div class="ite-page">'+dv_subHeaderLight(numDevis,df,nomDevis);
+        pg4+='<div style="font-size:9pt;line-height:1.7;margin-top:4mm;">';
+        pg4+='<b style="font-size:10pt;text-decoration:underline;">Conditions de paiement :</b><br>';
+        pg4+='Mode de règlement : Financement<br>';
+        pg4+='Montant à financer : '+ite_fmt(pfMontant)+'<br>';
+        pg4+='Organisme financier : DOMOFINANCE — Produit : '+pfProduit+'<br>';
+        pg4+='TAEG : '+pfTAEG+'<br>';
+        pg4+='Taux débiteur : '+pfTNC+'<br>';
+        pg4+='Coût du crédit : '+pfCout+'<br>';
+        pg4+='Frais de dossier : '+pfFrais+'<br>';
+        pg4+='Durée du contrat de crédit : '+pfDureeContrat+' mois<br>';
+        pg4+='Remboursement en : '+pfDuree+' mois<br>';
+        pg4+='Mensualité hors assurance : '+ite_fmt(pfMensHA)+'<br>';
+        pg4+='Mensualité avec assurance : '+ite_fmt(pfMensAA)+'<br>';
+        pg4+='Report mensualité : '+pfReport+'<br>';
+        pg4+='Assurance : '+(pfAssurance==='Aucune'?'Non':'Oui')+'<br>';
+        pg4+='Type d\u2019assurance : '+pfAssurance+'<br>';
+        pg4+='Montant total dû hors assurance : '+ite_fmt(pfTotalHA)+'<br>';
+        pg4+='Montant total dû avec assurance : '+ite_fmt(pfTotalAA);
+        pg4+='</div>';
+        // Signatures financement
+        pg4+='<div style="margin-top:8mm;display:flex;gap:20mm;font-size:9pt;line-height:1.8;">';
+        pg4+='<div style="flex:1;border:1px solid #999;padding:4mm;">Fait à : <b>'+villeClean.toUpperCase()+'</b><br>Le :<br><br>Signature du bénéficiaire :</div>';
+        pg4+='<div style="flex:1;border:1px solid #999;padding:4mm;">Nom du représentant LES ARTISANS VERTS : <b>'+con+'</b><br>A : COURBEVOIE<br>Le :<br><br>Signature du représentant'+tamponSVG+'</div>';
+        pg4+='</div>';
+        pg4+=ite_dvFT(4,tp)+'</div>';
+    }
+
+    document.getElementById('pacDevisArea').innerHTML=pg1+pg2+pg3+pg4;
     document.getElementById('pacDevisArea').style.display='block';
     document.getElementById('printArea').style.display='none';
     downloadDevisPDF('pacDevisArea','DEVIS-'+numDevis+'-'+nom.replace(/\s+/g,'_')+'.pdf');
