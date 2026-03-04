@@ -3433,13 +3433,23 @@
                 <div class="dark-section-title">Estimation financière</div>
 
                 <div class="result-row-card">
-                    <div class="rrc-label">MaPrimeRénov'</div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <label style="display: flex; align-items: center; cursor: pointer; gap: 4px;">
+                            <input type="checkbox" id="deduireMPR" checked onchange="calc()" style="accent-color: #22c55e; width: 16px; height: 16px; cursor: pointer;">
+                            <span class="rrc-label" style="margin: 0;">MaPrimeRénov'</span>
+                        </label>
+                    </div>
                     <div class="rrc-value green" id="aidesMPR" style="font-size: 18px;">&mdash;</div>
                 </div>
 
                 <div class="result-row-card">
                     <div>
-                        <div class="rrc-label">Certificats CEE</div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <label style="display: flex; align-items: center; cursor: pointer; gap: 4px;">
+                                <input type="checkbox" id="deduireCEE" checked onchange="calc()" style="accent-color: #22c55e; width: 16px; height: 16px; cursor: pointer;">
+                                <span class="rrc-label" style="margin: 0;">Certificats CEE</span>
+                            </label>
+                        </div>
                         <div style="font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 2px;" id="ceeSourceLabel">BAR-TH détaillé</div>
                     </div>
                     <div class="rrc-value green" id="aidesCEE" style="font-size: 18px;">&mdash;</div>

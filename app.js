@@ -464,12 +464,14 @@ function calc(){
         tt=D.TTC[sc]||0;
     }
     
-    const ad=(D.MPR[sc]&&D.MPR[sc][ct])?D.MPR[sc][ct]:0;
-    
+    const adBrut=(D.MPR[sc]&&D.MPR[sc][ct])?D.MPR[sc][ct]:0;
+    const deduireMPR=document.getElementById('deduireMPR').checked;
+    const ad=deduireMPR?adBrut:0;
+
     let ch;
     if(mode){
         const lockCoutHT=document.getElementById('lockCoutHT').checked;
-        
+
         if(lockCoutHT){
             if(D.COUT_DETAIL[sc]){
                 const detail=D.COUT_DETAIL[sc];
@@ -542,7 +544,8 @@ function calc(){
     let ceForMarge, taForMarge;
     
     // Always use detailed CEE calculation (with Coup de pouce)
-    ce = lastCEEDetailPrime;
+    const deduireCEE=document.getElementById('deduireCEE').checked;
+    ce = deduireCEE ? lastCEEDetailPrime : 0;
     ceForMarge = ce;
     taForMarge = ad + ceForMarge;
     
@@ -567,8 +570,12 @@ function calc(){
     const displayTTC = (!mode && rb < 0) ? (ta + 1) : tt;
     
     document.getElementById('totalTTC').textContent=fmt(displayTTC);
-    document.getElementById('aidesMPR').textContent=fmt(ad);
-    document.getElementById('aidesCEE').textContent=fmt(ceDisplay);
+    document.getElementById('aidesMPR').textContent=deduireMPR ? fmt(adBrut) : fmt(adBrut);
+    document.getElementById('aidesMPR').style.textDecoration=deduireMPR ? 'none' : 'line-through';
+    document.getElementById('aidesMPR').style.opacity=deduireMPR ? '1' : '0.4';
+    document.getElementById('aidesCEE').textContent=fmt(lastCEEDetailPrime);
+    document.getElementById('aidesCEE').style.textDecoration=deduireCEE ? 'none' : 'line-through';
+    document.getElementById('aidesCEE').style.opacity=deduireCEE ? '1' : '0.4';
     document.getElementById('totalAides').textContent=fmt(ta);
     document.getElementById('ceeSourceLabel').textContent=ceeSourceText;
     
@@ -742,8 +749,10 @@ function updatePct(){
         tt=D.TTC[sc]||0;
     }
     
-    const ad=(D.MPR[sc]&&D.MPR[sc][ct])?D.MPR[sc][ct]:0;
-    
+    const adBrut=(D.MPR[sc]&&D.MPR[sc][ct])?D.MPR[sc][ct]:0;
+    const deduireMPR2=document.getElementById('deduireMPR').checked;
+    const ad=deduireMPR2?adBrut:0;
+
     let ch;
     if(mode){
         const lockCoutHT=document.getElementById('lockCoutHT').checked;
@@ -767,8 +776,9 @@ function updatePct(){
             if(document.getElementById('checkPrevisite').checked) ch += parseFloat(document.getElementById('coutPrevisite').value)||0;
         }
     }else{ ch=getCoutFromDetail(sc, ad); }
-    
-    let ce = lastCEEDetailPrime;
+
+    const deduireCEE2=document.getElementById('deduireCEE').checked;
+    let ce = deduireCEE2 ? lastCEEDetailPrime : 0;
     let ceForMarge = ce;
     let taForMarge = ad + ceForMarge;
     
@@ -800,8 +810,10 @@ function updateAmt(){
         tt = lockTTC ? (D.TTC[sc] || 0) : (parseFloat(document.getElementById('totalTTCInput').value)||0);
     }else{ tt=D.TTC[sc]||0; }
     
-    const ad=(D.MPR[sc]&&D.MPR[sc][ct])?D.MPR[sc][ct]:0;
-    
+    const adBrut3=(D.MPR[sc]&&D.MPR[sc][ct])?D.MPR[sc][ct]:0;
+    const deduireMPR3=document.getElementById('deduireMPR').checked;
+    const ad=deduireMPR3?adBrut3:0;
+
     let ch;
     if(mode){
         const lockCoutHT=document.getElementById('lockCoutHT').checked;
@@ -825,8 +837,9 @@ function updateAmt(){
             if(document.getElementById('checkPrevisite').checked) ch += parseFloat(document.getElementById('coutPrevisite').value)||0;
         }
     }else{ ch=getCoutFromDetail(sc, ad); }
-    
-    let ce = lastCEEDetailPrime;
+
+    const deduireCEE3=document.getElementById('deduireCEE').checked;
+    let ce = deduireCEE3 ? lastCEEDetailPrime : 0;
     let ceForMarge = ce;
     let taForMarge = ad + ceForMarge;
     
