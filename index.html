@@ -7566,9 +7566,13 @@ function ite_generateDevis(){
     +'</div>';
     // --- Options / Prestations complémentaires ---
     var dvOpts=iteOptGetList();
-    for(var oi=0;oi<dvOpts.length;oi++){
-        var op=dvOpts[oi];
-        pg1+='<div class="dv-row"><div class="n">'+op.label+'</div><div class="c">'+op.qty.toFixed(2)+'</div><div class="r">'+ite_fmt(op.pu)+'</div><div class="r">'+ite_fmt(op.total)+'</div><div class="r">'+tvaStr+'</div></div>';
+    if(dvOpts.length>0){
+        pg1+='<div style="margin-top:3mm;margin-bottom:1mm;font-size:8.5pt;font-weight:700;text-decoration:underline;">Options / Prestations compl\u00e9mentaires</div>';
+        for(var oi=0;oi<dvOpts.length;oi++){
+            var op=dvOpts[oi];
+            var opQtyStr=op.qty.toFixed(2)+' U';
+            pg1+='<div class="dv-row"><div class="n">'+op.label+'</div><div class="c">'+opQtyStr+'</div><div class="r">'+ite_fmt(op.pu)+'</div><div class="r">'+ite_fmt(op.total)+'</div><div class="r">'+tvaStr+'</div></div>';
+        }
     }
     // pg1 footer added in ASSEMBLE PAGES section (after lot2Desc injection)
 
