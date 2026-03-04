@@ -7917,18 +7917,19 @@ function ite_generateDevis(){
             +'<b style="font-size:10pt;text-decoration:underline;">Conditions de paiement :</b><br>'
             +'Mode de r\u00e8glement : Financement<br>'
             +'Montant \u00e0 financer : '+ite_fmt(reste)+'<br>'
-            +'Organisme financier : DOMOFINANCE \u2014 Produit : '+finProduit+'<br>'
+            +'Organisme financier : DOMOFINANCE<br>'
             +'TAEG : '+finTAEG+'<br>'
             +'Taux d\u00e9biteur : '+finTNC+'<br>'
-            +'Co\u00fbt du cr\u00e9dit : '+finCoutCredit+'<br>'
-            +'Frais de dossier : '+finFraisDossier+'<br>'
             +'Dur\u00e9e du contrat de cr\u00e9dit : '+finDureeContrat+' mois<br>'
             +'Remboursement en : '+fDuree+' mois<br>'
             +'Mensualit\u00e9 hors assurance : '+ite_fmt(fMensHA)+'<br>'
             +'Mensualit\u00e9 avec assurance : '+ite_fmt(fMensAA)+'<br>'
             +'Report mensualit\u00e9 : '+finReport+'<br>'
             +'Assurance : '+(ite_V('iteTypeAssurance')==='Aucune'?'Non':'Oui')+'<br>'
-            +'Type d\u2019assurance : '+ite_V('iteTypeAssurance')
+            +'Type d\u2019assurance : '+ite_V('iteTypeAssurance')+'<br>'
+            +'Technicien financier : -<br>'
+            +'Montant total d\u00fb hors assurance : '+ite_fmt(fTotalHA)+'<br>'
+            +'Montant total d\u00fb avec assurance : '+ite_fmt(fTotalAA)
             +'</div>'
             +sigBlock;
         }
