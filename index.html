@@ -3978,12 +3978,12 @@ function toggleRevenus() {
 // CEE DÉTAIL \u2014 BAR-TH-171 / 143 / 148
 // (Source : fiche BAR-TH-171 vA78.4)
 // ============================================
-const CEE_PRICE = { tm: 12.5, autres: 7.5 }; // \u20AC/MWhc
+const CEE_PRICE = { tm: 12, autres: 7.8 }; // \u20AC/MWhc — EDF POLCO 01/03/2026
 
 const BAR143 = { H1: 134800, H2: 121000, H3: 100500 };
 
-// BAR-TH-148 v27 \u2014 Forfaits officiels (à compter du 01/03/2026)
-const BAR148 = { maison: 14700, appartement: 11800 };
+// BAR-TH-148 — kWhc cumacs (POLCO 7.8 → 121.68€ maison, 92.82€ appart / POLCO 12 → 187.20€, 142.80€)
+const BAR148 = { maison: 15600, appartement: 11900 };
 
 const BAR171 = {
     maison: {
@@ -5871,13 +5871,16 @@ const ite_fmt=n=>parseFloat(n).toLocaleString('fr-FR',{minimumFractionDigits:2,m
 const ite_fmtN=n=>Math.round(n).toLocaleString('fr-FR');
 
 // CEE EDF baremes
-const CEE_ITE_102={classique:{H1:11,H2:9,H3:6},modeste:{H1:16,H2:13,H3:9},grande:{H1:22,H2:18,H3:12}};
-const CEE_ITE_101={classique:{H1:14,H2:11,H3:8},modeste:{H1:20,H2:16,H3:11},grande:{H1:28,H2:22,H3:16}};
-const CEE_ITE_103={classique:{H1:9,H2:7,H3:5},modeste:{H1:13,H2:11,H3:7},grande:{H1:18,H2:15,H3:10}};
-const CEE_ITE_148={classique:150,modeste:200,grande:300};
-const KWHC_102={H1:1600,H2:1300,H3:1000};
-const KWHC_101={H1:1500,H2:1200,H3:900};
-const KWHC_103={H1:1100,H2:890,H3:600};
+// CEE EDF — Primes au 01/03/2026 (POLCO: précaire=12€/MWhc, modeste/classique=7.8€/MWhc)
+// "grande" = même que "modeste" (modeste non précaire = classique en €)
+const CEE_ITE_102={classique:{H1:12.48,H2:10.14,H3:6.86},modeste:{H1:12.48,H2:10.14,H3:6.86},grande:{H1:19.20,H2:15.60,H3:10.56}};
+const CEE_ITE_101={classique:{H1:13.26,H2:10.92,H3:7.18},modeste:{H1:13.26,H2:10.92,H3:7.18},grande:{H1:20.40,H2:16.80,H3:11.04}};
+const CEE_ITE_103={classique:{H1:8.58,H2:6.94,H3:4.60},modeste:{H1:8.58,H2:6.94,H3:4.60},grande:{H1:13.20,H2:10.68,H3:7.08}};
+const CEE_ITE_148={classique:121.68,modeste:121.68,grande:187.20};
+// Cumacs/m² ou /unité — source EDF 01/03/2026
+const KWHC_102={H1:1600,H2:1300,H3:880};
+const KWHC_101={H1:1700,H2:1400,H3:920};
+const KWHC_103={H1:1100,H2:890,H3:590};
 const KWHC_148=14700;
 const ITE_ISOLANT={
     CELLOMUR_120:{ref:'*ISOLATION MURS EXTERIEURS HIRSCH CELLOMUR ULTRA 120 mm',brand:'HIRSCH ISOLATION',thickness:'120',R:'3,85',acermi:'12/081/795'},
@@ -6915,7 +6918,7 @@ function ite_getCEE(){
     if(_iteNbLots>=2){
     if(t2==='101'){u101=(CEE_ITE_101[p]||CEE_ITE_101.classique)[z]||0;p2=ite_N('iteSurface101')*u101;}
     else if(t2==='103'){u103=(CEE_ITE_103[p]||CEE_ITE_103.classique)[z]||0;p2=ite_N('iteSurface103')*u103;}
-    else{u148=CEE_ITE_148[p]||150;p2=u148;}
+    else{u148=CEE_ITE_148[p]||CEE_ITE_148.classique;p2=u148;}
     }
     // LOT 3
     var p3=0,u101L3=0,u103L3=0,u148L3=0;
@@ -6923,7 +6926,7 @@ function ite_getCEE(){
         var t3=ite_V('iteTypeLot3');
         if(t3==='101'){u101L3=(CEE_ITE_101[p]||CEE_ITE_101.classique)[z]||0;p3=ite_N('iteSurface101L3')*u101L3;}
         else if(t3==='103'){u103L3=(CEE_ITE_103[p]||CEE_ITE_103.classique)[z]||0;p3=ite_N('iteSurface103L3')*u103L3;}
-        else{u148L3=CEE_ITE_148[p]||150;p3=u148L3;}
+        else{u148L3=CEE_ITE_148[p]||CEE_ITE_148.classique;p3=u148L3;}
     }
     return{p1:p1,p2:p2,p3:p3,total:p1+p2+p3,c102:c102,u101:u101,u103:u103,u148:u148,u101L3:u101L3,u103L3:u103L3,u148L3:u148L3};
 }
