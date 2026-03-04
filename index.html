@@ -7487,13 +7487,12 @@ async function downloadDevisPDF(containerId,filename){
             var pg=pages[i];
             // Ensure element is visible and at full A4 width for capture
             var prevStyles=pg.style.cssText;
-            pg.style.cssText+=';position:absolute;left:-9999px;top:0;display:block;width:210mm;min-height:297mm;overflow:visible;';
+            pg.style.cssText+=';position:absolute;left:-9999px;top:0;display:block;width:210mm;height:297mm;overflow:hidden;';
             // Force layout recalc
             var pgW=pg.scrollWidth;
-            var pgH=pg.scrollHeight;
-            // A4 in px at 96dpi: 210mm~794px, 297mm~1123px — use as floor
+            // A4 in px at 96dpi: 210mm~794px, 297mm~1123px — fixed A4 dimensions
             var captureW=Math.max(pgW,794);
-            var captureH=Math.max(pgH,1123);
+            var captureH=1123;
             var h2cOpts={scale:2,useCORS:true,backgroundColor:'#ffffff',logging:false,width:captureW,height:captureH};
             // On iOS force windowWidth so html2canvas uses a wide virtual viewport
             if(isIOS){
