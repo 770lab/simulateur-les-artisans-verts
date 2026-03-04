@@ -1406,6 +1406,29 @@
     border-color: #16a34a;
     box-shadow: 0 0 0 3px rgba(22,163,74,0.1);
 }
+.ite-couleur-dropdown {
+    display:flex;align-items:center;justify-content:space-between;
+    width:100%;padding:9px 12px;border:1px solid #d2d2d7;border-radius:8px;
+    font-size:14px;background:white;cursor:pointer;transition:border-color 0.2s;
+    box-sizing:border-box;
+}
+.ite-couleur-dropdown:hover { border-color:#16a34a; }
+.ite-couleur-menu {
+    position:absolute;top:100%;left:0;right:0;z-index:50;
+    background:white;border:1px solid #d2d2d7;border-radius:8px;
+    box-shadow:0 8px 24px rgba(0,0,0,0.12);margin-top:4px;
+    max-height:260px;overflow-y:auto;
+}
+.ite-couleur-option {
+    display:flex;align-items:center;gap:10px;padding:8px 12px;cursor:pointer;
+    font-size:13px;font-weight:500;color:#334155;transition:background 0.15s;
+}
+.ite-couleur-option:first-child { border-radius:8px 8px 0 0; }
+.ite-couleur-option:last-child { border-radius:0 0 8px 8px; }
+.ite-couleur-option:hover { background:#f1f5f9; }
+.ite-couleur-swatch {
+    width:22px;height:22px;border-radius:4px;border:1px solid rgba(0,0,0,0.12);flex-shrink:0;
+}
 .ite-note { font-size: 11px; color: #86868b; margin-bottom: 12px; line-height: 1.5; }
 
 /* ITE KPI row */
@@ -2971,19 +2994,15 @@
                         <div class="ite-fi" style="display:none;"><label>Prix mat&eacute;riel (&euro;/m&sup2;)</label><input type="number" id="itePrixMatITE" value="0" oninput="ite_calc()"></div>
                         <div class="ite-fi" style="display:none;"><label>Prix MO (&euro;/m&sup2;)</label><input type="number" id="itePrixMoITE" value="0" oninput="ite_calc()"></div>
                         <div class="ite-fi"><label>Isolant</label><select id="iteIsolantITE"><option value="CELLOMUR_120">HIRSCH CELLOMUR ULTRA 120mm &mdash; R=3,85</option><option value="CELLOMUR_140">HIRSCH CELLOMUR ULTRA 140mm &mdash; R=4,50</option></select></div>
-                        <div class="ite-fi"><label>Code couleur cr&eacute;pis</label><select id="iteCodeCouleurCrepi" onchange="ite_calc();iteUpdateCouleurPreview(this);" style="font-weight:600;">
-                            <option value="">-- Choisir --</option>
-                            <option value="BLANC" style="background:#f5f0eb;color:#333;">&#9632; BLANC</option>
-                            <option value="OK4E" style="background:#e8dcc8;color:#333;">&#9632; OK4E</option>
-                            <option value="OK1E" style="background:#e6d9b8;color:#333;">&#9632; OK1E</option>
-                            <option value="OK00" style="background:#ede4cc;color:#333;">&#9632; OK00</option>
-                            <option value="HN9B" style="background:#8b3a2a;color:#fff;">&#9632; HN9B</option>
-                            <option value="HN1C" style="background:#c4a67a;color:#333;">&#9632; HN1C</option>
-                            <option value="OR2E" style="background:#d4c4a0;color:#333;">&#9632; OR2E</option>
-                            <option value="SE4B" style="background:#4a4e54;color:#fff;">&#9632; SE4B</option>
-                            <option value="SE4D" style="background:#9a9c9e;color:#333;">&#9632; SE4D</option>
-                            <option value="SE4E" style="background:#b8babe;color:#333;">&#9632; SE4E</option>
-                        </select></div>
+                        <div class="ite-fi" style="position:relative;">
+                            <label>Code couleur cr&eacute;pis</label>
+                            <input type="hidden" id="iteCodeCouleurCrepi" value="">
+                            <div id="iteCouleurDropdown" class="ite-couleur-dropdown" onclick="iteToggleCouleurMenu()">
+                                <span id="iteCouleurSelected" style="display:flex;align-items:center;gap:8px;color:#9ca3af;">-- Choisir --</span>
+                                <span style="font-size:10px;color:#9ca3af;">&#9660;</span>
+                            </div>
+                            <div id="iteCouleurMenu" class="ite-couleur-menu" style="display:none;"></div>
+                        </div>
                     </div>
                     <div class="ite-fg" style="margin-top: 10px; display:none;">
                         <div class="ite-fi full"><label>Sous-traitance</label><input id="iteSousTraitITE" value="RL CONSEILS, 2 RUE LOUIS PERGAUD 94700 MAISONS-ALFORT"></div>
@@ -6916,18 +6935,66 @@ function ite_onMontantTotal(){
     ite_calc();
 }
 
-var ITE_COULEUR_MAP={BLANC:'#f5f0eb',OK4E:'#e8dcc8',OK1E:'#e6d9b8',OK00:'#ede4cc',HN9B:'#8b3a2a',HN1C:'#c4a67a',OR2E:'#d4c4a0',SE4B:'#4a4e54',SE4D:'#9a9c9e',SE4E:'#b8babe'};
-var ITE_COULEUR_DARK={HN9B:true,SE4B:true};
-function iteUpdateCouleurPreview(sel){
-    var v=sel.value;
-    if(v&&ITE_COULEUR_MAP[v]){
-        sel.style.backgroundColor=ITE_COULEUR_MAP[v];
-        sel.style.color=ITE_COULEUR_DARK[v]?'#fff':'#333';
-    } else {
-        sel.style.backgroundColor='';
-        sel.style.color='';
-    }
+var ITE_COULEURS=[
+    {code:'BLANC',hex:'#f5f0eb',label:'Blanc'},
+    {code:'OK4E',hex:'#e8dcc8',label:'Cr\u00e8me'},
+    {code:'OK1E',hex:'#e6d9b8',label:'Beige clair'},
+    {code:'OK00',hex:'#ede4cc',label:'Ivoire'},
+    {code:'HN9B',hex:'#8b3a2a',label:'Rouge brique'},
+    {code:'HN1C',hex:'#c4a67a',label:'Terre sable'},
+    {code:'OR2E',hex:'#d4c4a0',label:'Beige dor\u00e9'},
+    {code:'SE4B',hex:'#4a4e54',label:'Gris anthracite'},
+    {code:'SE4D',hex:'#9a9c9e',label:'Gris moyen'},
+    {code:'SE4E',hex:'#b8babe',label:'Gris clair'}
+];
+var ITE_COULEUR_MAP={};
+ITE_COULEURS.forEach(function(c){ITE_COULEUR_MAP[c.code]=c;});
+
+function iteInitCouleurMenu(){
+    var menu=document.getElementById('iteCouleurMenu');
+    if(!menu)return;
+    var html='<div class="ite-couleur-option" data-val="" onclick="iteSelectCouleur(\'\')"><div class="ite-couleur-swatch" style="background:#fff;"></div><span style="color:#9ca3af;">-- Aucun --</span></div>';
+    ITE_COULEURS.forEach(function(c){
+        html+='<div class="ite-couleur-option" data-val="'+c.code+'" onclick="iteSelectCouleur(\''+c.code+'\')">'
+            +'<div class="ite-couleur-swatch" style="background:'+c.hex+';"></div>'
+            +'<span>'+c.code+'</span><span style="color:#94a3b8;font-size:11px;font-weight:400;">'+c.label+'</span></div>';
+    });
+    menu.innerHTML=html;
 }
+function iteToggleCouleurMenu(){
+    var menu=document.getElementById('iteCouleurMenu');
+    if(!menu)return;
+    menu.style.display=menu.style.display==='none'?'block':'none';
+}
+function iteSelectCouleur(code){
+    var hidden=document.getElementById('iteCodeCouleurCrepi');
+    var display=document.getElementById('iteCouleurSelected');
+    var menu=document.getElementById('iteCouleurMenu');
+    var dropdown=document.getElementById('iteCouleurDropdown');
+    if(hidden)hidden.value=code;
+    if(menu)menu.style.display='none';
+    if(!code){
+        if(display)display.innerHTML='<span style="color:#9ca3af;">-- Choisir --</span>';
+        if(dropdown){dropdown.style.backgroundColor='';dropdown.style.borderColor='#d2d2d7';}
+    } else {
+        var c=ITE_COULEUR_MAP[code];
+        if(display)display.innerHTML='<span class="ite-couleur-swatch" style="width:18px;height:18px;border-radius:4px;display:inline-block;vertical-align:middle;border:1px solid rgba(0,0,0,0.12);background:'+c.hex+';"></span> <strong>'+c.code+'</strong> <span style="color:#94a3b8;font-size:12px;">'+c.label+'</span>';
+        if(dropdown){dropdown.style.backgroundColor='';dropdown.style.borderColor='#16a34a';}
+    }
+    // Dispatch change event for restoreFields compatibility
+    if(hidden)try{hidden.dispatchEvent(new Event('change'));}catch(e){}
+    ite_calc();
+}
+// Close menu on outside click
+document.addEventListener('click',function(e){
+    var menu=document.getElementById('iteCouleurMenu');
+    var dropdown=document.getElementById('iteCouleurDropdown');
+    if(menu&&dropdown&&!dropdown.contains(e.target)&&!menu.contains(e.target)){
+        menu.style.display='none';
+    }
+});
+// Init on load
+document.addEventListener('DOMContentLoaded',function(){iteInitCouleurMenu();});
 
 function ite_calc(){
     try{
@@ -8875,6 +8942,10 @@ function restoreFields(data){
             if(el.tagName==='SELECT') try{el.dispatchEvent(new Event('change'));}catch(e){}
         }
     });
+    // Restore custom couleur dropdown
+    if(data.iteCodeCouleurCrepi && typeof iteSelectCouleur==='function'){
+        iteSelectCouleur(data.iteCodeCouleurCrepi);
+    }
 }
 
 function saveDossier(type,numDevis,nomClient){
