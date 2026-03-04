@@ -5935,6 +5935,10 @@ function domoApiCall(route, qs, cb, errCb) {
             var msg = (data.title || '') + ' ' + (data.details || data.detailsAge || '');
             console.warn('Domo API error:', msg);
             if (errCb) errCb(msg.trim());
+        } else if (data && data.success === false && data.error) {
+            // GAS proxy error (HTTP error from Domofinance)
+            console.warn('Domo proxy error:', data.error);
+            if (errCb) errCb(data.error);
         } else {
             cb(data);
         }

@@ -107,9 +107,15 @@ function handleRequest(e) {
           headers: { 'X-AUTH-TOKEN': '5b661c80-e2dc-49e8-9a1b-3cd618319b39' },
           muteHttpExceptions: true
         });
-        return ContentService
-          .createTextOutput(domoResp.getContentText())
-          .setMimeType(ContentService.MimeType.JSON);
+        var domoHttpCode = domoResp.getResponseCode();
+        if (domoHttpCode >= 200 && domoHttpCode < 300) {
+          return ContentService
+            .createTextOutput(domoResp.getContentText())
+            .setMimeType(ContentService.MimeType.JSON);
+        } else {
+          result = { success: false, error: 'Domofinance HTTP ' + domoHttpCode, httpCode: domoHttpCode };
+          break;
+        }
 
       case 'ping':
         result = { success: true, message: 'PAC 2026 Backend OK' };
