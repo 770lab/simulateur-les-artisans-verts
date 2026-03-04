@@ -6107,11 +6107,14 @@ function domoGetMontant() {
     var primeCEE = ite_N('itePrimeCEE');
     var deduire = ite_V('iteDeduireCee') !== 'non';
     var reste = Math.round(deduire ? ttc - primeCEE : ttc);
-    // Plafonner au PTZ : 2 lots = 25000€, 3 lots+ = 30000€, 1 lot = pas de PTZ
-    var nbLots = _iteNbLots || 2;
-    var plafondPTZ = nbLots >= 3 ? 30000 : nbLots >= 2 ? 25000 : 0;
-    if (plafondPTZ > 0 && reste > plafondPTZ) {
-        return plafondPTZ;
+    // Plafonner au PTZ seulement pour ECO-PTZ (produit 153)
+    var isEcoPTZ = ite_V('iteDomoProduct') === '153';
+    if (isEcoPTZ) {
+        var nbLots = _iteNbLots || 2;
+        var plafondPTZ = nbLots >= 3 ? 30000 : nbLots >= 2 ? 25000 : 0;
+        if (plafondPTZ > 0 && reste > plafondPTZ) {
+            return plafondPTZ;
+        }
     }
     return reste;
 }
@@ -6235,11 +6238,11 @@ function domoUpdateUI(r) {
     ite_$('iteMensHorsAss').value = mensHA.toFixed(2);
     ite_$('iteMensAvecAss').value = mensAA.toFixed(2);
 
-    // Duration-based totals
+    // Duration-based totals — utiliser durée de remboursement, PAS durée du contrat
     var duree = parseInt(r.duration) || parseInt(ite_V('iteDureeMois')) || 120;
     var dureeContrat = parseInt(r.duree_du_contract_de_credit) || duree;
-    var totalHA = Math.round(mensHA * dureeContrat * 100) / 100;
-    var totalAA = Math.round(mensAA * dureeContrat * 100) / 100;
+    var totalHA = Math.round(mensHA * duree * 100) / 100;
+    var totalAA = Math.round(mensAA * duree * 100) / 100;
     ite_$('iteTotalDuHA').value = totalHA.toFixed(2);
     ite_$('iteTotalDuAA').value = totalAA.toFixed(2);
 
@@ -6426,10 +6429,13 @@ function ite_calcFinancementLocal(){
     var primeCEE=ite_N('itePrimeCEE');
     var deduire=ite_V('iteDeduireCee')!=='non';
     var montant=Math.round(deduire?ttc-primeCEE:ttc);
-    // Plafonner au PTZ : 2 lots = 25000€, 3 lots+ = 30000€
-    var nbLotsLocal=_iteNbLots||2;
-    var plafondLocal=nbLotsLocal>=3?30000:nbLotsLocal>=2?25000:0;
-    if(plafondLocal>0&&montant>plafondLocal) montant=plafondLocal;
+    // Plafonner au PTZ seulement pour ECO-PTZ (produit 153)
+    var isEcoPTZLocal=ite_V('iteDomoProduct')==='153';
+    if(isEcoPTZLocal){
+        var nbLotsLocal=_iteNbLots||2;
+        var plafondLocal=nbLotsLocal>=3?30000:nbLotsLocal>=2?25000:0;
+        if(plafondLocal>0&&montant>plafondLocal) montant=plafondLocal;
+    }
     if(montant<=0){
         ite_$('iteMensHorsAss').value='0';
         ite_$('iteMensAvecAss').value='0';
@@ -6500,6 +6506,9 @@ var _iteSurplusDebounce = null;
 function ite_checkSurplusPTZ() {
     var block = document.getElementById('iteSurplusPtzBlock');
     if (!block) return;
+    // Surplus PTZ uniquement si produit ECO-PTZ sélectionné
+    var isEcoPTZ = ite_V('iteDomoProduct') === '153';
+    if (!isEcoPTZ) { ITE_SURPLUS_AMOUNT = 0; block.style.display = 'none'; return; }
     var nbLots = _iteNbLots || 2;
     var plafondPTZ = nbLots >= 3 ? 30000 : nbLots >= 2 ? 25000 : 0;
     var ttc = ite_N('iteMontantTotalProjet') + iteOptGetTotal();
@@ -7913,10 +7922,11 @@ function ite_generateDevis(){
             +sigBlock;
         } else {
             // ---- SINGLE BLOCK: standard financing (no surplus or apport) ----
+            var finMontant=domoGetMontant();
             finBlock='<div style="font-size:9pt;line-height:1.7;margin-top:4mm;">'
             +'<b style="font-size:10pt;text-decoration:underline;">Conditions de paiement :</b><br>'
             +'Mode de r\u00e8glement : Financement<br>'
-            +'Montant \u00e0 financer : '+ite_fmt(reste)+'<br>'
+            +'Montant \u00e0 financer : '+ite_fmt(finMontant)+'<br>'
             +'Organisme financier : DOMOFINANCE<br>'
             +'TAEG : '+finTAEG+'<br>'
             +'Taux d\u00e9biteur : '+finTNC+'<br>'
@@ -7927,7 +7937,9 @@ function ite_generateDevis(){
             +'Report mensualit\u00e9 : '+finReport+'<br>'
             +'Assurance : '+(ite_V('iteTypeAssurance')==='Aucune'?'Non':'Oui')+'<br>'
             +'Type d\u2019assurance : '+ite_V('iteTypeAssurance')+'<br>'
-            +'Technicien financier : -'
+            +'Technicien financier : -<br>'
+            +'Montant total d\u00fb hors assurance : '+ite_fmt(fTotalHA)+'<br>'
+            +'Montant total d\u00fb avec assurance : '+ite_fmt(fTotalAA)
             +'</div>'
             +sigBlock;
         }
