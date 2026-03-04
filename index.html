@@ -2971,7 +2971,19 @@
                         <div class="ite-fi" style="display:none;"><label>Prix mat&eacute;riel (&euro;/m&sup2;)</label><input type="number" id="itePrixMatITE" value="0" oninput="ite_calc()"></div>
                         <div class="ite-fi" style="display:none;"><label>Prix MO (&euro;/m&sup2;)</label><input type="number" id="itePrixMoITE" value="0" oninput="ite_calc()"></div>
                         <div class="ite-fi"><label>Isolant</label><select id="iteIsolantITE"><option value="CELLOMUR_120">HIRSCH CELLOMUR ULTRA 120mm &mdash; R=3,85</option><option value="CELLOMUR_140">HIRSCH CELLOMUR ULTRA 140mm &mdash; R=4,50</option></select></div>
-                        <div class="ite-fi"><label>Code couleur cr&eacute;pis</label><input id="iteCodeCouleurCrepi" value="" placeholder="Ex : T2.05.80" oninput="ite_calc()"></div>
+                        <div class="ite-fi"><label>Code couleur cr&eacute;pis</label><select id="iteCodeCouleurCrepi" onchange="ite_calc();iteUpdateCouleurPreview(this);" style="font-weight:600;">
+                            <option value="">-- Choisir --</option>
+                            <option value="BLANC" style="background:#f5f0eb;color:#333;">&#9632; BLANC</option>
+                            <option value="OK4E" style="background:#e8dcc8;color:#333;">&#9632; OK4E</option>
+                            <option value="OK1E" style="background:#e6d9b8;color:#333;">&#9632; OK1E</option>
+                            <option value="OK00" style="background:#ede4cc;color:#333;">&#9632; OK00</option>
+                            <option value="HN9B" style="background:#8b3a2a;color:#fff;">&#9632; HN9B</option>
+                            <option value="HN1C" style="background:#c4a67a;color:#333;">&#9632; HN1C</option>
+                            <option value="OR2E" style="background:#d4c4a0;color:#333;">&#9632; OR2E</option>
+                            <option value="SE4B" style="background:#4a4e54;color:#fff;">&#9632; SE4B</option>
+                            <option value="SE4D" style="background:#9a9c9e;color:#333;">&#9632; SE4D</option>
+                            <option value="SE4E" style="background:#b8babe;color:#333;">&#9632; SE4E</option>
+                        </select></div>
                     </div>
                     <div class="ite-fg" style="margin-top: 10px; display:none;">
                         <div class="ite-fi full"><label>Sous-traitance</label><input id="iteSousTraitITE" value="RL CONSEILS, 2 RUE LOUIS PERGAUD 94700 MAISONS-ALFORT"></div>
@@ -6902,6 +6914,19 @@ function ite_onMontantTotal(){
     detTxt+=' = <b>'+ite_fmtN(ttc)+' \u20AC TTC</b>';
     if(det) det.innerHTML=detTxt;
     ite_calc();
+}
+
+var ITE_COULEUR_MAP={BLANC:'#f5f0eb',OK4E:'#e8dcc8',OK1E:'#e6d9b8',OK00:'#ede4cc',HN9B:'#8b3a2a',HN1C:'#c4a67a',OR2E:'#d4c4a0',SE4B:'#4a4e54',SE4D:'#9a9c9e',SE4E:'#b8babe'};
+var ITE_COULEUR_DARK={HN9B:true,SE4B:true};
+function iteUpdateCouleurPreview(sel){
+    var v=sel.value;
+    if(v&&ITE_COULEUR_MAP[v]){
+        sel.style.backgroundColor=ITE_COULEUR_MAP[v];
+        sel.style.color=ITE_COULEUR_DARK[v]?'#fff':'#333';
+    } else {
+        sel.style.backgroundColor='';
+        sel.style.color='';
+    }
 }
 
 function ite_calc(){
