@@ -6694,14 +6694,13 @@ function iteOptAdd(preset){
     var p=preset||{label:'',qty:'',pu:''};
     var row=document.createElement('div');
     row.id='iteOpt_'+id;
-    row.className='ite-fg';
-    row.style.cssText='margin-bottom:6px;align-items:center;gap:6px;';
+    row.style.cssText='display:flex;margin-bottom:6px;align-items:flex-end;gap:8px;';
     row.innerHTML=''
-        +'<div class="ite-fi" style="flex:2;min-width:120px;"><label>D\u00e9signation</label><input type="text" data-field="label" value="'+p.label+'" placeholder="Ex: Finition Cr\u00e9pis en m\u00b2"></div>'
-        +'<div class="ite-fi" style="flex:0.7;min-width:60px;"><label>Qt\u00e9</label><input type="number" data-field="qty" value="'+p.qty+'" step="0.01" min="0" oninput="iteOptCalc()"></div>'
-        +'<div class="ite-fi" style="flex:1;min-width:80px;"><label>P.U TTC (\u20ac)</label><input type="number" data-field="pu" value="'+p.pu+'" step="0.01" min="0" oninput="iteOptCalc()"></div>'
-        +'<div class="ite-fi" style="flex:0.8;min-width:70px;"><label>Total</label><span data-field="total" style="font-weight:600;font-size:12px;color:#334155;">0,00 \u20ac</span></div>'
-        +'<button type="button" onclick="iteOptRemove('+id+')" style="margin-top:18px;padding:2px 8px;border-radius:4px;border:1px solid #ef4444;background:#fef2f2;color:#dc2626;font-size:11px;cursor:pointer;" title="Supprimer">\u2716</button>';
+        +'<div class="ite-fi" style="flex:3;min-width:0;"><label>D\u00e9signation</label><input type="text" data-field="label" value="'+p.label+'" placeholder="Ex: Finition Cr\u00e9pis en m\u00b2" style="padding:7px 10px;font-size:13px;"></div>'
+        +'<div class="ite-fi" style="flex:0.8;min-width:0;"><label>Qt\u00e9</label><input type="number" data-field="qty" value="'+p.qty+'" step="0.01" min="0" oninput="iteOptCalc()" style="padding:7px 10px;font-size:13px;"></div>'
+        +'<div class="ite-fi" style="flex:1.2;min-width:0;"><label>P.U TTC (\u20ac)</label><input type="number" data-field="pu" value="'+p.pu+'" step="0.01" min="0" oninput="iteOptCalc()" style="padding:7px 10px;font-size:13px;"></div>'
+        +'<div class="ite-fi" style="flex:1;min-width:0;"><label>Total</label><span data-field="total" style="font-weight:600;font-size:12px;color:#334155;line-height:34px;">0,00 \u20ac</span></div>'
+        +'<button type="button" onclick="iteOptRemove('+id+')" style="margin-bottom:4px;padding:2px 6px;border:none;background:transparent;color:#94a3b8;font-size:14px;cursor:pointer;transition:color 0.2s;" onmouseover="this.style.color=\'#ef4444\'" onmouseout="this.style.color=\'#94a3b8\'" title="Supprimer">\u2716</button>';
     c.appendChild(row);
     iteOptCalc();
 }
