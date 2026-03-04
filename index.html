@@ -6103,7 +6103,14 @@ function domoGetMontant() {
     var ttc = ite_N('iteMontantTotalProjet') + iteOptGetTotal();
     var primeCEE = ite_N('itePrimeCEE');
     var deduire = ite_V('iteDeduireCee') !== 'non';
-    return Math.round(deduire ? ttc - primeCEE : ttc);
+    var reste = Math.round(deduire ? ttc - primeCEE : ttc);
+    // Plafonner au PTZ : 2 lots = 25000€, 3 lots+ = 30000€, 1 lot = pas de PTZ
+    var nbLots = _iteNbLots || 2;
+    var plafondPTZ = nbLots >= 3 ? 30000 : nbLots >= 2 ? 25000 : 0;
+    if (plafondPTZ > 0 && reste > plafondPTZ) {
+        return plafondPTZ;
+    }
+    return reste;
 }
 
 function _domoPopulateDurations(data) {
@@ -6415,7 +6422,11 @@ function ite_calcFinancementLocal(){
     var ttc=ite_N('iteMontantTotalProjet')+iteOptGetTotal();
     var primeCEE=ite_N('itePrimeCEE');
     var deduire=ite_V('iteDeduireCee')!=='non';
-    var montant=deduire?ttc-primeCEE:ttc;
+    var montant=Math.round(deduire?ttc-primeCEE:ttc);
+    // Plafonner au PTZ : 2 lots = 25000€, 3 lots+ = 30000€
+    var nbLotsLocal=_iteNbLots||2;
+    var plafondLocal=nbLotsLocal>=3?30000:nbLotsLocal>=2?25000:0;
+    if(plafondLocal>0&&montant>plafondLocal) montant=plafondLocal;
     if(montant<=0){
         ite_$('iteMensHorsAss').value='0';
         ite_$('iteMensAvecAss').value='0';
