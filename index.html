@@ -7041,7 +7041,7 @@ function ite_calc(){
     var cee=ite_getCEE();
     ite_$('itePrimeCEE').value=cee.total.toFixed(2);
     var _deduireCee=ite_V('iteDeduireCee')!=='non';
-    var primeCEE=cee.total,reste=_deduireCee?ttc-primeCEE:ttc;
+    var primeCEE=cee.total,reste=Math.round(_deduireCee?ttc-primeCEE:ttc);
     var lot2Ok=totLot2>=1500,t2=ite_V('iteTypeLot2');
     var lot3Ok=!hasLot3||totLot3>=1500;
     var z=document.getElementById('zone').value;
@@ -7485,7 +7485,7 @@ function ite_generateDevis(){
     var catMPR=document.getElementById('categorie').value;
     var has148=(_iteNbLots>=2&&t2==='148')||(hasLot3&&t3==='148');
     var mprCET=has148?(MPR_CET[catMPR]||0):0;
-    var reste=ttc-(_dvDeduireCee?primeCEE:0);
+    var reste=Math.round(ttc-(_dvDeduireCee?primeCEE:0));
     var wFin=ite_V('iteIncludeFinancement')==='oui';
     var _nbLotsTP=_iteNbLots>=3?3:_iteNbLots>=2?2:1;
     var _plafondTP=_nbLotsTP>=3?30000:_nbLotsTP>=2?25000:0;
@@ -8042,7 +8042,7 @@ async function ite_generatePTZ(){
     var ttc=ite_N('iteMontantTotalProjet')+iteOptGetTotal();
     var primeCEE=ite_N('itePrimeCEE');
     var deduireCeePTZ=ite_V('iteDeduireCee')!=='non';
-    var reste=deduireCeePTZ?ttc-primeCEE:ttc;
+    var reste=Math.round(deduireCeePTZ?ttc-primeCEE:ttc);
     var montantPTZ=Math.min(reste,plafondPTZ);
 
     // Action detection
@@ -8523,7 +8523,7 @@ function pac_generateDevis(){
     var adTxt=document.getElementById('aidesMPR').textContent.replace(/[^\d]/g,'');
     var ceTxt=document.getElementById('aidesCEE').textContent.replace(/[^\d]/g,'');
     var ad=parseFloat(adTxt)||0,ce=parseFloat(ceTxt)||0;
-    var totalAides=ad+ce,reste=ttc-totalAides;
+    var totalAides=ad+ce,reste=Math.round(ttc-totalAides);
 
     // kWhc ballon (BAR-TH-148 v27)
     var kwhcBallon=wBallon?14700:0;
