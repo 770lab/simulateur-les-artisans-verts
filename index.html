@@ -7622,18 +7622,20 @@ function ite_generateDevis(){
     +''+(ite_V('iteCouleurCrepi')||'Ton pierre')+(ite_V('iteCodeCouleurCrepi')?' (Code : '+ite_V('iteCodeCouleurCrepi')+')':'')+' Protection en t\u00eate d\'ITE avec mise en place d\'une \u00e9paisseur suffisante du produit de finition afin de prot\u00e9ger contre les intemp\u00e9ries et les rayonnements solaires<br>'
     +'Rail de d\u00e9part'
     +'</div>';
-    // --- Options / Prestations complémentaires ---
+    // --- Options / Prestations complémentaires (page dédiée si présentes) ---
     var dvOpts=iteOptGetList();
+    var optionsBlock='';
     if(dvOpts.length>0){
         for(var oi=0;oi<dvOpts.length;oi++){
             var op=dvOpts[oi];
             var opQtyStr=op.qty.toFixed(2)+' '+(op.unit||'U');
-            pg1+='<div class="dv-row"><div class="n"><b>* '+op.label+'</b></div><div class="c">'+opQtyStr+'</div><div class="r">'+ite_fmt(op.pu)+'</div><div class="r">'+ite_fmt(op.total)+'</div><div class="r">'+tvaStr+'</div></div>';
+            optionsBlock+='<div class="dv-row"><div class="n"><b>* '+op.label+'</b></div><div class="c">'+opQtyStr+'</div><div class="r">'+ite_fmt(op.pu)+'</div><div class="r">'+ite_fmt(op.total)+'</div><div class="r">'+tvaStr+'</div></div>';
             if(op.desc&&op.desc.trim()){
-                pg1+='<div class="dv-specs">'+op.desc.replace(/\n/g,'<br>')+'</div>';
+                optionsBlock+='<div class="dv-specs">'+op.desc.replace(/\n/g,'<br>')+'</div>';
             }
         }
     }
+    var hasOptions=optionsBlock.length>0;
     // pg1 footer added in ASSEMBLE PAGES section (after lot2Desc injection)
 
     // =========================================================
@@ -8011,29 +8013,41 @@ function ite_generateDevis(){
     // =========================================================
     // ASSEMBLE PAGES (flowing layout like target Margeot devis)
     // =========================================================
+    // Ajuster le nombre total de pages si options présentes
+    if(hasOptions) tp++;
     if(_nbLotsTP===1){
         // 1 LOT: ITE seul — pas de lot2/lot3
         pg1+=ite_dvFT(1,tp)+'</div>';
         var pn=2,allPages=pg1;
-        // pg2: conditions + totals + legal
+        // Page options si présentes
+        if(hasOptions){
+            var pgOpt='<div class="ite-page">'+dv_subHeader(num,df,nom)+optionsBlock+ite_dvFT(pn,tp)+'</div>';
+            allPages+=pgOpt;pn++;
+        }
+        // Conditions + totals + legal
         var pg2='<div class="ite-page">'+dv_subHeaderLight(num,df,nom)+condBlock+totauxBlock+legalBlock+ite_dvFT(pn,tp)+'</div>';
         allPages+=pg2;pn++;
     } else {
-        // pg1 : LOT 1 seul (avec options) — pas de lot2Desc pour éviter overflow
+        // pg1 : LOT 1 seul — pas de lot2Desc pour éviter overflow
         pg1+=ite_dvFT(1,tp)+'</div>';
         var pn=2,allPages=pg1;
-        // pg2 : LOT 2 description + détail complet
+        // Page options si présentes
+        if(hasOptions){
+            var pgOpt='<div class="ite-page">'+dv_subHeader(num,df,nom)+optionsBlock+ite_dvFT(pn,tp)+'</div>';
+            allPages+=pgOpt;pn++;
+        }
+        // LOT 2 description + détail complet
         var pg2='<div class="ite-page">'+dv_subHeader(num,df,nom)+lot2Desc+lot2Rows+ite_dvFT(pn,tp)+'</div>';
         allPages+=pg2;pn++;
         if(hasLot3){
-            // pg3 : LOT 3 description + détail complet (page dédiée)
+            // LOT 3 description + détail complet (page dédiée)
             var pg3='<div class="ite-page">'+dv_subHeader(num,df,nom)+lot3Desc+lot3Rows+ite_dvFT(pn,tp)+'</div>';
             allPages+=pg3;pn++;
-            // pg4 : conditions + totals + legal
+            // conditions + totals + legal
             var pg4='<div class="ite-page">'+dv_subHeaderLight(num,df,nom)+condBlock+totauxBlock+legalBlock+ite_dvFT(pn,tp)+'</div>';
             allPages+=pg4;pn++;
         } else {
-            // pg3: conditions + totals + legal
+            // conditions + totals + legal
             var pg3='<div class="ite-page">'+dv_subHeaderLight(num,df,nom)+condBlock+totauxBlock+legalBlock+ite_dvFT(pn,tp)+'</div>';
             allPages+=pg3;pn++;
         }
