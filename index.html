@@ -7854,7 +7854,7 @@ function ite_generateDevis(){
         var finTAEG=dr?(dr.teg_display||'0')+'%':'0%';
         var finTNC=dr?(dr.tnc_display||'0')+'%':'0%';
         var finDureeContrat=dr?(dr.duree_du_contract_de_credit||fDuree):fDuree;
-        var finReport=dr&&dr.postpone?(dr.pponeval||'0')+' mois':'0 mois';
+        var finReport=dr&&dr.postpone?(parseInt(finDureeContrat)-parseInt(fDuree)+1)+' mois':'0 mois';
         var finCoutCredit=dr?(dr.cout_du_credit||'0,00')+' \u20AC':'0,00 \u20AC';
         var finFraisDossier=dr?(dr.frais_de_dossier||'0,00')+' \u20AC':'0,00 \u20AC';
         var finProduit=dr?(dr.equipment_name||'ECO-PTZ'):'ECO-PTZ';
