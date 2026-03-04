@@ -3433,13 +3433,23 @@
                 <div class="dark-section-title">Estimation financière</div>
 
                 <div class="result-row-card">
-                    <div class="rrc-label">MaPrimeRénov'</div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <label style="display: flex; align-items: center; cursor: pointer; gap: 4px;">
+                            <input type="checkbox" id="deduireMPR" checked onchange="calc()" style="accent-color: #22c55e; width: 16px; height: 16px; cursor: pointer;">
+                            <span class="rrc-label" style="margin: 0;">MaPrimeRénov'</span>
+                        </label>
+                    </div>
                     <div class="rrc-value green" id="aidesMPR" style="font-size: 18px;">&mdash;</div>
                 </div>
 
                 <div class="result-row-card">
                     <div>
-                        <div class="rrc-label">Certificats CEE</div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <label style="display: flex; align-items: center; cursor: pointer; gap: 4px;">
+                                <input type="checkbox" id="deduireCEE" checked onchange="calc()" style="accent-color: #22c55e; width: 16px; height: 16px; cursor: pointer;">
+                                <span class="rrc-label" style="margin: 0;">Certificats CEE</span>
+                            </label>
+                        </div>
                         <div style="font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 2px;" id="ceeSourceLabel">BAR-TH détaillé</div>
                     </div>
                     <div class="rrc-value green" id="aidesCEE" style="font-size: 18px;">&mdash;</div>
@@ -4139,6 +4149,19 @@ let _calcRunning = false;
 let lastCEEDetailPrime = 0;
 let lastCEEDetailKwhc = 0;
 
+// TTC depuis les prix manuels PAC/Pose/Ballon/SSC
+function getPacManualTTC(){
+    var p=parseFloat(document.getElementById('prixPAC').value)||0;
+    var pp=parseFloat(document.getElementById('prixPose').value)||0;
+    var wb=ite_V('includeBallon')==='oui';
+    var pb=wb?(parseFloat(document.getElementById('prixBallon').value)||0):0;
+    var ppb=wb?(parseFloat(document.getElementById('prixPoseBallon').value)||0):0;
+    var ws=ite_V('includeSSC')==='oui';
+    var ps=ws?(parseFloat(document.getElementById('prixSSC').value)||0):0;
+    var pps=ws?(parseFloat(document.getElementById('prixPoseSSC').value)||0):0;
+    return p+pp+pb+ppb+ps+pps;
+}
+
 function toggleCEE() {
     const body = document.getElementById('ceeBody');
     const arrow = document.getElementById('ceeToggleArrow');
@@ -4505,7 +4528,7 @@ function calc(){
             tt=parseFloat(document.getElementById('totalTTCInput').value)||0;
         }
     }else{
-        tt=D.TTC[sc]||0;
+        tt=getPacManualTTC();
     }
     
     const ad=(D.MPR[sc]&&D.MPR[sc][ct])?D.MPR[sc][ct]:0;
@@ -4744,6 +4767,9 @@ function calcRAC(rb,ch,ta,taForMarge,tt,proRB){
         icon.textContent='\u274C';
         txt.textContent='Dossier refusé';
     }
+
+    // Activer/désactiver le bloc financement avec le RAC
+    updatePacFinanceBlock(rc);
 }
 
 function shareDevis(){
@@ -4787,11 +4813,11 @@ function updatePct(){
         const lockTTC=document.getElementById('lockTTC').checked;
         tt = lockTTC ? (D.TTC[sc] || 0) : (parseFloat(document.getElementById('totalTTCInput').value)||0);
     }else{
-        tt=D.TTC[sc]||0;
+        tt=getPacManualTTC();
     }
-    
+
     const ad=(D.MPR[sc]&&D.MPR[sc][ct])?D.MPR[sc][ct]:0;
-    
+
     let ch;
     if(mode){
         const lockCoutHT=document.getElementById('lockCoutHT').checked;
@@ -4813,21 +4839,21 @@ function updatePct(){
             if(document.getElementById('checkPrevisite').checked) ch += parseFloat(document.getElementById('coutPrevisite').value)||0;
         }
     }else{ ch=getCoutFromDetail(sc, ad); }
-    
+
     let ce = lastCEEDetailPrime;
     let ceForMarge = ce;
     let taForMarge = ad + ceForMarge;
-    
+
     const chForMarge = ch - getPassThrough();
     const ta=ad+ce;
     const rb=tt-ta;
-    
+
     let po=parseFloat(document.getElementById('racPourcent').value)||0;
     if(po>100)po=100; if(po<0)po=0;
     document.getElementById('racPourcent').value=Math.round(po);
     const mo=Math.round(rb*(po/100));
     document.getElementById('racOffert').value=mo;
-    
+
     calcRAC(rb,chForMarge,ta,taForMarge,tt);
 }
 
@@ -4843,7 +4869,7 @@ function updateAmt(){
     if(mode){
         const lockTTC=document.getElementById('lockTTC').checked;
         tt = lockTTC ? (D.TTC[sc] || 0) : (parseFloat(document.getElementById('totalTTCInput').value)||0);
-    }else{ tt=D.TTC[sc]||0; }
+    }else{ tt=getPacManualTTC(); }
     
     const ad=(D.MPR[sc]&&D.MPR[sc][ct])?D.MPR[sc][ct]:0;
     
@@ -8482,6 +8508,8 @@ function pac_generateDevis(){
     var pPAC=ite_N('prixPAC'),pPose=ite_N('prixPose');
     var usage=document.getElementById('usagePAC').value;
     var surfacePAC=ite_V('surfaceClient')||ite_V('ceeSurface')||'100';
+    var surfCl=document.getElementById('surfaceClient').value||'—';
+    var tlog='Maison individuelle / +15 ans / '+surfCl+' m²';
 
     // Déterminer application HT/BT depuis ETAS
     var ev=(p.etas||'').split('/').map(function(s){return parseFloat(s.trim());});
@@ -8519,10 +8547,13 @@ function pac_generateDevis(){
     var ttc=pPAC+pPose+(wBallon?pBallon+pPoseBallon:0)+(wSSC?pSSC+pPoseSSC:0);
     var ht=ttc/(1+tva/100),tvam=ttc-ht;
 
-    // Aides
-    var adTxt=document.getElementById('aidesMPR').textContent.replace(/[^\d]/g,'');
-    var ceTxt=document.getElementById('aidesCEE').textContent.replace(/[^\d]/g,'');
-    var ad=parseFloat(adTxt)||0,ce=parseFloat(ceTxt)||0;
+    // Aides — respecter les checkboxes déduire CEE / MPR
+    var _dvDeduireMPR=document.getElementById('deduireMPR').checked;
+    var _dvDeduireCEE=document.getElementById('deduireCEE').checked;
+    var adBrut=parseFloat(document.getElementById('aidesMPR').textContent.replace(/[^\d]/g,''))||0;
+    var ceBrut=parseFloat(document.getElementById('aidesCEE').textContent.replace(/[^\d]/g,''))||0;
+    var ad=_dvDeduireMPR?adBrut:0;
+    var ce=_dvDeduireCEE?ceBrut:0;
     var totalAides=ad+ce,reste=Math.round(ttc-totalAides);
 
     // kWhc ballon (BAR-TH-148 v27)
@@ -8534,18 +8565,32 @@ function pac_generateDevis(){
 
     var numDevis=num.replace('AVR-','');
 
-    var tp=3; // 3 pages
+    // Financement PAC (même logique que ITE)
+    var wPacFin=PAC_RAC_FINAL>1&&PAC_DOMO_RESULT;
+    var tp=wPacFin?4:3;
 
     // RGE info
     var rgeInfo='Matériel(s) fourni(s) et mis en place par notre société LES ARTISANS VERTS.<br>représentée par TORDJMAN BENJAMIN, SIRET 87806279300038, Certificat rge<br>Numéro QPAC/69719 attribué le 15/02/2026 valable jusqu\'au 15/02/2027';
 
     // ===== PAGE 1 =====
     var pg1='<div class="ite-page">'+dv_logoHeader();
-    pg1+='<div class="dv-title"><span>DEVIS : '+numDevis+' '+nomDevis+'</span></div>';
-    pg1+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:0 6mm;margin-bottom:4mm;font-size:8pt;line-height:1.6;">';
-    pg1+='<div>Numéro Client : <b>'+nc+'</b><br>Date de devis : <b>'+df+'</b><br>Adresse des travaux : <b>'+adr+'</b><br><b>'+vil+'</b></div>';
-    pg1+='<div>'+adr+'<br>'+vil+'<br>Tél : '+tel+'<br>E-mail : '+em+'<br>Zone : <b>'+zn+'</b><br>Précarité : <b>'+precDevis+'</b><br>Type de chauffage : <b>'+tchLong+'</b><br>Type de logement : <b>Maison individuelle / +15 ans</b></div>';
-    pg1+='</div>';
+    pg1+='<div class="dv-title"><span>DEVIS : '+numDevis+'</span><span>'+nomDevis+'</span></div>';
+    pg1+='<div class="dv-info"><div class="dv-info-l">'
+    +'Numéro Client : <b>'+nc+'</b><br>'
+    +'Date de devis : <b>'+df+'</b><br>'
+    +'Date de visite préalable : <b>'+df+'</b><br>'
+    +'Adresse des travaux : '+adr+'<br>'
+    +vil+'<br>'
+    +'Conseiller : <b>'+con+'</b>'
+    +'</div><div class="dv-info-r">'
+    +nom+'<br>'+adr+'<br>'+vil+'<br>'
+    +'Tél : '+tel+'<br>'
+    +'E-mail : '+em+'<br>'
+    +'Zone : <b>'+zn+'</b><br>'
+    +'Précarité : <b>'+precDevis+'</b><br>'
+    +'Type de chauffage : '+tchLong+'<br>'
+    +'Type de logement : '+tlog
+    +'</div></div>';
     pg1+=ite_dvTH();
 
     // === CET (Ballon) en premier si présent (comme le modèle PDF) ===
@@ -8602,7 +8647,7 @@ function pac_generateDevis(){
     // ===== PAGE 2 : Suite PAC (specs + pose) =====
     var pg2='<div class="ite-page">'+dv_subHeader(numDevis,df,nomDevis);
     pg2+='<div style="margin-top:2mm;font-size:8pt;line-height:1.55;">';
-    pg2+='- Prime Coup de pouce CEE : '+ite_fmt(primeCEETotale)+'<br><br>';
+    pg2+='- Prime Coup de pouce CEE : '+ite_fmt(ceBrut)+'<br><br>';
     pg2+=rgeInfo+'</div>';
 
     // Ligne prix PAC matériel
@@ -8653,26 +8698,26 @@ function pac_generateDevis(){
     // ===== PAGE 3 : Conditions + Totaux + Signatures =====
     var pg3='<div class="ite-page">'+dv_subHeader(numDevis,df,nomDevis);
 
-    // Single red box for all conditions (MPR + CEE + Déchets)
+    // Single box for all conditions (MPR + CEE + Déchets)
     pg3+='<div class="dv-cond" style="margin-top:4mm;">';
 
     // Conditions MPR
-    if(ad>0){
+    if(adBrut>0){
         pg3+='<h4>(**) Conditions particulières relatives à l\'aide ANAH / MaPrimeRénov\'</h4>';
-        pg3+='<p>Cette offre est cumulable avec l\'aide MaPrimeRénov\', accordée uniquement après analyse du dossier, d\'un montant estimatif de <b>'+ite_fmt(ad)+'</b>.<br>';
+        pg3+='<p>Cette offre est cumulable avec l\'aide MaPrimeRénov\', accordée uniquement après analyse du dossier, d\'un montant estimatif de <b>'+ite_fmt(adBrut)+'</b>.<br>';
         pg3+='Dans le cas où l\'aide notifiée au client est inférieure au montant de l\'aide prévisionnelle, l\'usager n\'est pas lié par le devis et l\'entreprise s\'engage à proposer un devis rectificatif. Le client conserve alors un droit de rétractation d\'une durée de quatorze jours à partir de la date de présentation du devis rectificatif.<br>';
         pg3+='L\'aide MaPrimeRénov\' est conditionnelle et soumise à la conformité des pièces justificatives et informations déclarées par le bénéficiaire. En cas de fausse déclaration, de manœuvre frauduleuse ou de changement du projet de travaux subventionné, le bénéficiaire s\'expose au retrait et reversement de tout ou partie de l\'aide. Les services de l\'Anah pourront faire procéder à tout contrôle des engagements et sanctionner le bénéficiaire et son mandataire éventuel des manquements constatés.</p>';
     }
 
     // Conditions CEE
     pg3+='<h4 style="text-decoration:underline">Termes et conditions CEE</h4>';
-    pg3+='<p>Tout ou partie des travaux relatifs \u00e0 ce devis ou bon de commande sont \u00e9ligibles \u00e0 une prime d\'un montant de '+ite_fmt(ce)+' euros dont EDF (SIREN 552 081 317) est \u00e0 l\'origine dans le cadre du dispositif des Certificats d\'Economies d\'Energie. Le montant de cette prime ne pourra \u00eatre r\u00e9vis\u00e9 \u00e0 la baisse qu\'en cas de modification du volume de Certificats d\'Economies d\'Energie attach\u00e9 \u00e0 l\'op\u00e9ration ou aux op\u00e9rations d\'\u00e9conomies d\'\u00e9nergie ou de la situation de pr\u00e9carit\u00e9 \u00e9nerg\u00e9tique et ce, de mani\u00e8re proportionnelle. Dans le cadre de la r\u00e9glementation un contr\u00f4le qualit\u00e9 des travaux sur site ou par contact pourra \u00eatre demand\u00e9. Un refus de ce contr\u00f4le sur site ou par contact via EDF ou un prestataire d\'EDF conduira au refus de cette prime par EDF.</p>';
+    pg3+='<p>Tout ou partie des travaux relatifs \u00e0 ce devis ou bon de commande sont \u00e9ligibles \u00e0 une prime d\'un montant de '+ite_fmt(ceBrut)+' euros dont EDF (SIREN 552 081 317) est \u00e0 l\'origine dans le cadre du dispositif des Certificats d\'Economies d\'Energie. Le montant de cette prime ne pourra \u00eatre r\u00e9vis\u00e9 \u00e0 la baisse qu\'en cas de modification du volume de Certificats d\'Economies d\'Energie attach\u00e9 \u00e0 l\'op\u00e9ration ou aux op\u00e9rations d\'\u00e9conomies d\'\u00e9nergie ou de la situation de pr\u00e9carit\u00e9 \u00e9nerg\u00e9tique et ce, de mani\u00e8re proportionnelle. Dans le cadre de la r\u00e9glementation un contr\u00f4le qualit\u00e9 des travaux sur site ou par contact pourra \u00eatre demand\u00e9. Un refus de ce contr\u00f4le sur site ou par contact via EDF ou un prestataire d\'EDF conduira au refus de cette prime par EDF.</p>';
 
     // Gestion déchets
     pg3+='<b>Gestion des déchets</b><br>';
     pg3+='Gestion, évacuation et traitements des déchets de chantier comprenant la main d\'œuvre liée à la dépose et au tri, le transport des déchets de chantiers vers un ou plusieurs points de collecte et coûts de traitement.';
 
-    pg3+='</div>'; // end single red box
+    pg3+='</div>'; // end conditions box
 
     // Signature + Totaux
     pg3+='<div class="dv-totaux">';
@@ -8703,7 +8748,55 @@ function pac_generateDevis(){
 
     pg3+=ite_dvFT(3,tp)+'</div>';
 
-    document.getElementById('pacDevisArea').innerHTML=pg1+pg2+pg3;
+    // ===== PAGE 4 (optionnelle) : Financement Domofinance =====
+    var pg4='';
+    if(wPacFin){
+        var pdr=PAC_DOMO_RESULT;
+        var pfMensHA=parseFloat((pdr.mensualite1||'0').replace(/\s/g,'').replace(',','.'))||0;
+        var pfMensAA=parseFloat((pdr.mens1_ins_lin||'0').replace(/\s/g,'').replace(',','.'))||0;
+        var pfDuree=document.getElementById('pacDureeMois')?document.getElementById('pacDureeMois').value:'120';
+        var pfTAEG=(pdr.teg_display||'-')+'%';
+        var pfTNC=(pdr.tnc_display||'-')+'%';
+        var pfCout=(pdr.cout_du_credit||'-')+' \u20AC';
+        var pfFrais=(pdr.frais_de_dossier||'-')+' \u20AC';
+        var pfDureeContrat=pdr.duree_du_contract_de_credit||pfDuree;
+        var pfReport=pdr.postpone?(parseInt(pfDureeContrat)-parseInt(pfDuree)+1)+' mois':'0 mois';
+        var pfProduit=pdr.equipment_name||'Domofinance';
+        var pfMontant=Math.round(PAC_RAC_FINAL);
+        var pfTotalHA=Math.round(pfMensHA*parseFloat(pfDuree)*100)/100;
+        var pfTotalAA=Math.round(pfMensAA*parseFloat(pfDuree)*100)/100;
+        var pfAssurance=document.getElementById('pacTypeAssurance')?document.getElementById('pacTypeAssurance').value:'DIM';
+        var villeClean=vil.split(' ').slice(1).join(' ')||'_____';
+
+        pg4='<div class="ite-page">'+dv_subHeaderLight(numDevis,df,nomDevis);
+        pg4+='<div style="font-size:9pt;line-height:1.7;margin-top:4mm;">';
+        pg4+='<b style="font-size:10pt;text-decoration:underline;">Conditions de paiement :</b><br>';
+        pg4+='Mode de règlement : Financement<br>';
+        pg4+='Montant à financer : '+ite_fmt(pfMontant)+'<br>';
+        pg4+='Organisme financier : DOMOFINANCE — Produit : '+pfProduit+'<br>';
+        pg4+='TAEG : '+pfTAEG+'<br>';
+        pg4+='Taux débiteur : '+pfTNC+'<br>';
+        pg4+='Coût du crédit : '+pfCout+'<br>';
+        pg4+='Frais de dossier : '+pfFrais+'<br>';
+        pg4+='Durée du contrat de crédit : '+pfDureeContrat+' mois<br>';
+        pg4+='Remboursement en : '+pfDuree+' mois<br>';
+        pg4+='Mensualité hors assurance : '+ite_fmt(pfMensHA)+'<br>';
+        pg4+='Mensualité avec assurance : '+ite_fmt(pfMensAA)+'<br>';
+        pg4+='Report mensualité : '+pfReport+'<br>';
+        pg4+='Assurance : '+(pfAssurance==='Aucune'?'Non':'Oui')+'<br>';
+        pg4+='Type d\u2019assurance : '+pfAssurance+'<br>';
+        pg4+='Montant total dû hors assurance : '+ite_fmt(pfTotalHA)+'<br>';
+        pg4+='Montant total dû avec assurance : '+ite_fmt(pfTotalAA);
+        pg4+='</div>';
+        // Signatures financement
+        pg4+='<div style="margin-top:8mm;display:flex;gap:20mm;font-size:9pt;line-height:1.8;">';
+        pg4+='<div style="flex:1;border:1px solid #999;padding:4mm;">Fait à : <b>'+villeClean.toUpperCase()+'</b><br>Le :<br><br>Signature du bénéficiaire :</div>';
+        pg4+='<div style="flex:1;border:1px solid #999;padding:4mm;">Nom du représentant LES ARTISANS VERTS : <b>'+con+'</b><br>A : COURBEVOIE<br>Le :<br><br>Signature du représentant'+tamponSVG+'</div>';
+        pg4+='</div>';
+        pg4+=ite_dvFT(4,tp)+'</div>';
+    }
+
+    document.getElementById('pacDevisArea').innerHTML=pg1+pg2+pg3+pg4;
     document.getElementById('pacDevisArea').style.display='block';
     document.getElementById('printArea').style.display='none';
     downloadDevisPDF('pacDevisArea','DEVIS-'+numDevis+'-'+nom.replace(/\s+/g,'_')+'.pdf');
