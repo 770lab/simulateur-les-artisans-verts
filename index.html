@@ -299,6 +299,41 @@
             font-weight: 700;
             color: #1d1d1f;
         }
+        /* Custom searchable PAC dropdown */
+        .pac-select-wrapper { position: relative; }
+        .pac-select-trigger {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 8px 12px; border: 1.5px solid #d1d5db; border-radius: 8px;
+            background: #fff; cursor: pointer; font-size: 13px; color: #1d1d1f;
+            transition: border-color 0.15s;
+        }
+        .pac-select-trigger:hover { border-color: #22c55e; }
+        .pac-select-trigger.open { border-color: #22c55e; border-radius: 8px 8px 0 0; }
+        .pac-select-trigger span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .pac-select-dropdown {
+            display: none; position: absolute; top: 100%; left: 0; right: 0;
+            background: #fff; border: 1.5px solid #22c55e; border-top: none;
+            border-radius: 0 0 8px 8px; z-index: 999; max-height: 280px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+        .pac-select-dropdown.open { display: block; }
+        .pac-select-search-wrap { padding: 8px; border-bottom: 1px solid #e5e7eb; }
+        .pac-select-search {
+            width: 100%; padding: 7px 10px; border: 1.5px solid #d1d5db; border-radius: 6px;
+            font-size: 13px; outline: none; box-sizing: border-box;
+        }
+        .pac-select-search:focus { border-color: #22c55e; }
+        .pac-select-options { overflow-y: auto; max-height: 220px; }
+        .pac-select-opt {
+            padding: 8px 12px; cursor: pointer; font-size: 13px; color: #374151;
+            border-bottom: 1px solid #f3f4f6; transition: background 0.1s;
+        }
+        .pac-select-opt:hover { background: #f0fdf4; color: #15803d; }
+        .pac-select-opt.active { background: #dcfce7; color: #15803d; font-weight: 600; }
+        .pac-select-opt:last-child { border-bottom: none; }
+        .pac-select-opt .pac-opt-brand { font-weight: 600; color: #15803d; }
+        .pac-select-opt .pac-opt-detail { font-size: 11px; color: #6b7280; display: block; margin-top: 2px; }
+        .pac-select-no-result { padding: 12px; text-align: center; color: #94a3b8; font-size: 12px; }
         .produit-opt-section {
             display: none;
             margin-top: 8px;
@@ -2802,7 +2837,7 @@
                     <option value="ge140" selected>ge140</option>
                 </select>
                 <div style="display:none;">
-                    <select id="menageCEE" onchange="calcCEEDetail()">
+                    <select id="menageCEE" onchange="var lpc=document.getElementById('lockPrixCumac');if(lpc)lpc.value='0';calcCEEDetail()">
                         <option value="tm">Très modestes (12,5 &euro;/MWhc)</option>
                         <option value="autres">Autres ménages (7,5 &euro;/MWhc)</option>
                     </select>
@@ -2903,38 +2938,20 @@
                     </div>
                     <div class="form-group" style="margin-bottom: 10px;">
                         <label>Mod&egrave;le PAC</label>
-                        <input type="text" id="marquePAC" list="marquePACList" placeholder="Tapez ou s&eacute;lectionnez un mod&egrave;le" autocomplete="off" oninput="onMarquePACInput()">
+                        <input type="hidden" id="marquePAC" value="">
                         <input type="hidden" id="marquePACKey" value="">
-                        <datalist id="marquePACList">
-                            <option value="THALEOS 4kW Mono">
-                            <option value="THALEOS 6kW Mono">
-                            <option value="THALEOS 8kW Mono">
-                            <option value="THALEOS 10kW Mono">
-                            <option value="THALEOS 12kW Mono">
-                            <option value="THALEOS 14kW Mono">
-                            <option value="THALEOS 16kW Mono">
-                            <option value="THALEOS 8kW Tri">
-                            <option value="THALEOS 10kW Tri">
-                            <option value="THALEOS 12kW Tri">
-                            <option value="THALEOS 14kW Tri">
-                            <option value="THALEOS 16kW Tri">
-                            <option value="WELLEA 12kW Tri">
-                            <option value="WELLEA 14kW Tri">
-                            <option value="WELLEA 16kW Tri">
-                            <option value="WELLEA 16kW Mono">
-                            <option value="WOLF 5kW Mono">
-                            <option value="WOLF 6kW Mono">
-                            <option value="WOLF 8kW Mono">
-                            <option value="WOLF 11kW Mono">
-                            <option value="WOLF 14kW Mono">
-                            <option value="WOLF 14kW Tri">
-                            <option value="Clivet Edge EVO 22kW Tri">
-                            <option value="Clivet Edge EVO 26kW Tri">
-                            <option value="Clivet Edge EVO 30kW Tri">
-                            <option value="FHE Inelio 22kW Tri">
-                            <option value="FHE Inelio 26kW Tri">
-                            <option value="FHE Inelio 30kW Tri">
-                        </datalist>
+                        <div class="pac-select-wrapper" id="pacSelectWrapper">
+                            <div class="pac-select-trigger" id="pacSelectTrigger" onclick="togglePacDropdown()">
+                                <span id="pacSelectLabel">Choisir un mod&egrave;le...</span>
+                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="flex-shrink:0;"><path d="M2.5 4.5L6 8L9.5 4.5" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </div>
+                            <div class="pac-select-dropdown" id="pacSelectDropdown">
+                                <div class="pac-select-search-wrap">
+                                    <input type="text" id="pacSearchInput" class="pac-select-search" placeholder="Rechercher une PAC..." oninput="filterPacOptions()" autocomplete="off">
+                                </div>
+                                <div class="pac-select-options" id="pacSelectOptions"></div>
+                            </div>
+                        </div>
                     </div>
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px;">
                         <div class="form-group" style="margin-bottom:0;">
@@ -3293,7 +3310,8 @@
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                     <div class="form-group" style="margin-bottom: 0;">
                         <label for="prixCumac">Prix cumac (&euro;/MWhc) &mdash; auto selon ménage</label>
-                        <input type="number" id="prixCumac" value="12.5" step="0.01" oninput="calc()" style="font-weight: 600;">
+                        <input type="number" id="prixCumac" value="12.5" step="0.01" oninput="document.getElementById('lockPrixCumac').value='1';calc()" style="font-weight: 600;">
+                        <input type="hidden" id="lockPrixCumac" value="0">
                     </div>
 
                     <div class="form-group" style="margin-bottom: 0;">
@@ -4468,20 +4486,22 @@ function onScenarioVisibleChange(val) {
     // Show/hide blocs
     var isSSC = (val === 'SSC');
     var hasPAC = !isSSC;
-    var hasBallon = (val === 'PAC + BALLON THERMO');
+    var hasBallon = (val === 'PAC + BALLON THERMO' || val === 'PAC + BALLON ÉLECTRIQUE');
     var hasSSC = (val === 'PAC + SSC' || val === 'SSC');
     // Toggle PAC bloc
     var blocPAC = document.getElementById('blocPAC');
     if (blocPAC) blocPAC.style.display = hasPAC ? '' : 'none';
-    // Toggle Ballon include & section
+    // Toggle Ballon include & section (skip autoSync to avoid overriding explicit button choice)
     var balSel = document.getElementById('includeBallon');
     if (balSel) { balSel.value = hasBallon ? 'oui' : 'non'; }
-    toggleProduitOpt('ballonOpt', hasBallon);
+    var ballonEl = document.getElementById('ballonOpt');
+    if (ballonEl) ballonEl.style.display = hasBallon ? 'block' : 'none';
     // Toggle SSC include & section
     var sscSel = document.getElementById('includeSSC');
     if (sscSel) { sscSel.value = hasSSC ? 'oui' : 'non'; }
-    toggleProduitOpt('sscOpt', hasSSC);
-    // Trigger scenario change
+    var sscEl = document.getElementById('sscOpt');
+    if (sscEl) sscEl.style.display = hasSSC ? 'block' : 'none';
+    // Trigger scenario change (without autoSyncScenario which would override the explicit choice)
     syncEtasFromPAC();
     onScenarioChange();
 }
@@ -4548,7 +4568,8 @@ function calcCEEDetail() {
     const sc = document.getElementById('scenario').value;
     const zn = document.getElementById('zone').value;
     const menage = document.getElementById('menageCEE').value;
-    const price = CEE_PRICE[menage] || CEE_PRICE.autres;
+    const lockPC = document.getElementById('lockPrixCumac');
+    const price = (lockPC && lockPC.value==='1') ? (parseFloat(document.getElementById('prixCumac').value)||CEE_PRICE.autres) : (CEE_PRICE[menage] || CEE_PRICE.autres);
     const tl = document.getElementById('typeLogement').value;
     const surfaceVal = document.getElementById('surface').value;
     const coefS = getSurfaceCoef(surfaceVal);
@@ -4745,6 +4766,118 @@ function onMarquePACInput() {
         if (el) el.innerHTML = val ? '<i style="color:#94a3b8;">Mod\u00e8le personnalis\u00e9 — donn\u00e9es non disponibles</i>' : '';
     }
 }
+
+// === PAC Searchable Dropdown ===
+function buildPacOptions() {
+    var container = document.getElementById('pacSelectOptions');
+    if (!container) return;
+    container.innerHTML = '';
+    var names = Object.keys(PAC_NAME_TO_KEY);
+    // Group by brand
+    var brands = {};
+    names.forEach(function(name) {
+        var key = PAC_NAME_TO_KEY[name];
+        var p = PAC_CATALOG[key];
+        var brand = p ? p.m : name.split(' ')[0];
+        if (!brands[brand]) brands[brand] = [];
+        brands[brand].push({ name: name, key: key, data: p });
+    });
+    Object.keys(brands).forEach(function(brand) {
+        brands[brand].forEach(function(item) {
+            var div = document.createElement('div');
+            div.className = 'pac-select-opt';
+            div.setAttribute('data-name', item.name);
+            div.setAttribute('data-key', item.key);
+            div.setAttribute('data-brand', brand.toLowerCase());
+            var detail = '';
+            if (item.data) {
+                detail = item.data.cls + ' · ETAS ' + item.data.etas + '% · COP ' + item.data.cop35 + '/' + item.data.cop55 + ' · ' + item.data.ref;
+            }
+            div.innerHTML = '<span class="pac-opt-brand">' + brand + '</span> ' + item.name.replace(brand + ' ', '') +
+                (detail ? '<span class="pac-opt-detail">' + detail + '</span>' : '');
+            div.onclick = function() { selectPacOption(item.name, item.key); };
+            container.appendChild(div);
+        });
+    });
+}
+
+function togglePacDropdown() {
+    var dd = document.getElementById('pacSelectDropdown');
+    var trigger = document.getElementById('pacSelectTrigger');
+    var isOpen = dd.classList.contains('open');
+    if (isOpen) {
+        closePacDropdown();
+    } else {
+        dd.classList.add('open');
+        trigger.classList.add('open');
+        var searchInput = document.getElementById('pacSearchInput');
+        searchInput.value = '';
+        filterPacOptions();
+        setTimeout(function() { searchInput.focus(); }, 50);
+    }
+}
+
+function closePacDropdown() {
+    var dd = document.getElementById('pacSelectDropdown');
+    var trigger = document.getElementById('pacSelectTrigger');
+    if (dd) dd.classList.remove('open');
+    if (trigger) trigger.classList.remove('open');
+}
+
+function filterPacOptions() {
+    var query = (document.getElementById('pacSearchInput').value || '').toLowerCase().trim();
+    var opts = document.querySelectorAll('#pacSelectOptions .pac-select-opt');
+    var visible = 0;
+    opts.forEach(function(opt) {
+        var name = opt.getAttribute('data-name').toLowerCase();
+        var brand = opt.getAttribute('data-brand');
+        var match = !query || name.indexOf(query) !== -1 || brand.indexOf(query) !== -1;
+        opt.style.display = match ? '' : 'none';
+        if (match) visible++;
+    });
+    // No result message
+    var noRes = document.getElementById('pacSelectOptions').querySelector('.pac-select-no-result');
+    if (visible === 0) {
+        if (!noRes) {
+            noRes = document.createElement('div');
+            noRes.className = 'pac-select-no-result';
+            noRes.textContent = 'Aucun résultat';
+            document.getElementById('pacSelectOptions').appendChild(noRes);
+        }
+        noRes.style.display = '';
+    } else if (noRes) {
+        noRes.style.display = 'none';
+    }
+}
+
+function selectPacOption(name, key) {
+    document.getElementById('marquePAC').value = name;
+    document.getElementById('pacSelectLabel').textContent = name;
+    // Mark active
+    document.querySelectorAll('#pacSelectOptions .pac-select-opt').forEach(function(o) {
+        o.classList.toggle('active', o.getAttribute('data-key') === key);
+    });
+    closePacDropdown();
+    onMarquePACInput();
+}
+
+// Close dropdown on outside click
+document.addEventListener('click', function(e) {
+    var wrapper = document.getElementById('pacSelectWrapper');
+    if (wrapper && !wrapper.contains(e.target)) {
+        closePacDropdown();
+    }
+});
+
+// Build options on load
+document.addEventListener('DOMContentLoaded', function() {
+    buildPacOptions();
+    // Restore selection if marquePAC already has a value
+    var cur = document.getElementById('marquePAC').value;
+    if (cur) {
+        document.getElementById('pacSelectLabel').textContent = cur;
+    }
+});
 
 function getCEE(et, zn, cs, sf){
     if(!D.CEE[et]) return 0;
@@ -5011,10 +5144,13 @@ function calc(){
     taForMarge = (_dedMPR ? ad : 0) + ceForMarge;
 
     if(mode){
-        // Sync prixCumac with ménage CEE category
-        const menageVal = document.getElementById('menageCEE').value;
-        const pxAuto = (menageVal === 'tm') ? 12.5 : 7.5;
-        document.getElementById('prixCumac').value = pxAuto;
+        // Sync prixCumac with ménage CEE category (only if not manually edited)
+        var lockPCEl=document.getElementById('lockPrixCumac');
+        if(!lockPCEl || lockPCEl.value==='0'){
+            const menageVal = document.getElementById('menageCEE').value;
+            const pxAuto = (menageVal === 'tm') ? 12.5 : 7.5;
+            document.getElementById('prixCumac').value = pxAuto;
+        }
         document.getElementById('kwhCumac').value=Math.round(lastCEEDetailKwhc).toLocaleString('fr-FR');
     }
 
@@ -6268,8 +6404,11 @@ function autoSelectPAC(targetKW) {
         var pacInput = document.getElementById('marquePAC');
         var pacKeyInput = document.getElementById('marquePACKey');
         if (pacInput && pacKeyInput) {
-            pacInput.value = PAC_KEY_TO_NAME[best.key] || best.key;
+            var dispName = PAC_KEY_TO_NAME[best.key] || best.key;
+            pacInput.value = dispName;
             pacKeyInput.value = best.key;
+            var lbl = document.getElementById('pacSelectLabel');
+            if (lbl) lbl.textContent = dispName;
             updatePAC(); syncEtasFromPAC(); calc(); calcCEEDetail();
         }
     }
@@ -9928,6 +10067,10 @@ function loadDossier(id){
     for(var i=0;i<dossiers.length;i++){if(dossiers[i].id===id){d=dossiers[i];break;}}
     if(!d){alert('Dossier introuvable');return;}
     restoreFields(d.fields);
+    // Sync PAC dropdown label after restore
+    var _pacLbl=document.getElementById('pacSelectLabel');
+    var _pacVal=document.getElementById('marquePAC');
+    if(_pacLbl && _pacVal && _pacVal.value) _pacLbl.textContent=_pacVal.value;
     if(d.type==='ITE') switchTab('ite'); else switchTab('pac');
     try{ite_switchLot2();}catch(e){}
     try{ite_switchLot3();}catch(e){}
