@@ -5395,17 +5395,23 @@ function showApp(){
         var conSel = document.getElementById('iteConseiller');
         if(conSel){
             if(isAdmin){
+                var COMMERCIAUX=[
+                    'ISHAY','YOANN','BEN','JOHN','MENDY','JEAN CHRISTOPHE',
+                    'TELEPRO','DA COSTA','SOFIANE','TESTEUR','ARTHUR',
+                    'BENEDICT JOSEPH','BITTON PATRICK','CANELLA GIANNI',
+                    'COPAIN GONDZA','DA ROCHA THIMOTHEE','DACOSTA THOMAS',
+                    'DUPRES JULIEN','DUVAL BENJAMIN','GABALDON SACHA',
+                    'GONZVA DAVID','HAGEGE DAVID','LECLECH DAMIEN',
+                    'LECLECH MAXIME','LELLOUCHE ETHAN','MOUTY DANIEL',
+                    'OLIVEIRA JEROME','PEREZ JAROD','SAADOUN JEAN PATRICK',
+                    'SITBON YVES','BENDICK BRUNO'
+                ];
                 var opts='<option value="">&mdash; S\u00e9lectionner &mdash;</option>';
-                var names=[];
-                for(var uid in FALLBACK_USERS){
-                    var u=FALLBACK_USERS[uid];
-                    if(u.name && names.indexOf(u.name)===-1){
-                        names.push(u.name);
-                        opts+='<option value="'+u.name+'">'+u.name+'</option>';
-                    }
+                for(var ci=0;ci<COMMERCIAUX.length;ci++){
+                    opts+='<option value="'+COMMERCIAUX[ci]+'">'+COMMERCIAUX[ci]+'</option>';
                 }
                 conSel.innerHTML=opts;
-                conSel.value=currentUser.name;
+                conSel.value=currentUser.name.toUpperCase();
             }else{
                 conSel.innerHTML='<option value="'+currentUser.name+'">'+currentUser.name+'</option>';
                 conSel.value=currentUser.name;
