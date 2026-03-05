@@ -688,7 +688,7 @@
 
         .results-sidebar {
             position: sticky;
-            top: 0;
+            top: var(--header-h, 80px);
             z-index: 90;
             order: -1;
             width: 100%;
@@ -2399,7 +2399,7 @@
                                 <input type="text" id="iteVille" placeholder="75000 Paris">
                             </div>
                         </div>
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+                        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;">
                             <div class="form-group" style="margin-bottom:0;">
                                 <label>Parcelle cadastrale</label>
                                 <input type="text" id="iteParcelle" placeholder="000 / 0E / 1185">
@@ -2448,8 +2448,8 @@
                                 </select>
                             </div>
                         </div>
-                        <!-- Département + Surface + RFR + Foyer -->
-                        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;">
+                        <!-- Département + Surface + RFR + Foyer + Année -->
+                        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;gap:12px;">
                             <div class="form-group" style="margin-bottom:0;">
                                 <label for="departement">D&eacute;partement</label>
                                 <input type="text" id="departement" placeholder="Ex: 33, 75&hellip;" maxlength="3" style="text-align:center;font-weight:600;" oninput="detectDept()">
@@ -2475,11 +2475,10 @@
                                     <option value="8">8 pers.</option>
                                 </select>
                             </div>
-                        </div>
-
-                        <div class="form-group" style="margin-bottom:0;margin-top:12px;">
-                            <label>Année de construction</label>
-                            <input type="number" id="dimAnnee" value="2000" min="1900" max="2026" oninput="evalIsolation(); calcBareme(); calcDim()">
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label for="dimAnnee">Ann&eacute;e construction</label>
+                                <input type="number" id="dimAnnee" value="2000" min="1900" max="2026" style="font-weight:600;" oninput="evalIsolation(); calcBareme(); calcDim()">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -5488,6 +5487,13 @@ function showApp(){
     try { syncProfilPrecarite(); } catch(e){}
     // Load Domofinance products
     try { domoFetchProducts(); } catch(e){ console.warn('domoFetchProducts init error:', e); }
+    // Measure header height for sticky sidebar offset
+    function _syncHeaderH(){
+        var hdr=document.querySelector('.header');
+        if(hdr) document.documentElement.style.setProperty('--header-h', hdr.offsetHeight+'px');
+    }
+    setTimeout(_syncHeaderH, 100);
+    window.addEventListener('resize', _syncHeaderH);
 }
 
 function checkAutoLogin(){
