@@ -2646,7 +2646,7 @@
                                 <select id="iteConseiller"><option value="">&mdash; S&eacute;lectionner &mdash;</option></select>
                             </div>
                         </div>
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+                        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;">
                             <div class="form-group" style="margin-bottom:0;">
                                 <label>Chauffage actuel</label>
                                 <select id="iteTypeChauffage">
@@ -2657,6 +2657,13 @@
                                         <option value="PAC">Pompe à chaleur</option>
                                         <option value="Autre">Autre</option>
                                     </select>
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>Type de logement</label>
+                                <select id="iteTypeLogement" onchange="ite_calc()">
+                                    <option value="maison">Maison</option>
+                                    <option value="appartement">Appartement</option>
+                                </select>
                             </div>
                             <div class="form-group" style="margin-bottom:0;">
                                 <label>Pr&eacute;carit&eacute; CEE (auto)</label>
@@ -6370,17 +6377,23 @@ const ite_fmt=n=>parseFloat(n).toLocaleString('fr-FR',{minimumFractionDigits:2,m
 const ite_fmtN=n=>Math.round(n).toLocaleString('fr-FR');
 
 // CEE EDF baremes
-// CEE EDF — Primes au 01/03/2026 (POLCO: précaire=12€/MWhc, modeste/classique=7.8€/MWhc)
-// "grande" = même que "modeste" (modeste non précaire = classique en €)
+// CEE EDF — Primes au 01/03/2026 (POLCO MI: précaire=12€/MWhc, modeste/classique=7.8€/MWhc)
+// "grande" = très modeste (précaire) ; "modeste"/"classique" = même tarif €/MWhc
 const CEE_ITE_102={classique:{H1:12.48,H2:10.14,H3:6.86},modeste:{H1:12.48,H2:10.14,H3:6.86},grande:{H1:19.20,H2:15.60,H3:10.56}};
 const CEE_ITE_101={classique:{H1:13.26,H2:10.92,H3:7.18},modeste:{H1:13.26,H2:10.92,H3:7.18},grande:{H1:20.40,H2:16.80,H3:11.04}};
 const CEE_ITE_103={classique:{H1:8.58,H2:6.94,H3:4.60},modeste:{H1:8.58,H2:6.94,H3:4.60},grande:{H1:13.20,H2:10.68,H3:7.08}};
-const CEE_ITE_148={classique:121.68,modeste:121.68,grande:187.20};
+// BAR-TH-148 v27 — Primes forfaitaires MI par type logement (cumacs 01/11/2025, rates 01/03/2026)
+// Maison: 14700 kWhc × 7.80 = 114.66 (classique/modeste) ; 14700 × 12.00 = 176.40 (précaire)
+// Appart: 11800 kWhc × 7.80 =  92.04 (classique/modeste) ; 11800 × 12.00 = 141.60 (précaire)
+const CEE_ITE_148={
+    maison:      {classique:114.66, modeste:114.66, grande:176.40},
+    appartement: {classique:92.04,  modeste:92.04,  grande:141.60}
+};
 // Cumacs/m² ou /unité — source EDF 01/03/2026
 const KWHC_102={H1:1600,H2:1300,H3:880};
 const KWHC_101={H1:1700,H2:1400,H3:920};
 const KWHC_103={H1:1100,H2:890,H3:590};
-const KWHC_148=14700;
+const KWHC_148={maison:14700,appartement:11800};
 const ITE_ISOLANT={
     CELLOMUR_120:{ref:'*ISOLATION MURS EXTERIEURS HIRSCH CELLOMUR ULTRA 120 mm',brand:'HIRSCH ISOLATION',thickness:'120',R:'3,85',acermi:'12/081/795'},
     CELLOMUR_140:{ref:'*ISOLATION MURS EXTERIEURS HIRSCH CELLOMUR ULTRA 140 mm',brand:'HIRSCH ISOLATION',thickness:'140',R:'4,50',acermi:'12/081/795'}
@@ -7472,13 +7485,15 @@ function ite_getCEE(){
     var p=ite_V('itePrecarite');
     var s=ite_N('iteSurfaceITE');
     var t2=ite_V('iteTypeLot2');
+    var tl=ite_V('iteTypeLogement')||'maison';
     var c102=(CEE_ITE_102[p]||CEE_ITE_102.classique)[z]||0;
     var p1=s*c102;
     var p2=0,u101=0,u103=0,u148=0;
+    var cee148=(CEE_ITE_148[tl]||CEE_ITE_148.maison);
     if(_iteNbLots>=2){
     if(t2==='101'){u101=(CEE_ITE_101[p]||CEE_ITE_101.classique)[z]||0;p2=ite_N('iteSurface101')*u101;}
     else if(t2==='103'){u103=(CEE_ITE_103[p]||CEE_ITE_103.classique)[z]||0;p2=ite_N('iteSurface103')*u103;}
-    else{u148=CEE_ITE_148[p]||CEE_ITE_148.classique;p2=u148;}
+    else{u148=cee148[p]||cee148.classique;p2=u148;}
     }
     // LOT 3
     var p3=0,u101L3=0,u103L3=0,u148L3=0;
@@ -7486,9 +7501,10 @@ function ite_getCEE(){
         var t3=ite_V('iteTypeLot3');
         if(t3==='101'){u101L3=(CEE_ITE_101[p]||CEE_ITE_101.classique)[z]||0;p3=ite_N('iteSurface101L3')*u101L3;}
         else if(t3==='103'){u103L3=(CEE_ITE_103[p]||CEE_ITE_103.classique)[z]||0;p3=ite_N('iteSurface103L3')*u103L3;}
-        else{u148L3=CEE_ITE_148[p]||CEE_ITE_148.classique;p3=u148L3;}
+        else{u148L3=cee148[p]||cee148.classique;p3=u148L3;}
     }
-    return{p1:p1,p2:p2,p3:p3,total:p1+p2+p3,c102:c102,u101:u101,u103:u103,u148:u148,u101L3:u101L3,u103L3:u103L3,u148L3:u148L3};
+    var kwhc148=(KWHC_148[tl]||KWHC_148.maison);
+    return{p1:p1,p2:p2,p3:p3,total:p1+p2+p3,c102:c102,u101:u101,u103:u103,u148:u148,u101L3:u101L3,u103L3:u103L3,u148L3:u148L3,kwhc148:kwhc148,tl:tl};
 }
 
 function ite_onMontantTotal(){
@@ -7643,15 +7659,16 @@ function ite_calc(){
         :'<div class="ite-alert ite-alert-warn">'+ptzMsg+'</div>';
 
     // CEE Table
+    var tlLabel148=cee.tl==='appartement'?'Appt':'Maison';
     var lot2Row=t2==='101'?'<tr class="active"><td><b>BAR-EN-101</b> Combles</td><td>'+z+'</td><td>'+p+'</td><td>'+ite_N('iteSurface101')+' m\u00b2</td><td>'+cee.u101+' \u20AC/m\u00b2</td><td class="val">'+ite_fmt(cee.p2)+'</td></tr>'
         :t2==='103'?'<tr class="active"><td><b>BAR-EN-103</b> Plancher</td><td>'+z+'</td><td>'+p+'</td><td>'+ite_N('iteSurface103')+' m\u00b2</td><td>'+cee.u103+' \u20AC/m\u00b2</td><td class="val">'+ite_fmt(cee.p2)+'</td></tr>'
-        :'<tr class="active"><td><b>BAR-TH-148</b> CET</td><td>'+z+'</td><td>'+p+'</td><td>1 U</td><td>'+cee.u148+' \u20AC forfait</td><td class="val">'+ite_fmt(cee.p2)+'</td></tr>';
+        :'<tr class="active"><td><b>BAR-TH-148</b> CET ('+tlLabel148+')</td><td>'+z+'</td><td>'+p+'</td><td>1 U &middot; '+cee.kwhc148.toLocaleString('fr-FR')+' kWhc</td><td>'+cee.u148+' \u20AC forfait</td><td class="val">'+ite_fmt(cee.p2)+'</td></tr>';
     var lot3Row='';
     if(hasLot3){
         var t3=ite_V('iteTypeLot3');
         lot3Row=t3==='101'?'<tr class="active"><td><b>BAR-EN-101</b> Combles (L3)</td><td>'+z+'</td><td>'+p+'</td><td>'+ite_N('iteSurface101L3')+' m\u00b2</td><td>'+cee.u101L3+' \u20AC/m\u00b2</td><td class="val">'+ite_fmt(cee.p3)+'</td></tr>'
             :t3==='103'?'<tr class="active"><td><b>BAR-EN-103</b> Plancher (L3)</td><td>'+z+'</td><td>'+p+'</td><td>'+ite_N('iteSurface103L3')+' m\u00b2</td><td>'+cee.u103L3+' \u20AC/m\u00b2</td><td class="val">'+ite_fmt(cee.p3)+'</td></tr>'
-            :'<tr class="active"><td><b>BAR-TH-148</b> CET (L3)</td><td>'+z+'</td><td>'+p+'</td><td>1 U</td><td>'+cee.u148L3+' \u20AC forfait</td><td class="val">'+ite_fmt(cee.p3)+'</td></tr>';
+            :'<tr class="active"><td><b>BAR-TH-148</b> CET L3 ('+tlLabel148+')</td><td>'+z+'</td><td>'+p+'</td><td>1 U &middot; '+cee.kwhc148.toLocaleString('fr-FR')+' kWhc</td><td>'+cee.u148L3+' \u20AC forfait</td><td class="val">'+ite_fmt(cee.p3)+'</td></tr>';
     }
     ite_$('iteCeeTableContainer').innerHTML='<table class="ite-cee-table"><tr><th>Op\u00e9ration</th><th>Zone</th><th>Pr\u00e9carit\u00e9</th><th>Qt\u00e9</th><th>\u20AC/unit\u00e9</th><th style="text-align:right">Prime</th></tr>'
         +'<tr class="active"><td><b>BAR-EN-102</b> ITE</td><td>'+z+'</td><td>'+p+'</td><td>'+sITE+' m\u00b2</td><td>'+cee.c102+' \u20AC/m\u00b2</td><td class="val">'+ite_fmt(cee.p1)+'</td></tr>'
@@ -8056,8 +8073,10 @@ function ite_generateDevis(){
     var adr=ite_V('iteAdresse'),vil=ite_V('iteVille'),tel=ite_V('iteTel'),em=ite_V('iteEmail');
     var zn=document.getElementById('zone').value;
     var prec=ite_V('itePrecarite'),tch=ite_V('iteTypeChauffage');
+    var iteTL=ite_V('iteTypeLogement')||'maison';
     var surfCl=document.getElementById('surfaceClient').value||'\u2014';
-    var tlog='Maison individuelle / +15 ans / '+surfCl+' m\u00b2';
+    var tlog=(iteTL==='appartement'?'Appartement':'Maison individuelle')+' / +15 ans / '+surfCl+' m\u00b2';
+    var kwhc148_devis=(KWHC_148[iteTL]||KWHC_148.maison);
     var con=ite_V('iteConseiller');
     var tva=parseFloat(ite_$('iteTva')?.value)||5.5;
     var precL={classique:'Classique',modeste:'Modeste',grande:'Tr\u00e8s modeste'}[prec]||prec;
@@ -8241,7 +8260,7 @@ function ite_generateDevis(){
         +'Le COP du materiel install\u00e9 est de : '+cop2+' mesur\u00e9 selon les conditions de la norme EN 16147.<br>'
         +'Marque : THALEOS<br>'
         +'R\u00e9f : ** '+cn2+'<br><br>'
-        +'- Kwh Cumac : '+KWHC_148.toLocaleString('fr-FR')+'<br><br>'
+        +'- Kwh Cumac : '+kwhc148_devis.toLocaleString('fr-FR')+'<br><br>'
         +'Mat\u00e9riel(s) fourni(s) et mis en place par notre soci\u00e9t\u00e9 LES ARTISANS VERTS.<br>'
         +'repr\u00e9sent\u00e9e par TORDJMAN BENJAMIN, SIRET 87806279300038, Certificat rge Num\u00e9ro QPAC/69719 attribu\u00e9 le 15/02/2026 valable jusqu\'au 15/02/2027<br>'
         +'. Date de la visite technique : '+df+''
@@ -8353,7 +8372,7 @@ function ite_generateDevis(){
             +'Le COP du materiel install\u00e9 est de : '+cop3+' mesur\u00e9 selon les conditions de la norme EN 16147.<br>'
             +'Marque : THALEOS<br>'
             +'R\u00e9f : ** '+cn3+'<br><br>'
-            +'- Kwh Cumac : '+KWHC_148.toLocaleString('fr-FR')+'<br><br>'
+            +'- Kwh Cumac : '+kwhc148_devis.toLocaleString('fr-FR')+'<br><br>'
             +'Mat\u00e9riel(s) fourni(s) et mis en place par notre soci\u00e9t\u00e9 LES ARTISANS VERTS.<br>'
             +'repr\u00e9sent\u00e9e par TORDJMAN BENJAMIN, SIRET 87806279300038, Certificat rge Num\u00e9ro QPAC/69719 attribu\u00e9 le 15/02/2026 valable jusqu\'au 15/02/2027<br>'
             +'. Date de la visite technique : '+df+''
@@ -9290,8 +9309,9 @@ function pac_generateDevis(){
     var ce=_dvDeduireCEE?ceBrut:0;
     var totalAides=ad+ce,reste=Math.round(ttc-totalAides);
 
-    // kWhc ballon (BAR-TH-148 v27)
-    var kwhcBallon=wBallon?14700:0;
+    // kWhc ballon (BAR-TH-148 v27) — adapté au type logement
+    var pacTL=document.getElementById('typeLogement').value||'maison';
+    var kwhcBallon=wBallon?(BAR148[pacTL]||14700):0;
     var primeCEEBallon=wBallon?(kwhcBallon/1000*(ite_N('prixCumac')||7)):0;
 
     // Prime CEE totale du devis
@@ -9737,7 +9757,7 @@ function updateDossierStatus(id, status) {
 var DOSSIER_KEY = 'lav_dossiers';
 var DOSSIER_FIELDS = [
     'nom','prenom','iteAdresse','iteVille','iteTel','iteEmail',
-    'iteNumDevis','iteDateDevis','iteConseiller','iteTypeChauffage','itePrecarite',
+    'iteNumDevis','iteDateDevis','iteConseiller','iteTypeChauffage','iteTypeLogement','itePrecarite',
     'surfaceClient','zone','categorie',
     'iteSurfaceITE','iteMontantLot1','itePrixMatITE','itePrixMoITE','iteIsolantITE','iteCodeCouleurCrepi',
     'iteSousTraitITE','iteSiretSousTraitITE','iteRgeSousTraitITE','iteCouleurCrepi','iteEnduitITE',
