@@ -3692,8 +3692,8 @@
                     <div class="sidebar-card-group">
                         <button id="exportBtn" onclick="exportPDF()" class="sidebar-action-btn sidebar-btn-devis">&#128196; Devis PAC</button>
                     </div>
-                    <!-- PTZ -->
-                    <div class="sidebar-card-group">
+                    <!-- PTZ (admin only) -->
+                    <div class="sidebar-card-group" id="pacPtzGroup" style="display:none;">
                         <button onclick="pac_generatePTZ()" class="sidebar-action-btn sidebar-btn-ptz">&#127963;&#65039; PTZ</button>
                     </div>
                     <!-- Signature -->
@@ -4388,14 +4388,16 @@ let _calcRunning = false;
 let lastCEEDetailPrime = 0;
 let lastCEEDetailKwhc = 0;
 
-// TTC depuis les prix manuels PAC/Pose/Ballon/SSC
+// TTC depuis les prix manuels PAC/Pose/Ballon/SSC — PAC UNIQUEMENT (aucune donnée ITE)
 function getPacManualTTC(){
     var p=parseFloat(document.getElementById('prixPAC').value)||0;
     var pp=parseFloat(document.getElementById('prixPose').value)||0;
-    var wb=ite_V('includeBallon')==='oui';
+    var inclBEl=document.getElementById('includeBallon');
+    var wb=inclBEl && inclBEl.value==='oui';
     var pb=wb?(parseFloat(document.getElementById('prixBallon').value)||0):0;
     var ppb=wb?(parseFloat(document.getElementById('prixPoseBallon').value)||0):0;
-    var ws=ite_V('includeSSC')==='oui';
+    var inclSEl=document.getElementById('includeSSC');
+    var ws=inclSEl && inclSEl.value==='oui';
     var ps=ws?(parseFloat(document.getElementById('prixSSC').value)||0):0;
     var pps=ws?(parseFloat(document.getElementById('prixPoseSSC').value)||0):0;
     return p+pp+pb+ppb+ps+pps;
@@ -5443,12 +5445,16 @@ function switchView(v){
         mc.classList.add('fournisseur-mode');
         togF.classList.add('active');
         document.getElementById('tabITE').style.display='';
+        // Restaurer le display CSS des éléments ITE (nettoyage après vue client)
+        document.querySelectorAll('.tab-ite-content').forEach(function(el){ el.style.display=''; });
         logAction('Vue fournisseur', '');
     } else if(v === 'telepro'){
         mode = 1;
         mc.classList.add('telepro-mode');
         if(togT) togT.classList.add('active');
         document.getElementById('tabITE').style.display='';
+        // Restaurer le display CSS des éléments ITE (nettoyage après vue client)
+        document.querySelectorAll('.tab-ite-content').forEach(function(el){ el.style.display=''; });
         logAction('Vue telepro', '');
     } else {
         mode = 0;
@@ -5456,6 +5462,8 @@ function switchView(v){
         document.getElementById('tabITE').style.display='none';
         // Force PAC tab in client view (ITE not available)
         switchTab('pac');
+        // Défense : masquer explicitement tout contenu ITE (sidebar incluse)
+        document.querySelectorAll('.tab-ite-content').forEach(function(el){ el.style.display='none'; });
     }
     try{ calc(); }catch(e){}
 }
@@ -5517,6 +5525,9 @@ function showApp(){
         document.getElementById('btnPwd').style.display = isAdmin ? '' : 'none';
         document.getElementById('btnAddUser').style.display = isAdmin ? '' : 'none';
         document.getElementById('btnDashboard').style.display = isAdmin ? '' : 'none';
+        // PTZ PAC : admin only
+        var pacPtzGrp = document.getElementById('pacPtzGroup');
+        if(pacPtzGrp) pacPtzGrp.style.display = isAdmin ? '' : 'none';
         // Dossier button for all logged-in users
         document.getElementById('btnDossiers').style.display = '';
         
@@ -9077,23 +9088,25 @@ function pac_generateDevis(){
     var phase=(p.a||'').indexOf('3Ph')>=0?'Triphasée':'Monophasée';
     var phaseShort=phase==='Triphasée'?'Triphasée':'Monophasée';
 
-    // Ballon
-    var wBallon=ite_V('includeBallon')==='oui';
+    // Ballon (lecture directe des champs PAC, pas via ite_V)
+    var inclBallonEl=document.getElementById('includeBallon');
+    var wBallon=inclBallonEl && inclBallonEl.value==='oui';
     var ballonRef='',ballonKey='',pBallon=0,pPoseBallon=0,copB='',cetSpecs=null;
     if(wBallon){
         var bEl=document.getElementById('refBallon');
         ballonKey=bEl.value;
         ballonRef=bEl.options[bEl.selectedIndex].text;
-        pBallon=ite_N('prixBallon');
-        pPoseBallon=ite_N('prixPoseBallon');
-        copB=ite_V('copBallon');
+        pBallon=parseFloat(document.getElementById('prixBallon').value)||0;
+        pPoseBallon=parseFloat(document.getElementById('prixPoseBallon').value)||0;
+        copB=(document.getElementById('copBallon').value||'').trim();
         cetSpecs=CET_SPECS[ballonKey]||CET_SPECS['PERFORMER2_200L'];
     }
 
-    // SSC
-    var wSSC=ite_V('includeSSC')==='oui';
+    // SSC (lecture directe des champs PAC)
+    var inclSSCEl=document.getElementById('includeSSC');
+    var wSSC=inclSSCEl && inclSSCEl.value==='oui';
     var sscRef='',pSSC=0,pPoseSSC=0;
-    if(wSSC){sscRef=document.getElementById('refSSC').options[document.getElementById('refSSC').selectedIndex].text;pSSC=ite_N('prixSSC');pPoseSSC=ite_N('prixPoseSSC');}
+    if(wSSC){sscRef=document.getElementById('refSSC').options[document.getElementById('refSSC').selectedIndex].text;pSSC=parseFloat(document.getElementById('prixSSC').value)||0;pPoseSSC=parseFloat(document.getElementById('prixPoseSSC').value)||0;}
 
     // Totaux
     var ttc=pPAC+pPose+(wBallon?pBallon+pPoseBallon:0)+(wSSC?pSSC+pPoseSSC:0);
