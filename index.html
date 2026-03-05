@@ -3582,7 +3582,7 @@
                     <!-- CEE + checkbox -->
                     <div class="sidebar-card-group">
                         <div class="result-row-card">
-                            <div class="rrc-label">CEE <span id="ceeSourceLabel" style="font-size:8px;color:rgba(255,255,255,0.25);margin-left:2px;">BAR-TH</span></div>
+                            <div class="rrc-label">CEE</div>
                             <div class="rrc-value green" id="aidesCEE">&mdash;</div>
                         </div>
                         <div class="sidebar-card-check"><input type="checkbox" id="deduireCEE" checked onchange="calc()" title="D&eacute;duire CEE"></div>
@@ -4838,7 +4838,7 @@ function calc(){
     document.getElementById('aidesMPR').textContent=_dedMPR ? fmt(ad) : '0 \u20AC';
     document.getElementById('aidesCEE').textContent=_dedCEE ? fmt(ceDisplay) : '0 \u20AC';
     document.getElementById('totalAides').textContent=fmt(ta);
-    document.getElementById('ceeSourceLabel').textContent=ceeSourceText;
+    var _csl=document.getElementById('ceeSourceLabel');if(_csl)_csl.textContent=ceeSourceText;
     
     if(mode) document.getElementById('displayCoutHT').textContent=fmt(ch);
     
