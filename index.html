@@ -7191,15 +7191,49 @@ function ite_setNbLots(n, btn) {
         }
         domoOnProductChange();
     }
+    // Synchroniser les selects lot2/lot3 pour éviter les doublons
+    if(n >= 2) ite_syncLotSelects();
     // Recalculate
     ite_calc();
 }
 
+function ite_syncLotSelects(){
+    var sel2=ite_$('iteTypeLot2'),sel3=ite_$('iteTypeLot3');
+    if(!sel2||!sel3)return;
+    var v2=sel2.value,v3=sel3.value;
+    // Désactiver dans lot3 l'option choisie en lot2
+    for(var i=0;i<sel3.options.length;i++){
+        sel3.options[i].disabled=(sel3.options[i].value===v2);
+    }
+    // Désactiver dans lot2 l'option choisie en lot3 (si 3 lots actifs)
+    if(_iteNbLots>=3){
+        for(var i=0;i<sel2.options.length;i++){
+            sel2.options[i].disabled=(sel2.options[i].value===v3);
+        }
+    } else {
+        for(var i=0;i<sel2.options.length;i++) sel2.options[i].disabled=false;
+    }
+    // Si la sélection courante de lot3 est désactivée, basculer sur la première option libre
+    if(sel3.options[sel3.selectedIndex]&&sel3.options[sel3.selectedIndex].disabled){
+        for(var i=0;i<sel3.options.length;i++){
+            if(!sel3.options[i].disabled){sel3.value=sel3.options[i].value;break;}
+        }
+        ite_switchLot3();ite_calc();
+    }
+    // Idem pour lot2
+    if(sel2.options[sel2.selectedIndex]&&sel2.options[sel2.selectedIndex].disabled){
+        for(var i=0;i<sel2.options.length;i++){
+            if(!sel2.options[i].disabled){sel2.value=sel2.options[i].value;break;}
+        }
+        ite_switchLot2();ite_calc();
+    }
+}
 function ite_switchLot2(){
     var t=ite_V('iteTypeLot2');
     ite_$('iteCard101').style.display=t==='101'?'block':'none';
     ite_$('iteCard103').style.display=t==='103'?'block':'none';
     ite_$('iteCard148').style.display=t==='148'?'block':'none';
+    ite_syncLotSelects();
 }
 
 function ite_getLot2Total(){
@@ -7238,6 +7272,7 @@ function ite_switchLot3(){
         else if(t==='103')ite_$('iteCard103L3').style.display='block';
         else ite_$('iteCard148L3').style.display='block';
     }
+    ite_syncLotSelects();
 }
 
 function ite_getLot3Total(){
