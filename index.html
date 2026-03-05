@@ -749,19 +749,14 @@
             /* Card needs relative for checkbox positioning */
             .sidebar-row1 .result-row-card { position: relative; }
             /* TTC editable card visual cue */
-            .sidebar-card-edit-indicator { display: none; }
-            .ttc-editable-active { border-color: rgba(96,165,250,0.5) !important; box-shadow: 0 0 0 1px rgba(96,165,250,0.25); }
             .ttc-editable-active .rrc-value {
-                border-bottom: 1.5px dashed rgba(96,165,250,0.6);
-                padding-bottom: 1px;
-                animation: ttcBlink 1.5s ease-in-out infinite;
+                border: 1.5px solid rgba(96,165,250,0.6);
+                border-radius: 6px;
+                padding: 2px 8px;
+                background: rgba(96,165,250,0.08);
+                cursor: text !important;
             }
-            @keyframes ttcBlink {
-                0%, 100% { border-color: rgba(96,165,250,0.6); }
-                50% { border-color: rgba(96,165,250,0.15); }
-            }
-            .ttc-editable-locked .rrc-value { cursor: default !important; border-bottom: none !important; animation: none !important; }
-            .ttc-editable-locked { border-color: rgba(96,165,250,0.15) !important; box-shadow: none !important; }
+            .ttc-editable-locked .rrc-value { cursor: default !important; }
             /* Remise styled as card - same size as others */
             .sidebar-remise-card {
                 background: rgba(255,255,255,0.04);
@@ -773,7 +768,7 @@
                 align-items: center;
                 gap: 2px;
             }
-            .sidebar-remise-card .remise-label { font-size: 9px; color: rgba(255,255,255,0.45); font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 2px; }
+            .sidebar-remise-card .remise-label { font-size: 11px; color: rgba(255,255,255,0.55); font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 2px; }
             .sidebar-remise-card .remise-inputs { display: flex; align-items: center; gap: 3px; }
             .sidebar-remise-card input[type="number"] {
                 width: 52px; padding: 3px 4px; border-radius: 5px;
@@ -3578,7 +3573,7 @@
                     <!-- TTC (editable fournisseur) + lock -->
                     <div class="sidebar-card-group fournisseur-only">
                         <div class="result-row-card ttc-editable-active" id="ttcEditCard" style="background:rgba(96,165,250,0.08);border-color:rgba(96,165,250,0.15);">
-                            <div class="sidebar-card-check"><input type="checkbox" id="lockTTC" checked onchange="toggleTTCEdit()" title="Modifier TTC"></div>
+                            <div class="sidebar-card-check"><input type="checkbox" id="lockTTC" onchange="toggleTTCEdit()" title="Modifier TTC"></div>
                             <div class="rrc-label">TTC</div>
                             <div class="rrc-value blue" id="totalTTCEditable" contenteditable="true" oninput="onTTCEdit()" style="cursor:text;min-width:60px;">10 890 &euro;</div>
                         </div>
@@ -4595,7 +4590,7 @@ function onTTCEdit(){
     const raw = el.textContent.replace(/[^0-9]/g, '');
     const val = parseInt(raw) || 0;
     document.getElementById('totalTTCInput').value = val;
-    document.getElementById('lockTTC').checked = false;
+    document.getElementById('lockTTC').checked = true;
     toggleTTCEdit();
     calc();
 }
@@ -4604,7 +4599,7 @@ function toggleTTCEdit(){
     var card=document.getElementById('ttcEditCard');
     var editable=document.getElementById('totalTTCEditable');
     if(!cb||!card||!editable)return;
-    var unlocked=!cb.checked;
+    var unlocked=cb.checked;
     if(unlocked){
         card.classList.add('ttc-editable-active');
         card.classList.remove('ttc-editable-locked');
@@ -4750,8 +4745,8 @@ function calc(){
     
     let tt;
     if(mode){
-        const lockTTC=document.getElementById('lockTTC').checked;
-        if(lockTTC){
+        const editTTC=document.getElementById('lockTTC').checked;
+        if(!editTTC){
             tt = D.TTC[sc] || 0;
             document.getElementById('totalTTCInput').value=tt;
             const tte = document.getElementById('totalTTCEditable');
@@ -5056,8 +5051,8 @@ function updatePct(){
     
     let tt;
     if(mode){
-        const lockTTC=document.getElementById('lockTTC').checked;
-        tt = lockTTC ? (D.TTC[sc] || 0) : (parseFloat(document.getElementById('totalTTCInput').value)||0);
+        const editTTC=document.getElementById('lockTTC').checked;
+        tt = editTTC ? (parseFloat(document.getElementById('totalTTCInput').value)||0) : (D.TTC[sc] || 0);
     }else{
         tt=getPacManualTTC();
     }
@@ -5115,8 +5110,8 @@ function updateAmt(){
     
     let tt;
     if(mode){
-        const lockTTC=document.getElementById('lockTTC').checked;
-        tt = lockTTC ? (D.TTC[sc] || 0) : (parseFloat(document.getElementById('totalTTCInput').value)||0);
+        const editTTC=document.getElementById('lockTTC').checked;
+        tt = editTTC ? (parseFloat(document.getElementById('totalTTCInput').value)||0) : (D.TTC[sc] || 0);
     }else{ tt=getPacManualTTC(); }
     
     const ad=(D.MPR[sc]&&D.MPR[sc][ct])?D.MPR[sc][ct]:0;
