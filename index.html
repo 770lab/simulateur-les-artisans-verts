@@ -4692,12 +4692,16 @@ function calc(){
     
     let ce;
     let ceForMarge, taForMarge;
-    
+
+    // Respecter les checkboxes déduire MPR / CEE
+    const _dedMPR = document.getElementById('deduireMPR').checked;
+    const _dedCEE = document.getElementById('deduireCEE').checked;
+
     // Always use detailed CEE calculation (with Coup de pouce)
     ce = lastCEEDetailPrime;
-    ceForMarge = ce;
-    taForMarge = ad + ceForMarge;
-    
+    ceForMarge = _dedCEE ? ce : 0;
+    taForMarge = (_dedMPR ? ad : 0) + ceForMarge;
+
     if(mode){
         // Sync prixCumac with ménage CEE category
         const menageVal = document.getElementById('menageCEE').value;
@@ -4709,8 +4713,10 @@ function calc(){
     const ceDisplay = ce;
     const ceeSourceText = getCEEFiches(sc).map(f => 'BAR-TH-' + f).join(' + ') + ' détaillé';
 
-    const ta=ad+ceDisplay;
-    const rb=tt-ta;
+    const adDisplay = _dedMPR ? ad : 0;
+    const ceDisplayFinal = _dedCEE ? ceDisplay : 0;
+    const ta = adDisplay + ceDisplayFinal;
+    const rb = tt - ta;
 
     // Compute pro-level RAC (prix cumac très modestes) for auto-geste detection
     const proCEE = (lastCEEDetailKwhc / 1000) * 12.5;
@@ -4722,8 +4728,8 @@ function calc(){
     document.getElementById('totalTTC').textContent=fmt(displayTTC);
     const tteSync = document.getElementById('totalTTCEditable');
     if(tteSync && document.activeElement !== tteSync) tteSync.textContent = fmt(tt);
-    document.getElementById('aidesMPR').textContent=fmt(ad);
-    document.getElementById('aidesCEE').textContent=fmt(ceDisplay);
+    document.getElementById('aidesMPR').textContent=_dedMPR ? fmt(ad) : '0 \u20AC';
+    document.getElementById('aidesCEE').textContent=_dedCEE ? fmt(ceDisplay) : '0 \u20AC';
     document.getElementById('totalAides').textContent=fmt(ta);
     document.getElementById('ceeSourceLabel').textContent=ceeSourceText;
     
