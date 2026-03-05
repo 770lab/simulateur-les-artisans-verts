@@ -2266,7 +2266,7 @@
                             </div>
                             <div class="form-group" style="margin-bottom:0;">
                                 <label>Date</label>
-                                <input type="date" id="iteDateDevis" value="2026-02-26">
+                                <input type="date" id="iteDateDevis">
                             </div>
                             <div class="form-group" style="margin-bottom:0;">
                                 <label>Commercial</label>
@@ -4422,6 +4422,10 @@ function onTTCEdit(){
 
 // Prevent Enter from adding linebreaks, and reformat on blur
 document.addEventListener('DOMContentLoaded', function(){
+    // Date du jour par défaut
+    var dd=document.getElementById('iteDateDevis');
+    if(dd&&!dd.value){dd.value=new Date().toISOString().slice(0,10);}
+
     const tte = document.getElementById('totalTTCEditable');
     if(tte){
         tte.addEventListener('keydown', function(e){
