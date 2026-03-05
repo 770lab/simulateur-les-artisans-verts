@@ -2323,73 +2323,10 @@
                             </div>
                         </div>
 
-                        <!-- Puissance PAC recommandée (déplacé depuis baremeCard) -->
-                        <div id="baremeSection" style="margin-top:16px;padding-top:14px;border-top:1px dashed rgba(0,0,0,0.1);">
-                            <h3 style="font-size:14px;font-weight:700;color:#1d1d1f;margin-bottom:4px;">&#128208; Puissance PAC recommandée</h3>
-                            <div style="font-size:12px;color:#64748b;margin-bottom:14px;">Estimation selon la surface, l'année de construction et l'isolation</div>
-                            <input type="hidden" id="baremeSurface" value="100">
-                            <div class="form-group" style="margin-bottom:14px;">
-                                <label>Année de construction</label>
-                                <input type="number" id="dimAnnee" value="2000" min="1900" max="2026" oninput="evalIsolation(); calcBareme(); calcDim()">
-                            </div>
-                            <div style="margin-bottom:14px;">
-                                <label style="font-weight:700;color:#1d1d1f;font-size:14px;display:block;margin-bottom:12px;">Travaux d&eacute;j&agrave; r&eacute;alis&eacute;s</label>
-                                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;" id="isoChecklist">
-                                    <label class="iso-check" onclick="setTimeout(function(){evalIsolation();calcBareme()},10)">
-                                        <input type="checkbox" name="isoWork" value="combles">
-                                        <span class="iso-info"><span class="iso-title">&#127968; Combles / Toiture</span><span class="iso-sub">Souffl&eacute;e, rampants, sarking</span></span>
-                                        <select class="iso-quand" onchange="evalIsolation();calcBareme()"><option value="recent">&lt; 5 ans</option><option value="ancien">&gt; 5 ans</option></select>
-                                    </label>
-                                    <label class="iso-check" onclick="setTimeout(function(){evalIsolation();calcBareme()},10)">
-                                        <input type="checkbox" name="isoWork" value="murs">
-                                        <span class="iso-info"><span class="iso-title">&#129521; Murs (ITE / ITI)</span><span class="iso-sub">Ext&eacute;rieure ou int&eacute;rieure</span></span>
-                                        <select class="iso-quand" onchange="evalIsolation();calcBareme()"><option value="recent">&lt; 5 ans</option><option value="ancien">&gt; 5 ans</option></select>
-                                    </label>
-                                    <label class="iso-check" onclick="setTimeout(function(){evalIsolation();calcBareme()},10)">
-                                        <input type="checkbox" name="isoWork" value="fenetres">
-                                        <span class="iso-info"><span class="iso-title">&#128999; Fen&ecirc;tres DV / TV</span><span class="iso-sub">Double ou triple vitrage</span></span>
-                                        <select class="iso-quand" onchange="evalIsolation();calcBareme()"><option value="recent">&lt; 5 ans</option><option value="ancien">&gt; 5 ans</option></select>
-                                    </label>
-                                    <label class="iso-check" onclick="setTimeout(function(){evalIsolation();calcBareme()},10)">
-                                        <input type="checkbox" name="isoWork" value="plancher">
-                                        <span class="iso-info"><span class="iso-title">&#11015;&#65039; Plancher bas</span><span class="iso-sub">Vide sanitaire, sous-sol</span></span>
-                                        <select class="iso-quand" onchange="evalIsolation();calcBareme()"><option value="recent">&lt; 5 ans</option><option value="ancien">&gt; 5 ans</option></select>
-                                    </label>
-                                    <label class="iso-check" onclick="setTimeout(function(){evalIsolation();calcBareme()},10)" style="grid-column:1/-1;">
-                                        <input type="checkbox" name="isoWork" value="vmc">
-                                        <span class="iso-info"><span class="iso-title">&#128168; VMC double flux</span><span class="iso-sub">Ventilation m&eacute;canique contr&ocirc;l&eacute;e</span></span>
-                                        <select class="iso-quand" onchange="evalIsolation();calcBareme()"><option value="recent">&lt; 5 ans</option><option value="ancien">&gt; 5 ans</option></select>
-                                    </label>
-                                </div>
-                                <div id="isoResult" class="fournisseur-only" style="margin-top:10px;padding:10px 14px;border-radius:8px;font-size:13px;background:#f8fafc;border:1.5px solid #e2e8f0;">
-                                    <span style="font-weight:600;" id="isoStateName">État d'origine / Non précisé</span>
-                                    <span style="color:#64748b;"> &mdash; </span>
-                                    <span style="font-weight:700;color:#16a34a;" id="dimGDisplay">G = 0,95</span>
-                                </div>
-                            </div>
-                            <div id="baremeResult" style="padding:20px;background:linear-gradient(135deg,#f0fdf4,#ecfdf5);border-radius:12px;border:1.5px solid #bbf7d0;">
-                                <div style="font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px;text-align:center;">PAC recommandée</div>
-                                <div id="baremeGauge" style="position:relative;margin:0 auto;max-width:340px;">
-                                    <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
-                                        <span id="baremeLow" style="font-size:20px;font-weight:800;color:#16a34a;">10 kW</span>
-                                        <span id="baremeHigh" style="font-size:20px;font-weight:800;color:#dc2626;">12 kW</span>
-                                    </div>
-                                    <div style="position:relative;height:12px;border-radius:6px;background:linear-gradient(90deg,#22c55e 0%,#eab308 50%,#ef4444 100%);margin-bottom:4px;">
-                                        <div id="baremeCursor" style="position:absolute;top:-6px;width:24px;height:24px;border-radius:50%;background:white;border:3px solid #0f172a;box-shadow:0 2px 8px rgba(0,0,0,0.25);transition:left 0.4s ease;left:50%;"></div>
-                                    </div>
-                                    <div style="display:flex;justify-content:space-between;font-size:10px;color:#94a3b8;">
-                                        <span>Bien isolé</span>
-                                        <span>Mal isolé</span>
-                                    </div>
-                                </div>
-                                <div style="text-align:center;margin-top:14px;">
-                                    <div id="baremeReco" style="font-size:32px;font-weight:800;color:#16a34a;">10 kW</div>
-                                    <div id="baremeAlt" style="font-size:13px;color:#64748b;margin-top:2px;"></div>
-                                    <div id="baremeIsoHint" style="font-size:11px;color:#64748b;margin-top:4px;"></div>
-                                </div>
-                            </div>
+                        <div class="form-group" style="margin-bottom:0;margin-top:12px;">
+                            <label>Année de construction</label>
+                            <input type="number" id="dimAnnee" value="2000" min="1900" max="2026" oninput="evalIsolation(); calcBareme(); calcDim()">
                         </div>
-
                     </div>
                 </div>
 
@@ -2745,6 +2682,72 @@
             </div><!-- end tab-pac-content produit -->
 
             <div class="tab-pac-content">
+            <!-- ===================== BARÈME PAC (client) ===================== -->
+            <div class="card" id="baremeSection">
+                <h2 class="card-title">&#128208; Puissance PAC recommandée</h2>
+                <div style="font-size: 12px; color: #64748b; margin-bottom: 14px;">Estimation selon la surface, l'année de construction et l'isolation</div>
+                <input type="hidden" id="baremeSurface" value="100">
+
+                <!-- Questionnaire isolation -->
+                <div style="margin-bottom: 14px;">
+                    <label style="font-weight: 700; color: #1d1d1f; font-size: 14px; display: block; margin-bottom: 12px;">Travaux d&eacute;j&agrave; r&eacute;alis&eacute;s</label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;" id="isoChecklist">
+                        <label class="iso-check" onclick="setTimeout(function(){evalIsolation();calcBareme()},10)">
+                            <input type="checkbox" name="isoWork" value="combles">
+                            <span class="iso-info"><span class="iso-title">&#127968; Combles / Toiture</span><span class="iso-sub">Souffl&eacute;e, rampants, sarking</span></span>
+                            <select class="iso-quand" onchange="evalIsolation();calcBareme()"><option value="recent">&lt; 5 ans</option><option value="ancien">&gt; 5 ans</option></select>
+                        </label>
+                        <label class="iso-check" onclick="setTimeout(function(){evalIsolation();calcBareme()},10)">
+                            <input type="checkbox" name="isoWork" value="murs">
+                            <span class="iso-info"><span class="iso-title">&#129521; Murs (ITE / ITI)</span><span class="iso-sub">Ext&eacute;rieure ou int&eacute;rieure</span></span>
+                            <select class="iso-quand" onchange="evalIsolation();calcBareme()"><option value="recent">&lt; 5 ans</option><option value="ancien">&gt; 5 ans</option></select>
+                        </label>
+                        <label class="iso-check" onclick="setTimeout(function(){evalIsolation();calcBareme()},10)">
+                            <input type="checkbox" name="isoWork" value="fenetres">
+                            <span class="iso-info"><span class="iso-title">&#128999; Fen&ecirc;tres DV / TV</span><span class="iso-sub">Double ou triple vitrage</span></span>
+                            <select class="iso-quand" onchange="evalIsolation();calcBareme()"><option value="recent">&lt; 5 ans</option><option value="ancien">&gt; 5 ans</option></select>
+                        </label>
+                        <label class="iso-check" onclick="setTimeout(function(){evalIsolation();calcBareme()},10)">
+                            <input type="checkbox" name="isoWork" value="plancher">
+                            <span class="iso-info"><span class="iso-title">&#11015;&#65039; Plancher bas</span><span class="iso-sub">Vide sanitaire, sous-sol</span></span>
+                            <select class="iso-quand" onchange="evalIsolation();calcBareme()"><option value="recent">&lt; 5 ans</option><option value="ancien">&gt; 5 ans</option></select>
+                        </label>
+                        <label class="iso-check" onclick="setTimeout(function(){evalIsolation();calcBareme()},10)" style="grid-column: 1 / -1;">
+                            <input type="checkbox" name="isoWork" value="vmc">
+                            <span class="iso-info"><span class="iso-title">&#128168; VMC double flux</span><span class="iso-sub">Ventilation m&eacute;canique contr&ocirc;l&eacute;e</span></span>
+                            <select class="iso-quand" onchange="evalIsolation();calcBareme()"><option value="recent">&lt; 5 ans</option><option value="ancien">&gt; 5 ans</option></select>
+                        </label>
+                    </div>
+                    <div id="isoResult" class="fournisseur-only" style="margin-top: 10px; padding: 10px 14px; border-radius: 8px; font-size: 13px; background: #f8fafc; border: 1.5px solid #e2e8f0;">
+                        <span style="font-weight: 600;" id="isoStateName">État d'origine / Non précisé</span>
+                        <span style="color: #64748b;"> &mdash; </span>
+                        <span style="font-weight: 700; color: #16a34a;" id="dimGDisplay">G = 0,95</span>
+                    </div>
+                </div>
+
+                <!-- Résultat barème visuel -->
+                <div id="baremeResult" style="padding: 20px; background: linear-gradient(135deg, #f0fdf4, #ecfdf5); border-radius: 12px; border: 1.5px solid #bbf7d0;">
+                    <div style="font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; text-align: center;">PAC recommandée</div>
+                    <div id="baremeGauge" style="position: relative; margin: 0 auto; max-width: 340px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                            <span id="baremeLow" style="font-size: 20px; font-weight: 800; color: #16a34a;">10 kW</span>
+                            <span id="baremeHigh" style="font-size: 20px; font-weight: 800; color: #dc2626;">12 kW</span>
+                        </div>
+                        <div style="position: relative; height: 12px; border-radius: 6px; background: linear-gradient(90deg, #22c55e 0%, #eab308 50%, #ef4444 100%); margin-bottom: 4px;">
+                            <div id="baremeCursor" style="position: absolute; top: -6px; width: 24px; height: 24px; border-radius: 50%; background: white; border: 3px solid #0f172a; box-shadow: 0 2px 8px rgba(0,0,0,0.25); transition: left 0.4s ease; left: 50%;"></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 10px; color: #94a3b8;">
+                            <span>Bien isolé</span>
+                            <span>Mal isolé</span>
+                        </div>
+                    </div>
+                    <div style="text-align: center; margin-top: 14px;">
+                        <div id="baremeReco" style="font-size: 32px; font-weight: 800; color: #16a34a;">10 kW</div>
+                        <div id="baremeAlt" style="font-size: 13px; color: #64748b; margin-top: 2px;"></div>
+                        <div id="baremeIsoHint" style="font-size: 11px; color: #64748b; margin-top: 4px;"></div>
+                    </div>
+                </div>
+            </div>
 
             <!-- ===================== NOTE DE DIMENSIONNEMENT (fournisseur) ===================== -->
             <div class="card fournisseur-only telepro-hide" id="dimensionnementCard" style="display:none!important">
