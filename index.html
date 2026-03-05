@@ -430,8 +430,8 @@
             grid-template-columns: 1fr;
             gap: 0;
             padding: 0;
-            max-width: 1400px;
-            margin: 0 auto;
+            max-width: 100%;
+            margin: 0;
         }
         .main-content > .parameters-section {
             padding: 30px 20px;
@@ -697,45 +697,67 @@
         .results-sidebar .summary-card {
             border-radius: 0;
             margin-bottom: 0;
-            padding: 10px 24px;
+            padding: 8px 16px;
         }
         /* Desktop: horizontal layout */
         @media (min-width: 1025px) {
-            .results-sidebar .summary-card > .scenario-label-dark { margin-bottom: 6px; font-size: 12px; }
-            .sidebar-h-grid {
+            .results-sidebar .summary-card > .scenario-label-dark { margin-bottom: 4px; font-size: 11px; padding: 4px 10px; }
+            /* Row 1: key metrics */
+            .sidebar-row1 {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 6px;
+                align-items: center;
+                margin-bottom: 6px;
+            }
+            .sidebar-row1 .result-row-card,
+            .sidebar-row1 .result-highlight-card {
+                margin-bottom: 0;
+                padding: 4px 10px;
+                flex: 0 1 auto;
+            }
+            .sidebar-row1 .rrc-label, .sidebar-row1 .rhc-label { font-size: 9px; }
+            .sidebar-row1 .rrc-value { font-size: 14px !important; }
+            .sidebar-row1 .rhc-value { font-size: 14px; }
+            .sidebar-row1-rac .result-row-card {
+                padding: 6px 14px !important;
+                border: 1px solid rgba(251,191,36,0.4) !important;
+            }
+            .sidebar-row1-rac .rrc-value { font-size: 18px !important; font-weight: 800 !important; }
+            /* Row 2: controls */
+            .sidebar-row2 {
                 display: flex;
                 flex-wrap: wrap;
                 gap: 8px;
                 align-items: center;
+                padding-top: 6px;
+                border-top: 1px solid rgba(255,255,255,0.06);
             }
-            .sidebar-h-grid > div,
-            .sidebar-h-grid > .result-row-card,
-            .sidebar-h-grid > .result-highlight-card {
-                flex: 0 1 auto;
-                min-width: 0;
+            .sidebar-row2 .sidebar-ctrl-group {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                font-size: 11px;
+                color: rgba(255,255,255,0.5);
             }
-            .sidebar-h-grid .result-row-card {
-                margin-bottom: 0;
-                padding: 6px 12px;
-                min-width: 100px;
+            .sidebar-row2 .sidebar-ctrl-group input[type="checkbox"] {
+                width: 13px; height: 13px; accent-color: #22c55e; cursor: pointer;
             }
-            .sidebar-h-grid .result-highlight-card {
-                margin-bottom: 0;
-                padding: 6px 12px;
+            .sidebar-row2 .sidebar-ctrl-group input[type="number"] {
+                width: 55px; padding: 3px 5px; border-radius: 6px;
+                border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.06);
+                color: #e2e8f0; font-size: 11px; text-align: center;
             }
-            .sidebar-h-grid .rrc-label { font-size: 10px; }
-            .sidebar-h-grid .rrc-value { font-size: 15px !important; }
-            .sidebar-h-grid .rhc-label { font-size: 10px; }
-            .sidebar-h-grid .rhc-value { font-size: 15px; }
+            .sidebar-row2 .sidebar-ctrl-group label { cursor: pointer; white-space: nowrap; }
             .sidebar-details { display: none; }
-            .sidebar-details.open { display: block; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.08); margin-top: 8px; }
+            .sidebar-details.open { display: block; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.08); margin-top: 6px; }
             .sidebar-toggle-btn {
                 background: rgba(255,255,255,0.08);
                 border: 1px solid rgba(255,255,255,0.12);
                 color: #94a3b8;
-                padding: 5px 12px;
+                padding: 4px 10px;
                 border-radius: 8px;
-                font-size: 11px;
+                font-size: 10px;
                 cursor: pointer;
                 white-space: nowrap;
             }
@@ -752,8 +774,10 @@
                 padding: 24px;
                 margin: 10px;
             }
-            .sidebar-h-grid { display: block; }
-            .sidebar-h-grid .result-row-card { margin-bottom: 10px; }
+            .sidebar-row1 { display: block; }
+            .sidebar-row1 .result-row-card { margin-bottom: 10px; }
+            .sidebar-row2 { display: block; margin-top: 10px; }
+            .sidebar-row2 .sidebar-ctrl-group { margin-bottom: 8px; }
             .sidebar-details { display: block !important; }
             .sidebar-toggle-btn { display: none; }
         }
@@ -3447,129 +3471,99 @@
             <div class="summary-card" style="margin-bottom: 0;">
                 <div class="scenario-label-dark" id="scenarioSummary">&mdash;</div>
 
-                <!-- HORIZONTAL GRID: key metrics shown in a row on desktop -->
-                <div class="sidebar-h-grid">
-
-                    <!-- TOTAL TTC (readonly client) -->
+                <!-- ROW 1: key financial metrics -->
+                <div class="sidebar-row1">
+                    <!-- TTC (readonly client) -->
                     <div class="ttc-readonly">
                         <div class="result-row-card" style="background: rgba(96,165,250,0.08); border-color: rgba(96,165,250,0.15);">
                             <div class="rrc-label">&#128176; TTC</div>
                             <div class="rrc-value blue" id="totalTTC">&mdash;</div>
                         </div>
                     </div>
-
-                    <!-- TOTAL TTC (editable fournisseur) -->
+                    <!-- TTC (editable fournisseur) -->
                     <div class="fournisseur-only">
                         <div class="result-row-card" style="background: rgba(96,165,250,0.08); border-color: rgba(96,165,250,0.15);">
                             <div class="rrc-label">&#128176; TTC</div>
-                            <div class="rrc-value blue" id="totalTTCEditable" contenteditable="true" oninput="onTTCEdit()" style="cursor: text; min-width: 60px;">10 890 €</div>
+                            <div class="rrc-value blue" id="totalTTCEditable" contenteditable="true" oninput="onTTCEdit()" style="cursor: text; min-width: 60px;">10 890 &euro;</div>
                         </div>
                         <input type="hidden" id="totalTTCInput" value="10890">
                     </div>
-
+                    <!-- Co&ucirc;t HT -->
+                    <div class="fournisseur-only">
+                        <div class="result-row-card">
+                            <div class="rrc-label">HT</div>
+                            <div class="rrc-value" id="displayCoutHT" style="font-size: 14px;">&mdash;</div>
+                        </div>
+                    </div>
                     <!-- MPR -->
                     <div class="result-row-card">
                         <div class="rrc-label">MPR</div>
-                        <div class="rrc-value green" id="aidesMPR" style="font-size: 18px;">&mdash;</div>
+                        <div class="rrc-value green" id="aidesMPR">&mdash;</div>
                     </div>
-
                     <!-- CEE -->
                     <div class="result-row-card">
                         <div class="rrc-label">CEE</div>
-                        <div class="rrc-value green" id="aidesCEE" style="font-size: 18px;">&mdash;</div>
+                        <div class="rrc-value green" id="aidesCEE">&mdash;</div>
                     </div>
-
-                    <!-- TOTAL AIDES -->
-                    <div class="result-highlight-card">
-                        <div class="rhc-label">Total aides</div>
-                        <div class="rhc-value" id="totalAides">&mdash;</div>
+                    <!-- Total Aides -->
+                    <div class="result-row-card" style="background: rgba(52,211,153,0.08); border-color: rgba(52,211,153,0.15);">
+                        <div class="rrc-label">Total aides</div>
+                        <div class="rrc-value green" id="totalAides">&mdash;</div>
                     </div>
-
-                    <!-- RESTE À CHARGE -->
-                    <div class="result-row-card" style="background: rgba(251,191,36,0.08); border-color: rgba(251,191,36,0.15);">
-                        <div class="rrc-label">&#127968; RAC</div>
-                        <div class="rrc-value yellow" id="resteCharge">&mdash;</div>
-                    </div>
-
-                    <!-- MARGE fournisseur -->
-                    <div class="fournisseur-only telepro-hide">
-                        <div class="result-row-card" style="background: rgba(248,113,113,0.06); border-color: rgba(248,113,113,0.12);">
-                            <div class="rrc-label">&#128202; Marge</div>
-                            <div class="rrc-value" id="margeFinal" style="font-size: 18px;">&mdash;</div>
+                    <!-- RAC (highlighted) -->
+                    <div class="sidebar-row1-rac">
+                        <div class="result-row-card" style="background: rgba(251,191,36,0.10); border-color: rgba(251,191,36,0.3);">
+                            <div class="rrc-label">&#127968; RAC</div>
+                            <div class="rrc-value yellow" id="resteCharge">&mdash;</div>
                         </div>
                     </div>
-
-                    <!-- BOUTON DEVIS -->
+                    <!-- Marge -->
+                    <div class="fournisseur-only telepro-hide">
+                        <div class="result-row-card" style="background: rgba(248,113,113,0.06); border-color: rgba(248,113,113,0.12);">
+                            <div class="rrc-label">Marge</div>
+                            <div class="rrc-value" id="margeFinal">&mdash;</div>
+                        </div>
+                    </div>
+                    <!-- Bouton Devis -->
                     <div>
-                        <button id="exportBtn" onclick="exportPDF()" style="width:100%;padding:10px 14px;border-radius:10px;border:none;background:#16a34a;color:#fff;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
+                        <button id="exportBtn" onclick="exportPDF()" style="padding:8px 14px;border-radius:8px;border:none;background:#16a34a;color:#fff;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;white-space:nowrap;">
                             &#128196; Devis PAC
                         </button>
                     </div>
+                </div>
 
-                    <!-- TOGGLE DETAILS -->
-                    <div>
-                        <button class="sidebar-toggle-btn" onclick="toggleSidebarDetails(this)">&#9660; D&eacute;tails</button>
+                <!-- ROW 2: controls (checkboxes, remise, toggle financement) -->
+                <div class="sidebar-row2">
+                    <div class="sidebar-ctrl-group fournisseur-only">
+                        <label><input type="checkbox" id="lockTTC" checked onchange="calc()"> Verrouiller TTC</label>
                     </div>
+                    <div class="sidebar-ctrl-group">
+                        <label><input type="checkbox" id="deduireMPR" checked onchange="calc()"> MPR</label>
+                    </div>
+                    <div class="sidebar-ctrl-group">
+                        <label><input type="checkbox" id="deduireCEE" checked onchange="calc()"> CEE</label>
+                        <span style="font-size:9px;color:rgba(255,255,255,0.25);" id="ceeSourceLabel">BAR-TH</span>
+                    </div>
+                    <div class="sidebar-ctrl-group fournisseur-only" style="border-left:1px solid rgba(255,255,255,0.08);padding-left:8px;">
+                        <span style="font-size:10px;color:rgba(255,255,255,0.4);font-weight:600;">Remise</span>
+                        <input type="number" id="racPourcent" value="0" min="0" max="100" step="1" oninput="updatePct()" onchange="logRACChange()" title="Remise %">
+                        <span style="font-size:9px;color:rgba(255,255,255,0.3);">%</span>
+                        <input type="number" id="racOffert" value="0" min="0" step="1" oninput="updateAmt()" onchange="logRACChange()" title="RAC offert &euro;">
+                        <span style="font-size:9px;color:rgba(255,255,255,0.3);">&euro;</span>
+                    </div>
+                    <div class="sidebar-ctrl-group fournisseur-only">
+                        <span id="maxPctInfo" style="font-size:10px;color:#34d399;">Max: <strong id="maxPctValue">&mdash;</strong></span>
+                    </div>
+                    <div class="sidebar-ctrl-group">
+                        <button class="sidebar-toggle-btn" onclick="toggleSidebarDetails(this)">&#128179; Financement</button>
+                    </div>
+                    <div class="sidebar-ctrl-group">
+                        <button onclick="esign_openModal('pac')" style="padding:4px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#94a3b8;font-size:10px;cursor:pointer;white-space:nowrap;">&#9998; Signature</button>
+                    </div>
+                </div>
 
-                </div><!-- end sidebar-h-grid -->
-
-                <!-- DETAILS: collapsible on desktop, always visible on mobile -->
+                <!-- FINANCEMENT: collapsible on desktop, visible on mobile -->
                 <div class="sidebar-details" id="pacSidebarDetails">
-
-                    <!-- Lock TTC -->
-                    <div class="fournisseur-only" style="margin-bottom: 12px; margin-top: 8px;">
-                        <small style="font-size: 11px; color: rgba(255,255,255,0.35); display: block;">
-                            <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
-                                <input type="checkbox" id="lockTTC" checked onchange="calc()"> Verrouiller TTC (auto selon sc&eacute;nario)
-                            </label>
-                        </small>
-                    </div>
-
-                    <!-- COÛT HT fournisseur -->
-                    <div class="fournisseur-only" style="margin-bottom: 4px;">
-                        <div class="result-row-card">
-                            <div>
-                                <div class="rrc-label">Coût HT</div>
-                                <div style="font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 2px;">Matériel + pose + admin</div>
-                            </div>
-                            <div class="rrc-value" id="displayCoutHT" style="font-size: 18px;">&mdash;</div>
-                        </div>
-                    </div>
-
-                    <!-- MPR/CEE checkboxes -->
-                    <div style="display: flex; gap: 16px; margin-bottom: 8px;">
-                        <label style="display: flex; align-items: center; cursor: pointer; gap: 4px; font-size: 12px; color: rgba(255,255,255,0.5);">
-                            <input type="checkbox" id="deduireMPR" checked onchange="calc()" style="accent-color: #22c55e; width: 14px; height: 14px; cursor: pointer;">
-                            D&eacute;duire MPR
-                        </label>
-                        <label style="display: flex; align-items: center; cursor: pointer; gap: 4px; font-size: 12px; color: rgba(255,255,255,0.5);">
-                            <input type="checkbox" id="deduireCEE" checked onchange="calc()" style="accent-color: #22c55e; width: 14px; height: 14px; cursor: pointer;">
-                            D&eacute;duire CEE
-                        </label>
-                        <span style="font-size: 10px; color: rgba(255,255,255,0.3);" id="ceeSourceLabel">BAR-TH d&eacute;taill&eacute;</span>
-                    </div>
-
-                    <div class="glow-separator"></div>
-
-                    <!-- RAC Section (fournisseur only) -->
-                    <div class="rac-dark-section fournisseur-only" style="margin-bottom: 14px;">
-                        <div class="dark-section-title" style="margin-bottom: 10px;">Prise en charge du RAC</div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-                            <div>
-                                <div class="amount-label" style="color: rgba(255,255,255,0.45); margin-bottom: 4px;">Pourcentage (%)</div>
-                                <input type="number" id="racPourcent" value="0" min="0" max="100" step="1" oninput="updatePct()" onchange="logRACChange()">
-                            </div>
-                            <div>
-                                <div class="amount-label" style="color: rgba(255,255,255,0.45); margin-bottom: 4px;">RAC offert (&euro;)</div>
-                                <input type="number" id="racOffert" value="0" min="0" step="1" oninput="updateAmt()" onchange="logRACChange()">
-                            </div>
-                        </div>
-                        <div id="maxPctInfo" style="font-size: 12px; padding: 10px 14px; border-radius: 8px; background: rgba(5,150,105,0.12); border: 1px solid rgba(5,150,105,0.25); color: #34d399; margin-bottom: 6px;">
-                            Remise max : <strong id="maxPctValue">&mdash;</strong> pour rester en dossier vert
-                        </div>
-                        <div class="note-small" style="font-size: 11px; margin-bottom: 8px; color: rgba(255,255,255,0.3);">Appliqu&eacute; sur le RAC brut. N'affecte pas le prix cumac.</div>
-                    </div>
-
                     <!-- FINANCEMENT PAC (Domofinance) -->
                     <div id="pacFinanceBlock" style="margin-bottom:14px;border-radius:14px;padding:16px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);opacity:0.35;pointer-events:none;transition:all 0.3s;">
                         <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
@@ -3666,12 +3660,7 @@
                         <div id="pacDomoStatus" style="display:none;padding:6px 10px;border-radius:8px;font-size:11px;margin-top:8px;"></div>
                     </div>
 
-                    <!-- Signature -->
-                    <button onclick="esign_openModal('pac')" class="btn-dark-export" style="margin-top: 8px; background: rgba(255,255,255,0.08) !important; border: 1px solid rgba(255,255,255,0.15) !important;">
-                        &#9998; Signature &eacute;lectronique
-                    </button>
-
-                </div><!-- end sidebar-details -->
+                </div><!-- end sidebar-details (financement) -->
 
                 <!-- Status (hidden) -->
                 <div id="statusBadge" class="status-badge ok" style="display:none;">
@@ -4471,7 +4460,7 @@ function toggleSidebarDetails(btn){
     var d=document.getElementById('pacSidebarDetails');
     if(!d) return;
     d.classList.toggle('open');
-    btn.innerHTML=d.classList.contains('open')?'&#9650; Masquer':'&#9660; D\u00e9tails';
+    btn.innerHTML=d.classList.contains('open')?'&#9650; Fermer':'&#128179; Financement';
 }
 
 function onTTCEdit(){
