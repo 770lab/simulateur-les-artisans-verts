@@ -2043,7 +2043,7 @@
 
 <!-- DOSSIERS MODAL -->
 <div id="dossiersModal" class="hist-overlay" onclick="if(event.target===this)this.classList.remove('active')">
-    <div class="hist-modal" style="max-width:600px;max-height:85vh;">
+    <div class="hist-modal" style="max-width:900px;width:90%;max-height:90vh;">
         <div class="hist-modal-header">
             <h3>&#128194; Mes dossiers</h3>
             <button class="hist-modal-close" onclick="document.getElementById('dossiersModal').classList.remove('active')">&times;</button>
@@ -2051,7 +2051,7 @@
         <div style="padding:10px 16px 0;">
             <input type="text" id="dossierSearch" placeholder="&#128269; Rechercher par nom, n&deg; devis ou commercial..." oninput="filterDossiers()" style="width:100%;padding:10px 14px;border:1px solid #d1d5db;border-radius:8px;font-size:13px;box-sizing:border-box;">
         </div>
-        <div class="hist-modal-body" id="dossiersBody" style="max-height:60vh;overflow-y:auto;"></div>
+        <div class="hist-modal-body" id="dossiersBody" style="max-height:72vh;overflow-y:auto;"></div>
     </div>
 </div>
 
@@ -9300,30 +9300,30 @@ function renderDossiers(){
         +'<span>\uD83D\uDCE4 <b>'+nEnv+'</b> envoy\u00e9s</span>'
         +'<span>\u2705 <b>'+nSig+'</b> sign\u00e9s</span>'
         +'</div>';
-    html+='<div style="display:flex;flex-direction:column;gap:8px;padding:8px 0;">';
+    html+='<div style="display:flex;flex-direction:column;gap:6px;padding:8px 0;">';
     var STATUS_LABELS={'brouillon':'\uD83D\uDFE1 Brouillon','envoye':'\uD83D\uDD35 Envoy\u00e9','signe':'\uD83D\uDFE2 Sign\u00e9','perdu':'\uD83D\uDD34 Perdu'};
     filtered.forEach(function(d){
         var badge=d.type==='ITE'
-            ?'<span style="background:#059669;color:white;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;">ITE</span>'
-            :'<span style="background:#2563eb;color:white;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;">PAC</span>';
+            ?'<span style="background:#059669;color:white;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;white-space:nowrap;">ITE</span>'
+            :'<span style="background:#2563eb;color:white;padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;white-space:nowrap;">PAC</span>';
         var st=d.status||'brouillon';
-        var statusSelect='<select class="dossier-status-select" onclick="event.stopPropagation()" onchange="updateDossierStatus(\''+d.id+'\',this.value)">';
+        var statusSelect='<select class="dossier-status-select" onclick="event.stopPropagation()" onchange="updateDossierStatus(\''+d.id+'\',this.value)" style="padding:4px 8px;border-radius:6px;border:1px solid #d1d5db;font-size:11px;background:white;cursor:pointer;">';
         ['brouillon','envoye','signe','perdu'].forEach(function(s){
             statusSelect+='<option value="'+s+'"'+(s===st?' selected':'')+'>'+STATUS_LABELS[s]+'</option>';
         });
         statusSelect+='</select>';
-        html+='<div style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;cursor:pointer;transition:all 0.15s;" '
+        html+='<div style="display:flex;align-items:center;gap:12px;padding:10px 16px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;cursor:pointer;transition:all 0.15s;" '
             +'onmouseover="this.style.borderColor=\'#16a34a\';this.style.background=\'#f0fdf4\'" '
             +'onmouseout="this.style.borderColor=\'#e5e7eb\';this.style.background=\'#f9fafb\'">'
-            +'<div onclick="loadDossier(\''+d.id+'\')" style="flex:1;min-width:0;">'
-            +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">'
-            +badge+'<span style="font-weight:700;font-size:13px;color:#1f2937;">'+d.nomClient+'</span></div>'
-            +'<div style="font-size:11px;color:#6b7280;">'
-            +d.numDevis+' \u00b7 '+d.date
-            +(isAdmin?' \u00b7 \ud83d\udc64 '+d.commercial:'')
-            +'</div></div>'
+            +badge
+            +'<div onclick="loadDossier(\''+d.id+'\')" style="flex:1;min-width:0;display:flex;align-items:center;gap:16px;">'
+            +'<span style="font-weight:700;font-size:13px;color:#1f2937;min-width:140px;">'+d.nomClient+'</span>'
+            +'<span style="font-size:11px;color:#6b7280;white-space:nowrap;">'+d.numDevis+'</span>'
+            +'<span style="font-size:11px;color:#9ca3af;white-space:nowrap;">'+d.date+'</span>'
+            +(isAdmin?'<span style="font-size:11px;color:#6b7280;white-space:nowrap;">\ud83d\udc64 '+d.commercial+'</span>':'')
+            +'</div>'
             +statusSelect
-            +'<button onclick="event.stopPropagation();deleteDossier(\''+d.id+'\')" style="background:none;border:none;cursor:pointer;font-size:16px;color:#dc2626;padding:6px;" title="Supprimer">\ud83d\uddd1\ufe0f</button>'
+            +'<button onclick="event.stopPropagation();deleteDossier(\''+d.id+'\')" style="background:none;border:none;cursor:pointer;font-size:14px;color:#dc2626;padding:4px;" title="Supprimer">\ud83d\uddd1\ufe0f</button>'
             +'</div>';
     });
     html+='</div>';
