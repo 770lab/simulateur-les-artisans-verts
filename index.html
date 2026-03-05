@@ -702,66 +702,83 @@
         /* Desktop: horizontal layout */
         @media (min-width: 1025px) {
             .results-sidebar .summary-card > .scenario-label-dark { margin-bottom: 4px; font-size: 11px; padding: 4px 10px; }
-            /* Row 1: key metrics */
+            /* Row 1: all metrics + actions in one row */
             .sidebar-row1 {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 6px;
-                align-items: center;
-                margin-bottom: 6px;
-            }
-            .sidebar-row1 .result-row-card,
-            .sidebar-row1 .result-highlight-card {
-                margin-bottom: 0;
-                padding: 4px 10px;
-                flex: 0 1 auto;
-            }
-            .sidebar-row1 .rrc-label, .sidebar-row1 .rhc-label { font-size: 9px; }
-            .sidebar-row1 .rrc-value { font-size: 14px !important; }
-            .sidebar-row1 .rhc-value { font-size: 14px; }
-            .sidebar-row1-rac .result-row-card {
-                padding: 6px 14px !important;
-                border: 1px solid rgba(251,191,36,0.4) !important;
-            }
-            .sidebar-row1-rac .rrc-value { font-size: 18px !important; font-weight: 800 !important; }
-            /* Row 2: controls */
-            .sidebar-row2 {
                 display: flex;
                 flex-wrap: wrap;
                 gap: 8px;
                 align-items: center;
-                padding-top: 6px;
-                border-top: 1px solid rgba(255,255,255,0.06);
             }
-            .sidebar-row2 .sidebar-ctrl-group {
+            .sidebar-card-group {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 2px;
+            }
+            .sidebar-row1 .result-row-card,
+            .sidebar-row1 .result-highlight-card {
+                margin-bottom: 0;
+                padding: 5px 14px;
+                flex: 0 1 auto;
+            }
+            .sidebar-row1 .rrc-label, .sidebar-row1 .rhc-label { font-size: 9px; letter-spacing: 0.5px; }
+            .sidebar-row1 .rrc-value { font-size: 14px !important; white-space: nowrap; }
+            .sidebar-row1 .rhc-value { font-size: 14px; }
+            .sidebar-row1-rac .result-row-card {
+                padding: 6px 16px !important;
+                border: 1px solid rgba(251,191,36,0.4) !important;
+            }
+            .sidebar-row1-rac .rrc-value { font-size: 18px !important; font-weight: 800 !important; }
+            /* Checkbox under card */
+            .sidebar-card-check {
                 display: flex;
                 align-items: center;
-                gap: 6px;
+                justify-content: center;
+                height: 14px;
+            }
+            .sidebar-card-check input[type="checkbox"] {
+                width: 13px; height: 13px; accent-color: #22c55e; cursor: pointer; margin: 0;
+            }
+            /* Remise compact group */
+            .sidebar-remise-group {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 2px;
+            }
+            /* Action buttons */
+            .sidebar-action-btn {
+                padding: 6px 12px;
+                border-radius: 8px;
+                border: none;
                 font-size: 11px;
-                color: rgba(255,255,255,0.5);
+                font-weight: 700;
+                cursor: pointer;
+                white-space: nowrap;
+                display: flex;
+                align-items: center;
+                gap: 4px;
             }
-            .sidebar-row2 .sidebar-ctrl-group input[type="checkbox"] {
-                width: 13px; height: 13px; accent-color: #22c55e; cursor: pointer;
-            }
-            .sidebar-row2 .sidebar-ctrl-group input[type="number"] {
-                width: 55px; padding: 3px 5px; border-radius: 6px;
-                border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.06);
-                color: #e2e8f0; font-size: 11px; text-align: center;
-            }
-            .sidebar-row2 .sidebar-ctrl-group label { cursor: pointer; white-space: nowrap; }
-            .sidebar-details { display: none; }
-            .sidebar-details.open { display: block; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.08); margin-top: 6px; }
+            .sidebar-btn-devis { background: #16a34a; color: #fff; }
+            .sidebar-btn-devis:hover { background: #15803d; }
+            .sidebar-btn-ptz { background: linear-gradient(135deg, #006B3F, #2E9D5E); color: #fff; }
+            .sidebar-btn-ptz:hover { opacity: 0.9; }
+            .sidebar-btn-sign { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12) !important; color: #94a3b8; }
+            .sidebar-btn-sign:hover { background: rgba(255,255,255,0.12); color: #e2e8f0; }
+            /* Financement toggle */
             .sidebar-toggle-btn {
                 background: rgba(255,255,255,0.08);
                 border: 1px solid rgba(255,255,255,0.12);
                 color: #94a3b8;
-                padding: 4px 10px;
+                padding: 6px 12px;
                 border-radius: 8px;
-                font-size: 10px;
+                font-size: 11px;
                 cursor: pointer;
                 white-space: nowrap;
             }
             .sidebar-toggle-btn:hover { background: rgba(255,255,255,0.12); color: #e2e8f0; }
+            .sidebar-details { display: none; }
+            .sidebar-details.open { display: block; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.08); margin-top: 6px; }
         }
         /* Mobile: after content, vertical */
         @media (max-width: 1024px) {
@@ -775,9 +792,22 @@
                 margin: 10px;
             }
             .sidebar-row1 { display: block; }
-            .sidebar-row1 .result-row-card { margin-bottom: 10px; }
-            .sidebar-row2 { display: block; margin-top: 10px; }
-            .sidebar-row2 .sidebar-ctrl-group { margin-bottom: 8px; }
+            .sidebar-card-group { margin-bottom: 10px; }
+            .sidebar-card-check { display: inline-flex; margin-left: 8px; margin-top: 4px; }
+            .sidebar-card-check input[type="checkbox"] { width: 16px; height: 16px; accent-color: #22c55e; cursor: pointer; }
+            .sidebar-remise-group { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+            .sidebar-remise-group input[type="number"] {
+                width: 60px; padding: 4px 6px; border-radius: 6px;
+                border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.06);
+                color: #e2e8f0; font-size: 12px; text-align: center;
+            }
+            .sidebar-action-btn {
+                display: block; width: 100%; padding: 12px; border-radius: 10px; border: none;
+                font-size: 14px; font-weight: 700; cursor: pointer; text-align: center; margin-top: 8px;
+            }
+            .sidebar-btn-devis { background: #16a34a; color: #fff; }
+            .sidebar-btn-ptz { background: linear-gradient(135deg, #006B3F, #2E9D5E); color: #fff; }
+            .sidebar-btn-sign { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12) !important; color: #94a3b8; }
             .sidebar-details { display: block !important; }
             .sidebar-toggle-btn { display: none; }
         }
@@ -3475,94 +3505,96 @@
             <div class="summary-card" style="margin-bottom: 0;">
                 <div class="scenario-label-dark" id="scenarioSummary">&mdash;</div>
 
-                <!-- ROW 1: key financial metrics -->
+                <!-- ROW 1: key financial metrics + actions -->
                 <div class="sidebar-row1">
-                    <!-- TTC (readonly client) -->
-                    <div class="ttc-readonly">
-                        <div class="result-row-card" style="background: rgba(96,165,250,0.08); border-color: rgba(96,165,250,0.15);">
+                    <!-- TTC (readonly client) + lock -->
+                    <div class="sidebar-card-group ttc-readonly">
+                        <div class="result-row-card" style="background:rgba(96,165,250,0.08);border-color:rgba(96,165,250,0.15);">
                             <div class="rrc-label">&#128176; TTC</div>
                             <div class="rrc-value blue" id="totalTTC">&mdash;</div>
                         </div>
                     </div>
-                    <!-- TTC (editable fournisseur) -->
-                    <div class="fournisseur-only">
-                        <div class="result-row-card" style="background: rgba(96,165,250,0.08); border-color: rgba(96,165,250,0.15);">
+                    <!-- TTC (editable fournisseur) + lock -->
+                    <div class="sidebar-card-group fournisseur-only">
+                        <div class="result-row-card" style="background:rgba(96,165,250,0.08);border-color:rgba(96,165,250,0.15);">
                             <div class="rrc-label">&#128176; TTC</div>
-                            <div class="rrc-value blue" id="totalTTCEditable" contenteditable="true" oninput="onTTCEdit()" style="cursor: text; min-width: 60px;">10 890 &euro;</div>
+                            <div class="rrc-value blue" id="totalTTCEditable" contenteditable="true" oninput="onTTCEdit()" style="cursor:text;min-width:60px;">10 890 &euro;</div>
                         </div>
+                        <div class="sidebar-card-check fournisseur-only"><input type="checkbox" id="lockTTC" checked onchange="calc()" title="Verrouiller TTC"></div>
                         <input type="hidden" id="totalTTCInput" value="10890">
                     </div>
-                    <!-- Co&ucirc;t HT -->
-                    <div class="fournisseur-only">
+                    <!-- HT -->
+                    <div class="sidebar-card-group fournisseur-only">
                         <div class="result-row-card">
                             <div class="rrc-label">HT</div>
-                            <div class="rrc-value" id="displayCoutHT" style="font-size: 14px;">&mdash;</div>
+                            <div class="rrc-value" id="displayCoutHT">&mdash;</div>
                         </div>
                     </div>
-                    <!-- MPR -->
-                    <div class="result-row-card">
-                        <div class="rrc-label">MPR</div>
-                        <div class="rrc-value green" id="aidesMPR">&mdash;</div>
+                    <!-- MPR + checkbox -->
+                    <div class="sidebar-card-group">
+                        <div class="result-row-card">
+                            <div class="rrc-label">MPR</div>
+                            <div class="rrc-value green" id="aidesMPR">&mdash;</div>
+                        </div>
+                        <div class="sidebar-card-check"><input type="checkbox" id="deduireMPR" checked onchange="calc()" title="D&eacute;duire MPR"></div>
                     </div>
-                    <!-- CEE -->
-                    <div class="result-row-card">
-                        <div class="rrc-label">CEE</div>
-                        <div class="rrc-value green" id="aidesCEE">&mdash;</div>
+                    <!-- CEE + checkbox -->
+                    <div class="sidebar-card-group">
+                        <div class="result-row-card">
+                            <div class="rrc-label">CEE <span id="ceeSourceLabel" style="font-size:8px;color:rgba(255,255,255,0.25);margin-left:2px;">BAR-TH</span></div>
+                            <div class="rrc-value green" id="aidesCEE">&mdash;</div>
+                        </div>
+                        <div class="sidebar-card-check"><input type="checkbox" id="deduireCEE" checked onchange="calc()" title="D&eacute;duire CEE"></div>
                     </div>
                     <!-- Total Aides -->
-                    <div class="result-row-card" style="background: rgba(52,211,153,0.08); border-color: rgba(52,211,153,0.15);">
-                        <div class="rrc-label">Total aides</div>
-                        <div class="rrc-value green" id="totalAides">&mdash;</div>
+                    <div class="sidebar-card-group">
+                        <div class="result-row-card" style="background:rgba(52,211,153,0.08);border-color:rgba(52,211,153,0.15);">
+                            <div class="rrc-label">Total aides</div>
+                            <div class="rrc-value green" id="totalAides">&mdash;</div>
+                        </div>
                     </div>
                     <!-- RAC (highlighted) -->
-                    <div class="sidebar-row1-rac">
-                        <div class="result-row-card" style="background: rgba(251,191,36,0.10); border-color: rgba(251,191,36,0.3);">
+                    <div class="sidebar-card-group sidebar-row1-rac">
+                        <div class="result-row-card" style="background:rgba(251,191,36,0.10);border-color:rgba(251,191,36,0.3);">
                             <div class="rrc-label">&#127968; RAC</div>
                             <div class="rrc-value yellow" id="resteCharge">&mdash;</div>
                         </div>
                     </div>
+                    <!-- Remise -->
+                    <div class="sidebar-card-group fournisseur-only" style="border-left:1px solid rgba(255,255,255,0.08);padding-left:8px;">
+                        <div class="sidebar-remise-group">
+                            <span style="font-size:9px;color:rgba(255,255,255,0.4);font-weight:600;">Remise</span>
+                            <div style="display:flex;align-items:center;gap:3px;">
+                                <input type="number" id="racPourcent" value="0" min="0" max="100" step="1" oninput="updatePct()" onchange="logRACChange()" title="Remise %" style="width:48px;padding:3px 4px;border-radius:6px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#e2e8f0;font-size:11px;text-align:center;">
+                                <span style="font-size:9px;color:rgba(255,255,255,0.3);">%</span>
+                                <input type="number" id="racOffert" value="0" min="0" step="1" oninput="updateAmt()" onchange="logRACChange()" title="RAC offert &euro;" style="width:56px;padding:3px 4px;border-radius:6px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#e2e8f0;font-size:11px;text-align:center;">
+                                <span style="font-size:9px;color:rgba(255,255,255,0.3);">&euro;</span>
+                            </div>
+                            <span id="maxPctInfo" style="font-size:9px;color:#34d399;">Max: <strong id="maxPctValue">&mdash;</strong></span>
+                        </div>
+                    </div>
                     <!-- Marge -->
-                    <div class="fournisseur-only telepro-hide">
-                        <div class="result-row-card" style="background: rgba(248,113,113,0.06); border-color: rgba(248,113,113,0.12);">
+                    <div class="sidebar-card-group fournisseur-only telepro-hide">
+                        <div class="result-row-card" style="background:rgba(248,113,113,0.06);border-color:rgba(248,113,113,0.12);">
                             <div class="rrc-label">Marge</div>
                             <div class="rrc-value" id="margeFinal">&mdash;</div>
                         </div>
                     </div>
-                    <!-- Bouton Devis -->
-                    <div>
-                        <button id="exportBtn" onclick="exportPDF()" style="padding:8px 14px;border-radius:8px;border:none;background:#16a34a;color:#fff;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;white-space:nowrap;">
-                            &#128196; Devis PAC
-                        </button>
-                    </div>
-                </div>
-
-                <!-- ROW 2: controls (checkboxes, remise, toggle financement) -->
-                <div class="sidebar-row2">
-                    <div class="sidebar-ctrl-group fournisseur-only">
-                        <label><input type="checkbox" id="lockTTC" checked onchange="calc()"> Verrouiller TTC</label>
-                    </div>
-                    <div class="sidebar-ctrl-group">
-                        <label><input type="checkbox" id="deduireMPR" checked onchange="calc()"> MPR</label>
-                    </div>
-                    <div class="sidebar-ctrl-group">
-                        <label><input type="checkbox" id="deduireCEE" checked onchange="calc()"> CEE</label>
-                        <span style="font-size:9px;color:rgba(255,255,255,0.25);" id="ceeSourceLabel">BAR-TH</span>
-                    </div>
-                    <div class="sidebar-ctrl-group fournisseur-only" style="border-left:1px solid rgba(255,255,255,0.08);padding-left:8px;">
-                        <span style="font-size:10px;color:rgba(255,255,255,0.4);font-weight:600;">Remise</span>
-                        <input type="number" id="racPourcent" value="0" min="0" max="100" step="1" oninput="updatePct()" onchange="logRACChange()" title="Remise %">
-                        <span style="font-size:9px;color:rgba(255,255,255,0.3);">%</span>
-                        <input type="number" id="racOffert" value="0" min="0" step="1" oninput="updateAmt()" onchange="logRACChange()" title="RAC offert &euro;">
-                        <span style="font-size:9px;color:rgba(255,255,255,0.3);">&euro;</span>
-                    </div>
-                    <div class="sidebar-ctrl-group fournisseur-only">
-                        <span id="maxPctInfo" style="font-size:10px;color:#34d399;">Max: <strong id="maxPctValue">&mdash;</strong></span>
-                    </div>
-                    <div class="sidebar-ctrl-group">
+                    <!-- Financement toggle -->
+                    <div class="sidebar-card-group">
                         <button class="sidebar-toggle-btn" onclick="toggleSidebarDetails(this)">&#128179; Financement</button>
                     </div>
-                    <div class="sidebar-ctrl-group">
-                        <button onclick="esign_openModal('pac')" style="padding:4px 10px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#94a3b8;font-size:10px;cursor:pointer;white-space:nowrap;">&#9998; Signature</button>
+                    <!-- Devis PAC -->
+                    <div class="sidebar-card-group">
+                        <button id="exportBtn" onclick="exportPDF()" class="sidebar-action-btn sidebar-btn-devis">&#128196; Devis PAC</button>
+                    </div>
+                    <!-- PTZ -->
+                    <div class="sidebar-card-group">
+                        <button onclick="ite_generatePTZ()" class="sidebar-action-btn sidebar-btn-ptz">&#127963;&#65039; PTZ</button>
+                    </div>
+                    <!-- Signature -->
+                    <div class="sidebar-card-group">
+                        <button onclick="esign_openModal('pac')" class="sidebar-action-btn sidebar-btn-sign">&#9998; Signature</button>
                     </div>
                 </div>
 
@@ -9392,8 +9424,55 @@ function deleteDossier(id){
     if(useAPI && API_URL){
         apiCall({action:'deleteDossier', id:id}, function(){}, function(){});
     }
-    if(del) logAction('Dossier supprimé', del.numDevis+' - '+del.nomClient);
+    if(del) logAction('Dossier supprim\u00e9', del.numDevis+' - '+del.nomClient);
     renderDossiers();
+}
+function purgeDossiersBefore(dateStr){
+    if(!currentUser||currentUser.role!=='admin')return;
+    var cutoff=new Date(dateStr);
+    var dossiers=getLocalDossiers();
+    var before=dossiers.length;
+    var toDelete=[];
+    dossiers=dossiers.filter(function(d){
+        var dDate=d.dateISO?new Date(d.dateISO):null;
+        if(!dDate){
+            // Parse fr date dd/mm/yyyy
+            var p=(d.date||'').split('/');
+            if(p.length===3) dDate=new Date(p[2],p[1]-1,p[0]);
+        }
+        if(dDate&&dDate<cutoff){toDelete.push(d.id);return false;}
+        return true;
+    });
+    setLocalDossiers(dossiers);
+    // Sync deletes to API
+    if(useAPI && API_URL){
+        toDelete.forEach(function(id){
+            apiCall({action:'deleteDossier', id:id}, function(){}, function(){});
+        });
+    }
+    var removed=before-dossiers.length;
+    logAction('Purge dossiers', removed+' supprim\u00e9s avant '+dateStr);
+    return removed;
+}
+function purgeJournalBefore(dateStr){
+    if(!currentUser||currentUser.role!=='admin')return 0;
+    var cutoff=new Date(dateStr);
+    var j=getJournal();
+    var before=j.length;
+    j=j.filter(function(e){
+        var d=e.date?new Date(e.date):null;
+        return d&&d>=cutoff;
+    });
+    saveJournal(j);
+    return before-j.length;
+}
+function purgeAllBefore(dateStr){
+    if(!currentUser||currentUser.role!=='admin'){alert('R\u00e9serv\u00e9 aux administrateurs');return;}
+    if(!confirm('Supprimer tous les dossiers et logs avant le '+dateStr+' ?'))return;
+    var rd=purgeDossiersBefore(dateStr);
+    var rj=purgeJournalBefore(dateStr);
+    alert('Purge termin\u00e9e :\n'+rd+' dossier(s) supprim\u00e9(s)\n'+rj+' entr\u00e9e(s) de journal supprim\u00e9e(s)');
+    if(document.getElementById('dashboardModal').classList.contains('active'))_dashRefresh();
 }
 </script>
 <script src="script-telepro.js"></script>
