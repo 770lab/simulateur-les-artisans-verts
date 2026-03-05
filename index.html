@@ -3564,10 +3564,10 @@
                     <!-- TTC (editable fournisseur) + lock -->
                     <div class="sidebar-card-group fournisseur-only">
                         <div class="result-row-card ttc-editable-active" id="ttcEditCard" style="background:rgba(96,165,250,0.08);border-color:rgba(96,165,250,0.15);">
-                            <div class="sidebar-card-check"><input type="checkbox" id="lockTTC" onchange="toggleTTCEdit()" title="Modifier TTC"></div>
                             <div class="rrc-label">TTC</div>
                             <div class="rrc-value blue" id="totalTTCEditable" contenteditable="true" oninput="onTTCEdit()" style="cursor:text;min-width:60px;">10 890 &euro;</div>
                         </div>
+                        <input type="hidden" id="lockTTC" value="1">
                         <input type="hidden" id="totalTTCInput" value="10890">
                     </div>
                     <!-- HT -->
@@ -4590,29 +4590,10 @@ function onTTCEdit(){
     const raw = el.textContent.replace(/[^0-9]/g, '');
     const val = parseInt(raw) || 0;
     document.getElementById('totalTTCInput').value = val;
-    document.getElementById('lockTTC').checked = true;
-    toggleTTCEdit();
+    document.getElementById('lockTTC').value = '1';
     calc();
 }
-function toggleTTCEdit(){
-    var cb=document.getElementById('lockTTC');
-    var card=document.getElementById('ttcEditCard');
-    var editable=document.getElementById('totalTTCEditable');
-    if(!cb||!card||!editable)return;
-    var unlocked=cb.checked;
-    if(unlocked){
-        card.classList.add('ttc-editable-active');
-        card.classList.remove('ttc-editable-locked');
-        editable.contentEditable='true';
-        editable.style.cursor='text';
-    } else {
-        card.classList.remove('ttc-editable-active');
-        card.classList.add('ttc-editable-locked');
-        editable.contentEditable='false';
-        editable.style.cursor='default';
-    }
-    calc();
-}
+function toggleTTCEdit(){}
 
 // Prevent Enter from adding linebreaks, and reformat on blur
 document.addEventListener('DOMContentLoaded', function(){
@@ -4635,7 +4616,7 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 
 function updateFromTTC(){
-    document.getElementById('lockTTC').checked=false;
+    document.getElementById('lockTTC').value='0';
     calc();
 }
 
@@ -4722,7 +4703,7 @@ function onPrixPACPoseChange(){
         document.getElementById('totalTTCInput').value=tt;
         var tte=document.getElementById('totalTTCEditable');
         if(tte) tte.textContent=fmt(tt);
-        document.getElementById('lockTTC').checked=false;
+        document.getElementById('lockTTC').value='0';
     }
     calc();
 }
@@ -4745,7 +4726,7 @@ function calc(){
     
     let tt;
     if(mode){
-        const editTTC=document.getElementById('lockTTC').checked;
+        const editTTC=document.getElementById('lockTTC').value==='1';
         if(!editTTC){
             tt = D.TTC[sc] || 0;
             document.getElementById('totalTTCInput').value=tt;
@@ -5053,7 +5034,7 @@ function updatePct(){
     
     let tt;
     if(mode){
-        const editTTC=document.getElementById('lockTTC').checked;
+        const editTTC=document.getElementById('lockTTC').value==='1';
         tt = editTTC ? (parseFloat(document.getElementById('totalTTCInput').value)||0) : (D.TTC[sc] || 0);
     }else{
         tt=getPacManualTTC();
@@ -5112,7 +5093,7 @@ function updateAmt(){
     
     let tt;
     if(mode){
-        const editTTC=document.getElementById('lockTTC').checked;
+        const editTTC=document.getElementById('lockTTC').value==='1';
         tt = editTTC ? (parseFloat(document.getElementById('totalTTCInput').value)||0) : (D.TTC[sc] || 0);
     }else{ tt=getPacManualTTC(); }
     
