@@ -721,8 +721,8 @@
                 padding: 6px 16px;
                 flex: 0 1 auto;
             }
-            .sidebar-row1 .rrc-label, .sidebar-row1 .rhc-label { font-size: 9px; letter-spacing: 0.5px; margin-bottom: 3px; }
-            .sidebar-row1 .rrc-value { font-size: 14px !important; white-space: nowrap; }
+            .sidebar-row1 .rrc-label, .sidebar-row1 .rhc-label { font-size: 9px; letter-spacing: 0.5px; margin-bottom: 6px; }
+            .sidebar-row1 .rrc-value { font-size: 14px !important; white-space: nowrap; margin-top: 2px; }
             .sidebar-row1 .rhc-value { font-size: 14px; }
             .sidebar-row1-rac .result-row-card {
                 padding: 6px 18px !important;
@@ -739,26 +739,26 @@
             .sidebar-card-check input[type="checkbox"] {
                 width: 13px; height: 13px; accent-color: #22c55e; cursor: pointer; margin: 0;
             }
-            /* Remise styled as card */
+            /* Remise styled as card - same size as others */
             .sidebar-remise-card {
                 background: rgba(255,255,255,0.04);
                 border: 1px solid rgba(255,255,255,0.10);
                 border-radius: 12px;
-                padding: 6px 16px;
+                padding: 6px 14px;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                gap: 3px;
+                gap: 2px;
             }
-            .sidebar-remise-card .remise-label { font-size: 9px; color: rgba(255,255,255,0.45); font-weight: 600; letter-spacing: 0.5px; margin-bottom: 2px; }
-            .sidebar-remise-card .remise-inputs { display: flex; align-items: center; gap: 4px; }
+            .sidebar-remise-card .remise-label { font-size: 9px; color: rgba(255,255,255,0.45); font-weight: 600; letter-spacing: 0.5px; margin-bottom: 4px; }
+            .sidebar-remise-card .remise-inputs { display: flex; align-items: center; gap: 3px; }
             .sidebar-remise-card input[type="number"] {
-                width: 52px; padding: 4px 5px; border-radius: 6px;
+                width: 44px; padding: 2px 3px; border-radius: 5px;
                 border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.06);
-                color: #e2e8f0; font-size: 12px; text-align: center; font-weight: 600;
+                color: #e2e8f0; font-size: 11px; text-align: center; font-weight: 600;
             }
-            .sidebar-remise-card .remise-unit { font-size: 10px; color: rgba(255,255,255,0.35); }
-            .sidebar-remise-card .remise-max { font-size: 9px; color: #34d399; }
+            .sidebar-remise-card .remise-unit { font-size: 9px; color: rgba(255,255,255,0.35); }
+            .sidebar-remise-card .remise-max { font-size: 8px; color: #34d399; }
             /* Action buttons */
             .sidebar-action-btn {
                 padding: 7px 14px;
@@ -3533,17 +3533,17 @@
                     <!-- TTC (readonly client) + lock -->
                     <div class="sidebar-card-group ttc-readonly">
                         <div class="result-row-card" style="background:rgba(96,165,250,0.08);border-color:rgba(96,165,250,0.15);">
-                            <div class="rrc-label">&#128176; TTC</div>
+                            <div class="rrc-label">TTC</div>
                             <div class="rrc-value blue" id="totalTTC">&mdash;</div>
                         </div>
                     </div>
                     <!-- TTC (editable fournisseur) + lock -->
                     <div class="sidebar-card-group fournisseur-only">
                         <div class="result-row-card" style="background:rgba(96,165,250,0.08);border-color:rgba(96,165,250,0.15);">
-                            <div class="rrc-label">&#128176; TTC</div>
+                            <div class="rrc-label">TTC</div>
                             <div class="rrc-value blue" id="totalTTCEditable" contenteditable="true" oninput="onTTCEdit()" style="cursor:text;min-width:60px;">10 890 &euro;</div>
                         </div>
-                        <div class="sidebar-card-check fournisseur-only"><input type="checkbox" id="lockTTC" checked onchange="calc()" title="Verrouiller TTC"></div>
+                        <div class="sidebar-card-check"><input type="checkbox" id="lockTTC" checked onchange="calc()" title="Verrouiller TTC"></div>
                         <input type="hidden" id="totalTTCInput" value="10890">
                     </div>
                     <!-- HT -->
@@ -3579,7 +3579,7 @@
                     <!-- RAC (highlighted) -->
                     <div class="sidebar-card-group sidebar-row1-rac">
                         <div class="result-row-card" style="background:rgba(251,191,36,0.10);border-color:rgba(251,191,36,0.3);">
-                            <div class="rrc-label">&#127968; RAC</div>
+                            <div class="rrc-label">RAC</div>
                             <div class="rrc-value yellow" id="resteCharge">&mdash;</div>
                         </div>
                     </div>
