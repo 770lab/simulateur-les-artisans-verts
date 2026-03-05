@@ -5088,54 +5088,17 @@ function shareDevis(){
 }
 
 function updatePct(){
+    // Compute rb to convert % → €
     const sc=document.getElementById('scenario').value;
     const ct=document.getElementById('categorie').value;
-    const zn=document.getElementById('zone').value;
-    const et=document.getElementById('etas').value;
-    const sf=surfaceToCategory(document.getElementById('surface').value);
-    const cs=M[sc];
-    
     let tt;
     if(mode){
         const editTTC=document.getElementById('lockTTC').value==='1';
         tt = editTTC ? (parseFloat(document.getElementById('totalTTCInput').value)||0) : (D.TTC[sc] || 0);
-    }else{
-        tt=getPacManualTTC();
-    }
-
+    }else{ tt=getPacManualTTC(); }
     const ad=(D.MPR[sc]&&D.MPR[sc][ct])?D.MPR[sc][ct]:0;
-
-    let ch;
-    if(mode){
-        const lockCoutHT=document.getElementById('lockCoutHT').checked;
-        if(lockCoutHT){
-            if(D.COUT_DETAIL[sc]){
-                const detail=D.COUT_DETAIL[sc];
-                ch = detail.pac_materiel + detail.pac_pose + detail.ballon_materiel + detail.ballon_pose + detail.accessoires + detail.admin + (ad > 0 ? Math.round(ad * 0.12) : 0) + (detail.mairie || 0) + (document.getElementById("checkPrevisite").checked ? (parseFloat(document.getElementById("coutPrevisite").value) || 200) : 0);
-            }else{ ch = D.COUT[sc] || 0; }
-        }else{
-            const totalPACMateriel = (parseFloat(document.getElementById('coutPACMateriel').value) || 0) * (parseFloat(document.getElementById('qtePACMateriel').value) || 0);
-            const totalPACPose = (parseFloat(document.getElementById('coutPACPose').value) || 0) * (parseFloat(document.getElementById('qtePACPose').value) || 0);
-            const totalBallonMateriel = (parseFloat(document.getElementById('coutBallonMateriel').value) || 0) * (parseFloat(document.getElementById('qteBallonMateriel').value) || 0);
-            const totalBallonPose = (parseFloat(document.getElementById('coutBallonPose').value) || 0) * (parseFloat(document.getElementById('qteBallonPose').value) || 0);
-            const totalSSCMateriel = (parseFloat(document.getElementById('coutSSCMateriel').value) || 0) * (parseFloat(document.getElementById('qteSSCMateriel').value) || 0);
-            const totalSSCPose = (parseFloat(document.getElementById('coutSSCPose').value) || 0) * (parseFloat(document.getElementById('qteSSCPose').value) || 0);
-            const totalAccessoires = (parseFloat(document.getElementById('coutAccessoires').value) || 0) * (parseFloat(document.getElementById('qteAccessoires').value) || 0);
-            const totalAdmin = (parseFloat(document.getElementById('coutAdmin').value) || 0) * (parseFloat(document.getElementById('qteAdmin').value) || 0);
-            ch = totalPACMateriel + totalPACPose + totalBallonMateriel + totalBallonPose + totalSSCMateriel + totalSSCPose + totalAccessoires + totalAdmin;
-            ch += (parseFloat(document.getElementById('coutMandat').value)||0) * (parseFloat(document.getElementById('qteMandat').value)||0);
-            ch += (parseFloat(document.getElementById('coutMairie').value)||0) * (parseFloat(document.getElementById('qteMairie').value)||0);
-            if(document.getElementById('checkPrevisite').checked) ch += parseFloat(document.getElementById('coutPrevisite').value)||0;
-        }
-    }else{ ch=getCoutFromDetail(sc, ad); }
-
-    let ce = lastCEEDetailPrime;
-    let ceForMarge = ce;
-    let taForMarge = ad + ceForMarge;
-
-    const chForMarge = ch - getPassThrough();
-    const ta=ad+ce;
-    const rb=tt-ta;
+    const ce=lastCEEDetailPrime;
+    const rb=tt-(ad+ce);
 
     let po=parseFloat(document.getElementById('racPourcent').value)||0;
     if(po>100)po=100; if(po<0)po=0;
@@ -5143,65 +5106,32 @@ function updatePct(){
     const mo=Math.round(rb*(po/100));
     document.getElementById('racOffert').value=mo;
 
-    calcRAC(rb,chForMarge,ta,taForMarge,tt);
+    // Delegate full calculation (margin, status, etc.) to calc()
+    calc();
 }
 
 function updateAmt(){
+    // Compute rb to convert € → %
     const sc=document.getElementById('scenario').value;
     const ct=document.getElementById('categorie').value;
-    const zn=document.getElementById('zone').value;
-    const et=document.getElementById('etas').value;
-    const sf=surfaceToCategory(document.getElementById('surface').value);
-    const cs=M[sc];
-    
     let tt;
     if(mode){
         const editTTC=document.getElementById('lockTTC').value==='1';
         tt = editTTC ? (parseFloat(document.getElementById('totalTTCInput').value)||0) : (D.TTC[sc] || 0);
     }else{ tt=getPacManualTTC(); }
-    
     const ad=(D.MPR[sc]&&D.MPR[sc][ct])?D.MPR[sc][ct]:0;
-    
-    let ch;
-    if(mode){
-        const lockCoutHT=document.getElementById('lockCoutHT').checked;
-        if(lockCoutHT){
-            if(D.COUT_DETAIL[sc]){
-                const detail=D.COUT_DETAIL[sc];
-                ch = detail.pac_materiel + detail.pac_pose + detail.ballon_materiel + detail.ballon_pose + detail.accessoires + detail.admin;
-            }else{ ch = D.COUT[sc] || 0; }
-        }else{
-            const totalPACMateriel = (parseFloat(document.getElementById('coutPACMateriel').value) || 0) * (parseFloat(document.getElementById('qtePACMateriel').value) || 0);
-            const totalPACPose = (parseFloat(document.getElementById('coutPACPose').value) || 0) * (parseFloat(document.getElementById('qtePACPose').value) || 0);
-            const totalBallonMateriel = (parseFloat(document.getElementById('coutBallonMateriel').value) || 0) * (parseFloat(document.getElementById('qteBallonMateriel').value) || 0);
-            const totalBallonPose = (parseFloat(document.getElementById('coutBallonPose').value) || 0) * (parseFloat(document.getElementById('qteBallonPose').value) || 0);
-            const totalSSCMateriel = (parseFloat(document.getElementById('coutSSCMateriel').value) || 0) * (parseFloat(document.getElementById('qteSSCMateriel').value) || 0);
-            const totalSSCPose = (parseFloat(document.getElementById('coutSSCPose').value) || 0) * (parseFloat(document.getElementById('qteSSCPose').value) || 0);
-            const totalAccessoires = (parseFloat(document.getElementById('coutAccessoires').value) || 0) * (parseFloat(document.getElementById('qteAccessoires').value) || 0);
-            const totalAdmin = (parseFloat(document.getElementById('coutAdmin').value) || 0) * (parseFloat(document.getElementById('qteAdmin').value) || 0);
-            ch = totalPACMateriel + totalPACPose + totalBallonMateriel + totalBallonPose + totalSSCMateriel + totalSSCPose + totalAccessoires + totalAdmin;
-            ch += (parseFloat(document.getElementById('coutMandat').value)||0) * (parseFloat(document.getElementById('qteMandat').value)||0);
-            ch += (parseFloat(document.getElementById('coutMairie').value)||0) * (parseFloat(document.getElementById('qteMairie').value)||0);
-            if(document.getElementById('checkPrevisite').checked) ch += parseFloat(document.getElementById('coutPrevisite').value)||0;
-        }
-    }else{ ch=getCoutFromDetail(sc, ad); }
-    
-    let ce = lastCEEDetailPrime;
-    let ceForMarge = ce;
-    let taForMarge = ad + ceForMarge;
-    
-    const chForMarge = ch - getPassThrough();
-    const ta=ad+ce;
-    const rb=tt-ta;
-    
+    const ce=lastCEEDetailPrime;
+    const rb=tt-(ad+ce);
+
     let mo=parseFloat(document.getElementById('racOffert').value)||0;
     if(mo>rb)mo=rb; if(mo<0)mo=0;
     document.getElementById('racOffert').value=Math.round(mo);
     let po=rb>0?Math.round((mo/rb)*100):0;
     if(po>100)po=100; if(po<0)po=0;
     document.getElementById('racPourcent').value=po;
-    
-    calcRAC(rb,chForMarge,ta,taForMarge,tt);
+
+    // Delegate full calculation (margin, status, etc.) to calc()
+    calc();
 }
 
 function reset(){
