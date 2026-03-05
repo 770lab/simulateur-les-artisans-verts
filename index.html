@@ -701,31 +701,31 @@
         }
         /* Desktop: horizontal layout */
         @media (min-width: 1025px) {
-            .results-sidebar .summary-card > .scenario-label-dark { margin-bottom: 4px; font-size: 11px; padding: 4px 10px; }
+            .results-sidebar .summary-card > .scenario-label-dark { margin-bottom: 6px; font-size: 11px; padding: 4px 10px; }
             /* Row 1: all metrics + actions in one row */
             .sidebar-row1 {
                 display: flex;
                 flex-wrap: wrap;
-                gap: 8px;
-                align-items: center;
+                gap: 10px;
+                align-items: flex-start;
             }
             .sidebar-card-group {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                gap: 2px;
+                gap: 3px;
             }
             .sidebar-row1 .result-row-card,
             .sidebar-row1 .result-highlight-card {
                 margin-bottom: 0;
-                padding: 5px 14px;
+                padding: 6px 16px;
                 flex: 0 1 auto;
             }
-            .sidebar-row1 .rrc-label, .sidebar-row1 .rhc-label { font-size: 9px; letter-spacing: 0.5px; }
+            .sidebar-row1 .rrc-label, .sidebar-row1 .rhc-label { font-size: 9px; letter-spacing: 0.5px; margin-bottom: 3px; }
             .sidebar-row1 .rrc-value { font-size: 14px !important; white-space: nowrap; }
             .sidebar-row1 .rhc-value { font-size: 14px; }
             .sidebar-row1-rac .result-row-card {
-                padding: 6px 16px !important;
+                padding: 6px 18px !important;
                 border: 1px solid rgba(251,191,36,0.4) !important;
             }
             .sidebar-row1-rac .rrc-value { font-size: 18px !important; font-weight: 800 !important; }
@@ -739,16 +739,29 @@
             .sidebar-card-check input[type="checkbox"] {
                 width: 13px; height: 13px; accent-color: #22c55e; cursor: pointer; margin: 0;
             }
-            /* Remise compact group */
-            .sidebar-remise-group {
+            /* Remise styled as card */
+            .sidebar-remise-card {
+                background: rgba(255,255,255,0.04);
+                border: 1px solid rgba(255,255,255,0.10);
+                border-radius: 12px;
+                padding: 6px 16px;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                gap: 2px;
+                gap: 3px;
             }
+            .sidebar-remise-card .remise-label { font-size: 9px; color: rgba(255,255,255,0.45); font-weight: 600; letter-spacing: 0.5px; margin-bottom: 2px; }
+            .sidebar-remise-card .remise-inputs { display: flex; align-items: center; gap: 4px; }
+            .sidebar-remise-card input[type="number"] {
+                width: 52px; padding: 4px 5px; border-radius: 6px;
+                border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.06);
+                color: #e2e8f0; font-size: 12px; text-align: center; font-weight: 600;
+            }
+            .sidebar-remise-card .remise-unit { font-size: 10px; color: rgba(255,255,255,0.35); }
+            .sidebar-remise-card .remise-max { font-size: 9px; color: #34d399; }
             /* Action buttons */
             .sidebar-action-btn {
-                padding: 6px 12px;
+                padding: 7px 14px;
                 border-radius: 8px;
                 border: none;
                 font-size: 11px;
@@ -758,6 +771,7 @@
                 display: flex;
                 align-items: center;
                 gap: 4px;
+                height: 32px;
             }
             .sidebar-btn-devis { background: #16a34a; color: #fff; }
             .sidebar-btn-devis:hover { background: #15803d; }
@@ -770,11 +784,14 @@
                 background: rgba(255,255,255,0.08);
                 border: 1px solid rgba(255,255,255,0.12);
                 color: #94a3b8;
-                padding: 6px 12px;
+                padding: 7px 14px;
                 border-radius: 8px;
                 font-size: 11px;
                 cursor: pointer;
                 white-space: nowrap;
+                height: 32px;
+                display: flex;
+                align-items: center;
             }
             .sidebar-toggle-btn:hover { background: rgba(255,255,255,0.12); color: #e2e8f0; }
             .sidebar-details { display: none; }
@@ -795,12 +812,19 @@
             .sidebar-card-group { margin-bottom: 10px; }
             .sidebar-card-check { display: inline-flex; margin-left: 8px; margin-top: 4px; }
             .sidebar-card-check input[type="checkbox"] { width: 16px; height: 16px; accent-color: #22c55e; cursor: pointer; }
-            .sidebar-remise-group { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-            .sidebar-remise-group input[type="number"] {
-                width: 60px; padding: 4px 6px; border-radius: 6px;
-                border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.06);
-                color: #e2e8f0; font-size: 12px; text-align: center;
+            .sidebar-remise-card {
+                background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.10);
+                border-radius: 12px; padding: 12px 16px;
             }
+            .sidebar-remise-card .remise-label { font-size: 11px; color: rgba(255,255,255,0.45); font-weight: 600; margin-bottom: 6px; }
+            .sidebar-remise-card .remise-inputs { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+            .sidebar-remise-card input[type="number"] {
+                width: 70px; padding: 6px 8px; border-radius: 6px;
+                border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.06);
+                color: #e2e8f0; font-size: 13px; text-align: center; font-weight: 600;
+            }
+            .sidebar-remise-card .remise-unit { font-size: 11px; color: rgba(255,255,255,0.35); }
+            .sidebar-remise-card .remise-max { font-size: 10px; color: #34d399; margin-top: 4px; }
             .sidebar-action-btn {
                 display: block; width: 100%; padding: 12px; border-radius: 10px; border: none;
                 font-size: 14px; font-weight: 700; cursor: pointer; text-align: center; margin-top: 8px;
@@ -3561,16 +3585,16 @@
                         </div>
                     </div>
                     <!-- Remise -->
-                    <div class="sidebar-card-group fournisseur-only" style="border-left:1px solid rgba(255,255,255,0.08);padding-left:8px;">
-                        <div class="sidebar-remise-group">
-                            <span style="font-size:9px;color:rgba(255,255,255,0.4);font-weight:600;">Remise</span>
-                            <div style="display:flex;align-items:center;gap:3px;">
-                                <input type="number" id="racPourcent" value="0" min="0" max="100" step="1" oninput="updatePct()" onchange="logRACChange()" title="Remise %" style="width:48px;padding:3px 4px;border-radius:6px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#e2e8f0;font-size:11px;text-align:center;">
-                                <span style="font-size:9px;color:rgba(255,255,255,0.3);">%</span>
-                                <input type="number" id="racOffert" value="0" min="0" step="1" oninput="updateAmt()" onchange="logRACChange()" title="RAC offert &euro;" style="width:56px;padding:3px 4px;border-radius:6px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#e2e8f0;font-size:11px;text-align:center;">
-                                <span style="font-size:9px;color:rgba(255,255,255,0.3);">&euro;</span>
+                    <div class="sidebar-card-group fournisseur-only">
+                        <div class="sidebar-remise-card">
+                            <div class="remise-label">Remise</div>
+                            <div class="remise-inputs">
+                                <input type="number" id="racPourcent" value="0" min="0" max="100" step="1" oninput="updatePct()" onchange="logRACChange()" title="Remise %">
+                                <span class="remise-unit">%</span>
+                                <input type="number" id="racOffert" value="0" min="0" step="1" oninput="updateAmt()" onchange="logRACChange()" title="RAC offert &euro;">
+                                <span class="remise-unit">&euro;</span>
                             </div>
-                            <span id="maxPctInfo" style="font-size:9px;color:#34d399;">Max: <strong id="maxPctValue">&mdash;</strong></span>
+                            <div class="remise-max" id="maxPctInfo">Max: <strong id="maxPctValue">&mdash;</strong></div>
                         </div>
                     </div>
                     <!-- Marge -->
@@ -3590,7 +3614,7 @@
                     </div>
                     <!-- PTZ -->
                     <div class="sidebar-card-group">
-                        <button onclick="ite_generatePTZ()" class="sidebar-action-btn sidebar-btn-ptz">&#127963;&#65039; PTZ</button>
+                        <button onclick="pac_generatePTZ()" class="sidebar-action-btn sidebar-btn-ptz">&#127963;&#65039; PTZ</button>
                     </div>
                     <!-- Signature -->
                     <div class="sidebar-card-group">
@@ -8250,8 +8274,158 @@ function ite_generateDevis(){
 }
 
 // ============================================
+// PAC PTZ DOCUMENT GENERATION
+// Uses PAC RAC data, independent from ITE
+// ============================================
+async function pac_generatePTZ(){
+    // PAC RAC data
+    var racText=document.getElementById('resteCharge').textContent;
+    var racVal=parseFloat(racText.replace(/[^\d,-]/g,'').replace(',','.'))||0;
+    if(racVal<=0){
+        alert('Le RAC PAC est \u00e0 0 ou n\u00e9gatif. Pas de PTZ n\u00e9cessaire.');
+        return;
+    }
+
+    // Client info from PAC form
+    var prenomVal=document.getElementById('prenom').value.trim();
+    var nomVal=document.getElementById('nom').value.trim();
+    var nom=(prenomVal+' '+nomVal).trim()||'CLIENT';
+    var nomUpper=nomVal.toUpperCase();
+    var prenomUpper=prenomVal.charAt(0).toUpperCase()+prenomVal.slice(1);
+
+    // Devis info - use existing PAC devis number or generate one
+    var numEl=document.getElementById('numDevis');
+    var num=numEl?numEl.value.trim():'';
+    if(!num){
+        num='PAC-'+new Date().toISOString().slice(0,10).replace(/-/g,'');
+    }
+    var df=new Date().toLocaleDateString('fr-FR');
+
+    // Address from ITE fields if available, or from any available source
+    var adr='';var cp='';var villeClean='';var tel='';var em='';
+    var iteAdr=document.getElementById('iteAdresse');
+    var iteVil=document.getElementById('iteVille');
+    var iteTel=document.getElementById('iteTel');
+    var iteEmail=document.getElementById('iteEmail');
+    if(iteAdr) adr=iteAdr.value.trim();
+    if(iteVil){
+        var vilParts=iteVil.value.trim().split(' ');
+        cp=vilParts[0]||'';
+        villeClean=vilParts.slice(1).join(' ')||'';
+    }
+    if(iteTel) tel=iteTel.value.trim();
+    if(iteEmail) em=iteEmail.value.trim();
+
+    // TTC from PAC
+    var ttcText=document.getElementById('totalTTC').textContent;
+    var ttc=parseFloat(ttcText.replace(/[^\d,-]/g,'').replace(',','.'))||0;
+
+    // Montant PTZ = min(RAC, plafond 15000 for 1 action)
+    var plafondPTZ=15000;
+    var montantPTZ=Math.min(racVal,plafondPTZ);
+    var duree=parseInt(document.getElementById('pacDureeMois')?.value)||120;
+
+    // ================================================================
+    // FILL THE REAL CERFA PDF WITH PDF-LIB
+    // ================================================================
+    try{
+        var btnEl=event&&event.target?event.target:null;
+        if(btnEl){btnEl.disabled=true;btnEl.textContent='\u23f3 PTZ...';}
+
+        var pdfUrl='eco-ptz-emprunteur-2025.pdf';
+        var pdfResp=await fetch(pdfUrl);
+        if(!pdfResp.ok) throw new Error('Impossible de charger le formulaire PDF ('+pdfResp.status+')');
+        var pdfBytes=await pdfResp.arrayBuffer();
+
+        var PDFLib=window.PDFLib||window['pdf-lib'];
+        var pdfDoc=await PDFLib.PDFDocument.load(pdfBytes);
+        var form=pdfDoc.getForm();
+
+        var sanitize=function(s){return(s||'').replace(/[\u202f\u00a0]/g,' ');};
+        var setTxt=function(name,val){try{form.getTextField(name).setText(sanitize(val)||'');}catch(e){console.warn('PTZ field:',name);}};
+        var chk=function(name,val){try{var cb=form.getCheckBox(name);if(val)cb.check();else cb.uncheck();}catch(e){console.warn('PTZ chk:',name);}};
+        var fmtN=function(n){return Math.round(n).toLocaleString('fr-FR');};
+
+        // Page 1 - Identit\u00e9
+        setTxt('Nom',nomUpper);
+        setTxt('Pr\u00e9nom',prenomUpper);
+
+        // Page 1 - Logement
+        setTxt('n\u00b0 voirie','');
+        setTxt('Voie',adr);
+        setTxt('Code postal',cp);
+        setTxt('Ville',villeClean.toUpperCase());
+
+        // Page 1 - Co\u00fbts
+        setTxt('Co\u00fbt travaux',fmtN(ttc)+' \u20ac TTC');
+        setTxt('Frais','0 \u20ac TTC');
+        setTxt('TOTAL TTC',fmtN(ttc)+' \u20ac TTC');
+
+        // Page 1 - Montant et dur\u00e9e
+        setTxt('Montant demand\u00e9 en \u20ac',fmtN(montantPTZ));
+        setTxt('Dur\u00e9e demand\u00e9e en mois',String(duree));
+
+        // Page 2 - Demande
+        setTxt('Nb formulaires','1');
+        setTxt('Nb devis','1');
+        setTxt('Nb frais','');
+        setTxt('Nb copro','');
+        setTxt('Nb RP','1');
+        setTxt('Date',df);
+
+        // Checkboxes
+        chk('MI',true);
+        chk('Apt',false);
+        chk('Particulier',true);
+        chk('SCI',false);
+        chk('Propri\u00e9taire',true);
+        chk('Donn\u00e9 dispo',false);
+        chk('PB',false);
+        chk('Initial',true);
+        chk('Compl\u00e9mentaire',false);
+
+        // 1 action (PAC = pompe \u00e0 chaleur)
+        chk('1 action hors fen\u00eatres',true);
+        chk('1 action',false);
+        chk('2 actions',false);
+        chk('3 actions',false);
+        chk('Performance globale',false);
+        chk('Assainissement',false);
+
+        chk('X formulaires Entreprise',true);
+        chk('X devis',true);
+        chk('X frais',false);
+        chk('X frais copro',false);
+        chk('X RP',true);
+        chk('X audit',false);
+        chk('X SPANC',false);
+
+        try{form.getDropdown('Plafond').select('1 action (hors isolation parois vitr\u00e9es) - 15 000 \u20ac');}catch(e){}
+
+        var filledPdf=await pdfDoc.save();
+        var blob=new Blob([filledPdf],{type:'application/pdf'});
+        var url=URL.createObjectURL(blob);
+        var a=document.createElement('a');
+        a.href=url;
+        a.download='ECO-PTZ-PAC-'+num+'-'+nom.replace(/\s+/g,'_')+'.pdf';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(function(){URL.revokeObjectURL(url);},5000);
+
+        if(btnEl){btnEl.disabled=false;btnEl.innerHTML='\ud83c\udfdb\ufe0f PTZ';}
+        logAction('PTZ g\u00e9n\u00e9r\u00e9', 'PAC '+num+' - '+nom);
+
+    }catch(err){
+        console.error('Erreur PTZ PAC:',err);
+        alert('Erreur lors de la g\u00e9n\u00e9ration du PTZ PAC :\n'+err.message);
+        if(btnEl){btnEl.disabled=false;btnEl.innerHTML='\ud83c\udfdb\ufe0f PTZ';}
+    }
+}
+
+// ============================================
 // PTZ DOCUMENT GENERATION - CERFA Annexe 1.1
-// Formulaire officiel Éco-PTZ individuel
+// Formulaire officiel Éco-PTZ individuel (ITE)
 // ============================================
 function ptz_chk(checked){ return '<span style="display:inline-block;width:3.5mm;height:3.5mm;border:1px solid #333;text-align:center;line-height:3.5mm;font-size:8pt;margin-right:1.5mm;vertical-align:middle;'+(checked?'background:#006B3F;color:white;':'')+'">'+( checked?'X':'&nbsp;')+'</span>'; }
 function ptz_dots(val,w){ return '<span style="display:inline-block;min-width:'+(w||'40mm')+';border-bottom:1px dotted #555;padding:0 1mm;font-weight:'+(val?'600':'400')+';">'+(val||'')+'</span>'; }
