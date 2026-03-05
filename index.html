@@ -2649,8 +2649,19 @@
             <div class="card" id="produitCard">
                 <h2 class="card-title">&#9881;&#65039; Produit & Options</h2>
 
+                <!-- Scenario selector -->
+                <div class="form-group" style="margin-bottom:16px;">
+                    <label style="font-weight:700;font-size:13px;">Sc&eacute;nario</label>
+                    <select id="scenarioVisible" onchange="onScenarioVisibleChange(this.value)" style="font-size:14px;font-weight:600;padding:10px 12px;">
+                        <option value="PAC">PAC seule</option>
+                        <option value="PAC + BALLON THERMO">PAC + Ballon Thermodynamique</option>
+                        <option value="PAC + SSC">PAC + Syst&egrave;me Solaire Combin&eacute;</option>
+                        <option value="SSC">SSC seul</option>
+                    </select>
+                </div>
+
                 <!-- PAC Air/Eau -->
-                <div class="produit-bloc">
+                <div class="produit-bloc" id="blocPAC">
                     <div class="produit-bloc-head">
                         <span class="produit-bloc-icon">&#9881;&#65039;</span>
                         <span class="produit-bloc-title">Pompe &agrave; Chaleur Air/Eau</span>
@@ -2754,7 +2765,7 @@
                         <span class="produit-bloc-icon">&#128703;</span>
                         <span class="produit-bloc-title">Ballon Thermodynamique</span>
                     </div>
-                    <div class="form-group" style="margin-bottom:8px;">
+                    <div class="form-group" style="margin-bottom:8px;display:none;">
                         <label>Inclure un ballon CET ?</label>
                         <select id="includeBallon" onchange="toggleProduitOpt('ballonOpt',this.value==='oui');calc();calcCEEDetail()">
                             <option value="non">Non</option>
@@ -2789,7 +2800,7 @@
                         <span class="produit-bloc-icon">&#9728;&#65039;</span>
                         <span class="produit-bloc-title">SSC &mdash; Syst&egrave;me Solaire Combin&eacute;</span>
                     </div>
-                    <div class="form-group" style="margin-bottom:8px;">
+                    <div class="form-group" style="margin-bottom:8px;display:none;">
                         <label>Inclure SSC ?</label>
                         <select id="includeSSC" onchange="toggleProduitOpt('sscOpt',this.value==='oui');calc();calcCEEDetail()">
                             <option value="non">Non</option>
@@ -4242,6 +4253,36 @@ function autoSyncScenario() {
     if (sel) { sel.value = sc; }
     var disp = document.getElementById('scenarioAutoDisplay');
     if (disp) { disp.value = sc; }
+    // Sync visible selector
+    var vis = document.getElementById('scenarioVisible');
+    if (vis && vis.value !== sc) vis.value = sc;
+    syncEtasFromPAC();
+    onScenarioChange();
+}
+
+function onScenarioVisibleChange(val) {
+    // Sync hidden scenario select
+    var sel = document.getElementById('scenario');
+    if (sel) sel.value = val;
+    var disp = document.getElementById('scenarioAutoDisplay');
+    if (disp) disp.value = val;
+    // Show/hide blocs
+    var isSSC = (val === 'SSC');
+    var hasPAC = !isSSC;
+    var hasBallon = (val === 'PAC + BALLON THERMO');
+    var hasSSC = (val === 'PAC + SSC' || val === 'SSC');
+    // Toggle PAC bloc
+    var blocPAC = document.getElementById('blocPAC');
+    if (blocPAC) blocPAC.style.display = hasPAC ? '' : 'none';
+    // Toggle Ballon include & section
+    var balSel = document.getElementById('includeBallon');
+    if (balSel) { balSel.value = hasBallon ? 'oui' : 'non'; }
+    toggleProduitOpt('ballonOpt', hasBallon);
+    // Toggle SSC include & section
+    var sscSel = document.getElementById('includeSSC');
+    if (sscSel) { sscSel.value = hasSSC ? 'oui' : 'non'; }
+    toggleProduitOpt('sscOpt', hasSSC);
+    // Trigger scenario change
     syncEtasFromPAC();
     onScenarioChange();
 }
