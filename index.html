@@ -2783,49 +2783,38 @@
                     </div>
                     <div class="form-group" style="margin-bottom: 10px;">
                         <label>Mod&egrave;le PAC</label>
-                        <select id="marquePAC" onchange="updatePAC();syncEtasFromPAC();calc();calcCEEDetail()">
-                            <option value="">-- S&eacute;lectionner un mod&egrave;le --</option>
-                            <optgroup label="THALEOS Mono">
-                                <option value="THALEOS_04M">THALEOS 4kW Mono</option>
-                                <option value="THALEOS_06M">THALEOS 6kW Mono</option>
-                                <option value="THALEOS_08M">THALEOS 8kW Mono</option>
-                                <option value="THALEOS_10M">THALEOS 10kW Mono</option>
-                                <option value="THALEOS_12M">THALEOS 12kW Mono</option>
-                                <option value="THALEOS_14M">THALEOS 14kW Mono</option>
-                                <option value="THALEOS_16M">THALEOS 16kW Mono</option>
-                            </optgroup>
-                            <optgroup label="THALEOS Tri">
-                                <option value="THALEOS_08T">THALEOS 8kW Tri</option>
-                                <option value="THALEOS_10T">THALEOS 10kW Tri</option>
-                                <option value="THALEOS_12T">THALEOS 12kW Tri</option>
-                                <option value="THALEOS_14T">THALEOS 14kW Tri</option>
-                                <option value="THALEOS_16T">THALEOS 16kW Tri</option>
-                            </optgroup>
-                            <optgroup label="WELLEA">
-                                <option value="WELLEA_12T">WELLEA 12kW Tri</option>
-                                <option value="WELLEA_14T">WELLEA 14kW Tri</option>
-                                <option value="WELLEA_16T">WELLEA 16kW Tri</option>
-                                <option value="WELLEA_16M">WELLEA 16kW Mono</option>
-                            </optgroup>
-                            <optgroup label="WOLF">
-                                <option value="WOLF_FHA_05_06_230">WOLF 5kW Mono</option>
-                                <option value="WOLF_FHA_06_07_230">WOLF 6kW Mono</option>
-                                <option value="WOLF_FHA_08_10_230">WOLF 8kW Mono</option>
-                                <option value="WOLF_FHA_11_14_230">WOLF 11kW Mono</option>
-                                <option value="WOLF_FHA_14_17_230">WOLF 14kW Mono</option>
-                                <option value="WOLF_FHA_14_17_400">WOLF 14kW Tri</option>
-                            </optgroup>
-                            <optgroup label="CLIVET Edge EVO Tri">
-                                <option value="CLIVET_EVO_22T">Clivet Edge EVO 22kW Tri</option>
-                                <option value="CLIVET_EVO_26T">Clivet Edge EVO 26kW Tri</option>
-                                <option value="CLIVET_EVO_30T">Clivet Edge EVO 30kW Tri</option>
-                            </optgroup>
-                            <optgroup label="FHE Inelio Tri">
-                                <option value="FHE_INELIO_22T">FHE Inelio 22kW Tri</option>
-                                <option value="FHE_INELIO_26T">FHE Inelio 26kW Tri</option>
-                                <option value="FHE_INELIO_30T">FHE Inelio 30kW Tri</option>
-                            </optgroup>
-                        </select>
+                        <input type="text" id="marquePAC" list="marquePACList" placeholder="Tapez ou s&eacute;lectionnez un mod&egrave;le" autocomplete="off" oninput="onMarquePACInput()">
+                        <input type="hidden" id="marquePACKey" value="">
+                        <datalist id="marquePACList">
+                            <option value="THALEOS 4kW Mono">
+                            <option value="THALEOS 6kW Mono">
+                            <option value="THALEOS 8kW Mono">
+                            <option value="THALEOS 10kW Mono">
+                            <option value="THALEOS 12kW Mono">
+                            <option value="THALEOS 14kW Mono">
+                            <option value="THALEOS 16kW Mono">
+                            <option value="THALEOS 8kW Tri">
+                            <option value="THALEOS 10kW Tri">
+                            <option value="THALEOS 12kW Tri">
+                            <option value="THALEOS 14kW Tri">
+                            <option value="THALEOS 16kW Tri">
+                            <option value="WELLEA 12kW Tri">
+                            <option value="WELLEA 14kW Tri">
+                            <option value="WELLEA 16kW Tri">
+                            <option value="WELLEA 16kW Mono">
+                            <option value="WOLF 5kW Mono">
+                            <option value="WOLF 6kW Mono">
+                            <option value="WOLF 8kW Mono">
+                            <option value="WOLF 11kW Mono">
+                            <option value="WOLF 14kW Mono">
+                            <option value="WOLF 14kW Tri">
+                            <option value="Clivet Edge EVO 22kW Tri">
+                            <option value="Clivet Edge EVO 26kW Tri">
+                            <option value="Clivet Edge EVO 30kW Tri">
+                            <option value="FHE Inelio 22kW Tri">
+                            <option value="FHE Inelio 26kW Tri">
+                            <option value="FHE Inelio 30kW Tri">
+                        </datalist>
                     </div>
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px;">
                         <div class="form-group" style="margin-bottom:0;">
@@ -4278,7 +4267,7 @@ function syncEtas() {
 
 // ===== PRODUIT & OPTIONS =====
 function updatePAC() {
-    var key = document.getElementById('marquePAC').value;
+    var key = document.getElementById('marquePACKey').value;
     var p = PAC_CATALOG[key];
     var el = document.getElementById('pacInfo');
     if (!p || !el) return;
@@ -4301,7 +4290,7 @@ function updatePAC() {
 }
 
 function syncEtasFromPAC() {
-    var key = document.getElementById('marquePAC').value;
+    var key = document.getElementById('marquePACKey').value;
     var p = PAC_CATALOG[key];
     if (!p) return;
     var ev = (p.etas || '').split('/').map(function(s){ return parseFloat(s.trim()); });
@@ -4601,6 +4590,39 @@ const PAC_CATALOG = {
     FHE_INELIO_26T:{m:'FHE',n:'PAC FHE Inelio 26kW Tri',r:'FHEAR20022',a:'380-415V/3Ph',cop35:'4,50',cop55:'3,15',cap35:'26,0kW',cap55:'26,0kW',cls:'A+++',etas:'177/123',scop:'-',db:'-',dim:'-',kg:'-',ref:'R32',ch:'-',pr:'-',rg:'6',prix:4590},
     FHE_INELIO_30T:{m:'FHE',n:'PAC FHE Inelio 30kW Tri',r:'FHEAR20023',a:'380-415V/3Ph',cop35:'4,20',cop55:'3,15',cap35:'30,0kW',cap55:'30,0kW',cls:'A+++',etas:'165/123',scop:'-',db:'-',dim:'-',kg:'-',ref:'R32',ch:'-',pr:'-',rg:'6',prix:4690}
 };
+
+// Reverse lookup : display name → catalog key
+const PAC_NAME_TO_KEY = {
+    'THALEOS 4kW Mono':'THALEOS_04M','THALEOS 6kW Mono':'THALEOS_06M','THALEOS 8kW Mono':'THALEOS_08M',
+    'THALEOS 10kW Mono':'THALEOS_10M','THALEOS 12kW Mono':'THALEOS_12M','THALEOS 14kW Mono':'THALEOS_14M',
+    'THALEOS 16kW Mono':'THALEOS_16M','THALEOS 8kW Tri':'THALEOS_08T','THALEOS 10kW Tri':'THALEOS_10T',
+    'THALEOS 12kW Tri':'THALEOS_12T','THALEOS 14kW Tri':'THALEOS_14T','THALEOS 16kW Tri':'THALEOS_16T',
+    'WELLEA 12kW Tri':'WELLEA_12T','WELLEA 14kW Tri':'WELLEA_14T','WELLEA 16kW Tri':'WELLEA_16T',
+    'WELLEA 16kW Mono':'WELLEA_16M',
+    'WOLF 5kW Mono':'WOLF_FHA_05_06_230','WOLF 6kW Mono':'WOLF_FHA_06_07_230',
+    'WOLF 8kW Mono':'WOLF_FHA_08_10_230','WOLF 11kW Mono':'WOLF_FHA_11_14_230',
+    'WOLF 14kW Mono':'WOLF_FHA_14_17_230','WOLF 14kW Tri':'WOLF_FHA_14_17_400',
+    'Clivet Edge EVO 22kW Tri':'CLIVET_EVO_22T','Clivet Edge EVO 26kW Tri':'CLIVET_EVO_26T',
+    'Clivet Edge EVO 30kW Tri':'CLIVET_EVO_30T',
+    'FHE Inelio 22kW Tri':'FHE_INELIO_22T','FHE Inelio 26kW Tri':'FHE_INELIO_26T',
+    'FHE Inelio 30kW Tri':'FHE_INELIO_30T'
+};
+// Reverse lookup : catalog key → display name
+const PAC_KEY_TO_NAME = {};
+for (var _k in PAC_NAME_TO_KEY) PAC_KEY_TO_NAME[PAC_NAME_TO_KEY[_k]] = _k;
+
+function onMarquePACInput() {
+    var val = document.getElementById('marquePAC').value.trim();
+    var keyInput = document.getElementById('marquePACKey');
+    var key = PAC_NAME_TO_KEY[val] || '';
+    keyInput.value = key;
+    if (key) {
+        updatePAC(); syncEtasFromPAC(); calc(); calcCEEDetail();
+    } else {
+        var el = document.getElementById('pacInfo');
+        if (el) el.innerHTML = val ? '<i style="color:#94a3b8;">Mod\u00e8le personnalis\u00e9 — donn\u00e9es non disponibles</i>' : '';
+    }
+}
 
 function getCEE(et, zn, cs, sf){
     if(!D.CEE[et]) return 0;
@@ -6126,10 +6148,12 @@ function autoSelectPAC(targetKW) {
         if (score < bestScore) { best = m; bestScore = score; }
     }
     if (best) {
-        var sel = document.getElementById('marquePAC');
-        if (sel) {
-            sel.value = best.key;
-            sel.dispatchEvent(new Event('change'));
+        var pacInput = document.getElementById('marquePAC');
+        var pacKeyInput = document.getElementById('marquePACKey');
+        if (pacInput && pacKeyInput) {
+            pacInput.value = PAC_KEY_TO_NAME[best.key] || best.key;
+            pacKeyInput.value = best.key;
+            updatePAC(); syncEtasFromPAC(); calc(); calcCEEDetail();
         }
     }
 }
@@ -9100,9 +9124,8 @@ function pac_generateDevis(){
     var tchLong=tchMap[tch]||tch;
 
     // PAC data
-    var pacKey=document.getElementById('marquePAC').value;
-    var pacEl=document.getElementById('marquePAC');
-    var pacName=pacEl.options[pacEl.selectedIndex].text;
+    var pacKey=document.getElementById('marquePACKey').value;
+    var pacName=document.getElementById('marquePAC').value||'PAC';
     var p=PAC_CATALOG[pacKey]||{};
     var pPAC=ite_N('prixPAC'),pPose=ite_N('prixPose');
     var usage=document.getElementById('usagePAC').value;
