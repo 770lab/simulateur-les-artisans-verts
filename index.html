@@ -2402,7 +2402,7 @@
                             class="dossier-hero-input"
                             type="text"
                             value=""
-                            placeholder="AVR-202XX ou 06..."
+                            placeholder="4960, AVR-2025-4960 ou 06..."
                             autocomplete="off"
                             spellcheck="false"
                             onkeydown="if(event.key==='Enter'){event.preventDefault();ite_searchClient();}"
@@ -7589,8 +7589,8 @@ function ite_showDossierPicker(matches){
     var html='<div class="dossier-picker-title">&#128276; '+matches.length+' dossiers trouv\u00e9s &mdash; lequel charger ?</div>';
     matches.forEach(function(row,i){
         var num=(row[0]||'').trim();
-        var prenom=(row[1]||'').trim();
-        var nom=((row[2]||'')+(row[3]?' '+row[3]:'')).trim();
+        var nom=(row[2]||'').trim();
+        var prenom=(row[3]||'').trim();
         var tel=(row[21]||'').trim();
         var ville=(row[17]||row[20]||'').trim();
         html+='<div class="dossier-picker-item" onclick="ite_loadDossier(_ite_matches['+i+'])">'
@@ -7619,14 +7619,28 @@ async function ite_searchClient(){
         for(var i=1;i<rows.length;i++){
             if((rows[i][0]||'').toUpperCase().trim()===qUp) matches.push(rows[i]);
         }
-        // 2. Partielle n° dossier
+        // 2. Partielle n° dossier (contient la saisie)
         if(matches.length===0){
             for(var i=1;i<rows.length;i++){
                 var id=(rows[i][0]||'').toUpperCase().trim();
-                if(id&&(id.includes(qUp)||qUp.includes(id))) matches.push(rows[i]);
+                if(id&&id.includes(qUp)) matches.push(rows[i]);
             }
         }
-        // 3. Recherche par téléphone (col 21) — normaliser
+        // 3. Suffixe numérique (4 derniers chiffres du n° dossier)
+        if(matches.length===0 && /^\d{2,5}$/.test(q)){
+            for(var i=1;i<rows.length;i++){
+                var id=(rows[i][0]||'').trim();
+                if(id&&id.endsWith(q)) matches.push(rows[i]);
+            }
+            // Aussi chercher si le numéro contient ces chiffres
+            if(matches.length===0){
+                for(var i=1;i<rows.length;i++){
+                    var id=(rows[i][0]||'').trim();
+                    if(id&&id.includes(q)) matches.push(rows[i]);
+                }
+            }
+        }
+        // 4. Recherche par téléphone (col 21) — normaliser
         if(matches.length===0){
             var qTel=q.replace(/[\s.\-]/g,'');
             if(qTel.length>=6){
@@ -7641,6 +7655,14 @@ async function ite_searchClient(){
                         if(t&&(t.includes(qTel)||qTel.includes(t))) matches.push(rows[i]);
                     }
                 }
+            }
+        }
+        // 5. Recherche par nom (col 2) ou prénom (col 3)
+        if(matches.length===0 && q.length>=3 && !/^\d+$/.test(q)){
+            for(var i=1;i<rows.length;i++){
+                var nom=(rows[i][2]||'').toUpperCase().trim();
+                var prn=(rows[i][3]||'').toUpperCase().trim();
+                if((nom&&nom.includes(qUp))||(prn&&prn.includes(qUp))) matches.push(rows[i]);
             }
         }
         if(matches.length===0){ite_setStatus('err','\u274c '+q+' non trouv\u00e9');return;}
