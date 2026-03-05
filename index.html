@@ -2579,11 +2579,11 @@
                     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:10px;">
                         <div class="form-group" style="margin-bottom:0;">
                             <label>Prix PAC TTC (&euro;)</label>
-                            <input type="number" id="prixPAC" value="7650" oninput="calc()">
+                            <input type="number" id="prixPAC" value="7650" oninput="onPrixPACPoseChange()">
                         </div>
                         <div class="form-group" style="margin-bottom:0;">
                             <label>Prix Pose TTC (&euro;)</label>
-                            <input type="number" id="prixPose" value="3240" oninput="calc()">
+                            <input type="number" id="prixPose" value="3240" oninput="onPrixPACPoseChange()">
                         </div>
                         <div class="form-group" style="margin-bottom:0;">
                             <label>Usage</label>
@@ -2617,11 +2617,11 @@
                             </div>
                             <div class="form-group" style="margin-bottom:0;">
                                 <label>Prix TTC (&euro;)</label>
-                                <input type="number" id="prixBallon" value="2000" oninput="calc()">
+                                <input type="number" id="prixBallon" value="2000" oninput="onPrixPACPoseChange()">
                             </div>
                             <div class="form-group" style="margin-bottom:0;">
                                 <label>Pose TTC (&euro;)</label>
-                                <input type="number" id="prixPoseBallon" value="860" oninput="calc()">
+                                <input type="number" id="prixPoseBallon" value="860" oninput="onPrixPACPoseChange()">
                             </div>
                             <div class="form-group" style="margin-bottom:0;">
                                 <label>COP</label>
@@ -2652,11 +2652,11 @@
                             </div>
                             <div class="form-group" style="margin-bottom:0;">
                                 <label>Prix SSC TTC (&euro;)</label>
-                                <input type="number" id="prixSSC" value="10230" oninput="calc()">
+                                <input type="number" id="prixSSC" value="10230" oninput="onPrixPACPoseChange()">
                             </div>
                             <div class="form-group" style="margin-bottom:0;">
                                 <label>Pose SSC TTC (&euro;)</label>
-                                <input type="number" id="prixPoseSSC" value="4730" oninput="calc()">
+                                <input type="number" id="prixPoseSSC" value="4730" oninput="onPrixPACPoseChange()">
                             </div>
                         </div>
                     </div>
@@ -4519,10 +4519,22 @@ function getPassThrough() {
     }
 }
 
+// Quand l'utilisateur modifie un prix produit/pose, déverrouiller le TTC et recalculer depuis les prix saisis
+function onPrixPACPoseChange(){
+    if(mode){
+        var tt=getPacManualTTC();
+        document.getElementById('totalTTCInput').value=tt;
+        var tte=document.getElementById('totalTTCEditable');
+        if(tte) tte.textContent=fmt(tt);
+        document.getElementById('lockTTC').checked=false;
+    }
+    calc();
+}
+
 function calc(){
   try {
     _calcRunning = true;
-    
+
     // Always recalculate CEE detail first (updates lastCEEDetailPrime)
     calcCEEDetail();
     
