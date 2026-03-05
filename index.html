@@ -8091,9 +8091,7 @@ function ite_generateDevis(){
             +'Dur\u00e9e du contrat de cr\u00e9dit : '+sDuree+' mois<br>'
             +'Remboursement en : '+sDuree+' mois<br>'
             +'Mensualit\u00e9 hors assurance : '+sMensHA+'<br>'
-            +'Mensualit\u00e9 avec assurance : '+sMensAA+'<br>'
-            +'Montant total d\u00fb hors assurance : '+ite_fmt(sTotalHA)+'<br>'
-            +'Montant total d\u00fb avec assurance : '+ite_fmt(sTotalAA)
+            +'Mensualit\u00e9 avec assurance : '+sMensAA
             +'</div>'
             +sigBlock;
         } else {
@@ -8113,9 +8111,7 @@ function ite_generateDevis(){
             +'Report mensualit\u00e9 : '+finReport+'<br>'
             +'Assurance : '+(ite_V('iteTypeAssurance')==='Aucune'?'Non':'Oui')+'<br>'
             +'Type d\u2019assurance : '+ite_V('iteTypeAssurance')+'<br>'
-            +'Technicien financier : -<br>'
-            +'Montant total d\u00fb hors assurance : '+ite_fmt(fTotalHA)+'<br>'
-            +'Montant total d\u00fb avec assurance : '+ite_fmt(fTotalAA)
+            +'Technicien financier : -'
             +'</div>'
             +sigBlock;
         }
@@ -8943,9 +8939,7 @@ function pac_generateDevis(){
         pg4+='Mensualité avec assurance : '+ite_fmt(pfMensAA)+'<br>';
         pg4+='Report mensualité : '+pfReport+'<br>';
         pg4+='Assurance : '+(pfAssurance==='Aucune'?'Non':'Oui')+'<br>';
-        pg4+='Type d\u2019assurance : '+pfAssurance+'<br>';
-        pg4+='Montant total dû hors assurance : '+ite_fmt(pfTotalHA)+'<br>';
-        pg4+='Montant total dû avec assurance : '+ite_fmt(pfTotalAA);
+        pg4+='Type d\u2019assurance : '+pfAssurance;
         pg4+='</div>';
         // Signatures financement
         pg4+='<div style="margin-top:8mm;display:flex;gap:20mm;font-size:9pt;line-height:1.8;">';
