@@ -697,6 +697,65 @@
         .results-sidebar .summary-card {
             border-radius: 0;
             margin-bottom: 0;
+            padding: 10px 24px;
+        }
+        /* Desktop: horizontal layout */
+        @media (min-width: 1025px) {
+            .results-sidebar .summary-card > .scenario-label-dark { margin-bottom: 6px; font-size: 12px; }
+            .sidebar-h-grid {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                align-items: center;
+            }
+            .sidebar-h-grid > div,
+            .sidebar-h-grid > .result-row-card,
+            .sidebar-h-grid > .result-highlight-card {
+                flex: 0 1 auto;
+                min-width: 0;
+            }
+            .sidebar-h-grid .result-row-card {
+                margin-bottom: 0;
+                padding: 6px 12px;
+                min-width: 100px;
+            }
+            .sidebar-h-grid .result-highlight-card {
+                margin-bottom: 0;
+                padding: 6px 12px;
+            }
+            .sidebar-h-grid .rrc-label { font-size: 10px; }
+            .sidebar-h-grid .rrc-value { font-size: 15px !important; }
+            .sidebar-h-grid .rhc-label { font-size: 10px; }
+            .sidebar-h-grid .rhc-value { font-size: 15px; }
+            .sidebar-details { display: none; }
+            .sidebar-details.open { display: block; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.08); margin-top: 8px; }
+            .sidebar-toggle-btn {
+                background: rgba(255,255,255,0.08);
+                border: 1px solid rgba(255,255,255,0.12);
+                color: #94a3b8;
+                padding: 5px 12px;
+                border-radius: 8px;
+                font-size: 11px;
+                cursor: pointer;
+                white-space: nowrap;
+            }
+            .sidebar-toggle-btn:hover { background: rgba(255,255,255,0.12); color: #e2e8f0; }
+        }
+        /* Mobile: after content, vertical */
+        @media (max-width: 1024px) {
+            .results-sidebar {
+                position: static;
+                order: 1;
+            }
+            .results-sidebar .summary-card {
+                border-radius: 16px;
+                padding: 24px;
+                margin: 10px;
+            }
+            .sidebar-h-grid { display: block; }
+            .sidebar-h-grid .result-row-card { margin-bottom: 10px; }
+            .sidebar-details { display: block !important; }
+            .sidebar-toggle-btn { display: none; }
         }
 
         .summary-card {
@@ -3388,219 +3447,237 @@
             <div class="summary-card" style="margin-bottom: 0;">
                 <div class="scenario-label-dark" id="scenarioSummary">&mdash;</div>
 
-                <!-- TOTAL TTC (readonly client) -->
-                <div class="ttc-readonly">
-                    <div class="result-row-card" style="background: rgba(96,165,250,0.08); border-color: rgba(96,165,250,0.15);">
-                        <div class="rrc-label">&#128176; Coût installation TTC</div>
-                        <div class="rrc-value blue" id="totalTTC">&mdash;</div>
-                    </div>
-                </div>
+                <!-- HORIZONTAL GRID: key metrics shown in a row on desktop -->
+                <div class="sidebar-h-grid">
 
-                <!-- TOTAL TTC (editable fournisseur) -->
-                <div class="fournisseur-only" style="margin-bottom: 12px;">
-                    <div class="result-row-card" style="background: rgba(96,165,250,0.08); border-color: rgba(96,165,250,0.15);">
-                        <div class="rrc-label">&#128176; Coût installation TTC</div>
-                        <div class="rrc-value blue" id="totalTTCEditable" contenteditable="true" oninput="onTTCEdit()" style="cursor: text; min-width: 60px;">10 890 €</div>
+                    <!-- TOTAL TTC (readonly client) -->
+                    <div class="ttc-readonly">
+                        <div class="result-row-card" style="background: rgba(96,165,250,0.08); border-color: rgba(96,165,250,0.15);">
+                            <div class="rrc-label">&#128176; TTC</div>
+                            <div class="rrc-value blue" id="totalTTC">&mdash;</div>
+                        </div>
                     </div>
-                    <input type="hidden" id="totalTTCInput" value="10890">
-                    <small style="font-size: 11px; color: rgba(255,255,255,0.35); margin-top: 6px; display: block;">
-                        <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
-                            <input type="checkbox" id="lockTTC" checked onchange="calc()"> Verrouiller (auto selon scénario)
-                        </label>
-                    </small>
-                </div>
 
-                <!-- COÛT HT fournisseur -->
-                <div class="fournisseur-only" style="margin-bottom: 4px;">
+                    <!-- TOTAL TTC (editable fournisseur) -->
+                    <div class="fournisseur-only">
+                        <div class="result-row-card" style="background: rgba(96,165,250,0.08); border-color: rgba(96,165,250,0.15);">
+                            <div class="rrc-label">&#128176; TTC</div>
+                            <div class="rrc-value blue" id="totalTTCEditable" contenteditable="true" oninput="onTTCEdit()" style="cursor: text; min-width: 60px;">10 890 €</div>
+                        </div>
+                        <input type="hidden" id="totalTTCInput" value="10890">
+                    </div>
+
+                    <!-- MPR -->
                     <div class="result-row-card">
-                        <div>
-                            <div class="rrc-label">Coût HT</div>
-                            <div style="font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 2px;">Matériel + pose + admin</div>
+                        <div class="rrc-label">MPR</div>
+                        <div class="rrc-value green" id="aidesMPR" style="font-size: 18px;">&mdash;</div>
+                    </div>
+
+                    <!-- CEE -->
+                    <div class="result-row-card">
+                        <div class="rrc-label">CEE</div>
+                        <div class="rrc-value green" id="aidesCEE" style="font-size: 18px;">&mdash;</div>
+                    </div>
+
+                    <!-- TOTAL AIDES -->
+                    <div class="result-highlight-card">
+                        <div class="rhc-label">Total aides</div>
+                        <div class="rhc-value" id="totalAides">&mdash;</div>
+                    </div>
+
+                    <!-- RESTE À CHARGE -->
+                    <div class="result-row-card" style="background: rgba(251,191,36,0.08); border-color: rgba(251,191,36,0.15);">
+                        <div class="rrc-label">&#127968; RAC</div>
+                        <div class="rrc-value yellow" id="resteCharge">&mdash;</div>
+                    </div>
+
+                    <!-- MARGE fournisseur -->
+                    <div class="fournisseur-only telepro-hide">
+                        <div class="result-row-card" style="background: rgba(248,113,113,0.06); border-color: rgba(248,113,113,0.12);">
+                            <div class="rrc-label">&#128202; Marge</div>
+                            <div class="rrc-value" id="margeFinal" style="font-size: 18px;">&mdash;</div>
                         </div>
-                        <div class="rrc-value" id="displayCoutHT" style="font-size: 18px;">&mdash;</div>
                     </div>
-                </div>
 
-                <div class="glow-separator"></div>
-
-                <!-- ESTIMATION FINANCIÈRE -->
-                <div class="dark-section-title">Estimation financière</div>
-
-                <div class="result-row-card">
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <label style="display: flex; align-items: center; cursor: pointer; gap: 4px;">
-                            <input type="checkbox" id="deduireMPR" checked onchange="calc()" style="accent-color: #22c55e; width: 16px; height: 16px; cursor: pointer;">
-                            <span class="rrc-label" style="margin: 0;">MaPrimeRénov'</span>
-                        </label>
-                    </div>
-                    <div class="rrc-value green" id="aidesMPR" style="font-size: 18px;">&mdash;</div>
-                </div>
-
-                <div class="result-row-card">
+                    <!-- BOUTON DEVIS -->
                     <div>
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <label style="display: flex; align-items: center; cursor: pointer; gap: 4px;">
-                                <input type="checkbox" id="deduireCEE" checked onchange="calc()" style="accent-color: #22c55e; width: 16px; height: 16px; cursor: pointer;">
-                                <span class="rrc-label" style="margin: 0;">Certificats CEE</span>
+                        <button id="exportBtn" onclick="exportPDF()" style="width:100%;padding:10px 14px;border-radius:10px;border:none;background:#16a34a;color:#fff;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
+                            &#128196; Devis PAC
+                        </button>
+                    </div>
+
+                    <!-- TOGGLE DETAILS -->
+                    <div>
+                        <button class="sidebar-toggle-btn" onclick="toggleSidebarDetails(this)">&#9660; D&eacute;tails</button>
+                    </div>
+
+                </div><!-- end sidebar-h-grid -->
+
+                <!-- DETAILS: collapsible on desktop, always visible on mobile -->
+                <div class="sidebar-details" id="pacSidebarDetails">
+
+                    <!-- Lock TTC -->
+                    <div class="fournisseur-only" style="margin-bottom: 12px; margin-top: 8px;">
+                        <small style="font-size: 11px; color: rgba(255,255,255,0.35); display: block;">
+                            <label style="display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
+                                <input type="checkbox" id="lockTTC" checked onchange="calc()"> Verrouiller TTC (auto selon sc&eacute;nario)
                             </label>
-                        </div>
-                        <div style="font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 2px;" id="ceeSourceLabel">BAR-TH détaillé</div>
+                        </small>
                     </div>
-                    <div class="rrc-value green" id="aidesCEE" style="font-size: 18px;">&mdash;</div>
-                </div>
 
-                <div class="glow-separator"></div>
+                    <!-- COÛT HT fournisseur -->
+                    <div class="fournisseur-only" style="margin-bottom: 4px;">
+                        <div class="result-row-card">
+                            <div>
+                                <div class="rrc-label">Coût HT</div>
+                                <div style="font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 2px;">Matériel + pose + admin</div>
+                            </div>
+                            <div class="rrc-value" id="displayCoutHT" style="font-size: 18px;">&mdash;</div>
+                        </div>
+                    </div>
 
-                <!-- TOTAL AIDES -->
-                <div class="result-highlight-card">
-                    <div class="rhc-label">Total des aides</div>
-                    <div class="rhc-value" id="totalAides">&mdash;</div>
-                </div>
+                    <!-- MPR/CEE checkboxes -->
+                    <div style="display: flex; gap: 16px; margin-bottom: 8px;">
+                        <label style="display: flex; align-items: center; cursor: pointer; gap: 4px; font-size: 12px; color: rgba(255,255,255,0.5);">
+                            <input type="checkbox" id="deduireMPR" checked onchange="calc()" style="accent-color: #22c55e; width: 14px; height: 14px; cursor: pointer;">
+                            D&eacute;duire MPR
+                        </label>
+                        <label style="display: flex; align-items: center; cursor: pointer; gap: 4px; font-size: 12px; color: rgba(255,255,255,0.5);">
+                            <input type="checkbox" id="deduireCEE" checked onchange="calc()" style="accent-color: #22c55e; width: 14px; height: 14px; cursor: pointer;">
+                            D&eacute;duire CEE
+                        </label>
+                        <span style="font-size: 10px; color: rgba(255,255,255,0.3);" id="ceeSourceLabel">BAR-TH d&eacute;taill&eacute;</span>
+                    </div>
 
-                <!-- RESTE À CHARGE -->
-                <div class="result-row-card" style="background: rgba(251,191,36,0.08); border-color: rgba(251,191,36,0.15);">
-                    <div class="rrc-label">&#127968; Reste à charge estimé</div>
-                    <div class="rrc-value yellow" id="resteCharge">&mdash;</div>
-                </div>
+                    <div class="glow-separator"></div>
 
-                <!-- MARGE fournisseur -->
-                <div class="fournisseur-only telepro-hide" style="margin-top: 4px;">
-                    <div class="result-row-card" style="background: rgba(248,113,113,0.06); border-color: rgba(248,113,113,0.12);">
-                        <div class="rrc-label">&#128202; Marge finale (HT)</div>
-                        <div class="rrc-value" id="margeFinal" style="font-size: 18px;">&mdash;</div>
+                    <!-- RAC Section (fournisseur only) -->
+                    <div class="rac-dark-section fournisseur-only" style="margin-bottom: 14px;">
+                        <div class="dark-section-title" style="margin-bottom: 10px;">Prise en charge du RAC</div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                            <div>
+                                <div class="amount-label" style="color: rgba(255,255,255,0.45); margin-bottom: 4px;">Pourcentage (%)</div>
+                                <input type="number" id="racPourcent" value="0" min="0" max="100" step="1" oninput="updatePct()" onchange="logRACChange()">
+                            </div>
+                            <div>
+                                <div class="amount-label" style="color: rgba(255,255,255,0.45); margin-bottom: 4px;">RAC offert (&euro;)</div>
+                                <input type="number" id="racOffert" value="0" min="0" step="1" oninput="updateAmt()" onchange="logRACChange()">
+                            </div>
+                        </div>
+                        <div id="maxPctInfo" style="font-size: 12px; padding: 10px 14px; border-radius: 8px; background: rgba(5,150,105,0.12); border: 1px solid rgba(5,150,105,0.25); color: #34d399; margin-bottom: 6px;">
+                            Remise max : <strong id="maxPctValue">&mdash;</strong> pour rester en dossier vert
+                        </div>
+                        <div class="note-small" style="font-size: 11px; margin-bottom: 8px; color: rgba(255,255,255,0.3);">Appliqu&eacute; sur le RAC brut. N'affecte pas le prix cumac.</div>
                     </div>
-                </div>
 
-                <div class="glow-separator"></div>
+                    <!-- FINANCEMENT PAC (Domofinance) -->
+                    <div id="pacFinanceBlock" style="margin-bottom:14px;border-radius:14px;padding:16px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);opacity:0.35;pointer-events:none;transition:all 0.3s;">
+                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+                            <span style="font-size:18px;">&#128179;</span>
+                            <span style="font-size:13px;font-weight:700;color:#e2e8f0;">Financer le reste &agrave; charge</span>
+                            <span id="pacFinBadge" style="font-size:10px;padding:2px 8px;border-radius:20px;background:rgba(100,116,139,0.3);color:#94a3b8;font-weight:600;">Pas de RAC</span>
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:11px;">
+                            <div>
+                                <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">Produit Domofinance</div>
+                                <select id="pacDomoProduct" onchange="pacDomoOnProductChange()" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#e2e8f0;font-size:11px;">
+                                    <option value="">Chargement&hellip;</option>
+                                </select>
+                            </div>
+                            <div>
+                                <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">Modalit&eacute;</div>
+                                <select id="pacDomoModality" onchange="pacDomoOnParamChange()" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#e2e8f0;font-size:11px;">
+                                    <option value="normal">Normal</option>
+                                </select>
+                            </div>
+                            <div>
+                                <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">Report 180j</div>
+                                <select id="pacDomoPostpone" onchange="pacDomoOnParamChange()" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#e2e8f0;font-size:11px;">
+                                    <option value="false">Sans</option>
+                                    <option value="true">Avec</option>
+                                </select>
+                            </div>
+                            <div>
+                                <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">Assurance</div>
+                                <select id="pacTypeAssurance" onchange="pacDomoOnParamChange()" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#e2e8f0;font-size:11px;">
+                                    <option value="DIM">DIM</option>
+                                    <option value="D">D</option>
+                                    <option value="DIMC">DIMC</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div style="border-top:1px solid rgba(255,255,255,0.06);margin:10px 0;padding-top:8px;">
+                            <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.5);margin-bottom:6px;">Emprunteur</div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:11px;">
+                            <div>
+                                <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">Date naissance</div>
+                                <input type="text" inputmode="numeric" id="pacDobEmprunteur" placeholder="JJMMAAAA" maxlength="10" oninput="ecoptz_formatDateInput(this);pacDomoOnParamChange()" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#e2e8f0;font-size:11px;">
+                            </div>
+                            <div>
+                                <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">En activit&eacute; ?</div>
+                                <select id="pacDomoEnActivite" onchange="pacDomoOnParamChange()" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#e2e8f0;font-size:11px;">
+                                    <option value="true">Oui</option>
+                                    <option value="false">Non</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div style="border-top:1px solid rgba(255,255,255,0.06);margin:10px 0;padding-top:8px;">
+                            <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.5);margin-bottom:6px;">Co-emprunteur <span style="font-weight:400;color:rgba(255,255,255,0.3);">(optionnel)</span></div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:11px;margin-bottom:10px;">
+                            <div>
+                                <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">Date naissance</div>
+                                <input type="text" inputmode="numeric" id="pacDobCoemprunteur" placeholder="JJMMAAAA" maxlength="10" oninput="ecoptz_formatDateInput(this);pacDomoOnParamChange()" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#e2e8f0;font-size:11px;">
+                            </div>
+                            <div></div>
+                        </div>
+                        <div style="border-top:1px solid rgba(255,255,255,0.06);margin:10px 0;padding-top:8px;">
+                            <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.5);margin-bottom:6px;">Dur&eacute;e &amp; R&eacute;sultats</div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:11px;">
+                            <div>
+                                <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">Dur&eacute;e (mois)</div>
+                                <select id="pacDureeMois" onchange="pacDomoOnDurationChange()" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#e2e8f0;font-size:11px;">
+                                    <option value="120">120</option>
+                                </select>
+                            </div>
+                            <div>
+                                <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">Mensualit&eacute; H.A.</div>
+                                <div id="pacMensHA" style="font-weight:700;font-size:14px;color:#34d399;padding:4px 0;">&mdash;</div>
+                            </div>
+                            <div>
+                                <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">Mensualit&eacute; A.A.</div>
+                                <div id="pacMensAA" style="font-weight:700;font-size:14px;color:#e2e8f0;padding:4px 0;">&mdash;</div>
+                            </div>
+                            <div>
+                                <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">TAEG</div>
+                                <div id="pacFinTAEG" style="font-weight:700;font-size:14px;color:#e2e8f0;padding:4px 0;">&mdash;</div>
+                            </div>
+                            <div>
+                                <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">Co&ucirc;t du cr&eacute;dit</div>
+                                <div id="pacFinCoutCredit" style="font-weight:700;font-size:14px;color:#e2e8f0;padding:4px 0;">&mdash;</div>
+                            </div>
+                            <div>
+                                <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">Taux d&eacute;biteur</div>
+                                <div id="pacFinTNC" style="font-weight:700;font-size:14px;color:#e2e8f0;padding:4px 0;">&mdash;</div>
+                            </div>
+                        </div>
+                        <div id="pacDomoStatus" style="display:none;padding:6px 10px;border-radius:8px;font-size:11px;margin-top:8px;"></div>
+                    </div>
 
-                <!-- RAC Section (fournisseur only) -->
-                <div class="rac-dark-section fournisseur-only" style="margin-bottom: 14px;">
-                    <div class="dark-section-title" style="margin-bottom: 10px;">Prise en charge du RAC</div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
-                        <div>
-                            <div class="amount-label" style="color: rgba(255,255,255,0.45); margin-bottom: 4px;">Pourcentage (%)</div>
-                            <input type="number" id="racPourcent" value="0" min="0" max="100" step="1" oninput="updatePct()" onchange="logRACChange()">
-                        </div>
-                        <div>
-                            <div class="amount-label" style="color: rgba(255,255,255,0.45); margin-bottom: 4px;">RAC offert (&euro;)</div>
-                            <input type="number" id="racOffert" value="0" min="0" step="1" oninput="updateAmt()" onchange="logRACChange()">
-                        </div>
-                    </div>
-                    <div id="maxPctInfo" style="font-size: 12px; padding: 10px 14px; border-radius: 8px; background: rgba(5,150,105,0.12); border: 1px solid rgba(5,150,105,0.25); color: #34d399; margin-bottom: 6px;">
-                        Remise max : <strong id="maxPctValue">&mdash;</strong> pour rester en dossier vert
-                    </div>
-                    <div class="note-small" style="font-size: 11px; margin-bottom: 8px; color: rgba(255,255,255,0.3);">Appliqué sur le RAC brut. N'affecte pas le prix cumac.</div>
-                </div>
+                    <!-- Signature -->
+                    <button onclick="esign_openModal('pac')" class="btn-dark-export" style="margin-top: 8px; background: rgba(255,255,255,0.08) !important; border: 1px solid rgba(255,255,255,0.15) !important;">
+                        &#9998; Signature &eacute;lectronique
+                    </button>
 
-                <!-- FINANCEMENT PAC (Domofinance) -->
-                <div id="pacFinanceBlock" style="margin-bottom:14px;border-radius:14px;padding:16px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);opacity:0.35;pointer-events:none;transition:all 0.3s;">
-                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
-                        <span style="font-size:18px;">&#128179;</span>
-                        <span style="font-size:13px;font-weight:700;color:#e2e8f0;">Financer le reste &agrave; charge</span>
-                        <span id="pacFinBadge" style="font-size:10px;padding:2px 8px;border-radius:20px;background:rgba(100,116,139,0.3);color:#94a3b8;font-weight:600;">Pas de RAC</span>
-                    </div>
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:11px;">
-                        <div>
-                            <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">Produit Domofinance</div>
-                            <select id="pacDomoProduct" onchange="pacDomoOnProductChange()" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#e2e8f0;font-size:11px;">
-                                <option value="">Chargement&hellip;</option>
-                            </select>
-                        </div>
-                        <div>
-                            <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">Modalit&eacute;</div>
-                            <select id="pacDomoModality" onchange="pacDomoOnParamChange()" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#e2e8f0;font-size:11px;">
-                                <option value="normal">Normal</option>
-                            </select>
-                        </div>
-                        <div>
-                            <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">Report 180j</div>
-                            <select id="pacDomoPostpone" onchange="pacDomoOnParamChange()" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#e2e8f0;font-size:11px;">
-                                <option value="false">Sans</option>
-                                <option value="true">Avec</option>
-                            </select>
-                        </div>
-                        <div>
-                            <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">Assurance</div>
-                            <select id="pacTypeAssurance" onchange="pacDomoOnParamChange()" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#e2e8f0;font-size:11px;">
-                                <option value="DIM">DIM</option>
-                                <option value="D">D</option>
-                                <option value="DIMC">DIMC</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div style="border-top:1px solid rgba(255,255,255,0.06);margin:10px 0;padding-top:8px;">
-                        <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.5);margin-bottom:6px;">Emprunteur</div>
-                    </div>
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:11px;">
-                        <div>
-                            <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">Date naissance</div>
-                            <input type="text" inputmode="numeric" id="pacDobEmprunteur" placeholder="JJMMAAAA" maxlength="10" oninput="ecoptz_formatDateInput(this);pacDomoOnParamChange()" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#e2e8f0;font-size:11px;">
-                        </div>
-                        <div>
-                            <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">En activit&eacute; ?</div>
-                            <select id="pacDomoEnActivite" onchange="pacDomoOnParamChange()" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#e2e8f0;font-size:11px;">
-                                <option value="true">Oui</option>
-                                <option value="false">Non</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div style="border-top:1px solid rgba(255,255,255,0.06);margin:10px 0;padding-top:8px;">
-                        <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.5);margin-bottom:6px;">Co-emprunteur <span style="font-weight:400;color:rgba(255,255,255,0.3);">(optionnel)</span></div>
-                    </div>
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:11px;margin-bottom:10px;">
-                        <div>
-                            <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">Date naissance</div>
-                            <input type="text" inputmode="numeric" id="pacDobCoemprunteur" placeholder="JJMMAAAA" maxlength="10" oninput="ecoptz_formatDateInput(this);pacDomoOnParamChange()" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#e2e8f0;font-size:11px;">
-                        </div>
-                        <div></div>
-                    </div>
-                    <div style="border-top:1px solid rgba(255,255,255,0.06);margin:10px 0;padding-top:8px;">
-                        <div style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.5);margin-bottom:6px;">Dur&eacute;e &amp; R&eacute;sultats</div>
-                    </div>
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:11px;">
-                        <div>
-                            <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">Dur&eacute;e (mois)</div>
-                            <select id="pacDureeMois" onchange="pacDomoOnDurationChange()" style="width:100%;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:#e2e8f0;font-size:11px;">
-                                <option value="120">120</option>
-                            </select>
-                        </div>
-                        <div>
-                            <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">Mensualit&eacute; H.A.</div>
-                            <div id="pacMensHA" style="font-weight:700;font-size:14px;color:#34d399;padding:4px 0;">&mdash;</div>
-                        </div>
-                        <div>
-                            <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">Mensualit&eacute; A.A.</div>
-                            <div id="pacMensAA" style="font-weight:700;font-size:14px;color:#e2e8f0;padding:4px 0;">&mdash;</div>
-                        </div>
-                        <div>
-                            <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">TAEG</div>
-                            <div id="pacFinTAEG" style="font-weight:700;font-size:14px;color:#e2e8f0;padding:4px 0;">&mdash;</div>
-                        </div>
-                        <div>
-                            <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">Co&ucirc;t du cr&eacute;dit</div>
-                            <div id="pacFinCoutCredit" style="font-weight:700;font-size:14px;color:#e2e8f0;padding:4px 0;">&mdash;</div>
-                        </div>
-                        <div>
-                            <div style="color:rgba(255,255,255,0.45);margin-bottom:3px;">Taux d&eacute;biteur</div>
-                            <div id="pacFinTNC" style="font-weight:700;font-size:14px;color:#e2e8f0;padding:4px 0;">&mdash;</div>
-                        </div>
-                    </div>
-                    <div id="pacDomoStatus" style="display:none;padding:6px 10px;border-radius:8px;font-size:11px;margin-top:8px;"></div>
-                </div>
+                </div><!-- end sidebar-details -->
 
                 <!-- Status (hidden) -->
                 <div id="statusBadge" class="status-badge ok" style="display:none;">
                     <span id="statusIcon">&#9989;</span>
                     <span id="statusText">Voulez-vous un devis ?</span>
                 </div>
-
-                <button id="exportBtn" onclick="exportPDF()" style="margin-top:14px;width:100%;padding:14px 20px;border-radius:10px;border:none;background:#16a34a;color:#fff;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
-                    &#128196; G&eacute;n&eacute;rer le Devis PAC
-                </button>
-                
-                <button onclick="esign_openModal('pac')" class="btn-dark-export" style="margin-top: 8px; background: rgba(255,255,255,0.08) !important; border: 1px solid rgba(255,255,255,0.15) !important;">
-                    &#9998; Signature &eacute;lectronique
-                </button>
 
             </div><!-- end tab-pac-content sidebar -->
 
@@ -4388,6 +4465,13 @@ let savedRacOffert = 0;
 
 function fmt(n){
     return Math.round(n).toLocaleString('fr-FR')+' \u20AC';
+}
+
+function toggleSidebarDetails(btn){
+    var d=document.getElementById('pacSidebarDetails');
+    if(!d) return;
+    d.classList.toggle('open');
+    btn.innerHTML=d.classList.contains('open')?'&#9650; Masquer':'&#9660; D\u00e9tails';
 }
 
 function onTTCEdit(){
