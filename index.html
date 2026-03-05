@@ -1987,7 +1987,11 @@
             <button class="hist-modal-close" onclick="document.getElementById('pwdModal').classList.remove('active')">&times;</button>
         </div>
         <div class="hist-modal-body">
-            <div style="margin-bottom:14px;">
+            <div id="pwdUserSelectWrap" style="margin-bottom:14px;display:none;">
+                <label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:4px;">Utilisateur</label>
+                <select id="pwdUserSelect" onchange="onPwdUserChange()" style="width:100%;padding:10px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box;"></select>
+            </div>
+            <div id="pwdOldWrap" style="margin-bottom:14px;">
                 <label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:4px;">Ancien mot de passe</label>
                 <input type="password" id="pwdOld" style="width:100%;padding:10px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;box-sizing:border-box;">
             </div>
@@ -5456,9 +5460,36 @@ function openPwdModal(){
     document.getElementById('pwdConfirm').value = '';
     document.getElementById('pwdError').style.display = 'none';
     document.getElementById('pwdSuccess').style.display = 'none';
+    var isAdmin = currentUser && currentUser.role === 'admin';
+    var selWrap = document.getElementById('pwdUserSelectWrap');
+    var oldWrap = document.getElementById('pwdOldWrap');
+    if(isAdmin){
+        var sel = document.getElementById('pwdUserSelect');
+        var opts = '';
+        for(var uid in FALLBACK_USERS){
+            var u = FALLBACK_USERS[uid];
+            opts += '<option value="'+uid+'"'+(uid===currentUser.id?' selected':'')+'>'+u.name+' ('+uid+')</option>';
+        }
+        sel.innerHTML = opts;
+        selWrap.style.display = 'block';
+        // Admin qui change son propre mdp = ancien requis, sinon non
+        oldWrap.style.display = (sel.value === currentUser.id) ? 'block' : 'none';
+    } else {
+        selWrap.style.display = 'none';
+        oldWrap.style.display = 'block';
+    }
     document.getElementById('pwdModal').classList.add('active');
 }
+function onPwdUserChange(){
+    var sel = document.getElementById('pwdUserSelect');
+    var oldWrap = document.getElementById('pwdOldWrap');
+    oldWrap.style.display = (sel.value === currentUser.id) ? 'block' : 'none';
+    document.getElementById('pwdOld').value = '';
+}
 function doChangePassword(){
+    var isAdmin = currentUser && currentUser.role === 'admin';
+    var targetUser = isAdmin ? document.getElementById('pwdUserSelect').value : currentUser.id;
+    var changingSelf = (targetUser === currentUser.id);
     const oldP = document.getElementById('pwdOld').value;
     const newP = document.getElementById('pwdNew').value;
     const conf = document.getElementById('pwdConfirm').value;
@@ -5467,17 +5498,22 @@ function doChangePassword(){
     errEl.style.display = 'none';
     okEl.style.display = 'none';
 
-    if(!oldP || !newP){ errEl.textContent='Tous les champs sont requis'; errEl.style.display='block'; return; }
-    if(newP.length < 4){ errEl.textContent='Minimum 4 caractères'; errEl.style.display='block'; return; }
+    if(changingSelf && !oldP){ errEl.textContent='Ancien mot de passe requis'; errEl.style.display='block'; return; }
+    if(!newP){ errEl.textContent='Nouveau mot de passe requis'; errEl.style.display='block'; return; }
+    if(newP.length < 4){ errEl.textContent='Minimum 4 caract\u00e8res'; errEl.style.display='block'; return; }
     if(newP !== conf){ errEl.textContent='Les mots de passe ne correspondent pas'; errEl.style.display='block'; return; }
 
     if(useAPI && API_URL){
         errEl.textContent = 'Modification...'; errEl.style.display='block'; errEl.style.color='#6b7280';
-        apiCall({action:'changePassword', user:currentUser.id, oldPass:oldP, newPass:newP}, function(d){
+        var payload = {action:'changePassword', user:targetUser, newPass:newP};
+        if(changingSelf) payload.oldPass = oldP;
+        if(isAdmin && !changingSelf) payload.adminOverride = true;
+        apiCall(payload, function(d){
             errEl.style.color = '#dc2626';
             if(d.success){
                 errEl.style.display = 'none';
-                okEl.textContent = '\u2705 Mot de passe modifié !';
+                var targetName = FALLBACK_USERS[targetUser] ? FALLBACK_USERS[targetUser].name : targetUser;
+                okEl.textContent = '\u2705 Mot de passe de '+targetName+' modifi\u00e9 !';
                 okEl.style.display = 'block';
                 setTimeout(()=>{ document.getElementById('pwdModal').classList.remove('active'); }, 1500);
             } else {
@@ -5490,14 +5526,14 @@ function doChangePassword(){
             errEl.style.color = '#dc2626';
         });
     } else {
-        // Mode local: update FALLBACK_USERS
-        const account = FALLBACK_USERS[currentUser.id];
+        const account = FALLBACK_USERS[targetUser];
         if(!account){ errEl.textContent='Compte introuvable'; errEl.style.display='block'; return; }
-        if(account.pass !== oldP){ errEl.textContent='Ancien mot de passe incorrect'; errEl.style.display='block'; return; }
+        if(changingSelf && account.pass !== oldP){ errEl.textContent='Ancien mot de passe incorrect'; errEl.style.display='block'; return; }
         account.pass = newP;
-        okEl.textContent = '\u2705 Modifié (session uniquement en mode local)';
+        var targetName = account.name;
+        okEl.textContent = '\u2705 Mot de passe de '+targetName+' modifi\u00e9 (session uniquement)';
         okEl.style.display = 'block';
-        logAction('Changement mot de passe', currentUser.name);
+        logAction('Changement mot de passe de '+targetName, currentUser.name);
         setTimeout(()=>{ document.getElementById('pwdModal').classList.remove('active'); }, 1500);
     }
 }
