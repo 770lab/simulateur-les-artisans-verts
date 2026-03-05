@@ -602,9 +602,16 @@
         .fournisseur-only {
             display: none;
         }
+        /* Sidebar card groups need higher specificity to override .sidebar-card-group { display: flex } */
+        .sidebar-card-group.fournisseur-only {
+            display: none;
+        }
 
         .fournisseur-mode .fournisseur-only {
             display: block;
+        }
+        .fournisseur-mode .sidebar-card-group.fournisseur-only {
+            display: flex;
         }
         
         .fournisseur-mode .ttc-readonly {
@@ -622,6 +629,9 @@
         /* Telepro mode: like fournisseur but hides marge, dimensionnement, photo */
         .telepro-mode .fournisseur-only {
             display: block;
+        }
+        .telepro-mode .sidebar-card-group.fournisseur-only {
+            display: flex;
         }
         .telepro-mode .ttc-readonly {
             display: none !important;
@@ -4474,6 +4484,9 @@ function selectScenarioBtn(btn, val) {
     btn.classList.add('active');
     var sv = document.getElementById('scenarioVisible');
     if(sv) sv.value = val;
+    // Reset TTC lock so it updates from scenario data
+    var ltc = document.getElementById('lockTTC');
+    if(ltc) ltc.value = '0';
     onScenarioVisibleChange(val);
 }
 
