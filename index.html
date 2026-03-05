@@ -749,13 +749,19 @@
             /* Card needs relative for checkbox positioning */
             .sidebar-row1 .result-row-card { position: relative; }
             /* TTC editable card visual cue */
-            .sidebar-card-edit-indicator {
-                position: absolute; bottom: 2px; right: 4px;
-                font-size: 8px; opacity: 0.35; pointer-events: none; transition: opacity 0.2s;
-            }
+            .sidebar-card-edit-indicator { display: none; }
             .ttc-editable-active { border-color: rgba(96,165,250,0.5) !important; box-shadow: 0 0 0 1px rgba(96,165,250,0.25); }
-            .ttc-editable-locked .rrc-value { cursor: default !important; }
-            .ttc-editable-locked .sidebar-card-edit-indicator { opacity: 0; }
+            .ttc-editable-active .rrc-value {
+                border-bottom: 1.5px dashed rgba(96,165,250,0.6);
+                padding-bottom: 1px;
+                animation: ttcBlink 1.5s ease-in-out infinite;
+            }
+            @keyframes ttcBlink {
+                0%, 100% { border-color: rgba(96,165,250,0.6); }
+                50% { border-color: rgba(96,165,250,0.15); }
+            }
+            .ttc-editable-locked .rrc-value { cursor: default !important; border-bottom: none !important; animation: none !important; }
+            .ttc-editable-locked { border-color: rgba(96,165,250,0.15) !important; box-shadow: none !important; }
             /* Remise styled as card - same size as others */
             .sidebar-remise-card {
                 background: rgba(255,255,255,0.04);
@@ -770,11 +776,11 @@
             .sidebar-remise-card .remise-label { font-size: 9px; color: rgba(255,255,255,0.45); font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 2px; }
             .sidebar-remise-card .remise-inputs { display: flex; align-items: center; gap: 3px; }
             .sidebar-remise-card input[type="number"] {
-                width: 48px; padding: 2px 4px; border-radius: 5px;
+                width: 52px; padding: 3px 4px; border-radius: 5px;
                 border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.06);
-                color: #e2e8f0; font-size: 14px; text-align: center; font-weight: 700;
+                color: #e2e8f0; font-size: 16px; text-align: center; font-weight: 700;
             }
-            .sidebar-remise-card .remise-unit { font-size: 11px; color: rgba(255,255,255,0.45); font-weight: 600; }
+            .sidebar-remise-card .remise-unit { font-size: 14px; color: rgba(255,255,255,0.5); font-weight: 700; }
             .sidebar-remise-card .remise-max { font-size: 8px; color: #34d399; }
             /* Action buttons */
             .sidebar-action-btn {
@@ -3575,7 +3581,6 @@
                             <div class="sidebar-card-check"><input type="checkbox" id="lockTTC" checked onchange="toggleTTCEdit()" title="Modifier TTC"></div>
                             <div class="rrc-label">TTC</div>
                             <div class="rrc-value blue" id="totalTTCEditable" contenteditable="true" oninput="onTTCEdit()" style="cursor:text;min-width:60px;">10 890 &euro;</div>
-                            <div class="sidebar-card-edit-indicator">&#9998;</div>
                         </div>
                         <input type="hidden" id="totalTTCInput" value="10890">
                     </div>
