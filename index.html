@@ -434,11 +434,30 @@
             margin: 0;
         }
         .main-content > .parameters-section {
-            padding: 30px 20px;
-            max-width: 1400px;
-            margin: 0 auto;
+            padding: 20px 16px;
             width: 100%;
             box-sizing: border-box;
+        }
+        @media (min-width: 1025px) {
+            .main-content > .parameters-section {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+                align-items: start;
+                padding: 16px 20px;
+            }
+            /* Full-width items in 2-col grid */
+            .main-content > .parameters-section > .results-sidebar,
+            .main-content > .parameters-section > #teleproPanel,
+            .main-content > .parameters-section > .tab-pac-content:has(#baremeSection) {
+                grid-column: 1 / -1;
+            }
+            .card { padding: 16px; }
+        }
+        @media (min-width: 1441px) {
+            .main-content > .parameters-section {
+                padding: 16px 24px;
+            }
         }
 
         .card {
