@@ -767,14 +767,14 @@
                 align-items: center;
                 gap: 2px;
             }
-            .sidebar-remise-card .remise-label { font-size: 9px; color: rgba(255,255,255,0.45); font-weight: 600; letter-spacing: 0.5px; margin-bottom: 4px; }
+            .sidebar-remise-card .remise-label { font-size: 9px; color: rgba(255,255,255,0.45); font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 2px; }
             .sidebar-remise-card .remise-inputs { display: flex; align-items: center; gap: 3px; }
             .sidebar-remise-card input[type="number"] {
-                width: 44px; padding: 2px 3px; border-radius: 5px;
+                width: 48px; padding: 2px 4px; border-radius: 5px;
                 border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.06);
-                color: #e2e8f0; font-size: 11px; text-align: center; font-weight: 600;
+                color: #e2e8f0; font-size: 14px; text-align: center; font-weight: 700;
             }
-            .sidebar-remise-card .remise-unit { font-size: 9px; color: rgba(255,255,255,0.35); }
+            .sidebar-remise-card .remise-unit { font-size: 11px; color: rgba(255,255,255,0.45); font-weight: 600; }
             .sidebar-remise-card .remise-max { font-size: 8px; color: #34d399; }
             /* Action buttons */
             .sidebar-action-btn {
@@ -3626,7 +3626,7 @@
                                 <input type="number" id="racOffert" value="0" min="0" step="1" oninput="updateAmt()" onchange="logRACChange()" title="RAC offert &euro;">
                                 <span class="remise-unit">&euro;</span>
                             </div>
-                            <div class="remise-max" id="maxPctInfo">Max: <strong id="maxPctValue">&mdash;</strong></div>
+                            <div class="remise-max" id="maxPctInfo" style="display:none;">Max: <strong id="maxPctValue">&mdash;</strong></div>
                         </div>
                     </div>
                     <!-- Marge -->
