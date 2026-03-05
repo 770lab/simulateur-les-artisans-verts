@@ -768,7 +768,7 @@
                 align-items: center;
                 gap: 2px;
             }
-            .sidebar-remise-card .remise-label { font-size: 11px; color: rgba(255,255,255,0.55); font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 2px; }
+            .sidebar-remise-card .remise-label { font-size: 9px; color: rgba(255,255,255,0.55); font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 0; }
             .sidebar-remise-card .remise-inputs { display: flex; align-items: center; gap: 3px; }
             .sidebar-remise-card input[type="number"] {
                 width: 52px; padding: 3px 4px; border-radius: 5px;
@@ -2670,10 +2670,17 @@
             <div class="card" id="produitCard">
                 <h2 class="card-title">&#9881;&#65039; Produit & Options</h2>
 
-                <!-- Scenario selector -->
-                <div class="form-group" style="margin-bottom:16px;">
-                    <label style="font-weight:700;font-size:13px;">Sc&eacute;nario</label>
-                    <select id="scenarioVisible" onchange="onScenarioVisibleChange(this.value)" style="font-size:14px;font-weight:600;padding:10px 12px;">
+                <!-- Scenario selector (boutons cliquables) -->
+                <div style="margin-bottom:16px;">
+                    <label style="font-weight:700;font-size:13px;display:block;margin-bottom:8px;">Sc&eacute;nario</label>
+                    <div id="scenarioBtns" style="display:flex;flex-wrap:wrap;gap:8px;">
+                        <button class="ite-lot-btn active" onclick="selectScenarioBtn(this,'PAC')">PAC<span class="lot-sub">seule</span></button>
+                        <button class="ite-lot-btn" onclick="selectScenarioBtn(this,'PAC + BALLON ÉLECTRIQUE')">PAC<span class="lot-sub">+ Ballon &Eacute;lec.</span></button>
+                        <button class="ite-lot-btn" onclick="selectScenarioBtn(this,'PAC + BALLON THERMO')">PAC<span class="lot-sub">+ Ballon Thermo</span></button>
+                        <button class="ite-lot-btn" onclick="selectScenarioBtn(this,'PAC + SSC')">PAC<span class="lot-sub">+ SSC</span></button>
+                        <button class="ite-lot-btn" onclick="selectScenarioBtn(this,'SSC')">SSC<span class="lot-sub">seul</span></button>
+                    </div>
+                    <select id="scenarioVisible" onchange="onScenarioVisibleChange(this.value)" style="display:none;">
                         <option value="PAC">PAC seule</option>
                         <option value="PAC + BALLON ÉLECTRIQUE">PAC + Ballon &Eacute;lectrique</option>
                         <option value="PAC + BALLON THERMO">PAC + Ballon Thermodynamique</option>
@@ -3605,7 +3612,7 @@
                     <!-- Total Aides -->
                     <div class="sidebar-card-group">
                         <div class="result-row-card" style="background:rgba(52,211,153,0.08);border-color:rgba(52,211,153,0.15);">
-                            <div class="rrc-label">Total aides</div>
+                            <div class="rrc-label">TOTAL AIDES</div>
                             <div class="rrc-value green" id="totalAides">&mdash;</div>
                         </div>
                     </div>
@@ -3619,7 +3626,7 @@
                     <!-- Remise -->
                     <div class="sidebar-card-group fournisseur-only">
                         <div class="sidebar-remise-card">
-                            <div class="remise-label">Remise</div>
+                            <div class="rrc-label">REMISE</div>
                             <div class="remise-inputs">
                                 <input type="number" id="racPourcent" value="0" min="0" max="100" step="1" oninput="updatePct()" onchange="logRACChange()" title="Remise %">
                                 <span class="remise-unit">%</span>
@@ -3637,7 +3644,7 @@
                         </div>
                     </div>
                     <!-- Financement toggle -->
-                    <div class="sidebar-card-group">
+                    <div class="sidebar-card-group" id="financementGroup" style="display:none;">
                         <button class="sidebar-toggle-btn" onclick="toggleSidebarDetails(this)">&#128179; Financement</button>
                     </div>
                     <!-- Devis PAC -->
@@ -4280,6 +4287,15 @@ function autoSyncScenario() {
     if (vis && vis.value !== sc) vis.value = sc;
     syncEtasFromPAC();
     onScenarioChange();
+}
+
+function selectScenarioBtn(btn, val) {
+    var btns = document.querySelectorAll('#scenarioBtns .ite-lot-btn');
+    btns.forEach(function(b){ b.classList.remove('active'); });
+    btn.classList.add('active');
+    var sv = document.getElementById('scenarioVisible');
+    if(sv) sv.value = val;
+    onScenarioVisibleChange(val);
 }
 
 function onScenarioVisibleChange(val) {
@@ -4941,7 +4957,9 @@ function calcRAC(rb,ch,ta,taForMarge,tt,proRB){
     const rc=rb-mo;
     // RAC négatif \u2192 afficher 1\u20AC en vue client, vrai montant en vue fournisseur
     document.getElementById('resteCharge').textContent = (rc < 0 && !mode) ? '1 \u20AC' : fmt(rc);
-    
+    var finGrp=document.getElementById('financementGroup');
+    if(finGrp) finGrp.style.display=(rc>0)?'':'none';
+
     const rbForMarge = tt - taForMarge;
     const moForMarge = autoGesteApplied ? (parseFloat(savedRacOffert)||0) : mo;
     const rcForMarge = rbForMarge - moForMarge;
