@@ -2372,13 +2372,11 @@
             <!-- ===== FIN PANNEAU SCRIPT TELEPRO ===== -->
 
             <div class="card">
-                <h2 class="card-title">Param&egrave;tres</h2>
+                <h2 class="card-title">Informations client</h2>
 
                 <!-- ===== HERO RECHERCHE DOSSIER ===== -->
                 <div class="dossier-hero">
-                    <div class="dossier-hero-label">&#128194; Informations client</div>
-                    <div class="dossier-hero-title">Informations client</div>
-                    <div class="dossier-hero-sub">Saisissez un t&eacute;l ou un n&deg; de dossier</div>
+                    <div class="dossier-hero-sub" style="font-size:14px;font-weight:600;margin-bottom:8px;">Saisissez un t&eacute;l ou un n&deg; de dossier</div>
                     <div class="dossier-hero-row">
                         <input
                             id="iteNumClient"
@@ -2403,13 +2401,14 @@
                         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
                             <div class="form-group" style="margin-bottom:0;">
                                 <label>Nom</label>
-                                <input type="text" id="nom" placeholder="Nom du client" oninput="checkExport()" onchange="logClientChange()">
+                                <input type="text" id="nom" placeholder="Nom du client" oninput="checkExport();expandClientDetails()" onchange="logClientChange()">
                             </div>
                             <div class="form-group" style="margin-bottom:0;">
                                 <label>Pr&eacute;nom</label>
-                                <input type="text" id="prenom" placeholder="Pr&eacute;nom du client" oninput="checkExport()" onchange="logClientChange()">
+                                <input type="text" id="prenom" placeholder="Pr&eacute;nom du client" oninput="checkExport();expandClientDetails()" onchange="logClientChange()">
                             </div>
                         </div>
+                        <div id="clientDetailsExtra" style="display:none;">
                         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
                             <div class="form-group" style="margin-bottom:0;">
                                 <label>Adresse travaux</label>
@@ -2501,6 +2500,7 @@
                                 <input type="number" id="dimAnnee" value="2000" min="1900" max="2026" style="font-weight:600;" oninput="evalIsolation(); calcBareme(); calcDim()">
                             </div>
                         </div>
+                        </div><!-- end clientDetailsExtra -->
                     </div>
                 </div>
 
@@ -5195,6 +5195,13 @@ function reset(){
     calc();
 }
 
+function expandClientDetails(){
+    var nom=document.getElementById('nom').value.trim();
+    var prenom=document.getElementById('prenom').value.trim();
+    var extra=document.getElementById('clientDetailsExtra');
+    if(extra && (nom || prenom)) extra.style.display='';
+}
+
 function checkExport(){
     const nom=document.getElementById('nom').value.trim();
     const prenom=document.getElementById('prenom').value.trim();
@@ -7628,6 +7635,7 @@ function ite_loadDossier(f){
     try{ite_calc();}catch(e){}
     try{calc();}catch(e){}
     try{checkExport();}catch(e){}
+    try{expandClientDetails();}catch(e){}
     ite_setStatus('ok','\u2705 '+g(0)+' \u2014 '+(g(1)+' '+g(2)+' '+g(3)).trim());
     var pl=document.getElementById('dossierPickerList');if(pl)pl.style.display='none';
 }
