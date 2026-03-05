@@ -3392,7 +3392,6 @@
 
                 <!-- LOT 2 wrapper -->
                 <div id="iteLot2Wrap">
-                <!-- LOT 2 -->
                 <div class="ite-card">
                     <div class="ite-card-head">
                         <div class="ite-card-icon">&#128256;</div>
@@ -3409,51 +3408,47 @@
                             </select>
                         </div>
                     </div>
-                    <div id="iteLot2Alert"></div>
-                </div>
-
-                <!-- LOT 2: BAR-EN-101 -->
-                <div class="ite-card" id="iteCard101" style="display: none;">
-                    <div class="ite-card-head"><div class="ite-card-icon">&#127968;</div><h3>BAR-EN-101 &mdash; Combles Perdus</h3></div>
-                    <div class="ite-fg">
-                        <div class="ite-fi"><label>Technique</label>
-                            <select id="iteTech101" onchange="ite_calc()">
-                                <option value="souffle">Souffl&eacute;</option>
-                                <option value="deroule">D&eacute;roul&eacute;</option>
-                                <option value="rampant">Rampant</option>
-                            </select>
+                    <!-- LOT 2: BAR-EN-101 (inline) -->
+                    <div id="iteCard101" style="display: none; margin-top:12px; padding-top:12px; border-top:1px dashed #cbd5e1;">
+                        <div style="font-size:13px;font-weight:700;color:#334155;margin-bottom:8px;">&#127968; BAR-EN-101 &mdash; Combles Perdus</div>
+                        <div class="ite-fg">
+                            <div class="ite-fi"><label>Technique</label>
+                                <select id="iteTech101" onchange="ite_calc()">
+                                    <option value="souffle">Souffl&eacute;</option>
+                                    <option value="deroule">D&eacute;roul&eacute;</option>
+                                    <option value="rampant">Rampant</option>
+                                </select>
+                            </div>
+                            <div class="ite-fi"><label>Surface (m&sup2;)</label><input type="number" id="iteSurface101" value="50" oninput="ite_calc()"></div>
+                            <input type="hidden" id="itePrixMat101" value="0">
+                            <input type="hidden" id="itePrixMo101" value="0">
                         </div>
-                        <div class="ite-fi"><label>Surface (m&sup2;)</label><input type="number" id="iteSurface101" value="50" oninput="ite_calc()"></div>
-                        <input type="hidden" id="itePrixMat101" value="0">
-                        <input type="hidden" id="itePrixMo101" value="0">
                     </div>
-                </div>
-
-                <!-- LOT 2: BAR-EN-103 -->
-                <div class="ite-card" id="iteCard103" style="display: none;">
-                    <div class="ite-card-head"><div class="ite-card-icon">&#127968;</div><h3>BAR-EN-103 &mdash; Plancher Bas</h3></div>
-                    <div class="ite-fg">
-                        <div class="ite-fi"><label>Surface (m&sup2;)</label><input type="number" id="iteSurface103" value="50" oninput="ite_calc()"></div>
-                        <input type="hidden" id="itePrixMat103" value="0">
-                        <input type="hidden" id="itePrixMo103" value="0">
+                    <!-- LOT 2: BAR-EN-103 (inline) -->
+                    <div id="iteCard103" style="display: none; margin-top:12px; padding-top:12px; border-top:1px dashed #cbd5e1;">
+                        <div style="font-size:13px;font-weight:700;color:#334155;margin-bottom:8px;">&#127968; BAR-EN-103 &mdash; Plancher Bas</div>
+                        <div class="ite-fg">
+                            <div class="ite-fi"><label>Surface (m&sup2;)</label><input type="number" id="iteSurface103" value="50" oninput="ite_calc()"></div>
+                            <input type="hidden" id="itePrixMat103" value="0">
+                            <input type="hidden" id="itePrixMo103" value="0">
+                        </div>
                     </div>
-                </div>
-
-                <!-- LOT 2: BAR-TH-148 -->
-                <div class="ite-card" id="iteCard148" style="display: none;">
-                    <div class="ite-card-head"><div class="ite-card-icon">&#128703;</div><h3>BAR-TH-148 &mdash; CET</h3></div>
-                    <div class="ite-fg">
-                        <div class="ite-fi"><label>Mod&egrave;le</label><select id="iteRefCET"><option value="200">THALEOS Performer 2 &mdash; 200L</option><option value="240">THALEOS Performer III &mdash; 240L</option><option value="270">THALEOS Performer 2 &mdash; 270L</option></select></div>
-                        <input type="hidden" id="itePrixCET" value="0">
-                        <input type="hidden" id="itePrixPoseCET" value="0">
-                        <div class="ite-fi"><label>COP</label><input id="iteCopCET" value="2,78"></div>
+                    <!-- LOT 2: BAR-TH-148 (inline) -->
+                    <div id="iteCard148" style="display: none; margin-top:12px; padding-top:12px; border-top:1px dashed #cbd5e1;">
+                        <div style="font-size:13px;font-weight:700;color:#334155;margin-bottom:8px;">&#128703; BAR-TH-148 &mdash; CET</div>
+                        <div class="ite-fg">
+                            <div class="ite-fi"><label>Mod&egrave;le</label><select id="iteRefCET"><option value="200">THALEOS Performer 2 &mdash; 200L</option><option value="240">THALEOS Performer III &mdash; 240L</option><option value="270">THALEOS Performer 2 &mdash; 270L</option></select></div>
+                            <input type="hidden" id="itePrixCET" value="0">
+                            <input type="hidden" id="itePrixPoseCET" value="0">
+                            <div class="ite-fi"><label>COP</label><input id="iteCopCET" value="2,78"></div>
+                        </div>
                     </div>
+                    <div id="iteLot2Alert"></div>
                 </div>
                 </div><!-- end iteLot2Wrap -->
 
                 <!-- LOT 3 wrapper -->
                 <div id="iteLot3Wrap" style="display:none;">
-                <!-- LOT 3 -->
                 <div class="ite-card" style="border:1px dashed #94a3b8;">
                     <div class="ite-card-head">
                         <div class="ite-card-icon">&#128257;</div>
@@ -3471,45 +3466,42 @@
                             </select>
                         </div>
                     </div>
-                    <div id="iteLot3Alert"></div>
-                </div>
-
-                <!-- LOT 3: BAR-EN-101 -->
-                <div class="ite-card" id="iteCard101L3" style="display: none;">
-                    <div class="ite-card-head"><div class="ite-card-icon">&#127968;</div><h3>LOT 3 &mdash; BAR-EN-101 Combles Perdus</h3></div>
-                    <div class="ite-fg">
-                        <div class="ite-fi"><label>Technique</label>
-                            <select id="iteTech101L3" onchange="ite_calc()">
-                                <option value="souffle">Souffl&eacute;</option>
-                                <option value="deroule">D&eacute;roul&eacute;</option>
-                                <option value="rampant">Rampant</option>
-                            </select>
+                    <!-- LOT 3: BAR-EN-101 (inline) -->
+                    <div id="iteCard101L3" style="display: none; margin-top:12px; padding-top:12px; border-top:1px dashed #cbd5e1;">
+                        <div style="font-size:13px;font-weight:700;color:#334155;margin-bottom:8px;">&#127968; BAR-EN-101 &mdash; Combles Perdus</div>
+                        <div class="ite-fg">
+                            <div class="ite-fi"><label>Technique</label>
+                                <select id="iteTech101L3" onchange="ite_calc()">
+                                    <option value="souffle">Souffl&eacute;</option>
+                                    <option value="deroule">D&eacute;roul&eacute;</option>
+                                    <option value="rampant">Rampant</option>
+                                </select>
+                            </div>
+                            <div class="ite-fi"><label>Surface (m&sup2;)</label><input type="number" id="iteSurface101L3" value="50" oninput="ite_calc()"></div>
+                            <input type="hidden" id="itePrixMat101L3" value="0">
+                            <input type="hidden" id="itePrixMo101L3" value="0">
                         </div>
-                        <div class="ite-fi"><label>Surface (m&sup2;)</label><input type="number" id="iteSurface101L3" value="50" oninput="ite_calc()"></div>
-                        <input type="hidden" id="itePrixMat101L3" value="0">
-                        <input type="hidden" id="itePrixMo101L3" value="0">
                     </div>
-                </div>
-
-                <!-- LOT 3: BAR-EN-103 -->
-                <div class="ite-card" id="iteCard103L3" style="display: none;">
-                    <div class="ite-card-head"><div class="ite-card-icon">&#127968;</div><h3>LOT 3 &mdash; BAR-EN-103 Plancher Bas</h3></div>
-                    <div class="ite-fg">
-                        <div class="ite-fi"><label>Surface (m&sup2;)</label><input type="number" id="iteSurface103L3" value="50" oninput="ite_calc()"></div>
-                        <input type="hidden" id="itePrixMat103L3" value="0">
-                        <input type="hidden" id="itePrixMo103L3" value="0">
+                    <!-- LOT 3: BAR-EN-103 (inline) -->
+                    <div id="iteCard103L3" style="display: none; margin-top:12px; padding-top:12px; border-top:1px dashed #cbd5e1;">
+                        <div style="font-size:13px;font-weight:700;color:#334155;margin-bottom:8px;">&#127968; BAR-EN-103 &mdash; Plancher Bas</div>
+                        <div class="ite-fg">
+                            <div class="ite-fi"><label>Surface (m&sup2;)</label><input type="number" id="iteSurface103L3" value="50" oninput="ite_calc()"></div>
+                            <input type="hidden" id="itePrixMat103L3" value="0">
+                            <input type="hidden" id="itePrixMo103L3" value="0">
+                        </div>
                     </div>
-                </div>
-
-                <!-- LOT 3: BAR-TH-148 -->
-                <div class="ite-card" id="iteCard148L3" style="display: none;">
-                    <div class="ite-card-head"><div class="ite-card-icon">&#128703;</div><h3>LOT 3 &mdash; BAR-TH-148 CET</h3></div>
-                    <div class="ite-fg">
-                        <div class="ite-fi"><label>Mod&egrave;le</label><select id="iteRefCETL3"><option value="200">THALEOS Performer 2 &mdash; 200L</option><option value="240">THALEOS Performer III &mdash; 240L</option><option value="270">THALEOS Performer 2 &mdash; 270L</option></select></div>
-                        <input type="hidden" id="itePrixCETL3" value="0">
-                        <input type="hidden" id="itePrixPoseCETL3" value="0">
-                        <div class="ite-fi"><label>COP</label><input id="iteCopCETL3" value="2,78"></div>
+                    <!-- LOT 3: BAR-TH-148 (inline) -->
+                    <div id="iteCard148L3" style="display: none; margin-top:12px; padding-top:12px; border-top:1px dashed #cbd5e1;">
+                        <div style="font-size:13px;font-weight:700;color:#334155;margin-bottom:8px;">&#128703; BAR-TH-148 &mdash; CET</div>
+                        <div class="ite-fg">
+                            <div class="ite-fi"><label>Mod&egrave;le</label><select id="iteRefCETL3"><option value="200">THALEOS Performer 2 &mdash; 200L</option><option value="240">THALEOS Performer III &mdash; 240L</option><option value="270">THALEOS Performer 2 &mdash; 270L</option></select></div>
+                            <input type="hidden" id="itePrixCETL3" value="0">
+                            <input type="hidden" id="itePrixPoseCETL3" value="0">
+                            <div class="ite-fi"><label>COP</label><input id="iteCopCETL3" value="2,78"></div>
+                        </div>
                     </div>
+                    <div id="iteLot3Alert"></div>
                 </div>
                 </div><!-- end iteLot3Wrap -->
 
