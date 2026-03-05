@@ -443,7 +443,7 @@
                 display: grid;
                 grid-template-columns: repeat(3, 1fr);
                 gap: 12px;
-                align-items: start;
+                align-items: stretch;
                 padding: 12px 16px;
             }
             /* Full-width items */
@@ -459,10 +459,33 @@
             .tab-ite-active .parameters-section > .tab-ite-content {
                 grid-column: 1 / -1;
             }
-            /* baremeSection: spans 2 cols (isolation checkboxes grid) */
-            #baremeSection { grid-column: span 2; }
-            /* Client card: 1 col normally, 2 cols when expanded */
-            .card.client-expanded { grid-column: span 2; }
+
+            /* ====== PAC Mode — Desktop Row Layout ====== */
+            /* Row 1: Informations client — full width */
+            #clientCard {
+                grid-column: 1 / -1;
+                order: 1;
+            }
+            /* Row 2: Produits et options — full width */
+            #produitCard {
+                grid-column: 1 / -1;
+                order: 2;
+            }
+            /* Row 3: Puissance PAC recommandée — full width */
+            #baremeSection {
+                grid-column: 1 / -1;
+                order: 3;
+            }
+            /* Row 4: Coûts (2/3) + Aides CEE (1/3) — même hauteur */
+            .card.fournisseur-only {
+                grid-column: span 2;
+                order: 4;
+            }
+            #ceeCard {
+                grid-column: span 1;
+                order: 5;
+            }
+
             .card { padding: 14px; }
             /* Compact form inputs on desktop */
             .card .form-group input, .card .form-group select {
@@ -471,7 +494,7 @@
             }
             .card .form-group label { font-size: 11px; }
             .card-title { font-size: 11px; margin-bottom: 12px; }
-            /* Client expanded: use internal 2-col for extra details */
+            /* Client expanded: use internal grid for extra details */
             .card.client-expanded #clientDetailsExtra {
                 display: grid !important;
                 grid-template-columns: 1fr 1fr;
@@ -2461,6 +2484,17 @@
                             </div>
                         </div>
                         <div id="clientDetailsExtra" style="display:none;">
+                        <!-- 2ème personne (apparaîtra sur devis/PTZ si rempli) -->
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>Nom 2 <span style="font-weight:400;color:#94a3b8;">(optionnel)</span></label>
+                                <input type="text" id="nom2" placeholder="Nom du 2e titulaire">
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>Pr&eacute;nom 2 <span style="font-weight:400;color:#94a3b8;">(optionnel)</span></label>
+                                <input type="text" id="prenom2" placeholder="Pr&eacute;nom du 2e titulaire">
+                            </div>
+                        </div>
                         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
                             <div class="form-group" style="margin-bottom:0;">
                                 <label>Adresse travaux</label>
@@ -2602,7 +2636,7 @@
 
             <!-- ===== PAC-SPECIFIC PARAMETERS (hidden — calc fields only) ===== -->
             <div class="tab-pac-content" style="display:none;">
-            <div class="card">
+            <div class="card" id="ceeCard">
                 <h2 class="card-title">&#9889; Aides CEE</h2>
 <!-- Scenario & ETAS hidden (auto-derived from Produit & Options) -->
                 <div style="display:none;">
@@ -7882,6 +7916,7 @@ function ite_generateDevis(){
     if(_iteNbLots>=2&&totLot2<1500&&!confirm('\u26a0\ufe0f LOT 2 < 1500\u20ac ('+ite_fmtN(totLot2)+'\u20ac). Continuer ?'))return;
     if(hasLot3&&totLot3<1500&&!confirm('\u26a0\ufe0f LOT 3 < 1500\u20ac ('+ite_fmtN(totLot3)+'\u20ac). Continuer ?'))return;
     var nom=(document.getElementById('prenom').value.trim()+' '+document.getElementById('nom').value.trim()).trim()||'CLIENT';
+    var nom2Raw=(document.getElementById('prenom2').value.trim()+' '+document.getElementById('nom2').value.trim()).trim();
     var num=ite_V('iteNumDevis'),nc=ite_V('iteNumClient')||num;
     var dRaw=ite_V('iteDateDevis').split('-'),df=dRaw[2]+'/'+dRaw[1]+'/'+dRaw[0];
     var adr=ite_V('iteAdresse'),vil=ite_V('iteVille'),tel=ite_V('iteTel'),em=ite_V('iteEmail');
@@ -7923,7 +7958,9 @@ function ite_generateDevis(){
     // PAGE 1 : Header + Info + BAR-EN-102
     // =========================================================
     var pg1='<div class="ite-page">'+dv_logoHeader();
-    pg1+='<div class="dv-title"><span>DEVIS : '+num+'</span><span>'+nom.toUpperCase()+'</span></div>';
+    var nomComplet=nom+(nom2Raw?' & '+nom2Raw:'');
+    var nomDevisTitle=nomComplet.toUpperCase();
+    pg1+='<div class="dv-title"><span>DEVIS : '+num+'</span><span>'+nomDevisTitle+'</span></div>';
     var parcelle=ite_V('iteParcelle');
     pg1+='<div class="dv-info"><div class="dv-info-l">'
     +'Num\u00e9ro Client : <b>'+nc+'</b><br>'
@@ -7934,7 +7971,7 @@ function ite_generateDevis(){
     +(parcelle?'Parcelle cadastrale : <b>'+parcelle+'</b><br>':'')
     +'Conseiller : <b>'+con+'</b>'
     +'</div><div class="dv-info-r">'
-    +nom+'<br>'+adr+'<br>'+vil+'<br>'
+    +nom+(nom2Raw?'<br>'+nom2Raw:'')+'<br>'+adr+'<br>'+vil+'<br>'
     +'T\u00e9l : '+tel+'<br>'
     +'E-mail : '+em+'<br>'
     +'Zone : <b>'+zn+'</b><br>'
@@ -8374,11 +8411,11 @@ function ite_generateDevis(){
         var pn=2,allPages=pg1;
         // Page options si présentes
         if(hasOptions){
-            var pgOpt='<div class="ite-page">'+dv_subHeader(num,df,nom)+optionsBlock+ite_dvFT(pn,tp)+'</div>';
+            var pgOpt='<div class="ite-page">'+dv_subHeader(num,df,nomComplet)+optionsBlock+ite_dvFT(pn,tp)+'</div>';
             allPages+=pgOpt;pn++;
         }
         // Conditions + totals + legal
-        var pg2='<div class="ite-page">'+dv_subHeaderLight(num,df,nom)+condBlock+totauxBlock+legalBlock+ite_dvFT(pn,tp)+'</div>';
+        var pg2='<div class="ite-page">'+dv_subHeaderLight(num,df,nomComplet)+condBlock+totauxBlock+legalBlock+ite_dvFT(pn,tp)+'</div>';
         allPages+=pg2;pn++;
     } else {
         // pg1 : LOT 1 seul — pas de lot2Desc pour éviter overflow
@@ -8386,30 +8423,30 @@ function ite_generateDevis(){
         var pn=2,allPages=pg1;
         // Page options si présentes
         if(hasOptions){
-            var pgOpt='<div class="ite-page">'+dv_subHeader(num,df,nom)+optionsBlock+ite_dvFT(pn,tp)+'</div>';
+            var pgOpt='<div class="ite-page">'+dv_subHeader(num,df,nomComplet)+optionsBlock+ite_dvFT(pn,tp)+'</div>';
             allPages+=pgOpt;pn++;
         }
         // LOT 2 description + détail complet
-        var pg2='<div class="ite-page">'+dv_subHeader(num,df,nom)+lot2Desc+lot2Rows+ite_dvFT(pn,tp)+'</div>';
+        var pg2='<div class="ite-page">'+dv_subHeader(num,df,nomComplet)+lot2Desc+lot2Rows+ite_dvFT(pn,tp)+'</div>';
         allPages+=pg2;pn++;
         if(hasLot3){
             // LOT 3 description + détail complet (page dédiée)
-            var pg3='<div class="ite-page">'+dv_subHeader(num,df,nom)+lot3Desc+lot3Rows+ite_dvFT(pn,tp)+'</div>';
+            var pg3='<div class="ite-page">'+dv_subHeader(num,df,nomComplet)+lot3Desc+lot3Rows+ite_dvFT(pn,tp)+'</div>';
             allPages+=pg3;pn++;
             // conditions + totals + legal
-            var pg4='<div class="ite-page">'+dv_subHeaderLight(num,df,nom)+condBlock+totauxBlock+legalBlock+ite_dvFT(pn,tp)+'</div>';
+            var pg4='<div class="ite-page">'+dv_subHeaderLight(num,df,nomComplet)+condBlock+totauxBlock+legalBlock+ite_dvFT(pn,tp)+'</div>';
             allPages+=pg4;pn++;
         } else {
             // conditions + totals + legal
-            var pg3='<div class="ite-page">'+dv_subHeaderLight(num,df,nom)+condBlock+totauxBlock+legalBlock+ite_dvFT(pn,tp)+'</div>';
+            var pg3='<div class="ite-page">'+dv_subHeaderLight(num,df,nomComplet)+condBlock+totauxBlock+legalBlock+ite_dvFT(pn,tp)+'</div>';
             allPages+=pg3;pn++;
         }
     }
     if(wFin){
-        var pgFin='<div class="ite-page">'+dv_subHeaderLight(num,df,nom)+finBlock+ite_dvFT(pn,tp)+'</div>';
+        var pgFin='<div class="ite-page">'+dv_subHeaderLight(num,df,nomComplet)+finBlock+ite_dvFT(pn,tp)+'</div>';
         allPages+=pgFin;pn++;
         if(finBlock2){
-            var pgFin2='<div class="ite-page">'+dv_subHeaderLight(num,df,nom)+finBlock2+ite_dvFT(pn,tp)+'</div>';
+            var pgFin2='<div class="ite-page">'+dv_subHeaderLight(num,df,nomComplet)+finBlock2+ite_dvFT(pn,tp)+'</div>';
             allPages+=pgFin2;
         }
     }
@@ -8605,6 +8642,10 @@ async function ite_generatePTZ(){
     var nom=(prenomVal+' '+nomVal).trim()||'CLIENT';
     var nomUpper=nomVal.toUpperCase();
     var prenomUpper=prenomVal.charAt(0).toUpperCase()+prenomVal.slice(1);
+    var nom2Val=document.getElementById('nom2').value.trim();
+    var prenom2Val=document.getElementById('prenom2').value.trim();
+    var nom2Upper=nom2Val.toUpperCase();
+    var prenom2Upper=prenom2Val.charAt(0).toUpperCase()+prenom2Val.slice(1);
     var num=ite_V('iteNumDevis'),nc=ite_V('iteNumClient')||num;
     var dRaw=ite_V('iteDateDevis').split('-'),df=dRaw[2]+'/'+dRaw[1]+'/'+dRaw[0];
     var adr=ite_V('iteAdresse'),vil=ite_V('iteVille'),tel=ite_V('iteTel'),em=ite_V('iteEmail');
@@ -8662,7 +8703,11 @@ async function ite_generatePTZ(){
         // Page 1 - Identité
         setTxt('Nom',nomUpper);
         setTxt('Pr\u00e9nom',prenomUpper);
-        // Nom_2 / Prénom_2 left empty (co-emprunteur)
+        // Nom_2 / Prénom_2 co-emprunteur (rempli si 2ème personne saisie)
+        if(nom2Val||prenom2Val){
+            setTxt('Nom_2',nom2Upper);
+            setTxt('Pr\u00e9nom_2',prenom2Upper);
+        }
 
         // Page 1 - Logement
         setTxt('n\u00b0 voirie','');
@@ -8753,14 +8798,15 @@ async function ite_generatePTZ(){
         var url=URL.createObjectURL(blob);
         var a=document.createElement('a');
         a.href=url;
-        a.download='ECO-PTZ-'+num+'-'+nom.replace(/\s+/g,'_')+'.pdf';
+        var nomPtzFile=nom+(nom2Val||prenom2Val?' & '+(prenom2Val+' '+nom2Val).trim():'');
+        a.download='ECO-PTZ-'+num+'-'+nomPtzFile.replace(/\s+/g,'_')+'.pdf';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         setTimeout(function(){URL.revokeObjectURL(url);},5000);
 
         if(btnEl){btnEl.disabled=false;btnEl.innerHTML='\ud83c\udfdb\ufe0f G\u00e9n\u00e9rer le document PTZ';}
-        logAction('PTZ généré', num+' - '+nom);
+        logAction('PTZ généré', num+' - '+nomPtzFile);
 
     }catch(err){
         console.error('Erreur g\u00e9n\u00e9ration PTZ:',err);
@@ -9028,8 +9074,10 @@ function pac_generateDevis(){
     var titre=ite_V('nom').toUpperCase();
     var prenom=ite_V('prenom').toUpperCase();
     var nom=(prenom+' '+titre).trim()||'CLIENT';
+    var nom2Raw=(ite_V('prenom2').trim()+' '+ite_V('nom2').trim()).trim();
+    var nomCompletPac=nom+(nom2Raw?' & '+nom2Raw:'');
     var civilite='MME ';
-    var nomDevis=civilite+titre+' '+prenom;
+    var nomDevis=civilite+titre+' '+prenom+(nom2Raw?' & '+nom2Raw.toUpperCase():'');
     var num=ite_V('iteNumDevis'),nc=ite_V('iteNumClient')||num;
     var dRaw=ite_V('iteDateDevis').split('-'),df=dRaw[2]+'/'+dRaw[1]+'/'+dRaw[0];
     var adr=ite_V('iteAdresse'),vil=ite_V('iteVille'),tel=ite_V('iteTel'),em=ite_V('iteEmail');
@@ -9134,7 +9182,7 @@ function pac_generateDevis(){
     +vil+'<br>'
     +'Conseiller : <b>'+con+'</b>'
     +'</div><div class="dv-info-r">'
-    +nom+'<br>'+adr+'<br>'+vil+'<br>'
+    +nom+(nom2Raw?'<br>'+nom2Raw:'')+'<br>'+adr+'<br>'+vil+'<br>'
     +'Tél : '+tel+'<br>'
     +'E-mail : '+em+'<br>'
     +'Zone : <b>'+zn+'</b><br>'
