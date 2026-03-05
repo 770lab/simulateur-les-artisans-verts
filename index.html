@@ -3399,19 +3399,16 @@
                         <span class="ite-tag">LOT 2 &middot; min 1 500 &euro;</span>
                     </div>
                     <div class="ite-note">2&egrave;me geste obligatoire pour CEE + PTZ. <b style="color: #f97316;">Minimum factur&eacute; : 1 500 &euro;</b></div>
-                    <div class="ite-fg">
-                        <div class="ite-fi full"><label>Type</label>
+                    <div class="ite-fg c3">
+                        <div class="ite-fi"><label>Type</label>
                             <select id="iteTypeLot2" onchange="ite_switchLot2();ite_calc()">
                                 <option value="101">BAR-EN-101 &mdash; Isolation combles perdus</option>
                                 <option value="103">BAR-EN-103 &mdash; Isolation plancher bas</option>
                                 <option value="148">BAR-TH-148 &mdash; Chauffe-eau thermodynamique</option>
                             </select>
                         </div>
-                    </div>
-                    <!-- LOT 2: BAR-EN-101 (inline) -->
-                    <div id="iteCard101" style="display: none; margin-top:12px; padding-top:12px; border-top:1px dashed #cbd5e1;">
-                        <div style="font-size:13px;font-weight:700;color:#334155;margin-bottom:8px;">&#127968; BAR-EN-101 &mdash; Combles Perdus</div>
-                        <div class="ite-fg">
+                        <!-- BAR-EN-101 fields (inline) -->
+                        <div id="iteCard101" style="display:none;">
                             <div class="ite-fi"><label>Technique</label>
                                 <select id="iteTech101" onchange="ite_calc()">
                                     <option value="souffle">Souffl&eacute;</option>
@@ -3423,20 +3420,14 @@
                             <input type="hidden" id="itePrixMat101" value="0">
                             <input type="hidden" id="itePrixMo101" value="0">
                         </div>
-                    </div>
-                    <!-- LOT 2: BAR-EN-103 (inline) -->
-                    <div id="iteCard103" style="display: none; margin-top:12px; padding-top:12px; border-top:1px dashed #cbd5e1;">
-                        <div style="font-size:13px;font-weight:700;color:#334155;margin-bottom:8px;">&#127968; BAR-EN-103 &mdash; Plancher Bas</div>
-                        <div class="ite-fg">
+                        <!-- BAR-EN-103 fields (inline) -->
+                        <div id="iteCard103" style="display:none;">
                             <div class="ite-fi"><label>Surface (m&sup2;)</label><input type="number" id="iteSurface103" value="50" oninput="ite_calc()"></div>
                             <input type="hidden" id="itePrixMat103" value="0">
                             <input type="hidden" id="itePrixMo103" value="0">
                         </div>
-                    </div>
-                    <!-- LOT 2: BAR-TH-148 (inline) -->
-                    <div id="iteCard148" style="display: none; margin-top:12px; padding-top:12px; border-top:1px dashed #cbd5e1;">
-                        <div style="font-size:13px;font-weight:700;color:#334155;margin-bottom:8px;">&#128703; BAR-TH-148 &mdash; CET</div>
-                        <div class="ite-fg">
+                        <!-- BAR-TH-148 fields (inline) -->
+                        <div id="iteCard148" style="display:none;">
                             <div class="ite-fi"><label>Mod&egrave;le</label><select id="iteRefCET"><option value="200">THALEOS Performer 2 &mdash; 200L</option><option value="240">THALEOS Performer III &mdash; 240L</option><option value="270">THALEOS Performer 2 &mdash; 270L</option></select></div>
                             <input type="hidden" id="itePrixCET" value="0">
                             <input type="hidden" id="itePrixPoseCET" value="0">
@@ -3457,19 +3448,16 @@
                     </div>
                     <div class="ite-note">Plafond Eco-PTZ passe de 25 000 &euro; &agrave; <b style="color:#3b82f6;">30 000 &euro;</b>. <b style="color: #f97316;">Minimum factur&eacute; : 1 500 &euro;</b></div>
                     <select id="iteIncludeLot3" style="display:none;"><option value="non">Non</option><option value="oui" selected>Oui</option></select>
-                    <div class="ite-fg">
-                        <div class="ite-fi full" id="iteTypeLot3Wrap"><label>Type</label>
+                    <div class="ite-fg c3">
+                        <div class="ite-fi" id="iteTypeLot3Wrap"><label>Type</label>
                             <select id="iteTypeLot3" onchange="ite_switchLot3();ite_calc()">
                                 <option value="101">BAR-EN-101 &mdash; Isolation combles perdus</option>
                                 <option value="103">BAR-EN-103 &mdash; Isolation plancher bas</option>
                                 <option value="148">BAR-TH-148 &mdash; Chauffe-eau thermodynamique</option>
                             </select>
                         </div>
-                    </div>
-                    <!-- LOT 3: BAR-EN-101 (inline) -->
-                    <div id="iteCard101L3" style="display: none; margin-top:12px; padding-top:12px; border-top:1px dashed #cbd5e1;">
-                        <div style="font-size:13px;font-weight:700;color:#334155;margin-bottom:8px;">&#127968; BAR-EN-101 &mdash; Combles Perdus</div>
-                        <div class="ite-fg">
+                        <!-- BAR-EN-101 fields (inline) -->
+                        <div id="iteCard101L3" style="display:none;">
                             <div class="ite-fi"><label>Technique</label>
                                 <select id="iteTech101L3" onchange="ite_calc()">
                                     <option value="souffle">Souffl&eacute;</option>
@@ -3481,20 +3469,14 @@
                             <input type="hidden" id="itePrixMat101L3" value="0">
                             <input type="hidden" id="itePrixMo101L3" value="0">
                         </div>
-                    </div>
-                    <!-- LOT 3: BAR-EN-103 (inline) -->
-                    <div id="iteCard103L3" style="display: none; margin-top:12px; padding-top:12px; border-top:1px dashed #cbd5e1;">
-                        <div style="font-size:13px;font-weight:700;color:#334155;margin-bottom:8px;">&#127968; BAR-EN-103 &mdash; Plancher Bas</div>
-                        <div class="ite-fg">
+                        <!-- BAR-EN-103 fields (inline) -->
+                        <div id="iteCard103L3" style="display:none;">
                             <div class="ite-fi"><label>Surface (m&sup2;)</label><input type="number" id="iteSurface103L3" value="50" oninput="ite_calc()"></div>
                             <input type="hidden" id="itePrixMat103L3" value="0">
                             <input type="hidden" id="itePrixMo103L3" value="0">
                         </div>
-                    </div>
-                    <!-- LOT 3: BAR-TH-148 (inline) -->
-                    <div id="iteCard148L3" style="display: none; margin-top:12px; padding-top:12px; border-top:1px dashed #cbd5e1;">
-                        <div style="font-size:13px;font-weight:700;color:#334155;margin-bottom:8px;">&#128703; BAR-TH-148 &mdash; CET</div>
-                        <div class="ite-fg">
+                        <!-- BAR-TH-148 fields (inline) -->
+                        <div id="iteCard148L3" style="display:none;">
                             <div class="ite-fi"><label>Mod&egrave;le</label><select id="iteRefCETL3"><option value="200">THALEOS Performer 2 &mdash; 200L</option><option value="240">THALEOS Performer III &mdash; 240L</option><option value="270">THALEOS Performer 2 &mdash; 270L</option></select></div>
                             <input type="hidden" id="itePrixCETL3" value="0">
                             <input type="hidden" id="itePrixPoseCETL3" value="0">
@@ -7555,9 +7537,9 @@ function ite_syncLotSelects(){
 }
 function ite_switchLot2(){
     var t=ite_V('iteTypeLot2');
-    ite_$('iteCard101').style.display=t==='101'?'block':'none';
-    ite_$('iteCard103').style.display=t==='103'?'block':'none';
-    ite_$('iteCard148').style.display=t==='148'?'block':'none';
+    ite_$('iteCard101').style.display=t==='101'?'contents':'none';
+    ite_$('iteCard103').style.display=t==='103'?'contents':'none';
+    ite_$('iteCard148').style.display=t==='148'?'contents':'none';
     ite_syncLotSelects();
 }
 
@@ -7593,9 +7575,9 @@ function ite_switchLot3(){
     ite_$('iteCard148L3').style.display='none';
     if(inc){
         var t=ite_V('iteTypeLot3');
-        if(t==='101')ite_$('iteCard101L3').style.display='block';
-        else if(t==='103')ite_$('iteCard103L3').style.display='block';
-        else ite_$('iteCard148L3').style.display='block';
+        if(t==='101')ite_$('iteCard101L3').style.display='contents';
+        else if(t==='103')ite_$('iteCard103L3').style.display='contents';
+        else ite_$('iteCard148L3').style.display='contents';
     }
     ite_syncLotSelects();
 }
