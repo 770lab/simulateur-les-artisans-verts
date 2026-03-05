@@ -5391,11 +5391,25 @@ function showApp(){
         // Dossier button for all logged-in users
         document.getElementById('btnDossiers').style.display = '';
         
-        // Auto-fill conseiller with user name
+        // Auto-fill conseiller — admin peut choisir, les autres sont verrouillés
         var conSel = document.getElementById('iteConseiller');
         if(conSel){
-            conSel.innerHTML = '<option value="'+currentUser.name+'">'+currentUser.name+'</option>';
-            conSel.value = currentUser.name;
+            if(isAdmin){
+                var opts='<option value="">&mdash; S\u00e9lectionner &mdash;</option>';
+                var names=[];
+                for(var uid in FALLBACK_USERS){
+                    var u=FALLBACK_USERS[uid];
+                    if(u.name && names.indexOf(u.name)===-1){
+                        names.push(u.name);
+                        opts+='<option value="'+u.name+'">'+u.name+'</option>';
+                    }
+                }
+                conSel.innerHTML=opts;
+                conSel.value=currentUser.name;
+            }else{
+                conSel.innerHTML='<option value="'+currentUser.name+'">'+currentUser.name+'</option>';
+                conSel.value=currentUser.name;
+            }
         }
     }
 
