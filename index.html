@@ -7326,7 +7326,7 @@ function ite_fetchCSV(){
     return new Promise(function(resolve){
         if(ite_csvCache){resolve(ite_csvCache);return;}
         ite_setStatus('loading','\u23f3 Chargement\u2026');
-        var ID='1J88r4JUwqVvZFbdAFvj3MffBkEO3gYv7dYiXHhQT3C0';
+        var ID='19e0pDKanIMAzQ3SxU3heolzn5KtZ9X9ALb3McFG9pdQ';
         var cb='__itecb'+Date.now();
         var url='https://docs.google.com/spreadsheets/d/'+ID+'/gviz/tq?tqx=responseHandler:'+cb;
         window[cb]=function(d){
@@ -7396,6 +7396,16 @@ function ite_loadDossier(f){
     }
     var z=g(42).toUpperCase();
     if(z){var zs=document.getElementById('zone');if(zs){for(var j=0;j<zs.options.length;j++){if(zs.options[j].value===z){zs.selectedIndex=j;break;}}}}
+    // RFR (col 44)
+    var rfrVal=parseFloat(g(44).replace(/[^\d]/g,''))||0;
+    if(rfrVal>0){var rfrEl=document.getElementById('rfr');if(rfrEl){rfrEl.value=rfrVal;}}
+    // Personnes au foyer (col 45)
+    var foyerVal=g(45).replace(/[^\d]/g,'');
+    if(foyerVal){var foyerEl=document.getElementById('nbPersonnes');if(foyerEl){foyerEl.value=parseInt(foyerVal)||1;}}
+    // Age du batiment (col 46)
+    var ageVal=g(46).replace(/[^\d]/g,'');
+    if(ageVal){var anneeEl=document.getElementById('dimAnnee');if(anneeEl){anneeEl.value=parseInt(ageVal)||2000;}}
+    try{detectProfil();}catch(e){}
     try{ite_calc();}catch(e){}
     try{calc();}catch(e){}
     try{checkExport();}catch(e){}
