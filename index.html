@@ -2576,7 +2576,7 @@
                             </optgroup>
                         </select>
                     </div>
-                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:10px;">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px;">
                         <div class="form-group" style="margin-bottom:0;">
                             <label>Prix PAC TTC (&euro;)</label>
                             <input type="number" id="prixPAC" value="7650" oninput="onPrixPACPoseChange()">
@@ -2585,11 +2585,8 @@
                             <label>Prix Pose TTC (&euro;)</label>
                             <input type="number" id="prixPose" value="3240" oninput="onPrixPACPoseChange()">
                         </div>
-                        <div class="form-group" style="margin-bottom:0;">
-                            <label>Usage</label>
-                            <select id="usagePAC"><option>Chauffage seul</option><option>Chauffage + ECS</option></select>
-                        </div>
                     </div>
+                    <select id="usagePAC" style="display:none"><option>Chauffage seul</option><option>Chauffage + ECS</option></select>
                     <div id="pacInfo" style="font-size:11px;color:#64748b;line-height:1.5;min-height:20px;"></div>
                 </div>
 
