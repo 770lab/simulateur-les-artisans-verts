@@ -5656,11 +5656,12 @@ function doLogin(){
                 startSessionCheck();
                 logAction('Connexion', currentUser.name);
             } else {
-                errEl.textContent = d.error || 'Identifiants incorrects';
-                errEl.style.display = 'block';
+                // API a répondu mais user non trouvé → essayer le fallback local
+                errEl.style.color = '#dc2626';
+                doLoginLocal(u, p, errEl);
             }
         }, function(err){
-            // Fallback local
+            // Erreur réseau → fallback local
             errEl.style.color = '#dc2626';
             doLoginLocal(u, p, errEl);
         });
