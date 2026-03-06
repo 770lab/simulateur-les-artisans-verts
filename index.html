@@ -490,9 +490,10 @@
             .tab-pac-active .parameters-section > .tab-pac-content {
                 display: contents;
             }
-            /* ITE content spans full width */
+            /* ITE content spans full width, after clientCard (order:1) */
             .tab-ite-active .parameters-section > .tab-ite-content {
                 grid-column: 1 / -1;
+                order: 2;
             }
 
             /* ====== PAC Mode — Desktop Row Layout ====== */
