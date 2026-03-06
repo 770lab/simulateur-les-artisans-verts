@@ -3746,6 +3746,7 @@
                         <div class="result-row-card ttc-editable-active" id="ttcEditCard" style="background:rgba(96,165,250,0.08);border-color:rgba(96,165,250,0.15);">
                             <div class="rrc-label">TTC</div>
                             <div class="rrc-value blue" id="totalTTCEditable" contenteditable="true" oninput="onTTCEdit()" style="cursor:text;min-width:60px;">10 890 &euro;</div>
+                            <div id="pacHeaderHT" style="font-size:10px;color:#94a3b8;text-align:right;margin-top:2px;"></div>
                         </div>
                         <input type="hidden" id="lockTTC" value="0">
                         <input type="hidden" id="totalTTCInput" value="10890">
@@ -5203,8 +5204,8 @@ function calc(){
     document.getElementById('totalAides').textContent=fmt(ta);
     var _csl=document.getElementById('ceeSourceLabel');if(_csl)_csl.textContent=ceeSourceText;
     
-    if(mode) document.getElementById('displayCoutHT').textContent=fmt(ch);
-    
+    if(mode){document.getElementById('displayCoutHT').textContent=fmt(ch);var _phht=document.getElementById('pacHeaderHT');if(_phht)_phht.textContent='HT : '+fmt(ch);}
+
     const st=document.getElementById('scenario').options[document.getElementById('scenario').selectedIndex].text;
     const ct2=document.getElementById('categorie').options[document.getElementById('categorie').selectedIndex].text;
     const zn2=document.getElementById('zone').options[document.getElementById('zone').selectedIndex].text;
