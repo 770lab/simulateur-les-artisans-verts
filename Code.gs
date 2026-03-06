@@ -146,8 +146,8 @@ function isSuperAdmin(username) {
     if (!sheet) return false;
     var data = sheet.getDataRange().getValues();
     for (var i = 1; i < data.length; i++) {
-      if (data[i][0].toString().toLowerCase() === u) {
-        return (data[i][3] || '').toString().toLowerCase() === 'admin';
+      if (data[i][0].toString().trim().toLowerCase() === u) {
+        return (data[i][3] || '').toString().trim().toLowerCase() === 'admin';
       }
     }
   } catch(e) {}
@@ -167,8 +167,8 @@ function doLogin(username, password) {
   const data = sheet.getDataRange().getValues();
   for (let i = 1; i < data.length; i++) {
     const row = data[i];
-    if (row[0].toString().toLowerCase() === username.toLowerCase()) {
-      if (row[1].toString() === password) {
+    if (row[0].toString().trim().toLowerCase() === username.trim().toLowerCase()) {
+      if (row[1].toString().trim() === password.trim()) {
         // Generate unique session token and store in column E
         var token = Utilities.getUuid();
         sheet.getRange(i + 1, 5).setValue(token);
@@ -200,7 +200,7 @@ function doCheckSession(username, token) {
   if (!sheet) return { valid: false };
   const data = sheet.getDataRange().getValues();
   for (let i = 1; i < data.length; i++) {
-    if (data[i][0].toString().toLowerCase() === username.toLowerCase()) {
+    if (data[i][0].toString().trim().toLowerCase() === username.trim().toLowerCase()) {
       return { valid: (data[i][4] || '').toString() === token };
     }
   }
@@ -224,7 +224,7 @@ function doChangePassword(username, oldPass, newPass) {
 
   const data = sheet.getDataRange().getValues();
   for (let i = 1; i < data.length; i++) {
-    if (data[i][0].toString().toLowerCase() === username.toLowerCase()) {
+    if (data[i][0].toString().trim().toLowerCase() === username.trim().toLowerCase()) {
       if (data[i][1].toString() !== oldPass) {
         return { success: false, error: 'Ancien mot de passe incorrect' };
       }
@@ -282,7 +282,7 @@ function doCreateUser(adminUser, username, name, password, role) {
   // Vérifier que l'utilisateur n'existe pas déjà
   const data = sheet.getDataRange().getValues();
   for (let i = 1; i < data.length; i++) {
-    if (data[i][0].toString().toLowerCase() === username.toLowerCase()) {
+    if (data[i][0].toString().trim().toLowerCase() === username.trim().toLowerCase()) {
       return { success: false, error: 'Cet identifiant existe déjà' };
     }
   }
@@ -318,7 +318,7 @@ function doDeleteUser(adminUser, username) {
 
   const data = sheet.getDataRange().getValues();
   for (let i = 1; i < data.length; i++) {
-    if (data[i][0].toString().toLowerCase() === username.toLowerCase()) {
+    if (data[i][0].toString().trim().toLowerCase() === username.trim().toLowerCase()) {
       sheet.deleteRow(i + 1);
       addJournalEntry(adminUser, 'Suppression utilisateur', username);
       return { success: true, message: 'Utilisateur supprimé' };
