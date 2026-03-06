@@ -4891,24 +4891,37 @@ function toggleSidebarDetails(btn){
     btn.innerHTML=d.classList.contains('open')?'&#9650; Fermer':'&#128179; Financement';
 }
 
+// Mémorise les montants composants au début de l'édition TTC
+var _ttcEditSnapshot = null;
+
 function onTTCEdit(){
     const el = document.getElementById('totalTTCEditable');
     const raw = el.textContent.replace(/[^0-9]/g, '');
     const newTTC = parseInt(raw) || 0;
-    // Redistribuer proportionnellement sur les composants (PAC, Pose, Ballon, SSC)
-    const oldTTC = getPacManualTTC();
-    if(oldTTC > 0 && newTTC > 0 && newTTC !== oldTTC){
-        const ratio = newTTC / oldTTC;
+
+    // Capturer le snapshot au premier appel (lockTTC encore à 0)
+    if(document.getElementById('lockTTC').value !== '1'){
+        var snap = {};
+        ['prixPAC','prixPose','prixBallon','prixPoseBallon','prixSSC','prixPoseSSC'].forEach(function(id){
+            snap[id] = parseFloat(document.getElementById(id).value) || 0;
+        });
+        snap._total = getPacManualTTC();
+        _ttcEditSnapshot = snap;
+    }
+
+    // Redistribuer proportionnellement depuis les valeurs d'origine
+    if(_ttcEditSnapshot && _ttcEditSnapshot._total > 0 && newTTC > 0){
         var fields = ['prixPAC','prixPose'];
         var inclB = document.getElementById('includeBallon');
-        if(inclB && inclB.value==='oui'){ fields.push('prixBallon','prixPoseBallon'); }
+        if(inclB && inclB.value==='oui') fields.push('prixBallon','prixPoseBallon');
         var inclS = document.getElementById('includeSSC');
-        if(inclS && inclS.value==='oui'){ fields.push('prixSSC','prixPoseSSC'); }
+        if(inclS && inclS.value==='oui') fields.push('prixSSC','prixPoseSSC');
         fields.forEach(function(id){
             var inp = document.getElementById(id);
-            if(inp){ inp.value = Math.round((parseFloat(inp.value)||0) * ratio); }
+            if(inp) inp.value = Math.round((_ttcEditSnapshot[id] || 0) * newTTC / _ttcEditSnapshot._total);
         });
     }
+
     document.getElementById('totalTTCInput').value = newTTC;
     document.getElementById('lockTTC').value = '1';
     calc();
@@ -5024,6 +5037,7 @@ function onPrixPACPoseChange(){
         var tte=document.getElementById('totalTTCEditable');
         if(tte) tte.textContent=fmt(tt);
         document.getElementById('lockTTC').value='0';
+        _ttcEditSnapshot = null; // reset pour prochaine édition TTC
     }
     calc();
 }
