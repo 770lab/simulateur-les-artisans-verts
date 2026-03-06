@@ -3722,22 +3722,61 @@
                     </div>
                 </div>
 
-                <!-- Generate button -->
-                <div style="margin-top: 10px;">
-                    <button onclick="ite_generateDevis()" style="width: 100%; padding: 16px; border-radius: 12px; border: none; background: linear-gradient(135deg, #16a34a, #0d8a3a); color: white; font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 20px rgba(22,163,74,0.25); transition: all 0.2s; font-family: inherit;">
-                        &#128196; G&eacute;n&eacute;rer le Devis ITE
-                    </button>
+                <!-- ITE Financial summary (in content flow, not sticky) -->
+                <div class="summary-card" style="margin-top:20px;border-radius:16px;padding:16px;">
+                <div class="result-row-card">
+                    <div class="rrc-label">&#129521; LOT 1 &mdash; ITE</div>
+                    <div class="rrc-value blue" id="iteSidebarLot1">&mdash;</div>
                 </div>
-                <div style="margin-top: 8px;">
-                    <button onclick="ite_generatePTZ()" style="width: 100%; padding: 16px; border-radius: 12px; border: none; background: linear-gradient(135deg, #006B3F, #2E9D5E); color: white; font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 20px rgba(0,107,63,0.25); transition: all 0.2s; font-family: inherit;">
-                        &#127963;&#65039; G&eacute;n&eacute;rer le document PTZ
-                    </button>
+
+                <div class="result-row-card">
+                    <div>
+                        <div class="rrc-label">LOT 2</div>
+                        <div style="font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 2px;" id="iteSidebarLot2Type">BAR-EN-103</div>
+                    </div>
+                    <div class="rrc-value" id="iteSidebarLot2">&mdash;</div>
                 </div>
-                <div style="margin-top: 8px;">
-                    <button onclick="esign_openModal()" style="width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #d1d5db; background: white; color: #374151; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                        <span style="font-size: 18px;">&#9998;</span> Signature &eacute;lectronique des devis
-                    </button>
+                <div id="iteSidebarLot2Alert" style="display: none; font-size: 11px; color: #f87171; padding: 6px 10px; background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.15); border-radius: 8px; margin-bottom: 10px;">
+                    &#9888;&#65039; LOT 2 &lt; 1 500 &euro;
                 </div>
+
+                <div class="glow-separator"></div>
+
+                <div class="dark-section-title">Aides &amp; Primes</div>
+
+                <div class="result-row-card" style="background: rgba(52,211,153,0.08); border-color: rgba(52,211,153,0.15);">
+                    <div class="rrc-label">&#128220; Prime CEE EDF</div>
+                    <div class="rrc-value green" id="iteSidebarCEE">&mdash;</div>
+                </div>
+
+                <div id="iteSidebarMPR" style="display: none;"></div>
+
+                <div class="glow-separator"></div>
+
+                <div class="result-row-card" style="background: rgba(96,165,250,0.08); border-color: rgba(96,165,250,0.15);">
+                    <div class="rrc-label">&#128176; Total TTC</div>
+                    <div class="rrc-value blue" id="iteSidebarTTC">&mdash;</div>
+                    <div id="iteSidebarHT" style="font-size:10px;color:#94a3b8;text-align:right;margin-top:2px;"></div>
+                </div>
+
+                <div class="result-row-card" style="background: rgba(251,191,36,0.08); border-color: rgba(251,191,36,0.15);">
+                    <div class="rrc-label">&#127968; Reste &agrave; r&eacute;gler</div>
+                    <div class="rrc-value yellow" id="iteSidebarReste">&mdash;</div>
+                </div>
+
+                <div id="iteSidebarPTZ" style="margin-top: 10px;"></div>
+
+                <button onclick="ite_generateDevis()" class="btn-dark-export pdf" style="margin-top: 14px;">
+                    &#128196; G&eacute;n&eacute;rer le Devis ITE
+                </button>
+                <button onclick="ite_generatePTZ()" class="btn-dark-export pdf" style="margin-top: 8px; background: linear-gradient(135deg, #006B3F, #2E9D5E) !important;">
+                    &#127963;&#65039; G&eacute;n&eacute;rer PTZ
+                </button>
+                <button onclick="esign_openModal()" class="btn-dark-export" style="margin-top: 8px; background: rgba(255,255,255,0.08) !important; border: 1px solid rgba(255,255,255,0.15) !important;">
+                    &#9998; Signature &eacute;lectronique
+                </button>
+                </div>
+
             </div><!-- end tab-ite-content -->
 
         </div>
@@ -3967,63 +4006,11 @@
                 </div>
 
                 <!-- Sélecteur de lots (miroir du sélecteur dans le contenu) -->
-                <div id="iteSidebarLotBtns" style="display:flex;gap:6px;margin-bottom:12px;">
+                <div id="iteSidebarLotBtns" style="display:flex;gap:6px;margin-bottom:0;">
                     <button class="ite-lot-btn" onclick="ite_setNbLots(1,this);syncSidebarLotBtns(1)" style="flex:1;font-size:11px;padding:6px 4px;">1 LOT</button>
                     <button class="ite-lot-btn active" onclick="ite_setNbLots(2,this);syncSidebarLotBtns(2)" style="flex:1;font-size:11px;padding:6px 4px;">2 LOTS</button>
                     <button class="ite-lot-btn" onclick="ite_setNbLots(3,this);syncSidebarLotBtns(3)" style="flex:1;font-size:11px;padding:6px 4px;">3 LOTS</button>
                 </div>
-
-                <div class="result-row-card">
-                    <div class="rrc-label">&#129521; LOT 1 &mdash; ITE</div>
-                    <div class="rrc-value blue" id="iteSidebarLot1">&mdash;</div>
-                </div>
-
-                <div class="result-row-card">
-                    <div>
-                        <div class="rrc-label">LOT 2</div>
-                        <div style="font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 2px;" id="iteSidebarLot2Type">BAR-EN-103</div>
-                    </div>
-                    <div class="rrc-value" id="iteSidebarLot2">&mdash;</div>
-                </div>
-                <div id="iteSidebarLot2Alert" style="display: none; font-size: 11px; color: #f87171; padding: 6px 10px; background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.15); border-radius: 8px; margin-bottom: 10px;">
-                    &#9888;&#65039; LOT 2 &lt; 1 500 &euro;
-                </div>
-
-                <div class="glow-separator"></div>
-
-                <div class="dark-section-title">Aides &amp; Primes</div>
-
-                <div class="result-row-card" style="background: rgba(52,211,153,0.08); border-color: rgba(52,211,153,0.15);">
-                    <div class="rrc-label">&#128220; Prime CEE EDF</div>
-                    <div class="rrc-value green" id="iteSidebarCEE">&mdash;</div>
-                </div>
-
-                <div id="iteSidebarMPR" style="display: none;"></div>
-
-                <div class="glow-separator"></div>
-
-                <div class="result-row-card" style="background: rgba(96,165,250,0.08); border-color: rgba(96,165,250,0.15);">
-                    <div class="rrc-label">&#128176; Total TTC</div>
-                    <div class="rrc-value blue" id="iteSidebarTTC">&mdash;</div>
-                    <div id="iteSidebarHT" style="font-size:10px;color:#94a3b8;text-align:right;margin-top:2px;"></div>
-                </div>
-
-                <div class="result-row-card" style="background: rgba(251,191,36,0.08); border-color: rgba(251,191,36,0.15);">
-                    <div class="rrc-label">&#127968; Reste &agrave; r&eacute;gler</div>
-                    <div class="rrc-value yellow" id="iteSidebarReste">&mdash;</div>
-                </div>
-
-                <div id="iteSidebarPTZ" style="margin-top: 10px;"></div>
-
-                <button onclick="ite_generateDevis()" class="btn-dark-export pdf" style="margin-top: 14px;">
-                    &#128196; G&eacute;n&eacute;rer le Devis ITE
-                </button>
-                <button onclick="ite_generatePTZ()" class="btn-dark-export pdf" style="margin-top: 8px; background: linear-gradient(135deg, #006B3F, #2E9D5E) !important;">
-                    &#127963;&#65039; G&eacute;n&eacute;rer PTZ
-                </button>
-                <button onclick="esign_openModal()" class="btn-dark-export" style="margin-top: 8px; background: rgba(255,255,255,0.08) !important; border: 1px solid rgba(255,255,255,0.15) !important;">
-                    &#9998; Signature &eacute;lectronique
-                </button>
             </div>
             </div><!-- end tab-ite-content sidebar -->
 </div>
