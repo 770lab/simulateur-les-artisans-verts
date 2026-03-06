@@ -2693,7 +2693,7 @@
                                 <select id="iteConseiller"><option value="">&mdash; S&eacute;lectionner &mdash;</option></select>
                             </div>
                         </div>
-                        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px;">
+                        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:12px;">
                             <div class="form-group" style="margin-bottom:0;">
                                 <label>Chauffage actuel</label>
                                 <select id="iteTypeChauffage">
@@ -2710,6 +2710,13 @@
                                 <select id="iteTypeLogement" onchange="ite_calc()">
                                     <option value="maison">Maison</option>
                                     <option value="appartement">Appartement</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label>Installation &eacute;lectrique</label>
+                                <select id="typeElec">
+                                    <option value="mono" selected>Monophas&eacute;</option>
+                                    <option value="tri">Triphas&eacute;</option>
                                 </select>
                             </div>
                             <div class="form-group" style="margin-bottom:0;">
@@ -2979,14 +2986,14 @@
                     <div id="pacInfo" style="font-size:11px;color:#64748b;line-height:1.5;min-height:20px;"></div>
                 </div>
 
-                <!-- Ballon Thermodynamique -->
-                <div class="produit-bloc" style="margin-top:14px;">
+                <!-- Ballon (Thermo ou Électrique selon scénario) -->
+                <div class="produit-bloc" style="margin-top:14px;" id="blocBallon">
                     <div class="produit-bloc-head">
-                        <span class="produit-bloc-icon">&#128703;</span>
-                        <span class="produit-bloc-title">Ballon Thermodynamique</span>
+                        <span class="produit-bloc-icon" id="ballonIcon">&#128703;</span>
+                        <span class="produit-bloc-title" id="ballonTitle">Ballon Thermodynamique</span>
                     </div>
                     <div class="form-group" style="margin-bottom:8px;display:none;">
-                        <label>Inclure un ballon CET ?</label>
+                        <label>Inclure un ballon ?</label>
                         <select id="includeBallon" onchange="toggleProduitOpt('ballonOpt',this.value==='oui');calc();calcCEEDetail()">
                             <option value="non">Non</option>
                             <option value="oui">Oui</option>
@@ -2994,11 +3001,18 @@
                     </div>
                     <div class="produit-opt-section" id="ballonOpt">
                         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-                            <div class="form-group" style="margin-bottom:0;">
+                            <div class="form-group" style="margin-bottom:0;" id="refBallonGroup">
                                 <label>R&eacute;f&eacute;rence</label>
                                 <select id="refBallon">
                                     <option value="PERFORMER2_200L">Performer 2 &mdash; 200L</option>
                                     <option value="PERFORMER3_240L" selected>Performer III &mdash; 240L</option>
+                                </select>
+                                <!-- Références pour ballon électrique (masqué par défaut) -->
+                                <select id="refBallonElec" style="display:none;">
+                                    <option value="ELEC_100L">Ballon &Eacute;lectrique &mdash; 100L</option>
+                                    <option value="ELEC_150L">Ballon &Eacute;lectrique &mdash; 150L</option>
+                                    <option value="ELEC_200L" selected>Ballon &Eacute;lectrique &mdash; 200L</option>
+                                    <option value="ELEC_300L">Ballon &Eacute;lectrique &mdash; 300L</option>
                                 </select>
                             </div>
                             <div class="form-group" style="margin-bottom:0;">
@@ -3732,6 +3746,15 @@
             <div class="tab-pac-content">
             <div class="summary-card" style="margin-bottom: 0;">
                 <div class="scenario-label-dark" id="scenarioSummary">&mdash;</div>
+
+                <!-- Scenario quick-switch buttons in sticky header -->
+                <div id="sidebarScenarioBtns" style="display:flex;flex-wrap:wrap;gap:4px;margin:6px 0 8px;">
+                    <button class="ite-lot-btn active" onclick="selectScenarioBtn(this,'PAC');syncSidebarScenarioBtns('PAC')" style="flex:1;font-size:10px;padding:4px 2px;min-width:0;">PAC</button>
+                    <button class="ite-lot-btn" onclick="selectScenarioBtn(this,'PAC + BALLON &Eacute;LECTRIQUE');syncSidebarScenarioBtns('PAC + BALLON &Eacute;LECTRIQUE')" style="flex:1;font-size:10px;padding:4px 2px;min-width:0;">+ Ballon &Eacute;lec</button>
+                    <button class="ite-lot-btn" onclick="selectScenarioBtn(this,'PAC + BALLON THERMO');syncSidebarScenarioBtns('PAC + BALLON THERMO')" style="flex:1;font-size:10px;padding:4px 2px;min-width:0;">+ Ballon Th.</button>
+                    <button class="ite-lot-btn" onclick="selectScenarioBtn(this,'PAC + SSC');syncSidebarScenarioBtns('PAC + SSC')" style="flex:1;font-size:10px;padding:4px 2px;min-width:0;">+ SSC</button>
+                    <button class="ite-lot-btn" onclick="selectScenarioBtn(this,'SSC');syncSidebarScenarioBtns('SSC')" style="flex:1;font-size:10px;padding:4px 2px;min-width:0;">SSC</button>
+                </div>
 
                 <!-- ROW 1: key financial metrics + actions -->
                 <div class="sidebar-row1">
@@ -4468,9 +4491,13 @@ function autoSyncScenario() {
 var _prixDefaults = {prixPAC:7650, prixPose:3240, prixBallon:2000, prixPoseBallon:860, prixSSC:10230, prixPoseSSC:4730};
 
 function selectScenarioBtn(btn, val) {
-    var btns = document.querySelectorAll('#scenarioBtns .ite-lot-btn');
-    btns.forEach(function(b){ b.classList.remove('active'); });
+    // Sync both main and sidebar scenario buttons
+    var allBtnSets = ['#scenarioBtns .ite-lot-btn', '#sidebarScenarioBtns .ite-lot-btn'];
+    allBtnSets.forEach(function(sel){
+        document.querySelectorAll(sel).forEach(function(b){ b.classList.remove('active'); });
+    });
     btn.classList.add('active');
+    syncSidebarScenarioBtns(val);
     var sv = document.getElementById('scenarioVisible');
     if(sv) sv.value = val;
     // Reset TTC lock so it updates from scenario data
@@ -4483,6 +4510,13 @@ function selectScenarioBtn(btn, val) {
     });
     _ttcEditSnapshot = null;
     onScenarioVisibleChange(val);
+}
+function syncSidebarScenarioBtns(val){
+    var map={'PAC':0,'PAC + BALLON ÉLECTRIQUE':1,'PAC + BALLON THERMO':2,'PAC + SSC':3,'SSC':4};
+    var idx=map[val];if(idx===undefined)return;
+    ['#scenarioBtns .ite-lot-btn','#sidebarScenarioBtns .ite-lot-btn'].forEach(function(sel){
+        document.querySelectorAll(sel).forEach(function(b,i){b.classList.toggle('active',i===idx);});
+    });
 }
 
 function onScenarioVisibleChange(val) {
@@ -4504,6 +4538,26 @@ function onScenarioVisibleChange(val) {
     if (balSel) { balSel.value = hasBallon ? 'oui' : 'non'; }
     var ballonEl = document.getElementById('ballonOpt');
     if (ballonEl) ballonEl.style.display = hasBallon ? 'block' : 'none';
+    var blocBallonEl = document.getElementById('blocBallon');
+    if (blocBallonEl) blocBallonEl.style.display = hasBallon ? '' : 'none';
+    // Switch Ballon Thermo ↔ Ballon Électrique
+    var isElec = (val === 'PAC + BALLON ÉLECTRIQUE');
+    var bTitle = document.getElementById('ballonTitle');
+    var bIcon = document.getElementById('ballonIcon');
+    var refThermo = document.getElementById('refBallon');
+    var refElec = document.getElementById('refBallonElec');
+    if (bTitle) bTitle.textContent = isElec ? 'Ballon Électrique' : 'Ballon Thermodynamique';
+    if (bIcon) bIcon.innerHTML = isElec ? '&#9889;' : '&#128703;';
+    if (refThermo) refThermo.style.display = isElec ? 'none' : '';
+    if (refElec) refElec.style.display = isElec ? '' : 'none';
+    // Ajuster prix par défaut selon type
+    var pxBal = document.getElementById('prixBallon');
+    var pxPoseBal = document.getElementById('prixPoseBallon');
+    if (hasBallon && pxBal && pxPoseBal) {
+        if (isElec) { pxBal.value = 450; pxPoseBal.value = 350; }
+        else { pxBal.value = 2000; pxPoseBal.value = 860; }
+        onPrixPACPoseChange();
+    }
     // Toggle SSC include & section
     var sscSel = document.getElementById('includeSSC');
     if (sscSel) { sscSel.value = hasSSC ? 'oui' : 'non'; }
@@ -5214,7 +5268,8 @@ function calc(){
     document.getElementById('totalAides').textContent=fmt(ta);
     var _csl=document.getElementById('ceeSourceLabel');if(_csl)_csl.textContent=ceeSourceText;
     
-    if(mode){document.getElementById('displayCoutHT').textContent=fmt(ch);var _phht=document.getElementById('pacHeaderHT');if(_phht)_phht.textContent='HT : '+fmt(ch);}
+    var htFromTTC=Math.round(tt/1.055);
+    if(mode){document.getElementById('displayCoutHT').textContent=fmt(ch);var _phht=document.getElementById('pacHeaderHT');if(_phht)_phht.textContent='HT : '+fmt(htFromTTC);}
 
     const st=document.getElementById('scenario').options[document.getElementById('scenario').selectedIndex].text;
     const ct2=document.getElementById('categorie').options[document.getElementById('categorie').selectedIndex].text;
@@ -5338,16 +5393,24 @@ function calcRAC(rb,ch,ta,taForMarge,tt,proRB){
     const icon=document.getElementById('statusIcon');
     const txt=document.getElementById('statusText');
     if(typeof dbg==='function') dbg('RAC: mg='+Math.round(mgForMarge)+' seuil='+seuilOK+' rbFM='+Math.round(rbForMarge)+' ch='+Math.round(ch));
+    // Bloquer/débloquer boutons devis + PTZ + signature selon la marge
+    var _expBtn=document.getElementById('exportBtn');
+    var _ptzGrp=document.getElementById('pacPtzGroup');
+    var _signBtns=document.querySelectorAll('.sidebar-btn-sign');
     if(mgForMarge>=seuilOK){
         bd.className='status-badge ok';
         bd.onclick=shareDevis;
         icon.textContent='\u2705';
         txt.textContent='Voulez-vous un devis ?';
+        if(_expBtn){_expBtn.disabled=false;_expBtn.style.opacity='';_expBtn.style.pointerEvents='';_expBtn.title='';}
+        _signBtns.forEach(function(b){b.disabled=false;b.style.opacity='';b.style.pointerEvents='';});
     }else{
         bd.className='status-badge danger';
         bd.onclick=null;
         icon.textContent='\u274C';
         txt.textContent='Dossier refusé';
+        if(_expBtn){_expBtn.disabled=true;_expBtn.style.opacity='0.4';_expBtn.style.pointerEvents='none';_expBtn.title='Marge insuffisante ('+fmt(mgForMarge)+' < '+fmt(seuilOK)+')';}
+        _signBtns.forEach(function(b){b.disabled=true;b.style.opacity='0.4';b.style.pointerEvents='none';});
     }
 
     // Activer/désactiver le bloc financement avec le RAC
@@ -9476,6 +9539,14 @@ var CET_SPECS={
 
 function pac_generateDevis(){
     try{
+    // Bloquer si marge insuffisante
+    var _mgEl=document.getElementById('margeFinal');
+    if(_mgEl && mode){
+        var _mgVal=parseFloat(_mgEl.textContent.replace(/[^\d-]/g,''))||0;
+        var _sc=document.getElementById('scenario').value;
+        var _seuilDevis=(_sc==='PAC + SSC'||_sc==='SSC')?6000:4000;
+        if(_mgVal<_seuilDevis){alert('Impossible de g\u00e9n\u00e9rer le devis : marge insuffisante ('+_mgEl.textContent+' < '+_seuilDevis.toLocaleString('fr-FR')+' \u20AC)');return;}
+    }
     var titre=ite_V('nom').toUpperCase();
     var prenom=ite_V('prenom').toUpperCase();
     var nom=(prenom+' '+titre).trim()||'CLIENT';
@@ -10009,7 +10080,7 @@ function updateDossierStatus(id, status) {
 var DOSSIER_KEY = 'lav_dossiers';
 var DOSSIER_FIELDS = [
     'nom','prenom','iteAdresse','iteVille','iteTel','iteEmail',
-    'iteNumDevis','iteDateDevis','iteConseiller','iteTypeChauffage','iteTypeLogement','itePrecarite',
+    'iteNumDevis','iteDateDevis','iteConseiller','iteTypeChauffage','iteTypeLogement','typeElec','itePrecarite',
     'surfaceClient','zone','categorie',
     'iteSurfaceITE','iteMontantLot1','itePrixMatITE','itePrixMoITE','iteIsolantITE','iteCodeCouleurCrepi',
     'iteSousTraitITE','iteSiretSousTraitITE','iteRgeSousTraitITE','iteCouleurCrepi','iteEnduitITE',
