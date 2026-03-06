@@ -6286,10 +6286,10 @@ function checkAnneeGate(){
     if(!warn){
         warn=document.createElement('div');
         warn.id='anneeGateWarn';
-        warn.style.cssText='padding:10px 16px;background:#fef3c7;border:1px solid #f59e0b;border-radius:10px;color:#92400e;font-size:13px;font-weight:600;text-align:center;margin:12px 0;';
+        warn.style.cssText='padding:8px 14px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);border-radius:8px;color:#f59e0b;font-size:12px;font-weight:600;text-align:center;margin-top:10px;grid-column:1/-1;';
         warn.textContent='\u26a0\ufe0f Renseignez l\u2019ann\u00e9e de construction pour continuer';
-        var clientCard=document.getElementById('clientCard');
-        if(clientCard)clientCard.after(warn);
+        var anneeEl=document.getElementById('dimAnnee');
+        if(anneeEl){var grid=anneeEl.closest('[style*="grid-template"]');if(grid)grid.after(warn);}
     }
     warn.style.display=ok?'none':'block';
 }
