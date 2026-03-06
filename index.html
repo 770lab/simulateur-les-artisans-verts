@@ -7611,7 +7611,7 @@ function ite_getLot2Total(){
     var t=ite_V('iteTypeLot2');
     if(t==='101'){
         var s=ite_N('iteSurface101');
-        var tot=Math.max(s*30, s<50?1500:0);
+        var tot=Math.max(s*70, s<22?1500:0);
         // Sync hidden fields (ratio 57/43) pour le devis
         var pm=tot/s*0.57, pmo=tot/s*0.43;
         if(ite_$('itePrixMat101'))ite_$('itePrixMat101').value=pm.toFixed(2);
@@ -7651,7 +7651,7 @@ function ite_getLot3Total(){
     var t=ite_V('iteTypeLot3');
     if(t==='101'){
         var s=ite_N('iteSurface101L3');
-        var tot=Math.max(s*30, s<50?1500:0);
+        var tot=Math.max(s*70, s<22?1500:0);
         var pm=tot/s*0.57, pmo=tot/s*0.43;
         if(ite_$('itePrixMat101L3'))ite_$('itePrixMat101L3').value=pm.toFixed(2);
         if(ite_$('itePrixMo101L3'))ite_$('itePrixMo101L3').value=pmo.toFixed(2);
