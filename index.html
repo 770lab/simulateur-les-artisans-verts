@@ -6052,7 +6052,7 @@ function doCreateUser(){
     // Sync to API (Sheet)
     if(useAPI && API_URL){
         errEl.textContent='Enregistrement...';errEl.style.color='#000';errEl.style.fontWeight='700';errEl.style.display='block';
-        apiPost({action:'createUser', login:login, name:name, pass:pass, role:role}, function(d){
+        apiCall({action:'createUser', adminUser:currentUser.id, username:login, name:name, pass:pass, role:role}, function(d){
             errEl.style.display='none';errEl.style.color='#dc2626';errEl.style.fontWeight='400';
             if(d.success){
                 okEl.textContent='\u2705 Utilisateur '+name+' créé avec succès';
