@@ -1501,8 +1501,8 @@
 /* For grid layouts in sidebar */
 .tab-pac-active .tab-pac-content.sidebar-grid { display: block; }
 .tab-ite-active .tab-ite-content.sidebar-grid { display: block; }
-/* Hide MPR result bloc in ITE mode */
-.tab-ite-active #mprResultBloc { display: none !important; }
+/* Hide MPR/CEE wrapper entirely in ITE mode (the dark gradient bar) */
+.tab-ite-active #mprCeeWrapper { display: none !important; }
 
 /* ============ MPR PROFIL CARD ============ */
 #mprResultBloc.mpr-card {
@@ -4894,8 +4894,22 @@ function toggleSidebarDetails(btn){
 function onTTCEdit(){
     const el = document.getElementById('totalTTCEditable');
     const raw = el.textContent.replace(/[^0-9]/g, '');
-    const val = parseInt(raw) || 0;
-    document.getElementById('totalTTCInput').value = val;
+    const newTTC = parseInt(raw) || 0;
+    // Redistribuer proportionnellement sur les composants (PAC, Pose, Ballon, SSC)
+    const oldTTC = getPacManualTTC();
+    if(oldTTC > 0 && newTTC > 0 && newTTC !== oldTTC){
+        const ratio = newTTC / oldTTC;
+        var fields = ['prixPAC','prixPose'];
+        var inclB = document.getElementById('includeBallon');
+        if(inclB && inclB.value==='oui'){ fields.push('prixBallon','prixPoseBallon'); }
+        var inclS = document.getElementById('includeSSC');
+        if(inclS && inclS.value==='oui'){ fields.push('prixSSC','prixPoseSSC'); }
+        fields.forEach(function(id){
+            var inp = document.getElementById(id);
+            if(inp){ inp.value = Math.round((parseFloat(inp.value)||0) * ratio); }
+        });
+    }
+    document.getElementById('totalTTCInput').value = newTTC;
     document.getElementById('lockTTC').value = '1';
     calc();
 }
