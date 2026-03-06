@@ -8852,9 +8852,10 @@ async function pac_generatePTZ(){
         setTxt('Nom',nomUpper);
         setTxt('Pr\u00e9nom',prenomUpper);
 
-        // Page 1 - Logement
-        setTxt('n\u00b0 voirie','');
-        setTxt('Voie',adr);
+        // Page 1 - Logement (séparer n° du reste de l'adresse)
+        var adrMatch=adr.match(/^(\d+\s*(?:bis|ter|[a-dA-D])?)\s+(.+)$/i);
+        setTxt('n\u00b0 voirie',adrMatch?adrMatch[1].trim():'');
+        setTxt('Voie',adrMatch?adrMatch[2].trim():adr);
         setTxt('Code postal',cp);
         setTxt('Ville',villeClean.toUpperCase());
 
@@ -9026,9 +9027,10 @@ async function ite_generatePTZ(){
             setTxt('Pr\u00e9nom_2',prenom2Upper);
         }
 
-        // Page 1 - Logement
-        setTxt('n\u00b0 voirie','');
-        setTxt('Voie',adr);
+        // Page 1 - Logement (séparer n° du reste de l'adresse)
+        var adrMatch=adr.match(/^(\d+\s*(?:bis|ter|[a-dA-D])?)\s+(.+)$/i);
+        setTxt('n\u00b0 voirie',adrMatch?adrMatch[1].trim():'');
+        setTxt('Voie',adrMatch?adrMatch[2].trim():adr);
         setTxt('Code postal',cp);
         setTxt('Ville',villeClean.toUpperCase());
 
