@@ -6591,8 +6591,10 @@ const ITE_CET_SPECS={
     '240':{vol:'240',model:'PERFORMER III',profil:'XL',ref:'CV5',etas:'142',rendEtaWh:'130',cls:'A+',resist:'1800',temp:'-5 \u00b0C \u00e0 +43 \u00b0C',refrig:'R290 (propane \u2013 faible GWP)'},
     '270':{vol:'270',model:'PERFORMER 2',profil:'XL',ref:'THA 986 114',etas:'118',rendEtaWh:'109',cls:'A',resist:'1800',temp:'-5 \u00b0C \u00e0 +43 \u00b0C',refrig:'R-513A'}
 };
-// MPR par geste pour BAR-TH-148 (CET) — barème 2026
+// MPR par geste — barème 2026
 const MPR_CET={BLEU:1200,JAUNE:800,VIOLET:400,ROSE:0};
+// BAR-EN-101 rampants/combles : €/m²
+const MPR_101={BLEU:25,JAUNE:20,VIOLET:15,ROSE:0};
 
 // ============================================
 // ECO-PTZ CALCULATION ENGINE (auto-financement)
@@ -7804,10 +7806,17 @@ function ite_calc(){
     var nbLots=_iteNbLots;
     var plafondPTZ=nbLots>=3?30000:nbLots>=2?25000:0;
 
-    // MPR CET : indication uniquement si 148 en lot 2 ou 3
+    // MPR par geste : CET (148) et rampants (101)
     var cat=document.getElementById('categorie').value;
     var has148=t2==='148'||(hasLot3&&ite_V('iteTypeLot3')==='148');
     var mprCET=has148?(MPR_CET[cat]||0):0;
+    // MPR 101 rampants : €/m² × surface
+    var has101_L2=t2==='101', has101_L3=hasLot3&&ite_V('iteTypeLot3')==='101';
+    var surf101=0;
+    if(has101_L2) surf101+=ite_N('iteSurface101');
+    if(has101_L3) surf101+=ite_N('iteSurface101L3');
+    var mpr101=surf101>0?(MPR_101[cat]||0)*surf101:0;
+    var mprTotal=mprCET+mpr101;
 
     // Lot2 alert
     if(_iteNbLots>=2){
@@ -7871,11 +7880,13 @@ function ite_calc(){
     if(cat){kpiMPR='<div class="ite-kpi" style="border-color:'+(catColors[cat]||'#999')+';background:'+(catColors[cat]||'#999')+'18;"><div class="ite-kpi-icon">\ud83c\udfdb\ufe0f</div><div class="ite-kpi-val" style="color:'+(catColors[cat]||'#999')+';">'+(catLabels[cat]||cat)+'</div><div class="ite-kpi-label">Profil MPR</div></div>';}
     var kpiLot2=_iteNbLots>=2?'<div class="ite-kpi"><div class="ite-kpi-icon">'+(t2==='101'?'\ud83c\udfe0':t2==='103'?'\ud83c\udfe0':'\ud83d\udebf')+'</div><div class="ite-kpi-val'+(lot2Ok?'':' red')+'">'+ite_fmtN(totLot2)+' \u20AC</div><div class="ite-kpi-label">LOT 2</div></div>':'';
     var kpiCEE=_deduireCee?'<div class="ite-kpi"><div class="ite-kpi-icon">\ud83d\udcdc</div><div class="ite-kpi-val">'+ite_fmtN(primeCEE)+' \u20AC</div><div class="ite-kpi-label">CEE EDF</div></div>':'<div class="ite-kpi"><div class="ite-kpi-icon">\ud83d\udcdc</div><div class="ite-kpi-val" style="text-decoration:line-through;opacity:0.5;">'+ite_fmtN(primeCEE)+' \u20AC</div><div class="ite-kpi-label">CEE non d\u00e9duit</div></div>';
+    var kpiMPRAmount=mprTotal>0?'<div class="ite-kpi" style="border-color:#8b5cf6;background:rgba(139,92,246,0.06);"><div class="ite-kpi-icon">\ud83c\udfdb\ufe0f</div><div class="ite-kpi-val" style="color:#8b5cf6;">'+ite_fmtN(mprTotal)+' \u20AC</div><div class="ite-kpi-label">MPR estimatif</div></div>':'';
     ite_$('iteAidesSummary').innerHTML='<div class="ite-kpi-row">'
         +'<div class="ite-kpi"><div class="ite-kpi-icon">\ud83e\uddf1</div><div class="ite-kpi-val">'+ite_fmtN(totITE)+' \u20AC</div><div class="ite-kpi-label">LOT 1 \u00b7 ITE</div></div>'
         +kpiLot2
         +kpiLot3
         +kpiCEE
+        +kpiMPRAmount
         +kpiMPR
         +'<div class="ite-kpi"><div class="ite-kpi-icon">\ud83d\udcb0</div><div class="ite-kpi-val">'+ite_fmtN(reste)+' \u20AC</div><div class="ite-kpi-label">Reste \u00e0 r\u00e9gler</div></div></div>';
 
