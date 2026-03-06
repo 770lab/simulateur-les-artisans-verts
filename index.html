@@ -4453,6 +4453,9 @@ function autoSyncScenario() {
     onScenarioChange();
 }
 
+// Prix par défaut des composants PAC
+var _prixDefaults = {prixPAC:7650, prixPose:3240, prixBallon:2000, prixPoseBallon:860, prixSSC:10230, prixPoseSSC:4730};
+
 function selectScenarioBtn(btn, val) {
     var btns = document.querySelectorAll('#scenarioBtns .ite-lot-btn');
     btns.forEach(function(b){ b.classList.remove('active'); });
@@ -4462,6 +4465,12 @@ function selectScenarioBtn(btn, val) {
     // Reset TTC lock so it updates from scenario data
     var ltc = document.getElementById('lockTTC');
     if(ltc) ltc.value = '0';
+    // Remettre les prix composants à leurs valeurs par défaut
+    Object.keys(_prixDefaults).forEach(function(id){
+        var inp = document.getElementById(id);
+        if(inp) inp.value = _prixDefaults[id];
+    });
+    _ttcEditSnapshot = null;
     onScenarioVisibleChange(val);
 }
 
