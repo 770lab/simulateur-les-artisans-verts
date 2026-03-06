@@ -3972,6 +3972,7 @@
                 <div class="result-row-card" style="background: rgba(96,165,250,0.08); border-color: rgba(96,165,250,0.15);">
                     <div class="rrc-label">&#128176; Total TTC</div>
                     <div class="rrc-value blue" id="iteSidebarTTC">&mdash;</div>
+                    <div id="iteSidebarHT" style="font-size:10px;color:#94a3b8;text-align:right;margin-top:2px;"></div>
                 </div>
 
                 <div class="result-row-card" style="background: rgba(251,191,36,0.08); border-color: rgba(251,191,36,0.15);">
@@ -7915,6 +7916,7 @@ function ite_calc(){
         }
     }
     var st=ite_$('iteSidebarTTC');if(st)st.textContent=ite_fmtN(ttc)+' \u20AC';
+    var shtEl=ite_$('iteSidebarHT');if(shtEl){if(mode){shtEl.textContent='HT : '+ite_fmtN(Math.round(ht))+' \u20AC';shtEl.style.display='';}else{shtEl.style.display='none';}}
     var sr=ite_$('iteSidebarReste');if(sr)sr.textContent=ite_fmtN(reste)+' \u20AC';
     var sp=ite_$('iteSidebarPTZ');if(sp)sp.innerHTML=ptzOk
         ?'<div style="padding:10px;border-radius:8px;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.15);color:#60a5fa;text-align:center;font-weight:700;font-size:13px;">\ud83c\udfdb\ufe0f PTZ '+nbLots+' lots \u00b7 Plafond '+ite_fmtN(plafondPTZ)+' \u20AC</div>'
