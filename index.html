@@ -8287,6 +8287,13 @@ function ite_generateDevis(){
     var catMPR=document.getElementById('categorie').value;
     var has148=(_iteNbLots>=2&&t2==='148')||(hasLot3&&t3==='148');
     var mprCET=has148?(MPR_CET[catMPR]||0):0;
+    // MPR 101 rampants dans devis
+    var has101_dv=(_iteNbLots>=2&&t2==='101')||(hasLot3&&t3==='101');
+    var surf101_dv=0;
+    if(_iteNbLots>=2&&t2==='101') surf101_dv+=ite_N('iteSurface101');
+    if(hasLot3&&t3==='101') surf101_dv+=ite_N('iteSurface101L3');
+    var mpr101_dv=surf101_dv>0?(MPR_101[catMPR]||0)*surf101_dv:0;
+    var mprDevisTotal=mprCET+mpr101_dv;
     var reste=Math.round(ttc-(_dvDeduireCee?primeCEE:0));
     var wFin=ite_V('iteIncludeFinancement')==='oui';
     var _nbLotsTP=_iteNbLots>=3?3:_iteNbLots>=2?2:1;
@@ -8612,9 +8619,9 @@ function ite_generateDevis(){
     // CONDITIONS BLOCK
     // =========================================================
     var condBlock='<div class="dv-cond" style="margin-top:4mm;">';
-    if(mprCET>0){
+    if(mprDevisTotal>0){
         condBlock+='<h4>(**) Conditions particuli\u00e8res relatives \u00e0 l\'aide ANAH / MaPrimeR\u00e9nov\'</h4>'
-        +'<p>Cette offre est cumulable avec l\'aide MaPrimeR\u00e9nov\', accord\u00e9e uniquement apr\u00e8s analyse du dossier, d\'un montant estimatif de <b>'+ite_fmt(mprCET)+'</b>.</p>'
+        +'<p>Cette offre est cumulable avec l\'aide MaPrimeR\u00e9nov\', accord\u00e9e uniquement apr\u00e8s analyse du dossier, d\'un montant estimatif de <b>'+ite_fmt(mprDevisTotal)+'</b>.</p>'
         +'<p>Dans le cas o\u00f9 l\'aide notifi\u00e9e au client est inf\u00e9rieure au montant de l\'aide pr\u00e9visionnelle, l\'usager n\'est pas li\u00e9 par le devis et l\'entreprise s\'engage \u00e0 proposer un devis rectificatif. Le client conserve alors un droit de r\u00e9tractation d\'une dur\u00e9e de quatorze jours \u00e0 partir de la date de pr\u00e9sentation du devis rectificatif.</p>'
         +'<p>L\'aide MaPrimeR\u00e9nov\' est conditionnelle et soumise \u00e0 la conformit\u00e9 des pi\u00e8ces justificatives et informations d\u00e9clar\u00e9es par le b\u00e9n\u00e9ficiaire. En cas de fausse d\u00e9claration, de man\u0153uvre frauduleuse ou de changement du projet de travaux subventionn\u00e9, le b\u00e9n\u00e9ficiaire s\'expose au retrait et reversement de tout ou partie de l\'aide. Les services de l\'Anah pourront faire proc\u00e9der \u00e0 tout contr\u00f4le des engagements et sanctionner le b\u00e9n\u00e9ficiaire et son mandataire \u00e9ventuel des manquements constat\u00e9s.</p>';
     }
