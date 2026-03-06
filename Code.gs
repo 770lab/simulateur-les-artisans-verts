@@ -134,10 +134,24 @@ function handleRequest(e) {
 }
 
 // ============================================
-// HELPER: vérifier super admin
+// HELPER: vérifier si l'utilisateur est admin
 // ============================================
 function isSuperAdmin(username) {
-  return username && username.toString().toLowerCase() === SUPER_ADMIN;
+  if (!username) return false;
+  var u = username.toString().toLowerCase();
+  if (u === SUPER_ADMIN) return true;
+  // Vérifier le rôle dans le Sheet
+  try {
+    var sheet = getSpreadsheet().getSheetByName('Users');
+    if (!sheet) return false;
+    var data = sheet.getDataRange().getValues();
+    for (var i = 1; i < data.length; i++) {
+      if (data[i][0].toString().toLowerCase() === u) {
+        return (data[i][3] || '').toString().toLowerCase() === 'admin';
+      }
+    }
+  } catch(e) {}
+  return false;
 }
 
 // ============================================
